@@ -1,0 +1,96 @@
+<portfolio-edit class="portfolio-edit">
+  <div class="panel panel-default">
+    <div class="panel-heading text-right">
+      <button class="btn btn-primary" onclick={ save }>Save</button>   
+      <button class="btn btn-danger" onclick={ remove } if={ portfolio.id }>Delete</button>   
+    </div>
+    <div class="panel-body">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" name="title" class="form-control" value={ work.title }>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Date</label>
+          <div class="col-sm-3">
+            <input type="text" name="date" class="form-control" value={ _.date(work.date || new Date(), 'Y-m-d h:i:s') }>
+          </div>
+          <label class="col-sm-2 control-label">Status</label>
+          <div class="col-sm-3">
+            <select name="status" class="form-control">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Client</label>
+          <div class="col-sm-3">
+            <input type="text" name="client" class="form-control" value={ work.client }>
+          </div>
+          <label class="col-sm-2 control-label">Type</label>
+          <div class="col-sm-3">
+            <input type="text" name="type" class="form-control" value={ work.type }>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Summary</label>
+          <div class="col-sm-10">
+            <textarea name="summary" class="form-control" rows="7">{ work.summary }</textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Content</label>
+          <div class="col-sm-10">
+            <textarea name="content" class="form-control" rows="15">{ work.content }</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    _.log('Portfolio:init()')
+    var self = this    
+    self.work = {}    
+
+    if (opts._id) {
+      api.getWork(opts._id, function(data) {
+        self.work = data
+        self.update()
+        _.each(_.$$('option', self.root), function(el) {
+          if (el.value === self.work.status) el.selected = true
+        })
+      })
+    }
+
+    save() {
+      _.each(_.$$('.form-control', self.root), function(el) {
+        self.work[el.name] = el.value
+      })
+      self.work.date = +new Date(self.work.date)
+      if (opts._id) {
+        api.updateWork(self.work, function() {
+          notify('Work successfully updated', 'success')  
+        })
+      } else {
+        api.addWork(self.work, function(id) {
+          riot.route('portfolio/' + id)
+          notify('Work successfully saved', 'success')        
+        })
+      }     
+    }
+
+    remove() {
+      _.modal('Delete work <b>' + self.work.title + '</b>', function() {
+        // api.post('portfolio/' + self.portfolio.id, function(resp) {
+        //   riot.route('portfolio')
+        //   notify('Work successfully removed', 'success')        
+        // })
+      }, true)      
+    }
+    
+  </script>
+</portfolio-edit>

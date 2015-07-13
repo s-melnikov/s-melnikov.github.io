@@ -1,0 +1,30 @@
+<app>
+
+  <header></header>
+
+  <content></content>
+
+  <footer></footer>
+
+  <script>
+    var self = this
+
+    loadView(name, id) {
+      if (self.currentView) self.currentView.unmount(true)
+      var tag = riot.mount('content', 'page-' + name, {_id: id})
+      if (!tag.length) tag = riot.mount('content', 'page-404')
+      self.currentView = tag[0]
+    }
+
+    studyRoute(view, id) {
+      view = view || 'index'
+      self.loadView(view, id)
+    }
+
+    riot.route(self.studyRoute)
+
+    self.on('mount', function() {
+      riot.route.exec(self.studyRoute)
+    })
+  </script>
+</app>

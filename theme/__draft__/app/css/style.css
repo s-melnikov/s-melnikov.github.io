@@ -1,0 +1,208 @@
+/*
+* http://meyerweb.com/eric/tools/css/reset/ 
+* v2.0 | 20110126
+* License: none (public domain)
+*/
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, 
+strike, strong, sub, sup, tt, var, b, u, i, dl, dt, dd, ol, ul, li, fieldset, form, 
+label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, 
+embed, figure, figcaption, footer, header, hgroup, menu, nav, output, section,
+summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/*
+*
+*/
+[class^="icon-"], [class*=" icon-"] {
+  display: inline-block;
+  color: #444444;
+  fill: currentColor;
+  width: 16px;
+  height: 16px;
+  background-size: 100%;
+}
+.icon-home {
+  background-image: url(../img/icons/home.svg);
+}
+
+
+/*
+* Main css
+*/
+html, body {
+  height: 100%;
+  max-height: 100%;
+  color: #21272d;
+  font: 400 15px/1.7em "Open Sans", Tahoma, Verdana, sans-serif;
+  background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.1;
+  color: inherit
+}
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+  font-weight: 400;
+  line-height: 1;
+  color: #777;
+  font-size: 65%;
+}
+h1, h2, h3 {
+  margin-top: 20px;
+  margin-bottom: 10px
+}
+h4, h5, h6 {
+  margin-top: 10px;
+  margin-bottom: 10px
+}
+h1 {
+  font-size: 36px
+}
+h2 {
+  font-size: 30px
+}
+h3 {
+  font-size: 24px
+}
+h4 {
+  font-size: 18px
+}
+h5 {
+  font-size: 14px
+}
+h6 {
+  font-size: 12px
+}
+p {
+  margin: 0 0 10px;
+}
+a {
+  -webit-transition: background-color .2s, color .2s;
+  transition: background-color .2s, color .2s;
+  text-decoration: none;
+  color: #b1250d;
+}
+a:hover {
+  color: #21272d;
+}
+hr {
+  border: none;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  background-color: #e5e5e5;
+}
+body > header {
+  text-align: center;
+  border-top: 4px solid #b1250d;
+  text-rendering: optimizeLegibility;
+  position: relative;
+  padding-bottom: 30px;
+}
+body > header .wrap {
+  display: inline-block;
+}
+body > header h1 {
+  padding-top: 80px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 36px;
+  font-weight: normal;
+}
+body > header h1 a {
+  color: #21272d;
+}
+article {  
+  padding: 60px 15px;
+  border-bottom: 2px solid #f7f7f7;
+}
+article .meta {
+  margin: 0 auto 20px;
+  max-width: 680px;
+  font-size: 12px;
+  color: #a4adb6;
+}
+article .meta > * + * {
+  margin-left: 24px;
+}
+article header {
+  text-align: left;
+  margin: 0 auto 15px;
+  max-width: 680px;
+}
+article header h2 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+  font-family: "Open Sans Condensed", sans-serif;
+}
+article .text {
+  position: relative;
+  margin: 0 auto;
+  max-width: 680px;
+}
+article .readmore {
+  -webit-transition: opacity .5s;
+  transition: opacity .5s;
+  color: #777;
+  text-decoration: underline;
+  font-size: 85%;
+  margin-left: 20px;
+  opacity: 0;
+}
+article:hover .readmore {
+  opacity: 1;
+}
+article.single-post {
+  border-top: 4px solid #b1250d;
+  padding-bottom: 30px;
+}
+article .meta > a {
+  display: inline-block;
+  border: 1px solid #dcdcdc;
+  border-radius: 14px;
+  padding: 2px 7px 0px;
+  line-height: 1;
+  vertical-align: -3px;
+}
+article.single-post h1 {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: 1.2em;
+  font-family: "Open Sans Condensed", sans-serif;
+}
+article .title-img img {
+  max-width: 100%;
+  display: block;
+  margin: auto;
+}

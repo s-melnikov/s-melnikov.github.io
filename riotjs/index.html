@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="And why we need a new UI library">
+
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="assets/img/logo/riot16x.png">
+
+  <title></title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600,700&subset=latin,cyrillic' rel='stylesheet'>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+  <link rel="stylesheet" href="assets/css/prism.default.css">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<application></application>  
+
+<footer>
+  <div class="container">
+    <a href="#">Riot 2.0</a>
+  </div>
+</footer>
+
+<script src="application.tag" type="riot/tag"></script>
+
+<script src="assets/js/riot-2.0.10.min.js"></script>
+<script src="assets/js/riot-compiler-2.0.10.min.js"></script>
+
+<script src="assets/js/showdown.js"></script>
+<script src="assets/js/prism.js" data-manual></script>
+
+<script>
+riot.mount('*', { 
+  version: '2.0.12',
+  title: 'Riot 2.0'
+})
+</script>
+<script>window.onerror = function(e) { alert('An error occurred!\n\n"' + e + '"') }</script>
+
+</body>
+</html>

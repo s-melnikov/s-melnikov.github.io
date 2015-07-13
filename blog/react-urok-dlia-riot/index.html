@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+
+  <title>React урок для Riot | melnikov5.github.io</title>  
+  <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600,400&subset=latin,cyrillic' rel='stylesheet'> -->
+  <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic&subset=latin,cyrillic' rel='stylesheet'>
+  <!-- <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,500,700,400italic&subset=latin,cyrillic' rel='stylesheet'> -->
+  <link rel="stylesheet" href="/git/melnikov5.github.io/blog/css/prism.css" type="text/css">
+  <link rel="stylesheet" href="/git/melnikov5.github.io/blog/css/styles.css" type="text/css">
+
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <![endif]-->
+</head>
+
+  
+
+  <header id="site-head" class="post">
+    <div class="head-content">
+      <h1><a href="/git/melnikov5.github.io/blog/">melnikov5.github.io</a></h1>
+    </div>
+  </header>
+
+
+
+<main class="content" role="main">
+
+  <article id="post-react-urok-dlia-riot" class="post post-type-post">
+  <header class="post-header"> 
+    <div class="post-meta">
+              
+        <div class="post-tags">
+          <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/git/melnikov5.github.io/blog/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/git/melnikov5.github.io/blog/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/git/melnikov5.github.io/blog/tags/Riot/">Riot</a></li></ul>
+        </div>    
+      
+      <time datetime="2015-03-16T22:00:00.000Z">2015-03-17</time>
+      
+    </div>
+    
+      <h1 class="post-title">React урок для Riot</h1> 
+        
+  </header>  
+  
+    <section class="post-content"><p>Этот урок является копией <a href="http://facebook.github.io/react/docs/tutorial.html" target="_blank" rel="external">react урока по созданию блока коментариев</a>, но только для <a href="https://muut.com/riotjs/" target="_blank" rel="external">Riot</a>. React слишком сложен в случае разработки небольшого приложения, в то время как Riot прекрасно подходит для этого. Riot является замечательной минималистичной альтернативой react’у. В этом уроке я покажу как он работает.</p>
+<a id="more"></a>
+<p>В react уроке строится секция коментариев состоящая из нескольких индивидуальных состовляющих блоков:</p>
+<pre><code class="lang-ini">- CommentBox
+  - CommentList
+    - Comment
+  - CommentForm
+</code></pre>
+<p>Все эти блоки будут разработаны используя пользовательские теги Riot. Что бы получить представление о чем этот урок и вы незнакомы с react, вы должны сначала прочитать <a href="http://facebook.github.io/react/docs/tutorial.html" target="_blank" rel="external">урок по react’у</a>. Если вы хотите сразу перейти к заключению - то вы можете найти файлы этого урока на <a href="https://gist.github.com/juriansluiman/02e6da3b0e315cb5f9fd" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Пользовательские_теги_как_строительные_блоки-">Пользовательские теги как строительные блоки.</h2><p>Давайте начнем с файла <code>comments.tag</code> который содержит все пользовательские теги Riot.</p>
+<pre><code class="lang-jsx">&lt;comment-box&gt;
+  &lt;h1&gt;Комментарии&lt;/h1&gt;
+
+  &lt;comment-list comments={ comments } /&gt;
+  &lt;comment-form /&gt;
+
+  this.comments = []
+&lt;/comment-box&gt;
+
+&lt;comment-list&gt;
+  &lt;comment each={ opts.comments } /&gt;
+&lt;/comment-list&gt;
+
+&lt;comment-form&gt;
+  &lt;form&gt;
+    &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;
+    &lt;textarea name=&quot;message&quot;&gt;&lt;/textarea&gt;
+    &lt;button type=&quot;submit&quot;&gt;Отправить&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/comment-form&gt;
+
+&lt;comment&gt;
+  &lt;div&gt;
+    &lt;h2&gt;Мое имя&lt;/h2&gt;
+    &lt;p&gt;Мое сообщение&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/comment&gt;
+</code></pre>
+<p>Вы наверное заметили, что синтаксис схож с react JSX, он также является XML c HTML плюс шаблонный “синтаксический сахар”. Прежде всего, важно отметить что все индивидуальные строительные блоки похожи на пользовательские HTML теги: <code>&lt;comment-box&gt;</code> и подобные.</p>
+<p>Блок комментариев состоит из заголовка, списка комментариев и завершает все форма отправки комментариев. Список комментариев является блоком который повторяется для каждого коментария. Комментарий содержит имя его автора и сообщение которое он написал.</p>
+<p>Обычно в тегах Riot сначала идет HTML а потом JavaScript. Под HTML имеется ввиду чистый HTML, riot-javascript выражения и другие пользовательские теги Riot.</p>
+<pre><code class="lang-jsx">&lt;my-tag&gt;
+  &lt;h1&gt;Некоторый HTML&lt;/h1&gt;
+  &lt;input name=&quot;foo&quot; checked={ enabled } /&gt;
+  &lt;child-tag /&gt;
+
+  var enabled = true;
+&lt;/my-tag&gt;
+</code></pre>
+<h3 id="Монтирование_компонентов">Монтирование компонентов</h3><p>Riot использует термин “монтирование” (“mount”) для вывода пользовательских тегов Riot на вашей HTML странице. Теги, которые вы хотите загрузить (в нашем случае это <code>&lt;comment-box&gt;</code>) помещаются в ваш HTML и после вызывается <code>riot.mount()</code>:</p>
+<pre><code class="lang-markup">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello Riot&lt;/title&gt;
+    &lt;script src=&quot;http://cdn.jsdelivr.net/riot/2.0/riot.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;comment-box&gt;&lt;/comment-box&gt;
+
+    &lt;script src=&quot;comments.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;riot.mount(&#39;comment-box&#39;)&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Блок коментариев расположен в теле документа и Riot монтирует пользовательский тег в DOM. СИ последний шаг, перед тем как он заработает…</p>
+<h3 id="Компиляция_тегов_Riot">Компиляция тегов Riot</h3><p>Определение компонентов Riot начинается с <code>comments.tag</code> и в HTML загружается <code>comments.js</code>. Riot должен скомпилировать tag файл в простой javascript используя Riot компилятор.</p>
+<p>Для начала установите компилятор:</p>
+<pre><code class="lang-bash">npm install -g riot
+</code></pre>
+<p>После используем Riot для компиляции tag файл:</p>
+<pre><code class="lang-bash">riot path/to/comments.tag path/to/comments.js
+</code></pre>
+<p>Теперь воспользуемся браузером что бы проверить форму коментариев.</p>
+<p><a class="jsbin-embed" href="http://jsbin.com/vuhabiwusu/1/embed?output" target="_blank" rel="external">Hello Riot</a></p>
+<p>Как видите, отображается только форма, потому что у нас пока нет ни одного коментария и нечего выводить в списке.</p>
+<h2 id="Использование_параметров_и_состояний">Использование параметров и состояний</h2><p>Одна из особенностей Riot это передача переметров и захват состояния компонента. Параметры могут быть установлены в <code>riot.mount()</code> или внутри компонента и при этом есть возможность “опустить” переметры в дочерние компоненты.</p>
+<p>Для примера, давайте возьмем заголовок <code>&lt;comment-box&gt;</code>, который вы можете определить при монтировании:</p>
+<pre><code class="lang-jsx">&lt;comment-box&gt;
+  &lt;h1&gt;{ opts.title }&lt;/h1&gt;
+&lt;/comment-box&gt;
+</code></pre>
+<pre><code class="lang-javascript">riot.mount(&#39;comments-box&#39;, {title: &#39;Коментарии&#39;});
+</code></pre>
+<p>Все параметры которые мы передаем при монтировании компонента будут содержаться внутри переменной <code>opts</code>. Это также работает для дочерних элементов, которые могут получить параметры через аттрибут тега (в этом примере это коментарии <code>comments</code>):</p>
+<pre><code class="lang-jsx">&lt;comment-box&gt;
+  &lt;h1&gt;{ opts.title }&lt;/h1&gt;
+  &lt;comment-list comments={ comments } /&gt;
+
+  this.comments = []
+&lt;/comment-box&gt;
+
+&lt;comment-list&gt;
+  console.log(opts.comments)
+&lt;/comment-list&gt;
+</code></pre>
+<h3 id="Состояние_компонента">Состояние компонента</h3><p>В примере выше у нас есть элементы которые находятся в скрытом состоянии. Список коментариев создается в внутри <code>&lt;comment-box&gt;</code>. Хранение состояния компонента является одной из главных концепций Riot (и react). Если состояние компонента обновляется, то отображение тоже изменяется снутри что бы соостветствовать новому состоянию.</p>
+<p>Как и react, Riot работате со своим виртуальным DOM’ом. Если изменяется состояние то и виртуальный DOM тоже обновляется. Далее Riot сравнивает виртуальный DOM с актуальным DOM вашего приложения и обновляет те части, которые были изменены. Это делает изменение пользлвательского интерфейса более эффективным.</p>
+<p>Теперь давайте построим секцию коментариев которая содержит состояние коментариев в памяти браузера (в этом случае коментарии исчезают когда обновляется страница). Первым что требуется сделать это возможность добавление новых коментариев:</p>
+<pre><code class="lang-jsx">&lt;comment-box&gt;
+  &lt;h1&gt;{ opts.title }&lt;/h1&gt;
+
+  &lt;comment-list comments={ comments } /&gt;
+  &lt;comment-form /&gt;
+
+  this.comments = [];
+
+  add(comment) {
+    this.comments.push(comment)
+    this.update()
+  }
+&lt;/comment-box&gt;
+
+&lt;comment-form&gt;
+  &lt;form onsubmit={ add }&gt;
+    &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;
+    &lt;textarea name=&quot;message&quot;&gt;&lt;/textarea&gt;
+    &lt;button type=&quot;submit&quot;&gt;Отправить&lt;/button&gt;
+  &lt;/form&gt;
+
+  add(e) {
+    var comment = {
+      name: this.name.value,
+      message: this.message.value
+    }
+
+    this.parent.add(comment)
+    e.target.reset()
+  }
+&lt;/comment-form&gt;
+
+&lt;comment-list&gt;
+  &lt;comment each={ opts.comments } name={ this.name } message={ this.message } /&gt;
+&lt;/comment-list&gt;
+
+&lt;comment&gt;
+  &lt;div&gt;
+    &lt;h2&gt;{ opts.name }&lt;/h2&gt;
+    &lt;p&gt;{ opts.message }&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/comment&gt;
+</code></pre>
+<p><a class="jsbin-embed" href="http://jsbin.com/janogituge/1/embed?output" target="_blank" rel="external">JS Bin</a></p>
+<p>Разберем по порядку то, что сдесь происходит. Первое - у формы есть обработчик события <code>submit</code>, функция <code>add</code>. Если будет нажата кнопка “Отправить” эта функция сработает. Riot непосредственно<br>There are a few things happening here. First, the form has a submit handler, called add. When the form is submitted, the handler is executed. Riot directly calles <code>e.preventDefault()</code> which will cause the default action to halt (in this case, the form real submission).</p>
+<p>Inside the add function (a ES6 notation which Riot compiles into <code>this.add = function()</code>) the syntax <code>this.name</code> and <code>this.message</code> is used. This is a Riot feature where all tags with a <code>name</code> or <code>id</code> attribute can be easily identified. Because the input and textarea holds both a name (respectively “name” and “message”) you can access their values with <code>this.name.value</code> and <code>this.message.value</code>.</p>
+<p>Then, <code>this.parent</code> is accessed. The <code>parent</code> key is the component’s parent which is (duh) the parent of the <code>comment-form</code>. In fact, that is the <code>comment-box</code>. So <code>this.parent.add()</code> calls the <code>add()</code> method from the <code>comment-box</code>. This way, it allows you to change the state in the comment box from the comment form.</p>
+<p>As third you might notice <code>e.target</code>. The e is the event object which is triggered on submit. This object holds a <a href="https://muut.com/riotjs/guide/#event-handlers" target="_blank" rel="external">few properties</a> and one is the target. Simply said, the tag which triggered the event (in this case, the <code>form</code>) is referenced via <code>e.target</code>. In the case of a form submission, it allows you to clear the form when a comment is “posted”.</p>
+<p>The last part is the <code>comment-box</code>‘s <code>add()</code>. In here, two things happen. The state of comments is updated (simply push a new block onto the list of comments) and <code>this.update()</code> makes sure Riot updates the virtual DOM and pushes the changes into the “real” DOM.</p>
+<h2 id="Load_and_post_comments">Load and post comments</h2><p>The final part is to use a server and persist the comments between different requests. I am not posting the server part, the react tutorial has some excellent servers written and they are <a href="https://github.com/reactjs/react-tutorial" target="_blank" rel="external">available in their repositories</a>. Please note this tutorial uses a “name” and “message”, but the react tutorial uses an “author” and “text”. Update the server code if neccessary to use the new variable names.</p>
+<p>There are two moments you need to create HTTP requests: to load comments and to post a new comment. Loading comments will happen at mount and then at a specified interval. So let’s start with loading comments:</p>
+<pre><code class="lang-jsx">&lt;comment-box&gt;
+  &lt;h1&gt;{ opts.title }&lt;/h1&gt;
+
+  &lt;comment-list comments={ comments } /&gt;
+  &lt;comment-form url={ opts.url } /&gt;
+
+  this.comments = []
+
+  add(comment) {
+    this.comments.push(comment)
+    this.update()
+  }
+
+  load() {
+    var request = new XMLHttpRequest, self = this
+
+    request.open(&#39;GET&#39;, opts.url, true)
+    request.onload = function() {
+      if (this.status &gt;= 200 &amp;&amp; this.status &lt; 400) {
+        self.comments = JSON.parse(request.responseText)
+        self.update()
+      }
+    }
+    request.send()
+  }
+
+  load()
+  setInterval(this.load, opts.interval)
+&lt;/comment-box&gt;
+</code></pre>
+<p>A simple XMLHttpRequest is executed (note, IE10+ syntax!). If the request is a success, the comments state is set again and an update is executed. This loading happens when the component is created and thereafter repeatedly after a specified interval. Note you have to add two new options (the url and interval):</p>
+<pre><code>riot.mount(&#39;comment-box&#39;, {
+  title: &#39;Comments&#39;,
+  url: &#39;/comments.json&#39;,
+  interval: 2000
+}
+</code></pre><h3 id="Post_a_comment_optimistically">Post a comment optimistically</h3><p>The second XMLHttpRequest is when the form is submitted. Previously we called <code>this.parent.add(comment)</code>, but now we’re using the <code>comment</code> object to create a POST to the server as well. I called it “optimistically” because just before we are creating the request, the comment is already placed. This way, the user does not have to wait for the request to finish.</p>
+<pre><code class="lang-jsx">&lt;comment-form&gt;
+  &lt;form onsubmit={ add }&gt;
+    &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;
+    &lt;textarea name=&quot;message&quot;&gt;&lt;/textarea&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;Post&quot;&gt;
+  &lt;/form&gt;
+
+  add(e) {
+    var comment = {
+      name:    this.name.value,
+      message: this.message.value
+    }
+
+    this.parent.add(comment)
+    this.post(comment, e.target)
+  }
+
+  post(comment, form) {
+    var data = new FormData
+    data.append(&#39;name&#39;, comment.name)
+    data.append(&#39;message&#39;, comment.message)
+
+    var request = new XMLHttpRequest()
+    request.open(&#39;POST&#39;, opts.url, true)
+    request.onload = function() {
+      if (this.status &gt;= 200 &amp;&amp; this.status &lt; 400) {
+        form.reset()
+        // You might want to flash a message now
+      }
+    }
+    request.send(data)
+  }
+&lt;/comment-form&gt;
+</code></pre>
+<p>A second method, <code>post()</code>, is defined to encapsulated the XMLHttpRequest. The request simply POST to the specified URL with the given form data. Note <code>FormData</code> is IE10+ only, so you might want to use a <a href="https://github.com/mattfawcett/form-data-compatibility" target="_blank" rel="external">compatibility layer</a> for older browsers.</p>
+<p>In this new piece of code, the form is only reset after the message is sent successfully. The other parts are untouched (yah, components!).</p>
+<p>The cool thing now is you can test the requests. Fire up two tabs in your browsers. Create a comment in one of them and notice how it pops up in the other one too.</p>
+<h2 id="Conclusion">Conclusion</h2><p>I hope you like Riot as much as I do. It takes the component way of thinking from react (and polymer) but without a great amount of boilerplate code. It is easy to read and simple to use. And another great fact, it is fast! The library is also 24 <em>times smaller</em> than react.</p>
+<p>Of course, react has much more to offer and is therefore way more complicated. Personally, I did not need the additional features. I just wanted to have small components for comments and live search (both coming soon!). For these small parts of a page, Riot is a perfect choice.</p>
+<p>The last thing is to put all code combined into a single <code>comments.tag</code> file. I put it for you in a <a href="https://gist.github.com/juriansluiman/02e6da3b0e315cb5f9fd" target="_blank" rel="external">gist on GitHub</a>. This way you can easily compare the differences with the <a href="https://github.com/reactjs/react-tutorial/blob/master/public/scripts/example.js" target="_blank" rel="external">react version of a comment box</a>.</p>
+<h3 id="One_more_thing…">One more thing…</h3><p>As you might notice I didn’t do anything about validation and so on. No <code>request.onerror = function() {}</code>. No else when the server did report an error in the 4xx or 5xx range. No validation if all form fields are populated, etcetera etcetera.</p>
+<p>Note this is a starters tutorial about how to use Riot. If you want to use it in production, add some more validation, checks and messages. Be nice for your users.</p>
+<h2 id="Disclaimer">Disclaimer</h2><p>I am not a javascript developer, but rather a back-end (non-node.js) developer. This is the reason I choose for Riot (due it’s easier syntax) but nevertheless there might be some oddities in above code. If you know more about javascript than me (which is quite likely) just <a href="https://juriansluiman.nl/contact" target="_blank" rel="external">let me know</a>, I will update this tutorial accordingly.</p>
+<script src="http://static.jsbin.com/js/embed.js"></script></section>
+  
+</article>
+  
+</main>
+  
+  <footer class="site-footer">
+    <section class="copyright">
+      <a href="/git/melnikov5.github.io/blog/">melnikov5</a> &bull; 2015
+    </section>
+  </footer>
+  
+  <script src="/git/melnikov5.github.io/blog/js/prism.js" type="text/javascript"></script>
+  <script>Prism.highlightAll()</script>
+
+</body>
+</html>

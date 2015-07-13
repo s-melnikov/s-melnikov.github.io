@@ -1,0 +1,301 @@
+/* 
+ * CSS Reset v2.0
+ */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, 
+pre, a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, 
+samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, 
+li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, 
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  font-family: Roboto, Ubuntu, Tahoma, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 94px;
+}
+a {
+  color: inherit;
+}
+a:hover {
+  color: #777;
+  text-decoration: none;
+}
+p {
+  margin: 0 0 1em;
+}
+h1, h2, h3, h4, h5 {
+  font-weight: 400;
+  line-height: 1.1;  
+}
+h1 {
+  font-size: 3em;
+  margin-top: .7em;
+  margin-bottom: .7em;
+  font-weight: 300;
+}
+h2 {
+  font-size: 2em;
+  margin-top: .8em;
+  margin-bottom: .8em;
+  font-weight: 300;
+}
+h3 {
+  font-size: 1.5em;
+  margin-top: .9em;
+  margin-bottom: .9em;
+}
+h4 {
+  font-size: 1.17em;
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+}
+h5 {
+  font-size: 1em;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+h6 {
+  font-size: .83em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+#site-head h1,
+#site-head h2 {
+  font-weight: 600;
+}
+#site-head {
+  -moz-animation: show 3s forwards;
+  -webkit-animation: show 3s forwards;
+  animation: show 3s forwards;
+  position: relative;
+  overflow: hidden;
+  padding: 7em 0;
+  text-align: center;
+  color: #FFF;
+  margin-bottom: 32px;
+}
+#site-head-bg {
+  -moz-animation: bg 300s linear infinite;
+  -webkit-animation: bg 300s linear infinite;
+  animation: bg 300s linear infinite;
+  -moz-backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-transform: translate3d(0,0,0);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  background: #348CB2 url("img/header.jpg");
+  background-repeat: repeat-x;
+  height: 100%;
+  left: 0;
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  background-size: 1500px auto;
+  width: 4500px;
+}
+#site-head-overlay {
+  -moz-animation: show 1.5s 1.5s forwards;
+  -webkit-animation: show 1.5s 1.5s forwards;
+  animation: show 1.5s 1.5s forwards;
+  background-image: url("img/overlay-pattern.png"), url("img/overlay.svg");
+  background-position: top left, center center;
+  background-repeat: repeat, no-repeat;
+  background-size: auto, cover;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;  
+}
+#site-head h1 {
+  margin-bottom: 0;
+  position: relative;
+  opacity: 0;
+  -moz-animation: heading 1s 1.5s forwards;
+  -webkit-animation: heading 1s 1.5s forwards;
+  animation: heading heading 1s 1.5s forwards;
+  -moz-transform: translate3d(0,30px,0);
+  -webkit-transform: translate3d(0,30px,0);
+  transform: translate3d(0,30px,0);
+}
+#site-head a {
+  color: #fff;
+}
+#site-head h2 {
+  font-size: 1.5em;
+  margin-top: 0;
+  position: relative;
+  font-weight: 400;
+  opacity: 0;
+  -moz-animation: heading 1s 2s forwards;
+  -webkit-animation: heading 1s 2s forwards;
+  animation: heading 1s 2s forwards;
+  -moz-transform: translate3d(0,30px,0);
+  -webkit-transform: translate3d(0,30px,0);
+  transform: translate3d(0,30px,0);
+}
+#site-head.post {
+  background: #348CB2 url("img/header.jpg") center;
+  background-size: cover;
+  padding: 3em;
+  margin-bottom: 0;
+}
+#site-head.post .head-content {
+  max-width: 720px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: left;
+}
+#site-head.post .head-content h1 {
+  margin: 0;
+  font-size: 2em;
+}
+.content {
+  max-width: 720px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-bottom: 8em;
+}
+.post {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #EFEFEF;
+}
+.post-meta {
+  font-size: 80%;
+  color: #9EABB3;
+}
+.post-meta a {
+  color: #98B7C7;
+}
+.post-meta li,
+.post-meta .post-category,
+.post-meta .post-category ul,
+.post-meta .post-tags,
+.post-meta .post-tags ul {
+  display: inline-block;
+}
+.post-meta li {
+  margin-left: 5px;
+}
+.post-meta .post-tags {
+  font-size: 12px;
+  float: right;
+  padding-top: 1px;
+}
+.post-meta .post-tags a {
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 10px;
+  padding: 0 7px;
+}
+.post-title {
+  margin: .5em 0;
+}
+.post-single .post-title {
+  font-size: 2.5em;
+}
+.post-title a {
+  -moz-transition: .2s; 
+  -webkit-transition: .2s; 
+  transition: .2s; 
+  color: #50585D;
+}
+.post-title a:hover {
+  color: #808689;
+}
+.site-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 3em 0;
+  border-top: #EBF2F6 1px solid;
+  font-size: .7em;
+  color: #BBC7CC;
+  text-align: center;
+  background: #F7FAFB;
+}
+.site-footer a {
+  color: #BBC7CC;
+}
+@-moz-keyframes show { 
+  0% { opacity: 0; } 
+  100% { opacity: 1; } 
+}
+@-webkit-keyframes show { 
+  0% { opacity: 0; } 
+  100% { opacity: 1; } 
+}
+@keyframes show { 
+  0% { opacity: 0; } 
+  100% { opacity: 1; } 
+}  
+
+@-moz-keyframes bg { 
+  0% { -moz-transform: translate3d(0,0,0); } 
+  100% { -moz-transform: translate3d(-2250px,0,0); } 
+}
+@-webkit-keyframes bg { 
+  0% { -webkit-transform: translate3d(0,0,0); } 
+  100% { -webkit-transform: translate3d(-2250px,0,0); } 
+}
+@keyframes bg { 
+  0% { transform: translate3d(0,0,0); } 
+  100% { transform: translate3d(-2250px,0,0); } 
+}
+
+@-moz-keyframes heading { 
+  100% { -moz-transform: translate3d(0,0,0); opacity: 1; } 
+}
+@-webkit-keyframes heading { 
+  100% { -webkit-transform: translate3d(0,0,0); opacity: 1; } 
+}
+@keyframes heading { 
+  100% { transform: translate3d(0,0,0); opacity: 1; } 
+}
+
+pre[class*="language-"] {
+  margin: 1em 0;
+  border-radius: 0;
+}
