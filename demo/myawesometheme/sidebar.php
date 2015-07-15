@@ -4,12 +4,13 @@
  *
  * @package MyAwesomeTheme
  */
-
-if ( ! is_active_sidebar( 'sidebar-1' ) ) {
-	return;
-}
 ?>
 
-<div id="secondary" class="widget-area" role="complementary">
-	<?php dynamic_sidebar( 'sidebar-1' ); ?>
-</div><!-- #secondary -->
+<?php if (is_front_page()): ?>
+	<?php dynamic_sidebar('sidebar-front') ?>
+<?php elseif(get_post_type() == 'post'): ?>
+	<?php dynamic_sidebar('sidebar-blog') ?>
+<?php else: ?>
+	<?php dynamic_sidebar('sidebar') ?>
+<?php endif ?>
+

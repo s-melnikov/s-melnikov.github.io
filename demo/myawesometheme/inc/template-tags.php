@@ -107,23 +107,23 @@ function myawesometheme_entry_footer() {
 		/* translators: used between list items, there is a space after the comma */
 		$categories_list = get_the_category_list( esc_html__( ', ', 'myawesometheme' ) );
 		if ( $categories_list && myawesometheme_categorized_blog() ) {
-			printf( '<span class="cat-links">' . esc_html__( 'Posted in %1$s', 'myawesometheme' ) . '</span>', $categories_list ); // WPCS: XSS OK.
+			printf( '<span class="cat-links">' . 'Опубликовано %1$s' . '</span>', $categories_list ); // WPCS: XSS OK.
 		}
 
 		/* translators: used between list items, there is a space after the comma */
 		$tags_list = get_the_tag_list( '', esc_html__( ', ', 'myawesometheme' ) );
 		if ( $tags_list ) {
-			printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', 'myawesometheme' ) . '</span>', $tags_list ); // WPCS: XSS OK.
+			printf( '<span class="tags-links">' . 'Теги %1$s' . '</span>', $tags_list ); // WPCS: XSS OK.
 		}
 	}
 
 	if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
 		echo '<span class="comments-link">';
-		comments_popup_link( esc_html__( 'Leave a comment', 'myawesometheme' ), esc_html__( '1 Comment', 'myawesometheme' ), esc_html__( '% Comments', 'myawesometheme' ) );
+		comments_popup_link('Оставить коментарий', '1 Коментарий', esc_html__( '% Коментариев', 'myawesometheme' ) );
 		echo '</span>';
 	}
 
-	edit_post_link( esc_html__( 'Edit', 'myawesometheme' ), '<span class="edit-link">', '</span>' );
+	edit_post_link('Редактировать', '<span class="edit-link">', '</span>' );
 }
 endif;
 

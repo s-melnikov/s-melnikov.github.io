@@ -96,17 +96,37 @@ add_action( 'after_setup_theme', 'myawesometheme_content_width', 0 );
  * @link http://codex.wordpress.org/Function_Reference/register_sidebar
  */
 function myawesometheme_widgets_init() {
-	register_sidebar( array(
-		'name'          => esc_html__( 'Sidebar', 'myawesometheme' ),
-		'id'            => 'sidebar-1',
+	register_sidebar(array(
+		'name'          => esc_html__('Боковая панель на главной странице', 'myawesometheme'),
+		'id'            => 'sidebar-front',
 		'description'   => '',
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-		'after_widget'  => '</aside>',
-		'before_title'  => '<h1 class="widget-title">',
-		'after_title'   => '</h1>',
-	) );
+		'before_widget' => '<div id="%1$s" class="panel about_me widget %2$s"><div class="panel-body">',
+		'after_widget'  => '</div></div>',
+		'before_title'  => '<div class="title widget-title"><span>',
+		'after_title'   => '</span></div>',
+	));
+
+	register_sidebar(array(
+		'name'          => esc_html__('Боковая панель в блоге', 'myawesometheme'),
+		'id'            => 'sidebar-blog',
+		'description'   => '',
+		'before_widget' => '<div id="%1$s" class="panel widget %2$s"><div class="panel-body">',
+		'after_widget'  => '</div></div>',
+		'before_title'  => '<div class="title widget-title"><span>',
+		'after_title'   => '</span></div>',
+	));
+
+	register_sidebar(array(
+		'name'          => esc_html__('Боковая панель', 'myawesometheme'),
+		'id'            => 'sidebar',
+		'description'   => '',
+		'before_widget' => '<div id="%1$s" class="panel widget %2$s"><div class="panel-body">',
+		'after_widget'  => '</div></div>',
+		'before_title'  => '<div class="title widget-title"><span>',
+		'after_title'   => '</span></div>',
+	));
 }
-add_action( 'widgets_init', 'myawesometheme_widgets_init' );
+add_action('widgets_init', 'myawesometheme_widgets_init');
 
 /**
  * Enqueue scripts and styles.
