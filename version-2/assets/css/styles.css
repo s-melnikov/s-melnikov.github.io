@@ -131,9 +131,11 @@ header a {
   text-align: center;
   border-bottom: 1px solid #dcdcdc;
 }
+
 #works-list {}
-#work-list .work {
+#works-list .work {
   padding: 20px 0;
+  margin-bottom: 20px;
 }
 #works-list .work-image {
   text-align: right;
@@ -153,4 +155,41 @@ header a {
 #works-list .work-summary {
   font-size: px;
   margin: 20px 0;
+}
+
+.macbook {
+  padding: 1.2em 1.2em 0.8em;
+  background-color: #333;
+  border-radius: 1em 1em 0 0;
+  box-shadow: 0 0 0px 2px #dcdcdc;
+  margin-right: 4em;
+  margin-left: 4em;
+  position: relative;
+}
+.macbook img {
+  display: block;
+  width: 100%;
+}
+.macbook::before,
+.macbook::after {
+  content: "";
+  position: absolute;
+}
+.macbook::before {
+  height: 1em;
+  background-color: #dcdcdc;
+  background-image: linear-gradient(#ddd, #aaa);
+  left: -3em;
+  right: -3em;
+  bottom: -1em;
+  border-radius: 0 0 1em 1em;
+}
+.macbook::after {
+  height: 0.4em;
+  border-radius: 0 0 0.4em 0.4em;
+  width: 6em;
+  left: 50%;
+  margin-left: -3em;
+  bottom: -0.4em;
+  background-color: #888;
 }
