@@ -1,0 +1,89 @@
+<body>
+
+  <div class="container">
+    <div class="stations clearfix">
+      <div class="station station-{ key }" each={ key, val in opts.stations }>
+        <a href="#{ key }" onclick={ showCover }>
+          <span class="icon"></span>
+          <span>{ val.name }</span>
+        </a>
+      </div>
+      <div class="cover">
+        <div class="picture"></div>
+        <div class="title" onclick={ hideCover }>Transmission</div>
+      </div>
+    </div>
+    <div class="control clearfix">
+      <div id="play" onclick={ play }>
+        <span hide={ isPlaying } class="play"></span>
+        <span show={ isPlaying } class="pause"></span>
+      </div>
+      <ul class="bitrate">
+        <li each={ opts.rates } onclick={ setBitrate } class="bitrate-{ val }">{ name }</li>
+      </ul>
+    </div>
+    <audio id="audio"></audio>
+  </div>
+
+  <script>
+    var self = this
+
+    self.bitrate = +localStorage.radio_plugin_bitrate || 320
+    self.station = 'rr'
+    self.isPlaying = false
+    self.audio.preload = false
+
+    setBitrate(e) {
+      self.bitrate = e.item.val
+      self.setSource()
+      self.setActiveBitrate()
+    }
+
+    setActiveBitrate() {
+      $('.bitrate li').removeClass('active')
+      $('.bitrate-' + self.bitrate).addClass('active')
+    }
+
+    setActiveStation() {
+      $('.station').removeClass('active')
+      $('.station-' + self.station).addClass('active')      
+    }
+
+    router(station) {
+      if (!station) return;
+      self.station = station
+      self.setSource()
+    }
+
+    play() {
+      if (self.isPlaying) {
+        self.audio.pause()
+      } else {
+        self.audio.play()
+      }
+      self.isPlaying = !self.isPlaying
+    }
+
+    setSource() {
+      self.audio.src = opts.uri + opts.stations[self.station].port[self.bitrate] + '/' + self.station + '_' + self.bitrate
+      if (self.isPlaying) self.audio.play()
+      self.setActiveStation()
+    }
+
+    showCover() {
+      $('.cover').addClass('active')
+      return true
+    }
+
+    hideCover() {
+      $('.cover').removeClass('active')      
+    }
+
+    riot.route(self.router)
+
+    self.on('mount', function() {
+      riot.route.exec(self.router)
+      self.setActiveBitrate()
+    })
+  </script>
+</body>

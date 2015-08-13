@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Radio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" />
+
+  <link href="assets/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+
+  <script src="assets/views/app.html" type="riot/tag"></script>
+  <script src="assets/js/riot+compiler.min.js"></script>
+  <script>
+    riot.compile(function() { 
+      riot.mount('*', {
+        uri: 'http://air.radiorecord.ru:',
+        rates: [
+          { name: '32 kbps', val: 'aac' },
+          { name: '128 kbps', val: '128' },
+          { name: '320 kbps', val: '320' }
+        ],
+        stations: {
+          rr: { port: { 'aac': 8100, '128': 8101, '320': 8101 }, name: 'Radio Record' },
+          tm: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trancemission' },
+          ps: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Pirate Station' },
+          vip: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'VIP Mix' },
+          teo: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Hardstyle' },
+          dc: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Dancecore' },
+          brks: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Breaks' },
+          chil: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Chill-Out' },
+          dub: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Dubstep' },
+          sd90: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Super Disco 90' },
+          club: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Club' },
+          mdl: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Slow FM' },
+          gop: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Gop FM' },
+          pump: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Pump' },
+          rus: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Russian' },
+          deep: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Deep' },
+          trap: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trap' },
+          rock: { port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Rock' }
+        }   
+      })
+    })
+    function $(q) {
+      var c = Array.prototype.slice.call(document.querySelectorAll(q))
+      for (var p in $) { if ($.hasOwnProperty(p)) c[p] = $[p] }
+      return c;
+    }
+    $.each = function(cb) { this.forEach(cb) }
+    $.addClass = function(c) { this.each(function(el) { el.classList.add(c) }) }
+    $.removeClass = function(c) { this.each(function(el) { el.classList.remove(c) }) }
+  </script>
+</body>
+</html>
