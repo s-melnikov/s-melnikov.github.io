@@ -232,7 +232,11 @@ ul {
 .cover .picture img {
   max-width: 100%;
   display: block;
-} 
+}
+.track-info {
+  color: #fff;
+  padding: 10px 10px 0;
+}
 
 
 /*.control span {

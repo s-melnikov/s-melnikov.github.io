@@ -21,6 +21,10 @@
       <ul class="bitrate">
         <li each={ opts.rates } onclick={ setBitrate } class="bitrate-{ val }">{ name }</li>
       </ul>
+      <div class="track-info">
+        <span class="artist">{ trackInfo.artist }</span>
+        <span class="title" if={ trackInfo.artist }> - { trackInfo.artist }</span>
+      </div>
     </div>
     <audio id="audio"></audio>
   </div>
@@ -32,6 +36,7 @@
     self.station = 'rr'
     self.isPlaying = false
     self.audio.preload = false
+    self.trackInfo = {}
 
     setBitrate(e) {
       self.bitrate = e.item.val
@@ -60,13 +65,17 @@
         self.audio.pause()
       } else {
         self.audio.play()
+        self.checkTrackInfo()
       }
       self.isPlaying = !self.isPlaying
     }
 
     setSource() {
       self.audio.src = opts.uri + opts.stations[self.station].port[self.bitrate] + '/' + self.station + '_' + self.bitrate
-      if (self.isPlaying) self.audio.play()
+      if (self.isPlaying) {
+        self.audio.play()
+        self.checkTrackInfo()
+      }
       self.setActiveStation()
     }
 
@@ -77,6 +86,16 @@
 
     hideCover() {
       $('.cover').removeClass('active')      
+    }
+
+    checkTrackInfo() {
+      var url = 'http://www.radiorecord.ru/xml/' + self.station + '_online_v8.txt'
+      $.get(url, function(data) {
+        data = JSON.parse(data)
+        console.log(url, data)
+        if (self.trackInfo.title != data.title)
+          self.trackInfo = data
+      })
     }
 
     riot.route(self.router)

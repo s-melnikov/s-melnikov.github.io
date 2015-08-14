@@ -51,6 +51,14 @@
     $.each = function(cb) { this.forEach(cb) }
     $.addClass = function(c) { this.each(function(el) { el.classList.add(c) }) }
     $.removeClass = function(c) { this.each(function(el) { el.classList.remove(c) }) }
+    $.get = function(url, cb) {
+      var r = new XMLHttpRequest()
+      r.open('GET', url, true)
+      r.onload = function() {
+        if (r.status >= 200 && r.status < 400) cb && cb(r.response)
+      }
+      r.send()
+    }
   </script>
 </body>
 </html>
