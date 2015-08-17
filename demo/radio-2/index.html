@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<title>Radio Online</title>
+
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<input id="page-toggle-chk" type="checkbox" style="display: none;"/>
+<input id="window-toggle-chk" type="checkbox" style="display: none;"/>
+
+<label for="window-toggle-chk" class="start-radio-button">Start radio</label>
+
+<div class="window load-transition">
+  <div class="top-bar load-transition">
+    <label for="page-toggle-chk" class="left-action">
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
+    </label>
+    <div class="mid-text">
+      <div class="title page-front-title">Fm radio</div>
+      <div class="title page-saved-stations-title">All stations</div>
+    </div>
+    <label for="window-toggle-chk" class="right-action">
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
+    </label>
+  </div>
+  <div class="page page-front">
+    <div class="cover load-transition load-transition-delay-1">
+      <div class="glow load-transition load-transition-delay-2"></div>
+      <ul class="tool-buttons">
+        <li>Share</li>
+        <li>Save</li>
+      </ul>
+      <div class="current-station-text load-transition load-transition-delay-2">107.2</div>
+      <div class="current-station-name-bar load-transition load-transition-delay-2">
+        <div class="left-action fi-rewind"></div>
+        <div class="mid-text">NRJ radio</div>
+        <div class="right-action fi-fast-forward"></div>
+      </div>
+      <div class="sound-bars">
+        <div class="bar wave-1"></div>
+        <div class="bar wave-2"></div>
+        <div class="bar wave-3"></div>
+        <div class="bar wave-4"></div>
+        <div class="bar wave-5"></div>
+        <div class="bar wave-6"></div>
+        <div class="bar wave-7"></div>
+        <div class="bar wave-8"></div>
+        <div class="bar wave-9"></div>
+        <div class="bar wave-10"></div>
+        <div class="bar wave-1"></div>
+        <div class="bar wave-2"></div>
+        <div class="bar wave-3"></div>
+        <div class="bar wave-4"></div>
+        <div class="bar wave-5"></div>
+        <div class="bar wave-6"></div>
+        <div class="bar wave-7"></div>
+        <div class="bar wave-8"></div>
+        <div class="bar wave-9"></div>
+        <div class="bar wave-10"></div>
+        <div class="bar wave-1"></div>
+        <div class="bar wave-2"></div>
+        <div class="bar wave-3"></div>
+        <div class="bar wave-4"></div>
+        <div class="bar wave-5"></div>
+        <div class="bar wave-6"></div>
+        <div class="bar wave-7"></div>
+        <div class="bar wave-8"></div>
+        <div class="bar wave-9"></div>
+        <div class="bar wave-10"></div>
+        <div class="bar wave-1"></div>
+        <div class="bar wave-2"></div>
+        <div class="bar wave-3"></div>
+        <div class="bar wave-4"></div>
+        <div class="bar wave-5"></div>
+        <div class="bar wave-6"></div>
+        <div class="bar wave-7"></div>
+        <div class="bar wave-8"></div>
+        <div class="bar wave-9"></div>
+        <div class="bar wave-10"></div>
+        <div class="bar wave-1"></div>
+        <div class="bar wave-2"></div>
+        <div class="bar wave-3"></div>
+        <div class="bar wave-4"></div>
+        <div class="bar wave-5"></div>
+        <div class="bar wave-6"></div>
+        <div class="bar wave-7"></div>
+        <div class="bar wave-8"></div>
+        <div class="bar wave-9"></div>
+        <div class="bar wave-10"></div>
+      </div>
+    </div>
+    <div class="swipe-bar load-transition load-transition-delay-2">
+      <div class="range-ruler">
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="text">90</div>
+        <div class="point long"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="text">95</div>
+        <div class="point long dot"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="point dot"></div>
+        <div class="text long">100</div>
+        <div class="point long"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="point dot"></div>
+        <div class="text long">105</div>
+        <div class="point long"></div>
+        <div class="point"></div>
+        <div class="point dot"></div>
+        <div class="point"></div>
+        <div class="point"></div>
+        <div class="text long">110</div>
+        <div class="point long"></div>
+        <div class="point dot"></div>
+        <div class="point"></div>
+        <div class="mid-line"></div>
+      </div>
+      <input type="range" value="20" min="1" max="26" class="range"/>
+    </div>
+    <div class="volume-bar load-transition load-transition-delay-2">
+      <div class="left-icon fi-volume-none"></div>
+      <input type="range" value="80" class="range"/>
+    </div>
+  </div>
+  <div class="page page-saved-stations">
+    <menu class="station-list">
+      <ul>
+        <li><a class="link">Rix FM<span class="num">104.8</span></a></li>
+        <li class="active"><a class="link">NRJ radio
+          <div class="bar-bouncer">
+            <div class="bar bar1"></div>
+            <div class="bar bar2"></div>
+            <div class="bar bar3"></div>
+          </div><span class="num">107.2</span></a></li>
+        <li><a class="link">Motreal radio<span class="num">103.5</span></a></li>
+        <li> <a class="link">Soul music<span class="num">109.2</span></a></li>
+        <li> <a class="link">Rix FM<span class="num">105.9</span></a></li>
+        <li> <a class="link">Love radio<span class="num">96.3</span></a></li>
+      </ul>
+    </menu>
+  </div>
+</div>
+
+<script src="assets/js/scripts.js"></script>
