@@ -1,108 +1,208 @@
 <body>
 
-  <div class="container">
-    <div class="stations clearfix">
-      <div class="station station-{ key }" each={ key, val in opts.stations }>
-        <a href="#{ key }" onclick={ showCover }>
-          <span class="icon"></span>
-          <span>{ val.name }</span>
-        </a>
+  <input id="page-toggle-chk" type="checkbox" hidden/>
+
+  <div class="window">
+    <div class="top-bar">
+      <label for="page-toggle-chk" class="left-action">
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+      </label>
+      <div class="mid-text">
+        <div class="title page-front-title">Online Radio</div>
+        <div class="title page-saved-stations-title">All stations</div>
       </div>
+      <label for="window-toggle-chk" class="right-action">
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+      </label>
+    </div>
+    <div class="page page-front">
       <div class="cover">
-        <div class="picture"></div>
-        <div class="title" onclick={ hideCover }>Transmission</div>
+        <div class="img" style="background-image: url({ stationInfo.img })" if={ stationInfo.img }></div>
+        <ul class="tool-buttons">
+          <li>128 kbps</li>
+          <li>320 kbps</li>
+        </ul>
+        <div class="current-station-name-bar">
+          <div class="left-action fi-rewind"></div>
+          <div class="mid-text">{ stationInfo.name }</div>
+          <div class="right-action fi-fast-forward"></div>
+        </div>
+        <div class="sound-bars">
+          <div class="bar wave-1"></div>
+          <div class="bar wave-2"></div>
+          <div class="bar wave-3"></div>
+          <div class="bar wave-4"></div>
+          <div class="bar wave-5"></div>
+          <div class="bar wave-6"></div>
+          <div class="bar wave-7"></div>
+          <div class="bar wave-8"></div>
+          <div class="bar wave-9"></div>
+          <div class="bar wave-10"></div>
+          <div class="bar wave-1"></div>
+          <div class="bar wave-2"></div>
+          <div class="bar wave-3"></div>
+          <div class="bar wave-4"></div>
+          <div class="bar wave-5"></div>
+          <div class="bar wave-6"></div>
+          <div class="bar wave-7"></div>
+          <div class="bar wave-8"></div>
+          <div class="bar wave-9"></div>
+          <div class="bar wave-10"></div>
+          <div class="bar wave-1"></div>
+          <div class="bar wave-2"></div>
+          <div class="bar wave-3"></div>
+          <div class="bar wave-4"></div>
+          <div class="bar wave-5"></div>
+          <div class="bar wave-6"></div>
+          <div class="bar wave-7"></div>
+          <div class="bar wave-8"></div>
+          <div class="bar wave-9"></div>
+          <div class="bar wave-10"></div>
+          <div class="bar wave-1"></div>
+          <div class="bar wave-2"></div>
+          <div class="bar wave-3"></div>
+          <div class="bar wave-4"></div>
+          <div class="bar wave-5"></div>
+          <div class="bar wave-6"></div>
+          <div class="bar wave-7"></div>
+          <div class="bar wave-8"></div>
+          <div class="bar wave-9"></div>
+          <div class="bar wave-10"></div>
+          <div class="bar wave-1"></div>
+          <div class="bar wave-2"></div>
+          <div class="bar wave-3"></div>
+          <div class="bar wave-4"></div>
+          <div class="bar wave-5"></div>
+          <div class="bar wave-6"></div>
+          <div class="bar wave-7"></div>
+          <div class="bar wave-8"></div>
+          <div class="bar wave-9"></div>
+          <div class="bar wave-10"></div>
+        </div>
+      </div>
+      <div class="volume-bar">
+        <div class="left-icon icon-volume"></div>
+        <input id="volumeControl" type="range" class="range" oninput={ setVolume }/>
       </div>
     </div>
-    <div class="control clearfix">
-      <div id="play" onclick={ play }>
-        <span hide={ isPlaying } class="play"></span>
-        <span show={ isPlaying } class="pause"></span>
-      </div>
-      <ul class="bitrate">
-        <li each={ opts.rates } onclick={ setBitrate } class="bitrate-{ val }">{ name }</li>
-      </ul>
-      <div class="track-info">
-        <span class="artist">{ trackInfo.artist }</span>
-        <span class="title" if={ trackInfo.artist }> - { trackInfo.artist }</span>
-      </div>
+    <div class="page page-saved-stations">
+      <menu class="station-list">
+        <ul>
+          <li each={ opts.stations } class="station-{ code }">
+            <span class="link" onclick={ setStation }>
+              { name }              
+              <div class="bar-bouncer">
+                <div class="bar bar1"></div>
+                <div class="bar bar2"></div>
+                <div class="bar bar3"></div>
+              </div>
+            </span>
+          </li>
+        </ul>
+      </menu>
     </div>
-    <audio id="audio"></audio>
   </div>
 
+  <audio id="audio" onerror={ audioOnError }></audio>
+
   <script>
-    var self = this
 
-    self.bitrate = +localStorage.radio_plugin_bitrate || 320
-    self.station = 'rr'
-    self.isPlaying = false
-    self.audio.preload = false
-    self.trackInfo = {}
+    this.currentBitrate = +storage('bitrate') || 320
+    this.currentStation = storage('station') || 'tm'
+    this.volumeControl.value = (+storage('volume') || 0.5) * 100
+    this.audio.volume = this.volumeControl.value / 100
+    this.isPlaying = false
+    this.audio.preload = false
+    this.stationInfo = {}
+    //this.trackInfo = {}
 
-    setBitrate(e) {
-      self.bitrate = e.item.val
-      self.setSource()
-      self.setActiveBitrate()
-    }
-
-    setActiveBitrate() {
-      $('.bitrate li').removeClass('active')
-      $('.bitrate-' + self.bitrate).addClass('active')
-    }
-
-    setActiveStation() {
-      $('.station').removeClass('active')
-      $('.station-' + self.station).addClass('active')      
-    }
-
-    router(station) {
-      if (!station) return;
-      self.station = station
-      self.setSource()
-    }
-
-    play() {
-      if (self.isPlaying) {
-        self.audio.pause()
-      } else {
-        self.audio.play()
-        self.checkTrackInfo()
-      }
-      self.isPlaying = !self.isPlaying
+    init() {
+      this.setSource()
+      this.audio.play()    
     }
 
     setSource() {
-      self.audio.src = opts.uri + opts.stations[self.station].port[self.bitrate] + '/' + self.station + '_' + self.bitrate
-      if (self.isPlaying) {
-        self.audio.play()
-        self.checkTrackInfo()
+      var stationProps = find(opts.stations, 'code', this.currentStation)
+      this.audio.src = opts.url + stationProps.port[this.currentBitrate] + '/' + this.currentStation + '_' + this.currentBitrate
+      this.stationInfo = {
+        name: stationProps.name,
+        img: 'assets/img/' + this.currentStation + '.jpg'
       }
-      self.setActiveStation()
+      this.update()
+      // if (this.isPlaying) {
+      //   this.audio.play()
+      //   //self.checkTrackInfo()
+      // }
+      this.setActiveStation()
     }
 
-    showCover() {
-      $('.cover').addClass('active')
-      return true
+    setStation(e) {
+      if (e) {
+        this.currentStation = e.item.code     
+      }
+      this.setSource()
+      this.audio.play()
+      this['page-toggle-chk'].checked = false
+      storage('station', this.currentStation)
     }
 
-    hideCover() {
-      $('.cover').removeClass('active')      
+    // setBitrate(e) {
+    //   self.bitrate = e.item.val
+    //   self.setSource()
+    //   self.setActiveBitrate()
+    // }
+
+    // setActiveBitrate() {
+    //   $('.bitrate li').removeClass('active')
+    //   $('.bitrate-' + self.bitrate).addClass('active')
+    // }
+
+    setActiveStation() {
+      $('.station-list li').removeClass('active')
+      console.log('.station-list .station-' + this.currentStation)
+      $('.station-list .station-' + this.currentStation).addClass('active')      
     }
 
-    checkTrackInfo() {
-      var url = 'http://www.radiorecord.ru/xml/' + self.station + '_online_v8.txt'
-      $.get(url, function(data) {
-        data = JSON.parse(data)
-        console.log(url, data)
-        if (self.trackInfo.title != data.title)
-          self.trackInfo = data
-      })
+    function find(source, key, val) {
+      for (var i = 0; i < source.length; i++) {
+        if (source[i][key] == val) 
+          return source[i]
+      }
     }
 
-    riot.route(self.router)
+    function storage(key, value) {
+      var data = JSON.parse(localStorage[opts.appName] || '{}')
+      if (arguments.length === 1) {
+        return data[key]
+      }
+      data[key] = value
+      return localStorage[opts.appName] = JSON.stringify(data)
+    }
 
-    self.on('mount', function() {
-      riot.route.exec(self.router)
-      self.setActiveBitrate()
-    })
+    setVolume(e) {
+      self.audio.volume = e.target.value / 100;
+      storage('volume', self.audio.volume)
+    } 
+
+    // checkTrackInfo() {
+    //   var url = 'http://www.radiorecord.ru/xml/' + self.station + '_online_v8.txt'
+    //   $.get(url, function(data) {
+    //     data = JSON.parse(data)
+    //     console.log(url, data)
+    //     if (self.trackInfo.title != data.title)
+    //       self.trackInfo = data
+    //   })
+    // }
+
+    audioOnError(e) {
+      console.log(e)
+    }
+
+    this.on('mount', this.init.bind(this));    
+
   </script>
 </body>
