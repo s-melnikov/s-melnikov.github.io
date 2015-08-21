@@ -3,7 +3,7 @@
   <input id="page-toggle-chk" type="checkbox" hidden/>
 
   <div class="window">
-    <div class="top-bar">
+    <div class="top-bar">      
       <label for="page-toggle-chk" class="left-action">
         <div class="line line-1"></div>
         <div class="line line-2"></div>
@@ -13,11 +13,11 @@
         <div class="title page-front-title">Online Radio</div>
         <div class="title page-saved-stations-title">All stations</div>
       </div>
-      <label for="window-toggle-chk" class="right-action">
+      <span id="playButton" class="right-action" onclick={ togglePlay }>
         <div class="line line-1"></div>
         <div class="line line-2"></div>
         <div class="line line-3"></div>
-      </label>
+      </span>
     </div>
     <div class="page page-front">
       <div class="cover">
@@ -26,63 +26,18 @@
           <li>128 kbps</li>
           <li>320 kbps</li>
         </ul>
+        <div class="current-station-text"></div>
         <div class="current-station-name-bar">
           <div class="left-action fi-rewind"></div>
           <div class="mid-text">{ stationInfo.name }</div>
           <div class="right-action fi-fast-forward"></div>
         </div>
         <div class="sound-bars">
-          <div class="bar wave-1"></div>
-          <div class="bar wave-2"></div>
-          <div class="bar wave-3"></div>
-          <div class="bar wave-4"></div>
-          <div class="bar wave-5"></div>
-          <div class="bar wave-6"></div>
-          <div class="bar wave-7"></div>
-          <div class="bar wave-8"></div>
-          <div class="bar wave-9"></div>
-          <div class="bar wave-10"></div>
-          <div class="bar wave-1"></div>
-          <div class="bar wave-2"></div>
-          <div class="bar wave-3"></div>
-          <div class="bar wave-4"></div>
-          <div class="bar wave-5"></div>
-          <div class="bar wave-6"></div>
-          <div class="bar wave-7"></div>
-          <div class="bar wave-8"></div>
-          <div class="bar wave-9"></div>
-          <div class="bar wave-10"></div>
-          <div class="bar wave-1"></div>
-          <div class="bar wave-2"></div>
-          <div class="bar wave-3"></div>
-          <div class="bar wave-4"></div>
-          <div class="bar wave-5"></div>
-          <div class="bar wave-6"></div>
-          <div class="bar wave-7"></div>
-          <div class="bar wave-8"></div>
-          <div class="bar wave-9"></div>
-          <div class="bar wave-10"></div>
-          <div class="bar wave-1"></div>
-          <div class="bar wave-2"></div>
-          <div class="bar wave-3"></div>
-          <div class="bar wave-4"></div>
-          <div class="bar wave-5"></div>
-          <div class="bar wave-6"></div>
-          <div class="bar wave-7"></div>
-          <div class="bar wave-8"></div>
-          <div class="bar wave-9"></div>
-          <div class="bar wave-10"></div>
-          <div class="bar wave-1"></div>
-          <div class="bar wave-2"></div>
-          <div class="bar wave-3"></div>
-          <div class="bar wave-4"></div>
-          <div class="bar wave-5"></div>
-          <div class="bar wave-6"></div>
-          <div class="bar wave-7"></div>
-          <div class="bar wave-8"></div>
-          <div class="bar wave-9"></div>
-          <div class="bar wave-10"></div>
+          <div class="bar wave-{ Math.floor(Math.random() * 10 + 1) }" each={ new Array(50) }></div>
         </div>
+      </div>
+      <div class="swipe-bar load-transition load-transition-delay-2">
+        
       </div>
       <div class="volume-bar">
         <div class="left-icon icon-volume"></div>
@@ -107,7 +62,7 @@
     </div>
   </div>
 
-  <audio id="audio" onerror={ audioOnError }></audio>
+  <audio id="audio" onerror={ audioOnError } onabort={ audioOnAbort }></audio>
 
   <script>
 
@@ -118,25 +73,25 @@
     this.isPlaying = false
     this.audio.preload = false
     this.stationInfo = {}
-    //this.trackInfo = {}
 
     init() {
       this.setSource()
-      this.audio.play()    
+      setInterval(this.checkAudioState.bind(this), 1000)
     }
 
     setSource() {
       var stationProps = find(opts.stations, 'code', this.currentStation)
+      if (this.currentStation == this.stationInfo.code) return
       this.audio.src = opts.url + stationProps.port[this.currentBitrate] + '/' + this.currentStation + '_' + this.currentBitrate
       this.stationInfo = {
+        code: stationProps.code,
         name: stationProps.name,
         img: 'assets/img/' + this.currentStation + '.jpg'
       }
-      this.update()
-      // if (this.isPlaying) {
-      //   this.audio.play()
-      //   //self.checkTrackInfo()
-      // }
+      this.update()      
+      this.audio.play()
+      this.isPlaying = true      
+      this.playButton.classList.add('play')
       this.setActiveStation()
     }
 
@@ -145,9 +100,21 @@
         this.currentStation = e.item.code     
       }
       this.setSource()
-      this.audio.play()
       this['page-toggle-chk'].checked = false
       storage('station', this.currentStation)
+    }
+
+    togglePlay() {
+      if (this.isPlaying) {
+        this.audio.pause()
+        this.playButton.classList.remove('play')
+        this.isPlaying = false
+      } else {
+        this.audio.load()
+        this.audio.play()
+        this.playButton.classList.add('play')
+        this.isPlaying = true
+      }
     }
 
     // setBitrate(e) {
@@ -163,7 +130,6 @@
 
     setActiveStation() {
       $('.station-list li').removeClass('active')
-      console.log('.station-list .station-' + this.currentStation)
       $('.station-list .station-' + this.currentStation).addClass('active')      
     }
 
@@ -199,7 +165,19 @@
     // }
 
     audioOnError(e) {
-      console.log(e)
+      console.log('audio error')
+    }
+
+    audioOnAbort(e) {    
+      console.log('audio abort')
+    }
+
+    checkAudioState() { 
+      if (this.audio.networkState === this.audio.NETWORK_IDLE && this.isPlaying) {
+        console.log("reload audio")       
+        this.audio.load()
+        this.audio.play()
+      }
     }
 
     this.on('mount', this.init.bind(this));    
