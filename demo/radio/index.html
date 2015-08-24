@@ -11,55 +11,79 @@
 <body>
 
   <script src="assets/views/app.html" type="riot/tag"></script>
-  <script src="assets/js/riot+compiler.min.js"></script>
+  <script src="assets/js/riot+compiler.min.js"></script>  
   <script>
-    riot.compile(function() { 
-      riot.mount('*', {
-        appName: 'online-radio',
-        url: 'http://air.radiorecord.ru:',
-        rates: [
-          { name: '32 kbps', val: 'aac' },
-          { name: '128 kbps', val: '128' },
-          { name: '320 kbps', val: '320' }
-        ],
-        stations: [
-          { code: 'rr', port: { 'aac': 8100, '128': 8101, '320': 8101 }, name: 'Radio Record' },
-          { code: 'tm', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trancemission' },
-          { code: 'ps', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Pirate Station' },
-          { code: 'vip', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'VIP Mix' },
-          { code: 'teo', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Hardstyle' },
-          { code: 'dc', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Dancecore' },
-          { code: 'brks', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Breaks' },
-          { code: 'chil', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Chill-Out' },
-          { code: 'dub', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Dubstep' },
-          { code: 'sd90', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Super Disco 90' },
-          { code: 'club', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Club' },
-          { code: 'mdl', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Slow FM' },
-          { code: 'gop', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Gop FM' },
-          { code: 'pump', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Pump' },
-          { code: 'rus', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Russian' },
-          { code: 'deep', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Deep' },
-          { code: 'trap', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trap' },
-          { code: 'rock', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Rock' }
-        ]  
-      })
-    })
-    function $(q) {
-      var c = Array.prototype.slice.call(document.querySelectorAll(q))
-      for (var p in $) { if ($.hasOwnProperty(p)) c[p] = $[p] }
-      return c;
-    }
-    $.each = function(cb) { this.forEach(cb) }
-    $.addClass = function(c) { this.each(function(el) { el.classList.add(c) }) }
-    $.removeClass = function(c) { this.each(function(el) { el.classList.remove(c) }) }
-    $.get = function(url, cb) {
-      var r = new XMLHttpRequest()
-      r.open('GET', url, true)
-      r.onload = function() {
-        if (r.status >= 200 && r.status < 400) cb && cb(r.response)
+    (function(global) {
+      function _(q) {
+        var c = Array.prototype.slice.call(document.querySelectorAll(q))
+        for (var p in _) { if (_.hasOwnProperty(p)) c[p] = _[p] }
+        return c;
       }
-      r.send()
+      _.each = function(cb) { this.forEach(cb) }
+      _.addClass = function(c) { this.each(function(el) { el.classList.add(c) }) }
+      _.removeClass = function(c) { this.each(function(el) { el.classList.remove(c) }) }
+      _.get = function(url, cb) {
+        var r = new XMLHttpRequest()
+        r.open('GET', url, true)
+        r.onload = function() {
+          if (r.status >= 200 && r.status < 400) cb && cb(r.response)
+        }
+        r.send()
+      }
+      _.find = function(source, key, val) {
+        for (var i = 0; i < source.length; i++) {
+          if (source[i][key] == val) 
+            return source[i]
+        }
+      }
+      _.storage = function(name) {
+        return {
+          get: function(key) {
+            return JSON.parse(localStorage[name] || '{}')[key]
+          },
+          set: function(key, value) {
+            var data = JSON.parse(localStorage[name] || '{}')
+            data[key] = value
+            return localStorage[name ] = JSON.stringify(data)
+          }
+        }
+      }
+      global._ = _;
+    })(window);
+  </script>
+  <script>
+    var configs = {
+      appName: 'online-radio',
+      url: 'http://air.radiorecord.ru:',
+      rates: [
+        { name: '32 kbps', val: 'aac' },
+        { name: '128 kbps', val: '128' },
+        { name: '320 kbps', val: '320' }
+      ],
+      stations: [
+        { code: 'rr', port: { 'aac': 8100, '128': 8101, '320': 8101 }, name: 'Radio Record' },
+        { code: 'tm', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trancemission' },
+        { code: 'ps', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Pirate Station' },
+        { code: 'vip', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'VIP Mix' },
+        { code: 'teo', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Hardstyle' },
+        { code: 'dc', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Dancecore' },
+        { code: 'brks', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Breaks' },
+        { code: 'chil', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Chill-Out' },
+        { code: 'dub', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Dubstep' },
+        { code: 'sd90', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Super Disco 90' },
+        { code: 'club', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Club' },
+        { code: 'mdl', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Slow FM' },
+        { code: 'gop', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Gop FM' },
+        { code: 'pump', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Pump' },
+        { code: 'rus', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Russian' },
+        { code: 'deep', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Deep' },
+        { code: 'trap', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trap' },
+        { code: 'rock', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Rock' }
+      ]  
     }
+    riot.compile(function() { 
+      riot.mount('*', configs)
+    })        
   </script>
 </body>
 </html>

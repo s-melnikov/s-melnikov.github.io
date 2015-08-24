@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Lazy Load</title>
+  <style>
+    body {
+      padding: 15px;
+    }
+    img {
+      width: 320px;
+    }
+    img {
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+    img[data-src] {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <img data-src="http://monkeydrives.com/images/natural-scenery-2.jpg">
+  <img data-src="http://wallpapersshd.com/wp-content/uploads/2013/02/free-natural-wallpaper.jpg">
+  <img data-src="http://techusg.com/wp-content/uploads/2015/07/Forests-bridges-natural-scenery-hd-wallpaper-backgrounds-.jpg">
+
+  <script>
+    [].slice.apply(document.querySelectorAll('img[data-src]')).forEach(function(img) {
+      img.setAttribute('src', img.getAttribute('data-src'));
+      img.onload = function() {
+        img.removeAttribute('data-src');
+      };
+    });
+  </script>  
+</body>
+</html>

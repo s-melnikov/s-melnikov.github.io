@@ -1,6 +1,6 @@
 <body>
 
-  <input id="page-toggle-chk" type="checkbox" hidden/>
+  <input id="page-toggle-chk" type="checkbox" hidden>
 
   <div class="window">
     <div class="top-bar">      
@@ -22,15 +22,14 @@
     <div class="page page-front">
       <div class="cover">
         <div class="img" style="background-image: url({ stationInfo.img })" if={ stationInfo.img }></div>
-        <ul class="tool-buttons">
-          <li>128 kbps</li>
-          <li>320 kbps</li>
+        <ul class="tool-buttons bitrates">
+          <li class="bitrate-{ val }" each={ opts.rates } onclick={ setBitrate }>{ name }</li>
         </ul>
         <div class="current-station-text"></div>
         <div class="current-station-name-bar">
-          <div class="left-action fi-rewind"></div>
+          <div class="left-action icon-backward" onclick={ prevStation }></div>
           <div class="mid-text">{ stationInfo.name }</div>
-          <div class="right-action fi-fast-forward"></div>
+          <div class="right-action icon-forward" onclick={ nextStation }></div>
         </div>
         <div class="sound-bars">
           <div class="bar wave-{ Math.floor(Math.random() * 10 + 1) }" each={ new Array(50) }></div>
@@ -66,97 +65,99 @@
 
   <script>
 
-    this.currentBitrate = +storage('bitrate') || 320
-    this.currentStation = storage('station') || 'tm'
-    this.volumeControl.value = (+storage('volume') || 0.5) * 100
-    this.audio.volume = this.volumeControl.value / 100
-    this.isPlaying = false
-    this.audio.preload = false
-    this.stationInfo = {}
+    var self = this,
+      db = _.storage(opts.appName)
+
+    self.currentBitrate = +db.get('bitrate') || 320
+    self.currentStation = db.get('station') || 'tm'
+    self.volumeControl.value = (+db.get('volume') || 0.5) * 100
+    self.audio.volume = self.volumeControl.value / 100
+    self.isPlaying = false
+    self.audio.preload = false
+    self.stationInfo = {}
 
     init() {
-      this.setSource()
-      setInterval(this.checkAudioState.bind(this), 1000)
+      self.setSource()
+      self.setActiveBitrate()
+      setInterval(self.checkAudioState, 1000)
     }
 
     setSource() {
-      var stationProps = find(opts.stations, 'code', this.currentStation)
-      if (this.currentStation == this.stationInfo.code) return
-      this.audio.src = opts.url + stationProps.port[this.currentBitrate] + '/' + this.currentStation + '_' + this.currentBitrate
-      this.stationInfo = {
+      var stationProps = _.find(opts.stations, 'code', self.currentStation)
+      self.audio.src = opts.url + stationProps.port[self.currentBitrate] + '/' + self.currentStation + '_' + self.currentBitrate
+      self.stationInfo = {
         code: stationProps.code,
         name: stationProps.name,
-        img: 'assets/img/' + this.currentStation + '.jpg'
+        img: 'assets/img/' + self.currentStation + '.jpg'
       }
-      this.update()      
-      this.audio.play()
-      this.isPlaying = true      
-      this.playButton.classList.add('play')
-      this.setActiveStation()
+      self.update()      
+      self.audio.play()
+      self.isPlaying = true
+      _('.window').addClass('play')
+      self.setActiveStation()      
+      db.set('station', self.currentStation)
     }
 
     setStation(e) {
-      if (e) {
-        this.currentStation = e.item.code     
-      }
-      this.setSource()
-      this['page-toggle-chk'].checked = false
-      storage('station', this.currentStation)
+      if (e.item.code == self.currentStation) return
+      self.currentStation = e.item.code  
+      self.setSource()
+      self['page-toggle-chk'].checked = false
     }
 
     togglePlay() {
-      if (this.isPlaying) {
-        this.audio.pause()
-        this.playButton.classList.remove('play')
-        this.isPlaying = false
+      if (self.isPlaying) {
+        self.audio.pause()
+        _('.window').removeClass('play')
+        self.isPlaying = false
       } else {
-        this.audio.load()
-        this.audio.play()
-        this.playButton.classList.add('play')
-        this.isPlaying = true
+        self.audio.load()
+        self.audio.play()
+        _('.window').addClass('play')
+        self.isPlaying = true
       }
     }
 
-    // setBitrate(e) {
-    //   self.bitrate = e.item.val
-    //   self.setSource()
-    //   self.setActiveBitrate()
-    // }
+    prevStation() {
+      var i = self.currentStationIndex() - 1
+      if (i < 0) i = opts.stations.length - 1
+      self.currentStation = opts.stations[i].code
+      self.setSource()
+    }
 
-    // setActiveBitrate() {
-    //   $('.bitrate li').removeClass('active')
-    //   $('.bitrate-' + self.bitrate).addClass('active')
-    // }
+    nextStation() {
+      var i = self.currentStationIndex() + 1
+      if (i >= opts.stations.length) i = 0
+      self.currentStation = opts.stations[i].code
+      self.setSource()
+    }
+
+    setBitrate(e) {
+      if (e.item.val == self.currentBitrate) return
+      self.currentBitrate = e.item.val
+      self.setSource()
+      self.setActiveBitrate()
+      db.set('bitrate', self.currentBitrate)
+    }
+
+    setActiveBitrate() {
+      _('.bitrates li').removeClass('active')
+      _('.bitrate-' + self.currentBitrate).addClass('active')
+    }
 
     setActiveStation() {
-      $('.station-list li').removeClass('active')
-      $('.station-list .station-' + this.currentStation).addClass('active')      
-    }
-
-    function find(source, key, val) {
-      for (var i = 0; i < source.length; i++) {
-        if (source[i][key] == val) 
-          return source[i]
-      }
-    }
-
-    function storage(key, value) {
-      var data = JSON.parse(localStorage[opts.appName] || '{}')
-      if (arguments.length === 1) {
-        return data[key]
-      }
-      data[key] = value
-      return localStorage[opts.appName] = JSON.stringify(data)
+      _('.station-list li').removeClass('active')
+      _('.station-list .station-' + self.currentStation).addClass('active')      
     }
 
     setVolume(e) {
       self.audio.volume = e.target.value / 100;
-      storage('volume', self.audio.volume)
+      db.set('volume', self.audio.volume)
     } 
 
     // checkTrackInfo() {
     //   var url = 'http://www.radiorecord.ru/xml/' + self.station + '_online_v8.txt'
-    //   $.get(url, function(data) {
+    //   _.get(url, function(data) {
     //     data = JSON.parse(data)
     //     console.log(url, data)
     //     if (self.trackInfo.title != data.title)
@@ -173,14 +174,18 @@
     }
 
     checkAudioState() { 
-      if (this.audio.networkState === this.audio.NETWORK_IDLE && this.isPlaying) {
+      if (self.audio.networkState === self.audio.NETWORK_IDLE && self.isPlaying) {
         console.log("reload audio")       
-        this.audio.load()
-        this.audio.play()
+        self.audio.load()
+        self.audio.play()
       }
     }
 
-    this.on('mount', this.init.bind(this));    
+    currentStationIndex() {
+      return opts.stations.indexOf(_.find(opts.stations, 'code', self.currentStation))
+    }
+
+    self.on('mount', self.init);    
 
   </script>
 </body>
