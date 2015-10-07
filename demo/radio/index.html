@@ -44,9 +44,13 @@
           set: function(key, value) {
             var data = JSON.parse(localStorage[name] || '{}')
             data[key] = value
-            return localStorage[name ] = JSON.stringify(data)
+            return localStorage[name] = JSON.stringify(data)
           }
         }
+      }
+      _.log = function() {
+        console.log.apply(console, ['%c[%s]', 'font-size:10px;color:blue',
+          (new Date()).toLocaleString()].concat([].slice.call(arguments)))
       }
       global._ = _;
     })(window);
@@ -54,6 +58,8 @@
   <script>
     var configs = {
       appName: 'online-radio',
+      trackInfoUrl: 'http://www.radiorecord.ru/xml/%s%_online_v8.txt',
+      pingInterval: 30000,
       url: 'http://air.radiorecord.ru:',
       rates: [
         { name: '32 kbps', val: 'aac' },

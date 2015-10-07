@@ -19,13 +19,13 @@
 
     /* Test Case 1 */
 
-    var i = 0, iterations = 1000;
+    var i = 0, iterations = 10000;
 
     // Modifying in place
     var elem = $('#elem');
     console.time('In place');
 
-    for(i=0; i < iterations; i++){
+    for( i=0; i < iterations; i++) {
       elem.width(Math.round(100*Math.random()));
       elem.height(Math.round(100*Math.random()));
     }
@@ -35,13 +35,13 @@
 
     // Detaching first
     console.time('Detached');
-
-    elem.detach();
-    for(i=0; i < iterations; i++){
+    
+      elem.detach();
+    for (i = 0; i < iterations; i++) {
       elem.width(Math.round(100*Math.random()));
-      elem.height(Math.round(100*Math.random()));
-    }
-    elem.appendTo(parent);
+      elem.height(Math.round(100*Math.random()));    
+    }  
+      elem.appendTo(parent);
     
     console.timeEnd('Detached');
 

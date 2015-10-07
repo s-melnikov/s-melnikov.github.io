@@ -28,15 +28,18 @@
         <div class="current-station-text"></div>
         <div class="current-station-name-bar">
           <div class="left-action icon-backward" onclick={ prevStation }></div>
-          <div class="mid-text">{ stationInfo.name }</div>
+          <div class="mid-text stroke">{ stationInfo.name }</div>
           <div class="right-action icon-forward" onclick={ nextStation }></div>
         </div>
         <div class="sound-bars">
           <div class="bar wave-{ Math.floor(Math.random() * 10 + 1) }" each={ new Array(50) }></div>
         </div>
       </div>
-      <div class="swipe-bar load-transition load-transition-delay-2">
-        
+      <div class="track-info" onclick={ searchTrack }>
+        <div if={ trackInfo.artist } title="Искать в vk.com { trackInfo.artist } { trackInfo.title }">
+          <div class="artist">{ trackInfo.artist }</div>
+          <div class="title"><i>{ trackInfo.title }</i></div>
+        </div>        
       </div>
       <div class="volume-bar">
         <div class="left-icon icon-volume"></div>
@@ -66,15 +69,17 @@
   <script>
 
     var self = this,
-      db = _.storage(opts.appName)
+      db = _.storage(opts.appName),
+      checkTrackInfoTimeout
 
-    self.currentBitrate = +db.get('bitrate') || 320
-    self.currentStation = db.get('station') || 'tm'
-    self.volumeControl.value = (+db.get('volume') || 0.5) * 100
-    self.audio.volume = self.volumeControl.value / 100
-    self.isPlaying = false
-    self.audio.preload = false
-    self.stationInfo = {}
+    this.currentBitrate = +db.get('bitrate') || 320
+    this.currentStation = db.get('station') || 'tm'
+    this.volumeControl.value = (+db.get('volume') || 0.5) * 100
+    this.audio.volume = this.volumeControl.value / 100
+    this.isPlaying = false
+    this.audio.preload = false
+    this.stationInfo = {}
+    this.trackInfo = {}
 
     init() {
       self.setSource()
@@ -89,13 +94,14 @@
         code: stationProps.code,
         name: stationProps.name,
         img: 'assets/img/' + self.currentStation + '.jpg'
-      }
-      self.update()      
+      }      
       self.audio.play()
       self.isPlaying = true
       _('.window').addClass('play')
       self.setActiveStation()      
-      db.set('station', self.currentStation)
+      db.set('station', self.currentStation)      
+      self.update()
+      self.checkTrackInfo()
     }
 
     setStation(e) {
@@ -155,27 +161,37 @@
       db.set('volume', self.audio.volume)
     } 
 
-    // checkTrackInfo() {
-    //   var url = 'http://www.radiorecord.ru/xml/' + self.station + '_online_v8.txt'
-    //   _.get(url, function(data) {
-    //     data = JSON.parse(data)
-    //     console.log(url, data)
-    //     if (self.trackInfo.title != data.title)
-    //       self.trackInfo = data
-    //   })
-    // }
+    checkTrackInfo() {
+      var url = opts.trackInfoUrl.replace('%s%', self.currentStation)
+      _.get(url, function(response) {
+        try {          
+          response = JSON.parse(response)
+        } catch(e) {
+          _.log(e, url, response)
+        }
+        if (self.trackInfo.title != response.title) {
+          self.trackInfo = response
+          self.update()
+        }
+        if (checkTrackInfoTimeout) {
+          clearTimeout(checkTrackInfoTimeout)
+          checkTrackInfoTimeout = null
+        }
+        checkTrackInfoTimeout = setTimeout(self.checkTrackInfo, opts.pingInterval)
+      })
+    }
 
     audioOnError(e) {
-      console.log('audio error')
+      _.log('audio error')
     }
 
     audioOnAbort(e) {    
-      console.log('audio abort')
+      _.log('audio abort')
     }
 
     checkAudioState() { 
       if (self.audio.networkState === self.audio.NETWORK_IDLE && self.isPlaying) {
-        console.log("reload audio")       
+        _.log('reload audio')       
         self.audio.load()
         self.audio.play()
       }
@@ -185,7 +201,11 @@
       return opts.stations.indexOf(_.find(opts.stations, 'code', self.currentStation))
     }
 
-    self.on('mount', self.init);    
+    searchTrack() {
+      open('http://vk.com/audio?q=' + encodeURIComponent(self.trackInfo.artist + ' ' + self.trackInfo.title), '_blank')
+    }
+
+    this.on('mount', self.init);    
 
   </script>
 </body>

@@ -27,7 +27,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: #FFF;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.1);
   opacity: 1;
-  height: 470px;
+  height: 450px;
 }
 .top-bar {
   height: 70px;
@@ -133,7 +133,7 @@ input[type="range"]::-webkit-slider-thumb {
   top: 70px;
   left: 0;
   right: 0;
-  height: 400px;
+  height: 380px;
 }
 .page-front {
   z-index: 1;
@@ -145,6 +145,7 @@ input[type="range"]::-webkit-slider-thumb {
   position: relative;
   height: 260px;
   opacity: 1;
+  overflow: hidden;
 }
 .page-front .cover .img {
   position: absolute;
@@ -154,6 +155,13 @@ input[type="range"]::-webkit-slider-thumb {
   top: 0;
   background: center no-repeat;
   background-size: cover;
+}
+.page-front .cover .img img {
+  position: relative;
+  width: 100%;
+  display: block;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 .page-front .tool-buttons {
   position: absolute;
@@ -331,11 +339,15 @@ input[type="range"]::-webkit-slider-thumb {
     height: 1px;
   }
 }
-.page.page-front .swipe-bar {
+.track-info {
   position: relative;
   background: linear-gradient(to bottom, #381026, #462e48);
-  height: 70px;
-  overflow: hidden;
+  height: 30px;
+  text-align: center;
+  color: #eeeeee;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
 }
 .volume-bar {
   position: relative;
@@ -570,7 +582,7 @@ input[type="range"]::-webkit-slider-thumb {
   left: 50%;
   top: 50%;
   border-style: solid;
-  border-color: transparent #888888;
+  border-color: transparent #ffffff;
   border-width: 7px 14px 7px 0;
   margin-left: -13px;
   margin-top: -7px;
@@ -589,6 +601,11 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .bitrates li.active {
   transform: scale(1.1);
+}
+.stroke {
+  text-shadow: 
+    1px 1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000,
+    1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000;
 }
 @-webkit-keyframes wave1 {
   0% {
