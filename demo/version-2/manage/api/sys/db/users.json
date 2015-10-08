@@ -1,0 +1,22 @@
+{
+    "settings": {
+        "keys": [
+            "id",
+            "login",
+            "hash",
+            "name"
+        ],
+        "auto_increment": "id",
+        "default_values": [],
+        "create": "2015-06-03 11:03:57",
+        "last_increment": 1
+    },
+    "rows": [
+        {
+            "login": "admin",
+            "hash": "28c6ffbfb98024a6661016efe4b98fa799acd899",
+            "name": "Sergey",
+            "id": 1
+        }
+    ]
+}
