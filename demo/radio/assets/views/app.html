@@ -32,7 +32,7 @@
           <div class="right-action icon-forward" onclick={ nextStation }></div>
         </div>
         <div class="sound-bars">
-          <div class="bar wave-{ Math.floor(Math.random() * 10 + 1) }" each={ new Array(50) }></div>
+          <div class="bar wave-{ val }" each={ val in fakeArray }></div>
         </div>
       </div>
       <div class="track-info" onclick={ searchTrack }>
@@ -80,6 +80,7 @@
     this.audio.preload = false
     this.stationInfo = {}
     this.trackInfo = {}
+    this.fakeArray = [];
 
     init() {
       self.setSource()
@@ -102,6 +103,7 @@
       db.set('station', self.currentStation)      
       self.update()
       self.checkTrackInfo()
+      self.updateFakeArray();
     }
 
     setStation(e) {
@@ -203,6 +205,14 @@
 
     searchTrack() {
       open('http://vk.com/audio?q=' + encodeURIComponent(self.trackInfo.artist + ' ' + self.trackInfo.title), '_blank')
+    }
+
+    updateFakeArray() {
+      var i = 50;
+      self.fakeArray = [];      
+      while (i--) {
+        self.fakeArray.push(Math.floor(Math.random() * 10 + 1));
+      }
     }
 
     this.on('mount', self.init);    
