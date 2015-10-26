@@ -90,7 +90,9 @@
 
     setSource() {
       var stationProps = _.find(opts.stations, 'code', self.currentStation)
-      self.audio.src = opts.url + stationProps.port[self.currentBitrate] + '/' + self.currentStation + '_' + self.currentBitrate
+      var src = opts.url + stationProps.port[self.currentBitrate] + '/' + self.currentStation + '_' + self.currentBitrate
+      self.audio.src = src
+      _.log('Set new source:', src);
       self.stationInfo = {
         code: stationProps.code,
         name: stationProps.name,

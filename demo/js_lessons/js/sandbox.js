@@ -84,7 +84,7 @@ Sandbox.modules = {};
 Sandbox.modules.dom = function (box) {
   box.getElement = function () {};
   box.getStyle = function () {};
-  box.foo = “bar”;
+  box.foo = "bar";
 };
 
 Sandbox.modules.event = function (box) {
