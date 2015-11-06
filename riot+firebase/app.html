@@ -1,0 +1,44 @@
+<container>
+  <aside class="pure-u-5-24">
+    <span class="pure-menu-heading">RiotFireCRM</span>
+    <ul class="pure-menu-list">
+      <li class="pure-menu-item">
+        <a href="#users" class="pure-menu-link">Users</a>
+      </li>
+      <li class="pure-menu-item">
+        <a href="#companies" class="pure-menu-link">Companies</a>
+      </li>
+    </ul>
+  </aside>
+  <content class="pure-u-19-24"></content>
+  <script>
+    riot.route(function(name) {
+      if (!name) {        
+        riot.route(name = 'users')
+      }
+      if (this.view) {
+        this.view.unmount(true)
+      }
+      this.view = riot.mount('content', name, { data: opts[name] })[0]
+    }.bind(this))
+
+    this.on('mount', function() {
+      riot.route.start()
+      riot.route.exec()
+    })
+  </script>
+</container>
+
+<users>
+  <header>Users</header>
+  <list data={ opts.data }></list>
+</users>
+
+<companies>  
+  <header>Companies</header>
+  <list></list>
+</companies>
+
+<list>
+  <item each={ opts.data }>{ id }</item>
+</list>

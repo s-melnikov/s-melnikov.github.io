@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FireBase</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic-ext">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <container class="pure-g"></container>
+    
+  <script type="riot/tag" src="app.html"></script>
+  <script src='https://cdn.jsdelivr.net/g/riot@2.3.0(riot.min.js+compiler.min.js)'></script>
+  <script>
+    riot.compile(function() {
+      var tags = riot.mount('*', {
+        users: [
+          { id: 1, name: "UserName", tel: "123456789", company: 1},
+          { id: 2, name: "UserName", tel: "123456789", company: 1},
+          { id: 3, name: "UserName", tel: "123456789", company: 1},
+          { id: 4, name: "UserName", tel: "123456789", company: 1},
+          { id: 5, name: "UserName", tel: "123456789", company: 1}
+        ],
+        companies: [
+          { id: 1, name: "CompanyName", adress: "Company Adress, 012345" },
+          { id: 2, name: "CompanyName", adress: "Company Adress, 012345" },
+          { id: 3, name: "CompanyName", adress: "Company Adress, 012345" }
+        ]
+      })      
+    })
+  </script>
+  <!--
+  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  <script>  
+  //var ref = new Firebase('https://mlnkv-test.firebaseio.com');
+  </script>
+  -->
+</body>
+</html>
