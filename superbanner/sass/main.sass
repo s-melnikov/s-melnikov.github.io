@@ -1,0 +1,356 @@
+@import "bourbon/bourbon"
+
+$main_color: #cd3e2f
+$headers_color: #f6f0f0
+$blue: #5580cd
+$red: #cd3e2f
+$bg_wraper: #252525
+
+*::-webkit-input-placeholder
+	color: #666
+	opacity: 1
+
+*:-moz-placeholder
+	color: #666
+	opacity: 1
+
+*::-moz-placeholder
+	color: #666
+	opacity: 1
+
+*:-ms-input-placeholder
+	color: #666
+	opacity: 1
+
+body input:focus:required:invalid,
+body textarea:focus:required:invalid
+	color: #666
+body input:required:valid,
+body textarea:required:valid
+	color: #666
+
+html.js .loader
+	background: none repeat scroll 0 0 #ffffff
+	bottom: 0
+	height: 100%
+	
+	left: 0
+	position: fixed
+	right: 0
+	top: 0
+	width: 100%
+	z-index: 9999
+	.loader_inner
+		background-image: url("../img/preloader.gif")
+		background-size: cover
+		background-repeat: no-repeat
+		background-position: center center
+		background-color: #fff
+		height: 60px
+		width: 60px
+		margin-top: -30px
+		margin-left: -30px
+		left: 50%
+		top: 50%
+		position: absolute
+
+body
+	font-size: 18px
+	min-width: 320px
+	position: relative
+	line-height: em(22px)
+	font-family: "Open Sans", $helvetica
+	font-weight: 400
+	overflow: hidden
+	color: #fff
+	background-color: $bg_wraper
+.hidden
+	display: none
+
+.wraper
+	margin-left: 470px
+	position: relative
+	width: 100%
+	height: 100vh
+
+a, a:hover, a:focus, a:active
+	color: #fff
+	font-family: "Open Sans Condensed", $helvetica
+	font-weight: 300
+	text-decoration: none
+	text-transform: uppercase
+		
+.headers
+	font-family: "Open Sans" $helvetica
+	text-transform: uppercase
+	font-weight: 800
+	color: $headers_color
+
+.before
+	content: " "
+	top: 0
+	position: absolute
+
+.ulmnu
+	list-style-type: none
+	margin: 0
+	padding: 0
+
+.logo
+	position: fixed
+	left: -3px
+	top: 18px
+	z-index: 1
+	width: 780px
+	img
+		width: 100%
+
+h1, h2, h3, h4, h5, h6
+	@extend .headers
+
+h1
+	font-size: em(76px)
+	margin: 36px 0
+	&+span
+		font-family: "Open Sans" $helvetica
+		font-weight: 400
+		font-size: em(20px)
+		text-transform: uppercase
+
+h2
+	font-size: em(52px)
+	color: #252525
+	margin-bottom: 8px
+h3
+	font-size: em(36px)
+	color: $blue
+	margin-top: 10px 
+	
+// Header //	
+header
+	width: 1020px
+	background-color: transparent
+	padding: 23px 17px 50px
+	text-align: center
+	&::before, &::after
+		@extend .before
+		border-width: 97px 80px
+		border-style: solid
+	&::before
+		left: 0
+		border-color: $bg_wraper transparent transparent $bg_wraper
+	&::after
+		left: 860px
+		border-color:  transparent $bg_wraper $bg_wraper transparent
+// END Header //
+
+// Menu Fixed //
+.main-mnu
+	position: fixed
+	overflow: hidden
+	width: 300px
+	z-index: 1
+	bottom: 90px
+	left: 360px
+	font-size: em(21px)
+	ul
+		@extend .ulmnu
+	li
+		text-align: left
+		margin-top: 10px
+	i
+		display: inline-block
+		position: relative
+		z-index: 1
+		width: 110px
+		height: 90px
+		vertical-align: bottom
+		background: url("../img/icon_menu.png") -2px -3px $bg_wraper no-repeat
+		
+	i.icon-gallery
+		background-position: 0 -90px
+	i.icon-price
+		background-position: 1px -176px
+	i.icon-connect
+		background-position: 0 -264px
+	a
+		line-height: 3.75
+	span
+		position: absolute
+		left: -28px
+		padding: 0 30px
+		background-color: $main_color
+		display: inline-block
+		transition: left 0.5s
+	
+	li:nth-child(2) span
+		left: -69px
+	li:nth-child(3) span
+		left: -47px
+	li:nth-child(4) span
+		left: -49px
+
+	a:hover, li:nth-child(2) a:hover, li:nth-child(3) a:hover,	li:nth-child(4) a:hover
+		span
+			left: 110px
+
+/* END Menu fixed */ 
+
+section
+	max-width: 1330px
+	height: 80vh
+	text-align: center
+	position: relative
+	.text
+		padding: 40px 160px
+	.btn
+		position: absolute
+		bottom: 136px
+		left: 220px
+		font-size: em(30px)
+		background-color: $main_color
+		line-height: 3.9
+		padding: 0 47px
+		
+/* About section */
+.about
+	header
+		background-color: $main_color
+	.text
+		position: absolute
+		bottom: 115px
+		padding: 0 160px
+
+/* Price section */
+.price
+	color: $bg_wraper
+	section
+		padding: 8px 0 0 90px
+		background-color: #fff
+		line-height: 1.1
+	.description
+		margin-top: 30px
+		margin-left: 27px
+		text-align: left
+		a
+			font-family: "Open Sans" $helvetica
+			display: block
+			height: 90px
+	.inner
+		font-size: em(30px)
+		color: #fff
+		font-weight: 800
+		line-height: 2.65
+		i
+			display: inline-block
+			position: relative
+			text-align: center
+			width: 90px
+			height: 90px
+			margin-right: 2px
+			font-style: inherit
+		span
+			display: inline-block
+			position: relative
+			overflow: hidden
+			width: 0
+			z-index: 1
+			text-align: center
+			vertical-align: top
+			transition: width 0.5s
+	a:hover .inner span
+		width: 350px
+	.inner+span
+		display: block
+		position: relative
+		top: -62px
+		margin-left: 57px
+		color: $bg_wraper
+		text-align: center
+		text-transform: none
+		font-size: em(13px)
+		font-weight: 400
+					
+	.blue
+		i, span
+			background-color: $blue
+	.red 
+		i, span
+			background-color: $red		
+	header
+		background-color:	#f8e778
+	h1
+		color: $bg_wraper
+	.text
+		padding: 6px 0
+	p
+		font-size: em(13px)
+			
+/* Gallery section */
+.gallery
+	header
+		background-color:	$blue
+	section
+		max-width: 1200px
+	.gallery-item
+		padding: 0
+		img
+			width: 100%
+
+/* Connekt section */
+.connect
+	color: $bg_wraper
+	header, section
+		background-color: #fff
+	section
+		padding: 95px 0 0 85px
+		.data
+			font-size: 20px
+			text-transform: uppercase
+			width: 330px
+			margin: 0 auto
+			color: #fff
+			line-height: 4.4
+		i
+			display: block
+			height: 100px
+		.blue
+			i
+				background: url("../img/icon_skype.png") center no-repeat
+			.data
+				background-color: $blue
+		.red
+			i
+				background: url("../img/icon_mail.png") center no-repeat
+			.data
+				background-color: $red
+			h3
+				color: $red
+	h1
+		color: $bg_wraper
+	form
+		margin-top: 96px 
+		padding: 0 33px
+		label, input, textarea, button
+			display: block
+			width: 100%
+			border: none
+			font-size: 20px
+			text-transform: uppercase
+			resize: none
+			text-indent: 12px
+			text-align: center
+		input:focus, textarea:focus
+			outline: 0
+
+		label
+			border-bottom: 1px solid $bg_wraper
+			margin-bottom: 16px
+			padding-top: 32px
+		button
+			background-color: $bg_wraper
+			color: #fff
+			line-height: 4.4
+
+
+
