@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LiveCodding</title>
+  <style>  
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #editor, #result {
+      box-sizing: border-box;
+      position: fixed;
+      width: 50%;
+      height: 100%;
+      top: 0;
+      border: 1px solid #dcdcdc;
+    }
+    #result {
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor"></div>
+  <iframe id="result"></iframe>  
+<script type="text/html" id="default-template">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    * {
+      box-sizing: border-box;
+    } 
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <p>Hello World!</p>
+  <script>
+    console.log("App start")
+  <\/script>
+</body>
+</html>
+</script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+  <script>
+    var editor = ace.edit(document.querySelector('#editor'))
+    var doc = editor.getSession()
+
+    editor.setTheme('ace/theme/monokai')
+    doc.setMode('ace/mode/html')
+    doc.setTabSize(2)
+    editor.session.setUseWorker(false)
+    doc.setValue(document.querySelector('#default-template').innerText)
+  </script>
+</body>
+</html>
