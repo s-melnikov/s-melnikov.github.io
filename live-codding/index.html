@@ -23,41 +23,62 @@
 </head>
 <body>
   <div id="editor"></div>
-  <iframe id="result"></iframe>  
-<script type="text/html" id="default-template">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-  <style>
-    * {
-      box-sizing: border-box;
-    } 
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-</head>
-<body>
-  <p>Hello World!</p>
-  <script>
-    console.log("App start")
-  <\/script>
-</body>
-</html>
-</script>
+  <iframe id="result"></iframe>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
   <script>
-    var editor = ace.edit(document.querySelector('#editor'))
-    var doc = editor.getSession()
+    var 
+      editor = ace.edit(document.querySelector('#editor')),
+      doc = editor.getSession(),
+      result = document.querySelector('#result'),
+      fbref = new Firebase('https://mlnkv-live-editor.firebaseio.com'),
+      recordref = null,
+      recordkey = location.hash.slice(1) || null
 
     editor.setTheme('ace/theme/monokai')
     doc.setMode('ace/mode/html')
     doc.setTabSize(2)
     editor.session.setUseWorker(false)
-    doc.setValue(document.querySelector('#default-template').innerText)
+    doc.on('change', debounce(function(e) { 
+      var value = doc.getValue()
+      result.contentWindow.document.open()
+      result.contentWindow.document.write(value)
+      result.contentWindow.document.close()
+      if (!recordref) {
+        recordref = fbref.push({ data: value })
+        location.hash = recordref.key()
+      } else {
+        recordref.update({ data: value })
+      }
+    }, 1000))
+
+    get('default.html', function(r) {
+      doc.setValue(r)
+    })
+
+    function get(url, cb) {
+      var r = new XMLHttpRequest()
+      r.open('GET', url, true)
+      r.onreadystatechange  = function() {
+        if (r.status == 200) cb(r.response)
+      }
+      r.send()
+    }
+
+    function debounce(func, wait, immediate) {
+      var timeout
+      return function() {
+        var context = this, args = arguments,
+        later = function() {
+          timeout = null
+          if (!immediate) func.apply(context, args)
+        },
+        callNow = immediate && !timeout
+        clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
+        if (callNow) func.apply(context, args)
+      };
+    };
   </script>
 </body>
 </html>
