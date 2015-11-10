@@ -8,6 +8,9 @@
       margin: 0;
       padding: 0;
     }
+    #editor {
+      font: 12px/1.2 Consolas, Monaco, Menlo, 'Ubuntu Mono', monospace;
+    }
     #editor, #result {
       box-sizing: border-box;
       position: fixed;
@@ -39,22 +42,33 @@
     doc.setMode('ace/mode/html')
     doc.setTabSize(2)
     editor.session.setUseWorker(false)
+
+    if (recordkey) {
+      recordref = fbref.child(recordkey)
+      recordref.once('value', function(snap) {
+        doc.setValue(snap.val().data)
+      })
+    } else {
+      recordref = fbref.push()
+      location.hash = recordref.key()      
+      get('default.html', function(r) {
+        doc.setValue(r)
+      })
+    }
+
+    recordref.on('child_changed', function(snap) {
+      if (doc.getValue() !== snap.val()) {
+        doc.setValue(snap.val())
+      }
+    })
+
     doc.on('change', debounce(function(e) { 
       var value = doc.getValue()
       result.contentWindow.document.open()
       result.contentWindow.document.write(value)
       result.contentWindow.document.close()
-      if (!recordref) {
-        recordref = fbref.push({ data: value })
-        location.hash = recordref.key()
-      } else {
-        recordref.update({ data: value })
-      }
-    }, 1000))
-
-    get('default.html', function(r) {
-      doc.setValue(r)
-    })
+      recordref.update({ data: value })
+    }, 500))    
 
     function get(url, cb) {
       var r = new XMLHttpRequest()
