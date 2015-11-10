@@ -2,13 +2,6 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-container,
-aside,
-header,
-itemslist,
-content {
-  display: block;
-}
 body {
   margin: 0;
   padding: 0;
@@ -23,7 +16,8 @@ body {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-container {
+app {  
+  display: block;
   position: relative;
   background-color: rgb(255, 255, 255);
   width: 720px;
@@ -33,19 +27,40 @@ container {
   border: 1px solid #dcdcdc;
   min-height: 360px;
 }
-aside {
+.sidebar {
   background-color: rgb(245, 245, 245);
   color: #fff;
   float: left;
   border-right: 1px solid #dcdcdc;
 }
-aside .pure-menu-item {
+.sidebar .pure-menu-item {
   border-top: 1px solid #ffffff;
   border-bottom: 1px solid #dcdcdc;
 }
-header {
+.header {
   border-bottom: 1px solid #dcdcdc;
   padding: 10px;
   font-weight: bold;
   color: #777;
+}
+.list {
+  border-right: 1px solid #dcdcdc;
+  height: 320px;
+}
+.list .item {
+  border-bottom: 1px solid #dcdcdc;
+  padding: 9px;
+  font-size: 92%;
+  height: 34px;
+  cursor: pointer;
+}
+.list .item:hover {
+  background-color: #f0f0f0;
+}
+.list .item:active {
+  background-color: #E5F4FF;
+  border-color: #00adff;
+}
+info {
+  display: block;
 }

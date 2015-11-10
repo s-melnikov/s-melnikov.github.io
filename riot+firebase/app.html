@@ -1,5 +1,5 @@
-<container>
-  <aside class="pure-u-5-24">
+<app>
+  <div class="sidebar pure-u-5-24">
     <span class="pure-menu-heading">RiotFireCRM</span>
     <ul class="pure-menu-list">
       <li class="pure-menu-item">
@@ -9,8 +9,8 @@
         <a href="#companies" class="pure-menu-link">Companies</a>
       </li>
     </ul>
-  </aside>
-  <content class="pure-u-19-24"></content>
+  </div>
+  <div id="content" class="pure-u-19-24"></div>
   <script>
     riot.route(function(name) {
       if (!name) {        
@@ -19,7 +19,7 @@
       if (this.view) {
         this.view.unmount(true)
       }
-      this.view = riot.mount('content', name, { data: opts[name] })[0]
+      this.view = riot.mount('#content', name, { data: opts[name] })[0]
     }.bind(this))
 
     this.on('mount', function() {
@@ -27,18 +27,33 @@
       riot.route.exec()
     })
   </script>
-</container>
+</app>
 
 <users>
-  <header>Users</header>
-  <list data={ opts.data }></list>
+  <div class="header">Users</div>
+  <div class="row">    
+    <list class="list pure-u-8-24" data={ opts.data }></list>
+    <info class="ure-u-16-24"></info>
+  </div>
 </users>
 
 <companies>  
-  <header>Companies</header>
-  <list></list>
+  <div class="header">Companies</div>  
+  <div class="row">    
+    <list class="list pure-u-8-24" data={ opts.data }></list>
+    <info class="ure-u-16-24"></info>
+  </div>
 </companies>
 
 <list>
-  <item each={ opts.data }>{ id }</item>
+  <div onclick={ edit } class="item" each={ opts.data }>{ name }</div>
+  <script>
+    edit() {
+
+    }
+  </script>
 </list>
+
+<info>
+  
+</info>
