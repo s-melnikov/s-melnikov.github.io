@@ -56,9 +56,11 @@
       })
     }
 
-    recordref.on('child_changed', function(snap) {
+    recordref.on('child_changed', function(snap) {      
       if (doc.getValue() !== snap.val()) {
+        var cursor = doc.selection.getCursor()
         doc.setValue(snap.val())
+        doc.selection.moveCursorToPosition(cursor)
       }
     })
 
