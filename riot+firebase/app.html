@@ -10,16 +10,18 @@
       </li>
     </ul>
   </div>
-  <div id="content" class="pure-u-19-24"></div>
+  <div class="pure-u-19-24">
+    <div class="row">    
+      <list class="list pure-u-8-24" data={ list }></list>
+      <info class="ure-u-16-24" data={ item }></info>
+    </div>
+  </div>
   <script>
     riot.route(function(name) {
-      if (!name) {        
-        riot.route(name = 'users')
+      if (!name) {
+        riot.route('user')
       }
-      if (this.view) {
-        this.view.unmount(true)
-      }
-      this.view = riot.mount('#content', name, { data: opts[name] })[0]
+      name == name || 'users'
     }.bind(this))
 
     this.on('mount', function() {
@@ -28,32 +30,3 @@
     })
   </script>
 </app>
-
-<users>
-  <div class="header">Users</div>
-  <div class="row">    
-    <list class="list pure-u-8-24" data={ opts.data }></list>
-    <info class="ure-u-16-24"></info>
-  </div>
-</users>
-
-<companies>  
-  <div class="header">Companies</div>  
-  <div class="row">    
-    <list class="list pure-u-8-24" data={ opts.data }></list>
-    <info class="ure-u-16-24"></info>
-  </div>
-</companies>
-
-<list>
-  <div onclick={ edit } class="item" each={ opts.data }>{ name }</div>
-  <script>
-    edit() {
-
-    }
-  </script>
-</list>
-
-<info>
-  
-</info>

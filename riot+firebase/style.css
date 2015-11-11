@@ -57,9 +57,9 @@ app {
 .list .item:hover {
   background-color: #f0f0f0;
 }
-.list .item:active {
+.list .item.active {
   background-color: #E5F4FF;
-  border-color: #00adff;
+  border-right: 3px solid #00adff;
 }
 info {
   display: block;
