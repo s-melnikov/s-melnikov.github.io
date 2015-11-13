@@ -130,9 +130,9 @@ Complex.prototype.equals = function(that){
   return that != null && that.constructor === Complex && this.r === that.r && this.i === that.i;
 };
 
-Complex.ZERO = new Complex(0,0);
-Complex.ONE = new Complex(1,0);
-Complex.I = new Complex(0,1);
+Complex.ZERO = new Complex(0, 0);
+Complex.ONE = new Complex(1, 0);
+Complex.I = new Complex(0, 1);
 
 Complex.parse = function(s){
   try {
@@ -291,9 +291,9 @@ Card.prototype.compareTo = function(that) {
   return 0;
 };
 
-Card.orderByRank = function(a, b){ return a.compareTo(b); };
+Card.orderByRank = function(a, b) { return a.compareTo(b); };
 
-Card.orderBySuit = function(a, b){
+Card.orderBySuit = function(a, b) {
   if (a.suit < b.suit) return -1;
   if (a.suit > b.suit) return 1;
   if (a.rank < b.rank) return -1;
@@ -301,7 +301,7 @@ Card.orderBySuit = function(a, b){
   return 0;
 };
 
-function Deck(){
+function Deck() {
   var cards = this.cards = [];
   Card.Suit.foreach(function(s){
     Card.Rank.foreach(function(r){
@@ -332,7 +332,7 @@ var hand = deck.deal(13).sort(Card.orderBySuit);
 */
 
 extend(Set.prototype, {
-  toString: function(){
+  toString: function() {
     var s = "{", i = 0;
     this.foreach(function(v){ s += ((i++ > 0) ? ", ": "") + v; });
     return s + "}";

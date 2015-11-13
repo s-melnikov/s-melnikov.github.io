@@ -89,7 +89,7 @@ function keys(o) {
   return result;
 }
 
-
+/*
 _.extend = function(obj) {
   
   each(slice.call(arguments, 1), function(source) {
@@ -101,3 +101,4 @@ _.extend = function(obj) {
   });
   return obj;
 };
+*/

@@ -34,12 +34,17 @@
   <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
   <script>
     var 
+      DEBOUNCE_TIME = 500,
       editor = ace.edit(document.querySelector('#editor')),
       doc = editor.getSession(),
       result = document.querySelector('#result'),
       fbref = new Firebase('https://mlnkv-live-editor.firebaseio.com'),
       recordref = null,
-      recordkey = location.hash.slice(1) || null
+      recordkey = location.hash.slice(1) || null,
+      client = localStorage.fiddle_client;
+
+    if (!client)
+      client = localStorage.fiddle_client = randomString(16)
 
     editor.setTheme('ace/theme/monokai')
     doc.setMode('ace/mode/html')
@@ -59,8 +64,9 @@
       })
     }
 
-    recordref.on('child_changed', function(snap) {      
-      if (doc.getValue() !== snap.val()) {
+    recordref.on('child_changed', function(snap) {
+      var value = snap.val()
+      if (value.client != client) {        
         var cursor = doc.selection.getCursor()
         doc.setValue(snap.val())
         doc.selection.moveCursorToPosition(cursor)
@@ -72,8 +78,12 @@
       result.contentWindow.document.open()
       result.contentWindow.document.write(value)
       result.contentWindow.document.close()
-      recordref.update({ data: value })
-    }, 500))    
+      recordref.update({ 
+        client: client, 
+        data: value,
+        time: Date.now()
+      })
+    }, DEBOUNCE_TIME))    
 
     function get(url, cb) {
       var r = new XMLHttpRequest()
@@ -96,8 +106,14 @@
         clearTimeout(timeout)
         timeout = setTimeout(later, wait)
         if (callNow) func.apply(context, args)
-      };
-    };
+      }
+    }
+
+    function randomString(length) {
+      var text = '', possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));      
+      return text;
+    }
   </script>
 </body>
 </html>
