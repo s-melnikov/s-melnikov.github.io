@@ -41,10 +41,8 @@
       fbref = new Firebase('https://mlnkv-live-editor.firebaseio.com'),
       recordref = null,
       recordkey = location.hash.slice(1) || null,
-      client = localStorage.fiddle_client;
-
-    if (!client)
-      client = localStorage.fiddle_client = randomString(16)
+      userUid = localStorage.fiddle_client || randomString(16),
+      isOtherUserChanges = false
 
     editor.setTheme('ace/theme/monokai')
     doc.setMode('ace/mode/html')
@@ -52,24 +50,20 @@
     editor.session.setUseWorker(false)
 
     if (recordkey) {
-      recordref = fbref.child(recordkey)
-      recordref.once('value', function(snap) {
-        doc.setValue(snap.val().data)
-      })
+      recordref = fbref.child(recordkey)      
     } else {
       recordref = fbref.push()
-      location.hash = recordref.key()      
+      location.hash = recordref.key()
       get('default.html', function(r) {
         doc.setValue(r)
       })
     }
 
-    recordref.on('child_changed', function(snap) {
+    recordref.on('value', function(snap) {
       var value = snap.val()
-      if (value.client != client) {        
-        var cursor = doc.selection.getCursor()
-        doc.setValue(snap.val())
-        doc.selection.moveCursorToPosition(cursor)
+      if (value && value.userUid !== userUid) {
+        isOtherUserChanges = true
+        doc.setValue(value.data)
       }
     })
 
@@ -78,8 +72,12 @@
       result.contentWindow.document.open()
       result.contentWindow.document.write(value)
       result.contentWindow.document.close()
-      recordref.update({ 
-        client: client, 
+      if (isOtherUserChanges) {
+        isOtherUserChanges = false
+        return
+      }   
+      recordref.set({
+        userUid: userUid, 
         data: value,
         time: Date.now()
       })
