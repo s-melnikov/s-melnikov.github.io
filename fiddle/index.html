@@ -63,7 +63,9 @@
       var value = snap.val()
       if (value && value.userUid !== userUid) {
         isOtherUserChanges = true
-        doc.setValue(value.data)
+        var cursor = doc.selection.getCursor()
+        doc.setValue(snap.val().data)
+        doc.selection.moveCursorToPosition(cursor)
       }
     })
 
