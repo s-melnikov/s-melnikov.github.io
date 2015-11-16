@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  
+  <div id="outlet"></div>
+
+  <script type="text/html" id="tpl">
+    <h3>tpl.js</h3>
+    <p>{{ name }}</p>
+    <p>{{{ html }}}</p>
+    <ul>
+      {% musketeers.forEach(function(item) { %}
+        <li>{{ item }}</li>
+      {% }) %}
+    </ul>
+  </script>
+
+  <script src="tpl.js"></script>
+
+  <script>
+    document.querySelector('#outlet').innerHTML = tpl(document.querySelector('#tpl').innerHTML)({
+      name: "Chris",
+      musketeers: ["Athos", "Aramis", "Porthos", "D'Artagnan"],
+      html: "<a href='#'>link</a>"
+    });
+  </script>
+</body>
+</html>
