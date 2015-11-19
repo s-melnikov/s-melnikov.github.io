@@ -52,17 +52,11 @@ html.js .loader
 		left: 50%
 		top: 50%
 		position: absolute
-html, body
-	height: 100%
-	width: 100%
-	padding: 0
-	margin: 0
-	overflow: hidden
 	
 body
 	font-size: 18px
 	min-width: 320px
-	line-height: em(22px)
+	line-height: em(20px)
 	font-family: "Open Sans", $helvetica
 	font-weight: 400
 	color: #fff
@@ -98,8 +92,9 @@ a, a:hover, a:focus, a:active
 
 .logo
 	position: fixed
-	left: -49px
+	left: 50%
 	top: 20px
+	margin-left: -1210px
 	z-index: 1
 	width: 780px
 	img
@@ -108,202 +103,223 @@ a, a:hover, a:focus, a:active
 h1, h2, h3, h4, h5, h6
 	@extend .headers
 
-h1
-	font-size: em(76px)
-	margin: 36px 0
+h1,h2
+	font-size: em(80px)
+	margin-top: 60px
+	margin-bottom: 34px
 	&+span
 		font-family: "Open Sans" $helvetica
 		font-weight: 400
 		font-size: em(20px)
 		text-transform: uppercase
+		word-spacing: 5px  
 
-h2
+h3
 	font-size: em(52px)
 	color: #252525
 	margin-bottom: 8px
-h3
+	margin-top: 55px
+h4
 	font-size: em(36px)
 	color: $blue
 	margin-top: 10px 
 
-.button
+.main_button
 	position: absolute
-	top: 505px
-	left: 220px
+	top: 50%
+	left: 50%
+	margin-left: -267px
 	font-size: em(30px)
-	background-color: $main_color
-	line-height: 3.9
-	padding: 0 47px
+	a
+		background-color: $main_color
+		line-height: 4
+		padding: 0 110px
+		display: inline-block
 
-.toggle-mnu
+.toggle-menu
 	display: block
-	float: right
+	float: left
 	
 // Header //	
-header
-	//position: relative
-	padding-top: 14px
-	padding-bottom: 58px
-	margin-right: 70px
-	background-color: transparent
+.header_wrap
+	width: 100%
+	display: inline-block
+	position: relative
+	padding-bottom: 57px
+	background-color: $bg_wraper
 	text-align: center
 	&::before, &::after
 		@extend .before
 		border-width: 98px 80px
 		border-style: solid
 	&::before
-		left: 15px
-		border-color: $bg_wraper transparent transparent $bg_wraper
+		left: 0
+		border-color: $bg_wraper transparent transparent $bg_wraper 
 	&::after
-		left: 875px
+		right: 0
 		border-color:  transparent $bg_wraper $bg_wraper transparent
-// END Header //
 
-// Menu Fixed //
-.main-mnu
+/* Menu Fixed */ 
+.main-menu
 	position: fixed
-	background: $bg_wraper
 	z-index: 100
-	top: 500px
-	left: 206px
-	font-size: em(21px)
+	bottom: 90px
+	left: 50%
+	margin-left: -890px
+	font-size: em(19px)
 	ul
 		@extend .ulmnu
 	li
-		text-align: left
 		margin-top: 10px
-		&:before
-			content: ""
-			position: relative
-			display: inline-block
-			width: 100px
-			height: 90px
-			margin-right: -7px
-			z-index: 1
-			vertical-align: bottom
-			background-color: $bg_wraper
-
+		text-align: center
+		cursor: pointer
+		position: relative
 	i
 		display: inline-block
-		position: relative
-		z-index: 1
-		width: 110px
+		width: 100px
 		height: 90px
 		vertical-align: bottom
-		background: url("../img/icon_menu.png") -2px -3px $bg_wraper no-repeat
-		
-	i.icon-gallery
-		background-position: 0 -90px
-	i.icon-price
-		background-position: 1px -176px
-	i.icon-connect
-		background-position: 0 -264px
+		background-image: url("../img/icon_menu.png")
+		transition: background-image .5s 
+		background-position: 0 23px 
+		background-repeat: no-repeat
+		&.icon-gallery
+			background-position: 0 -64px
+		&.icon-price
+			background-position: 0 -148px
+		&.icon-connect
+			background-position: 0 -232px
 	a
-		line-height: 3.75
-	span
-		position: absolute
-		left: 70px
-		padding: 0 30px
-		background-color: $main_color
-		display: inline-block
-		transition: left 0.5s
-	
-	li:nth-child(2) span
-		left: 29px
-	li:nth-child(3) span
-		left: 51px
-	li:nth-child(4) span
-		left: 49px
+		position: relative
+		display: block
+		&:hover i, &.active i
+			background-image: url("../img/icon_menu_hover.png")
+		&>span
+			position: absolute
+			top: 0
+			left: 100%
+			height: 100%
+			width: 8px
+			overflow: hidden
+			background-color: $main_color
+			transition: width 0.3s
+			&>span
+				position: absolute
+				right: 37px
+				line-height: 90px
+	li:hover a>span
+		width: 152px
+	li:nth-child(2):hover a>span
+		width: 190px
+	li:nth-child(3):hover a>span
+		width: 170px
+	li:nth-child(4):hover a>span
+		width: 171px
 
-	a:hover, li:nth-child(2) a:hover, li:nth-child(3) a:hover,	li:nth-child(4) a:hover
-		span
-			left: 209px
+footer
+	position: fixed
+	width: 100%
+	bottom: 0
+	background-color: $bg_wraper
+	color: #6c6c6c
+	font-size: 12px
+	text-transform: uppercase
+.footer_menu
+	@extend .ulmnu
+	li
+		display: inline-block
+		padding: 4px 25px
+		&.copy
+			float: right
+		a
+			color: #6c6c6c
+			font-size: 12px
+			font-family: "Open Sans", $helvetica
+			font-weight: 400
+			&:hover
+				color: #fff
+			&.btn
+				color: $main_color
+		&.language
+			a
+				padding-left: 10px
+				text-decoration: underline
+				&.active
+					color: #fff
+					text-decoration: none
 
 /* END Menu fixed */ 
 
-/* Horizont scroll */
-section
-	float: left
-	display: block
-	height: 100%
-	padding: 0
-	margin: 0
-.horizon-prev, .horizon-next 
-	position: fixed
-	top: 50%
-	margin-top: -24px
-	z-index: 9999
-
-.horizon-prev 
-	left: 20px
-
-.horizon-next 
-	right: 20px
-
-.container, .row, .col-clg-10
-	height: 100%		
 .content
-	height: 80%
-.main
+	position: relative
+	.text
+		padding: 25px 40px
+		text-align: center
+.main_section
 	.content
-		padding-top: 40px
+		background-image: url(../img/main_bg.jpg)
 		background-repeat: no-repeat
 		background-size: cover
 		.text
-			padding: 0 40px
+			padding: 25px 40px
 			text-align: center
 			   
 /* About section */
 .about
-	header
+	.header_wrap
 		background-color: $main_color
-	.text
-		margin-top: 600px
-		padding: 0 40px
-		text-align: center
 	.content
+		background-image: url(../img/about_bg.jpg)
 		background-repeat: no-repeat
-		background-position: 0 0
 		background-size: cover
-
+		.text
+			position: absolute
+			bottom: 265px
 /* Price section */
 .price
 	color: $bg_wraper
 	.content
-		padding: 8px 65px 0 90px
 		background-color: #fff
 		line-height: 1.1
 	.description
 		margin-top: 30px
-		margin-left: 10px
+		margin-left: 100px
+		margin-right: 50px
 		text-align: left
 		a
 			font-family: "Open Sans" $helvetica
 			display: block
 			height: 90px
 	.inner
+		position: relative
 		font-size: em(30px)
 		color: #fff
 		font-weight: 800
 		line-height: 2.65
 		i
 			display: inline-block
-			position: relative
 			text-align: center
 			width: 90px
 			height: 90px
 			margin-right: 2px
 			font-style: inherit
-		span
-			display: inline-block
-			position: relative
-			overflow: hidden
-			width: 0
-			z-index: 1
-			text-align: center
-			vertical-align: top
-			transition: width 0.5s
-	a:hover .inner span
+			background-image: url("../img/dollar.png")
+			background-repeat: no-repeat
+			background-position: 70px 7px
+			&+span
+				position: absolute
+				top: 0
+				overflow: hidden
+				width: 0
+				height: 100%
+				z-index: 1
+				text-align: center
+				vertical-align: top
+				transition: width 0.3s
+			&+span>span
+				position: absolute
+				right: 85px
+	a:hover .inner>span
 		width: 350px
 	.inner+span
 		display: block
@@ -321,10 +337,10 @@ section
 			background-color: $blue
 	.red 
 		i, span
-			background-color: $red		
-	header
+			background-color: $red	
+	.header_wrap
 		background-color:	#f8e778
-	h1
+	h2
 		color: $bg_wraper
 	.text
 		padding: 6px 0
@@ -333,17 +349,15 @@ section
 			
 /* Gallery section */
 .gallery
-	header
+	.header_wrap
 		background-color:	$blue
-	.content
-		padding-right: 170px
 	.gallery-item
 		padding: 0
+		position: relative
 		img
 			width: 100%
 		.gal-item-cont
 			position: absolute
-			line-height: 480px
 			top: 0
 			left: 0
 			height: 100%
@@ -356,26 +370,28 @@ section
 			display: inline-block
 			height: 80px
 			width: 110px
+			position: relative
+			top: 50%
+			margin-top: -40px 
 			background: url("../img/play.png") no-repeat 
 			opacity: 0
 			border: 0
-			outline: 0
 			transition: all .5s 
 
 .gal-descr
+	position: relative
 	margin: auto
 	max-width: 600px
 	img
-		width: 100% 	
-		
+		width: 100%
 
 /* Connekt section */
 .connect
 	color: $bg_wraper
-	header
+	.header_wrap
 		background-color: #fff
 	.content
-		padding: 95px 50px 0 70px
+		padding-top: 95px
 		background-color: #fff
 		.data
 			font-size: 20px
@@ -397,13 +413,13 @@ section
 				background: url("../img/icon_mail.png") center no-repeat
 			.data
 				background-color: $red
-			h3
+			h4
 				color: $red
-	h1
+	h2
 		color: $bg_wraper
 form
 	margin-top: 96px 
-	padding: 0 33px
+	padding: 0 85px
 	label, input, textarea, button
 		display: block
 		width: 100%
@@ -432,5 +448,6 @@ form
 	.mfp-close
 		color: #000
 		left: 67%
+		top: 2px
 
 
