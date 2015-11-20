@@ -35,7 +35,7 @@
           <div class="bar wave-{ val }" each={ val in fakeArray }></div>
         </div>
       </div>
-      <div class="track-info" onclick={ searchTrack }>
+      <div class="track-info">
         <div if={ trackInfo.artist } title="Искать в vk.com { trackInfo.artist } { trackInfo.title }">
           <div class="artist">{ trackInfo.artist }</div>
           <div class="title"><i>{ trackInfo.title }</i></div>
@@ -69,7 +69,7 @@
   <script>
 
     var self = this,
-      db = _.storage(opts.appName),
+      db = $.storage(opts.appName),
       checkTrackInfoTimeout
 
     this.currentBitrate = +db.get('bitrate') || 320
@@ -89,10 +89,10 @@
     }
 
     setSource() {
-      var stationProps = _.find(opts.stations, 'code', self.currentStation)
+      var stationProps = $.find(opts.stations, 'code', self.currentStation)
       var src = opts.url + stationProps.port[self.currentBitrate] + '/' + self.currentStation + '_' + self.currentBitrate
       self.audio.src = src
-      _.log('Set new source:', src);
+      $.log('Set new source:', src);
       self.stationInfo = {
         code: stationProps.code,
         name: stationProps.name,
@@ -100,7 +100,7 @@
       }      
       self.audio.play()
       self.isPlaying = true
-      _('.window').addClass('play')
+      $('.window').addClass('play')
       self.setActiveStation()      
       db.set('station', self.currentStation)      
       self.update()
@@ -118,12 +118,12 @@
     togglePlay() {
       if (self.isPlaying) {
         self.audio.pause()
-        _('.window').removeClass('play')
+        $('.window').removeClass('play')
         self.isPlaying = false
       } else {
         self.audio.load()
         self.audio.play()
-        _('.window').addClass('play')
+        $('.window').addClass('play')
         self.isPlaying = true
       }
     }
@@ -151,13 +151,13 @@
     }
 
     setActiveBitrate() {
-      _('.bitrates li').removeClass('active')
-      _('.bitrate-' + self.currentBitrate).addClass('active')
+      $('.bitrates li').removeClass('active')
+      $('.bitrate-' + self.currentBitrate).addClass('active')
     }
 
     setActiveStation() {
-      _('.station-list li').removeClass('active')
-      _('.station-list .station-' + self.currentStation).addClass('active')      
+      $('.station-list li').removeClass('active')
+      $('.station-list .station-' + self.currentStation).addClass('active')      
     }
 
     setVolume(e) {
@@ -167,42 +167,47 @@
 
     checkTrackInfo() {
       var url = opts.trackInfoUrl.replace('%s%', self.currentStation)
-      _.get(url, function(response) {
-        try {          
-          response = JSON.parse(response)
-        } catch(e) {
-          _.log(e, url, response)
-        }
-        if (self.trackInfo.title != response.title) {
-          self.trackInfo = response
-          self.update()
-        }
-        if (checkTrackInfoTimeout) {
-          clearTimeout(checkTrackInfoTimeout)
-          checkTrackInfoTimeout = null
+      $.get(url, function(response) {
+        var result = {}, regex = /"(.+)":"(.+)"/
+        if (response) {
+          response
+            .replace(/^\{|\}$/g, "")
+            .split(",")
+            .forEach(function(el) {
+              var matches = regex.exec(el)
+              if (matches && matches[1] && matches[2]) result[matches[1]] = matches[2].replace("\\", "")           
+            })
+          if (self.trackInfo.title != result.title) {
+            self.trackInfo = result
+            self.update()
+          }
+          if (checkTrackInfoTimeout) {
+            clearTimeout(checkTrackInfoTimeout)
+            checkTrackInfoTimeout = null
+          }
         }
         checkTrackInfoTimeout = setTimeout(self.checkTrackInfo, opts.pingInterval)
       })
     }
 
     audioOnError(e) {
-      _.log('audio error')
+      $.log('audio error')
     }
 
     audioOnAbort(e) {    
-      _.log('audio abort')
+      $.log('audio abort')
     }
 
     checkAudioState() { 
       if (self.audio.networkState === self.audio.NETWORK_IDLE && self.isPlaying) {
-        _.log('reload audio')       
+        $.log('reload audio')       
         self.audio.load()
         self.audio.play()
       }
     }
 
     currentStationIndex() {
-      return opts.stations.indexOf(_.find(opts.stations, 'code', self.currentStation))
+      return opts.stations.indexOf($.find(opts.stations, 'code', self.currentStation))
     }
 
     searchTrack() {

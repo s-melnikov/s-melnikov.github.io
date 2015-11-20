@@ -10,19 +10,20 @@
 </head>
 <body>
 
-  <script src="assets/views/app.html" type="riot/tag"></script>
-  <script src="assets/js/riot+compiler.min.js"></script>  
+  
+  <script src="assets/js/riot+compiler.min.js"></script> 
+  <script src="assets/views/app.js"></script>
   <script>
     (function(global) {
-      function _(q) {
+      function $(q) {
         var c = Array.prototype.slice.call(document.querySelectorAll(q))
-        for (var p in _) { if (_.hasOwnProperty(p)) c[p] = _[p] }
+        for (var p in $) { if ($.hasOwnProperty(p)) c[p] = $[p] }
         return c;
       }
-      _.each = function(cb) { this.forEach(cb) }
-      _.addClass = function(c) { this.each(function(el) { el.classList.add(c) }) }
-      _.removeClass = function(c) { this.each(function(el) { el.classList.remove(c) }) }
-      _.get = function(url, cb) {
+      $.each = function(cb) { this.forEach(cb) }
+      $.addClass = function(c) { this.each(function(el) { el.classList.add(c) }) }
+      $.removeClass = function(c) { this.each(function(el) { el.classList.remove(c) }) }
+      $.get = function(url, cb) {
         var r = new XMLHttpRequest()
         r.open('GET', url, true)
         r.onload = function() {
@@ -30,13 +31,13 @@
         }
         r.send()
       }
-      _.find = function(source, key, val) {
+      $.find = function(source, key, val) {
         for (var i = 0; i < source.length; i++) {
           if (source[i][key] == val) 
             return source[i]
         }
       }
-      _.storage = function(name) {
+      $.storage = function(name) {
         return {
           get: function(key) {
             return JSON.parse(localStorage[name] || '{}')[key]
@@ -48,18 +49,18 @@
           }
         }
       }
-      _.log = function() {
+      $.log = function() {
         console.log.apply(console, ['%c[%s]', 'font-size:10px;color:blue',
           (new Date()).toLocaleString()].concat([].slice.call(arguments)))
       }
-      global._ = _;
+      global.$ = $;
     })(window);
   </script>
   <script>
     var configs = {
       appName: 'online-radio',
       trackInfoUrl: 'http://www.radiorecord.ru/xml/%s%_online_v8.txt',
-      pingInterval: 30000,
+      pingInterval: 15000,
       url: 'http://air.radiorecord.ru:',
       rates: [
         { name: '32 kbps', val: 'aac' },
@@ -87,9 +88,7 @@
         { code: 'rock', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Rock' }
       ]  
     }
-    riot.compile(function() { 
-      riot.mount('*', configs)
-    })        
+    riot.mount('*', configs)       
   </script>
 </body>
 </html>
