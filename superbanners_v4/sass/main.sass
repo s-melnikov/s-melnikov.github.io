@@ -1,0 +1,500 @@
+@import "bourbon/bourbon"
++font-face("icomoon", "../fonts/icomoon/icomoon", $file-formats: eot woff ttf)
+
+$main_color: #cd3e2f
+$headers_color: #f6f0f0
+$blue: #5580cd
+$bg_wraper: #252525
+
+
+html.js .loader
+	background: none repeat scroll 0 0 #ffffff
+	bottom: 0
+	height: 100%
+	left: 0
+	position: fixed
+	right: 0
+	top: 0
+	width: 100%
+	z-index: 9999
+	.loader_inner
+		background-image: url("../img/preloader.gif")
+		background-size: cover
+		background-repeat: no-repeat
+		background-position: center center
+		background-color: #fff
+		height: 60px
+		width: 60px
+		margin-top: -30px
+		margin-left: -30px
+		left: 50%
+		top: 50%
+		position: absolute
+	
+body
+	font-size: 18px
+	min-width: 320px
+	line-height: em(20px)
+	font-family: "Open Sans", $helvetica
+	font-weight: 400
+	color: #fff
+	background-color: $bg_wraper
+.hidden
+	display: none
+
+body input:focus:required:invalid,
+body input,
+body textarea:focus:required:invalid,
+body textarea
+	color: #e7a49d 
+	border: none
+	outline: none
+body input:required:valid,
+body textarea:required:valid
+	color: #e7a49d
+	border: none
+	outline: none
+*::-webkit-input-placeholder
+	color: #e7a49d
+	opacity: 1
+
+*:-moz-placeholder
+	color: #e7a49d
+	opacity: 1
+
+*::-moz-placeholder
+	color: #e7a49d
+	opacity: 1
+
+*:-ms-input-placeholder
+	color: #e7a49d
+	opacity: 1
+
+a, a:hover, a:focus, a:active
+	color: #fff
+	font-family: "Open Sans Condensed", $helvetica
+	font-weight: 300
+	text-decoration: none
+	text-transform: uppercase
+		
+.headers
+	font-family: "Open Sans" $helvetica
+	text-transform: uppercase
+	font-weight: 800
+	color: $headers_color
+
+.before
+	content: " "
+	top: 0
+	position: absolute
+
+.center
+	text-align: center
+
+.ulmnu
+	list-style-type: none
+	margin: 0
+	padding: 0
+
+.logo
+	position: fixed
+	left: 50%
+	top: 22px
+	margin-left: -1194px
+	z-index: 2
+	width: 770px
+	img
+		width: 100%
+
+.video_bg
+	position: absolute
+	right: 0 
+	top: 0
+	min-width: 100%
+	min-height: 100%
+	width: auto
+	height: auto
+	
+h1, h2, h3, h4, h5, h6
+	@extend .headers
+
+h1,h2
+	font-size: em(80px)
+	margin-top: 60px
+	margin-bottom: 41px
+	&+span
+		font-family: "Open Sans" $helvetica
+		font-weight: 400
+		font-size: em(22px)
+		text-transform: uppercase
+		
+h3
+	font-size: em(52px)
+	color: #252525
+	margin-bottom: 8px
+	margin-top: 40px
+h4
+	font-size: em(36px)
+	color: $blue
+	margin-top: 10px 
+	margin-bottom: 40px
+h5
+	font-weight: 400
+	font-size: em(18px)
+	text-transform: uppercase
+	color: $main_color
+	margin: 0
+	&:after
+		content: ""
+		display: block
+		height: 5px
+		width: 25em
+		border-bottom: 1px solid #ccc
+	
+.main_button
+	position: absolute
+	top: 50%
+	left: 50%
+	margin-left: -267px
+	margin-top: 66px
+	font-size: em(30px)
+	a
+		background-color: $main_color
+		line-height: 4
+		padding: 0 110px
+		display: inline-block
+
+.toggle-menu
+	display: block
+	float: left
+	
+// Header //	
+header
+	position: absolute
+	height: 196px
+	top: 0
+	width: 100%
+	background-color: $bg_wraper
+	text-align: center
+	&::before, &::after
+		@extend .before
+		border-width: 98px 80px
+		border-style: solid
+	&::before
+		left: 0
+		border-color: $bg_wraper transparent transparent $bg_wraper 
+	&::after
+		right: 0
+		border-color:  transparent $bg_wraper $bg_wraper transparent
+
+/* Menu Fixed */ 
+.main-menu
+	position: fixed
+	z-index: 100
+	top: 465px
+	left: 50%
+	margin-left: -890px
+	font-size: em(19px)
+	ul
+		@extend .ulmnu
+	li
+		margin-top: 10px
+		text-align: center
+		cursor: pointer
+		position: relative
+	i
+		display: inline-block
+		width: 100px
+		height: 90px
+		vertical-align: bottom
+		background-image: url("../img/icon_menu.png")
+		transition: background-image .5s 
+		background-position: 0 23px 
+		background-repeat: no-repeat
+		&.icon-gallery
+			background-position: 0 -64px
+		&.icon-price
+			background-position: 0 -148px
+		&.icon-connect
+			background-position: 0 -232px
+	a
+		position: relative
+		display: block
+		&:hover i, &.active i
+			background-image: url("../img/icon_menu_hover.png")
+		&>span
+			position: absolute
+			top: 0
+			left: 100%
+			height: 100%
+			width: 8px
+			overflow: hidden
+			background-color: $main_color
+			transition: width 0.3s
+			&>span
+				position: absolute
+				right: 37px
+				line-height: 90px
+	li:hover a>span
+		width: 152px
+	li:nth-child(2):hover a>span
+		width: 190px
+	li:nth-child(3):hover a>span
+		width: 170px
+	li:nth-child(4):hover a>span
+		width: 171px
+.cap
+	position: fixed
+	top: 0
+	left: 50%
+	height: 100%
+	width: 13em
+	margin-left: -56.9em
+	background-color: $bg_wraper
+	z-index: 1
+
+footer
+	position: fixed
+	width: 100%
+	bottom: 0
+	background-color: $bg_wraper
+	color: #6c6c6c
+	font-size: 12px
+	text-transform: uppercase
+	z-index: 100
+	nav
+		overflow: hidden
+		.language
+			margin-left: 30px
+			a
+				padding: 0
+				text-decoration: underline
+				&.present
+					color: #fff
+					text-decoration: none
+		.copyright
+			float: right
+			line-height: 2.5
+		a.btn
+			color: $main_color
+/* END Menu fixed */ 
+
+.content
+	position: absolute
+	width: 100%
+	top: 196px
+	bottom: 30px
+	.text
+		text-align: center
+		padding: 30px
+
+/* About section */
+#about
+	header
+		background-color: $main_color
+		span
+			font-size: em(21px)
+	.text
+		margin-top: 30em
+	
+
+/* Gallery section */
+#gallery
+	header
+		background-color:	$blue
+		span
+			word-spacing: .2em
+	.gallery-item
+		padding: 0
+		position: relative
+		img
+			width: 100%
+		.gal-item-cont
+			position: absolute
+			top: 0
+			left: 0
+			height: 100%
+			width: 100% 
+			text-align: center
+			z-index: 10
+			&:hover .gal-item-play
+				opacity: 1
+		.gal-item-play
+			display: inline-block
+			height: 80px
+			width: 110px
+			position: relative
+			top: 50%
+			margin-top: -40px 
+			background: url("../img/play.png") no-repeat 
+			opacity: 0
+			border: 0
+			transition: all .5s 
+
+.gal-descr
+	position: relative
+	margin: auto
+	max-width: 600px
+	img
+		width: 100%
+
+/* Price section */
+#price
+	color: $bg_wraper
+	header
+		background-color:	#f8e778
+		h2
+			color: $bg_wraper
+		span
+			word-spacing: .2em
+	.content
+		background-color: #fff
+		line-height: 1.1
+	.description
+		margin-top: 30px
+		margin-left: 100px
+		margin-right: 50px
+		text-align: left
+		a
+			font-family: inherit
+			color: inherit
+			display: block
+			height: 90px
+	.inner
+		position: relative
+		font-size: em(30px)
+		color: #fff
+		font-weight: 800
+		line-height: 2.65
+		i
+			display: inline-block
+			text-align: center
+			width: 90px
+			height: 90px
+			margin-right: 2px
+			font-style: inherit
+			background-image: url("../img/dollar.png")
+			background-repeat: no-repeat
+			background-position: 70px 7px
+			&+span
+				position: absolute
+				top: 0
+				overflow: hidden
+				width: 0
+				height: 100%
+				z-index: 1
+				text-align: center
+				vertical-align: top
+				transition: width 0.3s
+			&+span>span
+				position: absolute
+				right: 85px
+	a:hover .inner>span
+		width: 350px
+	.inner+span
+		display: block
+		position: relative
+		top: -62px
+		margin-left: 57px
+		color: $bg_wraper
+		text-align: center
+		text-transform: none
+		font-size: em(13px)
+		font-weight: 400
+					
+	.blue
+		i, span
+			background-color: $blue
+	.red 
+		i, span
+			background-color: $main_color	
+	.text
+		padding: 0
+	p
+		font-size: em(13px)
+			
+/* Connekt section */
+#connect
+	color: $bg_wraper
+	header
+		background-color: #fff
+		word-spacing: .12em
+	.content
+		padding-top: 80px
+		background-color: #fff
+		text-align: center
+		.data
+			font-size: 20px
+			text-transform: uppercase
+			color: #fff
+			a
+				font-family: inherit
+				line-height: 90px	
+				display: table-cell
+				width: 335px
+		i
+			display: block
+			height: 100px
+		.blue
+			i
+				background: url("../img/icon_skype.png") center no-repeat
+		.red
+			i
+				background: url("../img/icon_mail.png") center no-repeat
+			.btn-8, .btn-8:active
+				background-color: $main_color
+			.btn-8e:after
+				background: #cc6633
+			h4
+				color: $main_color
+	h2
+		color: $bg_wraper
+	form
+		margin-top: 60px 
+		padding: 0 15px
+		label, input, textarea, button
+			display: block
+			width: 100%
+			border: none
+			font-size: 20px
+			text-transform: uppercase
+			resize: none
+			text-align: center
+		label
+			border-bottom: 1px solid #e1e1e1
+			margin-bottom: 16px
+			padding-top: 32px
+		.button-wrap
+			background-color: $main_color
+			
+#callback
+	max-width: 740px
+	background-color: #fff
+	margin: auto
+	padding: 55px
+	position: relative
+	.button-wrap
+		margin-top: 50px
+		position: relative
+		z-index: 1
+
+/* Blog */
+
+.content_blog
+	background-color: #fff
+	color: $bg_wraper
+	overflow: auto
+	article
+		padding: 50px
+	img
+		width: 100%
+	.text_blog
+		height: 11em
+		overflow: hidden
+	a
+		background-color: $main_color
+		line-height: 5.3
+		padding: 15px 20px
+		font-family: inherit
+		font-size: 15px
+

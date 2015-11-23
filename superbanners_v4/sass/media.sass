@@ -1,0 +1,331 @@
+/*==========  Desktop First Method  ==========*/
+
+@media only screen and (max-width : 1850px)
+	
+	.logo
+		margin-left: -1050px
+		width: 700px
+		top: 11px
+	.cap
+		margin-left: -49em
+	.main-menu
+		margin-left: -755px
+		top: 440px
+		i
+			height: 70px
+			background-position: -2px 10px
+			&.icon-gallery
+				background-position: -2px -74px
+			&.icon-price
+				background-position: -2px -158px
+			&.icon-connect
+				background-position: -2px -241px
+		a>span>span
+			line-height: 70px
+	footer
+		nav.cl-effect-5 a
+			padding: 0 8px
+	header
+		height: 170px
+		&::before, &::after
+			border-width: 85px 55px
+	.content
+		top: 170px
+	#about
+		.text
+			margin-top: 25em
+	#price
+		.img_wrap
+			height: 15em
+			img
+				height: 75%
+			h3
+				font-size: 50px
+				margin-top: 10px
+	#connect
+		.content
+			padding-top: 40px
+			h4
+				margin-bottom: 30px
+		form
+			margin-top: 40px
+			padding: 0 100px		
+
+
+@media only screen and (max-width : 1570px)
+
+	h1,h2
+		font-size: 70px
+		margin-top: 36px
+		margin-bottom: 21px
+		&+span
+			font-size: 19px
+	header
+		height: 136px
+		padding-top: 7px 
+		&::before, &::after
+			border-width: 68px 50px
+		
+	.logo
+		margin-left: -880px
+		width: 600px
+		top: 0
+
+	.main-menu
+		margin-left: -629px
+		top: 345px
+	.cap
+		width: 14em
+		margin-left: -43.4em
+	
+	.content
+		top: 136px
+	#about
+		header
+			span
+				font-size: 18px
+		.text
+			margin-top: 19em
+	footer
+		nav.cl-effect-5 
+			a
+				padding: 0 5px
+			.language
+				display: none
+
+	#main_section
+		.content
+			.text
+				padding-left: 90px
+	#price
+		.img_wrap
+			height: 11em
+			h3
+				margin-bottom: 0
+				font-size: 45px
+		.description
+			margin-left: 50px
+			margin-right: 0
+		.inner
+			i+span>span
+				right: 70px
+		a:hover .inner>span
+			width: 325px
+	#connect
+		.content
+			padding-top: 10px
+			h4
+				margin-bottom: 20px
+		form
+			margin-top: 40px
+			padding: 0 50px
+			label
+				padding-top: 25px		
+	
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1250px)
+	.main-menu,
+	.horizon-next, 
+	.cap	
+		display: none !important 
+	
+	footer
+		nav.cl-effect-5 
+			a
+				padding: 0 14px
+			.copyright
+				display: none
+
+	.container
+		padding: 0
+	.logo
+		position: absolute
+		width: 470px
+		margin-left: -235px
+		top: 350px
+	
+	.main_button
+		position: relative
+		font-size: 24px
+		top: 190px
+		left: 0
+		right: 0
+		margin: 0
+		text-align: center
+		z-index: 2
+		a
+			line-height: 4.2
+			padding: 0 30px
+	section
+		position: relative
+		min-height: 720px
+		width: 100%
+	.content
+		bottom: 0
+
+	#main_section
+		.content
+			.text
+				padding-left: 30px
+				padding-top: 10px
+	#price
+		.content
+			padding-left: 10px
+		.img_wrap
+			height: 13em
+			img
+				height: 73%
+			h3
+				margin-bottom: 5px
+				font-size: 50px
+		.description
+			margin-left: 25px
+			margin-right: 0
+		.inner
+			i+span>span
+				right: 70px
+		a:hover .inner>span
+			width: 325px
+
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px)
+	footer
+		display: none
+	.logo
+		position: absolute
+		width: 470px
+		margin-left: -235px
+		top: 160px
+	.main_button
+		top: 420px
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px)
+	header
+		top: 32px
+		transform: rotate(-5deg)
+		z-index: 1
+		height: 105px
+		&::before, &::after
+			border-width: 0
+			width: 15px
+			height: 100%
+			background: inherit
+		&::before
+			left: 99%
+		&::after
+			right: 99%
+	h1, h2
+		font-size: 38px
+		margin-top: 25px
+		margin-bottom: 0 
+		&+span
+			font-size: 10px
+
+	
+	/*Disable Animation on Mobile Devices*/
+	.animated
+		/*CSS transitions*/
+		-o-transition-property: none !important
+		-moz-transition-property: none !important
+		-ms-transition-property: none !important
+		-webkit-transition-property: none !important
+		transition-property: none !important
+		/*CSS transforms*/
+		
+		/*CSS animations*/
+		-webkit-animation: none !important
+		-moz-animation: none !important
+		-o-animation: none !important
+		-ms-animation: none !important
+		animation: none !important
+
+	
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px)
+	#main_section
+		background-image: url(../img/main_bg_mob.jpg)
+		background-repeat: no-repeat
+		background-size: cover
+
+
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px)
+	/**/
+
+
+/*==========  Mobile First Method  ==========*/
+
+/* Custom, iPhone Retina */
+@media only screen and (min-width : 320px)
+	
+
+
+
+/* Extra Small Devices, Phones */
+@media only screen and (min-width : 480px)
+	#main_section
+		.content
+			background-image: url(../img/main_bg.jpg)
+			background-repeat: no-repeat
+			background-size: cover
+	#about
+		.content
+			background-image: url(../img/about_bg.jpg)
+			background-repeat: no-repeat
+			background-size: cover		
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px)
+	#price
+		h3+img
+			display: none			
+	#about
+		img
+			display: none	
+	
+
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px)
+	
+	a
+		outline: none !important
+
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1250px)
+	
+	/* CSS Scrol */			
+	html, body
+		height: 100%
+		width: 100%
+		padding: 0
+		margin: 0
+		overflow: hidden
+	section
+		float: left
+		display: block
+		height: 100%
+		padding: 0
+		margin: 0
+	.container
+		height: 100% 
+		position: relative
+	.horizon-prev, .horizon-next 
+		position: fixed
+		top: 50%
+		margin-top: -75px
+		z-index: 9999
+	.horizon-prev 
+		left: 30px
+	.horizon-next 
+		right: 30px
+	
+@media only screen and (min-width : 1850px)
+	
+	
+
+
