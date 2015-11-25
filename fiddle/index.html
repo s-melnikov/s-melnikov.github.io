@@ -66,6 +66,7 @@
         var cursor = doc.selection.getCursor()
         doc.setValue(snap.val().data)
         doc.selection.moveCursorToPosition(cursor)
+        editor.scrollToRow(cursor.row - 10);
       }
     })
 
