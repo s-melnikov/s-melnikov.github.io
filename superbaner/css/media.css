@@ -58,12 +58,8 @@
   }
   #price .img_wrap h3 {
     font-size: 50px;
-    margin-top: 10px;
   }
 
-  #connect .content {
-    padding-top: 40px;
-  }
   #connect .content h4 {
     margin-bottom: 30px;
   }
@@ -135,6 +131,10 @@
     margin-bottom: 0;
     font-size: 45px;
   }
+  #price .text {
+    margin: 0 60px;
+    padding: 0;
+  }
   #price .description {
     margin-left: 50px;
     margin-right: 0;
@@ -146,8 +146,8 @@
     width: 325px;
   }
 
-  #connect .content {
-    padding-top: 10px;
+  #connect .content i {
+    height: 80px;
   }
   #connect .content h4 {
     margin-bottom: 20px;
@@ -164,8 +164,14 @@
 @media only screen and (max-width: 1250px) {
   .main-menu,
   .horizon-next,
-  .cap {
+  .cap,
+  video {
     display: none !important;
+  }
+
+  header,
+  .content {
+    position: relative;
   }
 
   footer nav.cl-effect-5 a {
@@ -173,6 +179,10 @@
   }
   footer nav.cl-effect-5 .copyright {
     display: none;
+  }
+
+  h1, h2 {
+    margin-bottom: 25px;
   }
 
   .container {
@@ -203,22 +213,27 @@
 
   section {
     position: relative;
-    min-height: 720px;
     width: 100%;
   }
 
   .content {
-    bottom: 0;
+    top: 0;
+    padding-bottom: 50px;
+    padding-top: 30px;
   }
 
+  #main_section .content {
+    min-height: 620px;
+  }
   #main_section .content .text {
     padding-left: 30px;
-    padding-top: 10px;
   }
 
-  #price .content {
-    padding-left: 10px;
+  #gallery .content {
+    padding-bottom: 0;
+    padding-top: 0;
   }
+
   #price .img_wrap {
     height: 13em;
   }
@@ -229,6 +244,10 @@
     margin-bottom: 5px;
     font-size: 50px;
   }
+  #price .text {
+    margin: 0 20px;
+    padding: 0;
+  }
   #price .description {
     margin-left: 25px;
     margin-right: 0;
@@ -238,6 +257,10 @@
   }
   #price a:hover .inner > span {
     width: 325px;
+  }
+
+  #connect form {
+    margin-top: 30px;
   }
 }
 /* Medium Devices, Desktops */
@@ -250,21 +273,25 @@
     position: absolute;
     width: 470px;
     margin-left: -235px;
-    top: 160px;
+    top: 176px;
   }
 
   .main_button {
     top: 420px;
   }
+
+  #about .text {
+    margin-top: 7em;
+  }
+
+  #price .description {
+    margin: 20px auto;
+    width: 435px;
+  }
 }
 /* Small Devices, Tablets */
 @media only screen and (max-width: 768px) {
   header {
-    top: 32px;
-    -webkit-transform: rotate(-5deg);
-        -ms-transform: rotate(-5deg);
-            transform: rotate(-5deg);
-    z-index: 1;
     height: 105px;
   }
   header::before, header::after {
@@ -281,12 +308,32 @@
   }
 
   h1, h2 {
-    font-size: 38px;
+    font-size: 45px;
     margin-top: 25px;
-    margin-bottom: 0;
+    margin-bottom: 5px;
   }
   h1 + span, h2 + span {
+    font-size: 12px;
+  }
+
+  h1, #gallery h2 {
+    font-size: 37px;
+  }
+  h1 + span, #gallery h2 + span {
     font-size: 10px;
+  }
+
+  #connect form {
+    padding: 0 20px;
+    font-size: 16px;
+  }
+
+  #about .content {
+    min-height: 450px;
+    background-size: cover;
+  }
+  #about header span {
+    font-size: 12px;
   }
 
   /*Disable Animation on Mobile Devices */
@@ -303,10 +350,142 @@
 }
 /* Extra Small Devices, Phones */
 @media only screen and (max-width: 480px) {
+  #connect .content i, h4 {
+    display: none;
+  }
+
+  .logo {
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+  }
+  .logo a {
+    display: none;
+  }
+
+  .logo > img {
+    display: block !important;
+  }
+
+  .mob {
+    display: block;
+  }
+
+  .content {
+    padding: 0;
+    margin-top: -110px;
+    margin-bottom: 120px;
+  }
+
+  .main_button {
+    top: 0;
+  }
+
   #main_section {
     background-image: url(../img/main_bg_mob.jpg);
     background-repeat: no-repeat;
     background-size: cover;
+  }
+  #main_section .main_button {
+    top: 375px;
+  }
+  #main_section .content {
+    min-height: 500px;
+  }
+  #main_section header {
+    top: 32px;
+  }
+
+  header {
+    -webkit-transform: rotate(-5deg);
+        -ms-transform: rotate(-5deg);
+            transform: rotate(-5deg);
+    z-index: 1;
+    height: 105px;
+    top: -90px;
+  }
+
+  #about {
+    background-color: #fff;
+  }
+  #about .text {
+    padding: 10px;
+    margin-top: 0;
+    text-align: justify;
+    color: #252525;
+  }
+
+  #price .content {
+    padding: 60px 0;
+    margin-bottom: 60px;
+  }
+  #price h3 + img + img {
+    display: none;
+  }
+  #price .img_wrap {
+    height: 6em;
+    float: right;
+    margin: 0 15px;
+  }
+  #price .img_wrap h3 {
+    font-size: 14px;
+  }
+  #price .img_wrap img {
+    height: 55%;
+  }
+  #price .text {
+    margin: 16px 12px;
+  }
+  #price .text p {
+    font-size: 12px;
+    text-align: right;
+  }
+  #price .left .img_wrap {
+    float: left;
+  }
+  #price .left .text p {
+    text-align: left;
+  }
+  #price .left .description {
+    text-align: right;
+  }
+  #price .left .inner + span {
+    margin-right: 70px;
+    margin-left: 0;
+  }
+  #price .description {
+    width: 100%;
+    margin: 30px 0;
+  }
+  #price .description .inner {
+    font-size: 26px;
+    line-height: 3;
+  }
+  #price .description .inner i {
+    width: 70px;
+    height: 80px;
+    background-position: 54px 4px;
+  }
+  #price .description a {
+    height: 80px;
+  }
+  #price .description a:hover .inner > span {
+    width: 0;
+  }
+  #price .description .inner + span {
+    height: 80px;
+    top: -80px;
+    padding: 23px 0;
+    font-size: 12px;
+    background-color: #f3f3f3;
+  }
+
+  #connect .content {
+    padding: 50px 0;
+    margin-bottom: 0;
+  }
+  #connect form {
+    display: none;
   }
 }
 /* Custom, iPhone Retina */
@@ -323,22 +502,19 @@
     background-size: cover;
   }
 
-  #about .content {
-    background-image: url(../img/about_bg.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-}
-/* Small Devices, Tablets */
-@media only screen and (min-width: 768px) {
-  #price h3 + img {
-    display: none;
-  }
-
   #about img {
     display: none;
   }
+  #about .content {
+    background-image: url(../img/about_bg.jpg);
+    background-repeat: no-repeat;
+  }
+
+  #price h3 + img {
+    display: none;
+  }
 }
+/* Small Devices, Tablets */
 /* Medium Devices, Desktops */
 @media only screen and (min-width: 992px) {
   a {
@@ -382,5 +558,16 @@
 
   .horizon-next {
     right: 30px;
+  }
+
+  .content_table {
+    display: table;
+    width: 100%;
+    height: 100%;
+  }
+
+  .content_cell {
+    display: table-cell;
+    vertical-align: middle;
   }
 }

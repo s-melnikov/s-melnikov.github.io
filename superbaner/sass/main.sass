@@ -95,7 +95,8 @@ a, a:hover, a:focus, a:active
 	list-style-type: none
 	margin: 0
 	padding: 0
-
+.mob
+	display: none
 .logo
 	position: fixed
 	left: 50%
@@ -108,11 +109,9 @@ a, a:hover, a:focus, a:active
 
 .video_bg
 	position: absolute
-	right: 0 
-	top: 0
-	min-width: 100%
-	min-height: 100%
-	width: auto
+	left: 0 
+	top: -50px
+	width: 100%
 	height: auto
 	
 h1, h2, h3, h4, h5, h6
@@ -132,7 +131,7 @@ h3
 	font-size: em(52px)
 	color: #252525
 	margin-bottom: 8px
-	margin-top: 40px
+	margin-top: 0
 h4
 	font-size: em(36px)
 	color: $blue
@@ -281,6 +280,7 @@ footer
 
 .content
 	position: absolute
+	overflow: hidden
 	width: 100%
 	top: 196px
 	bottom: 30px
@@ -290,12 +290,16 @@ footer
 
 /* About section */
 #about
+	.content
+		background-size: cover
 	header
 		background-color: $main_color
 		span
 			font-size: em(21px)
 	.text
-		margin-top: 30em
+		margin-top: 23em
+	img
+		width: 100%
 	
 
 /* Gallery section */
@@ -395,7 +399,7 @@ footer
 		display: block
 		position: relative
 		top: -62px
-		margin-left: 57px
+		margin-left: 70px
 		color: $bg_wraper
 		text-align: center
 		text-transform: none
@@ -409,7 +413,7 @@ footer
 		i, span
 			background-color: $main_color	
 	.text
-		padding: 0
+		padding: 0 90px
 	p
 		font-size: em(13px)
 			
@@ -420,7 +424,6 @@ footer
 		background-color: #fff
 		word-spacing: .12em
 	.content
-		padding-top: 80px
 		background-color: #fff
 		text-align: center
 		.data
@@ -434,29 +437,33 @@ footer
 				width: 335px
 		i
 			display: block
-			height: 100px
-		.blue
-			i
-				background: url("../img/icon_skype.png") center no-repeat
-		.red
-			i
-				background: url("../img/icon_mail.png") center no-repeat
-			.btn-8, .btn-8:active
-				background-color: $main_color
-			.btn-8e:after
-				background: #cc6633
-			h4
-				color: $main_color
+			height: 90px
+			background-repeat: no-repeat
+			background-position: center
+			background-size: contain
+	.blue
+		i
+			background-image: url("../img/icon_skype.png")
+	.red
+		i
+			background-image: url("../img/icon_mail.png")
+		.btn-8, .btn-8:active
+			background-color: $main_color
+		.btn-8e:after
+			background: #cc6633
+		h4
+			color: $main_color
 	h2
 		color: $bg_wraper
 	form
-		margin-top: 60px 
+		font-size: 20px
+		margin-top: 40px 
 		padding: 0 15px
 		label, input, textarea, button
 			display: block
 			width: 100%
 			border: none
-			font-size: 20px
+			font-size: inherit
 			text-transform: uppercase
 			resize: none
 			text-align: center

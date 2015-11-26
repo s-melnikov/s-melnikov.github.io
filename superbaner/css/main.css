@@ -111,6 +111,10 @@ a, a:hover, a:focus, a:active {
   padding: 0;
 }
 
+.mob {
+  display: none;
+}
+
 .logo {
   position: fixed;
   left: 50%;
@@ -125,11 +129,9 @@ a, a:hover, a:focus, a:active {
 
 .video_bg {
   position: absolute;
-  right: 0;
-  top: 0;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
+  left: 0;
+  top: -50px;
+  width: 100%;
   height: auto;
 }
 
@@ -149,7 +151,7 @@ h3 {
   font-size: 3.25em;
   color: #252525;
   margin-bottom: 8px;
-  margin-top: 40px;
+  margin-top: 0;
 }
 
 h4 {
@@ -236,7 +238,8 @@ header::after {
   height: 90px;
   vertical-align: bottom;
   background-image: url("../img/icon_menu.png");
-  transition: background-image 0.5s;
+  -webkit-transition: background-image 0.5s;
+          transition: background-image 0.5s;
   background-position: 0 23px;
   background-repeat: no-repeat;
 }
@@ -264,7 +267,8 @@ header::after {
   width: 8px;
   overflow: hidden;
   background-color: #cd3e2f;
-  transition: width 0.3s;
+  -webkit-transition: width 0.3s;
+          transition: width 0.3s;
 }
 .main-menu a > span > span {
   position: absolute;
@@ -330,6 +334,7 @@ footer nav a.btn {
 /* END Menu fixed */
 .content {
   position: absolute;
+  overflow: hidden;
   width: 100%;
   top: 196px;
   bottom: 30px;
@@ -340,6 +345,9 @@ footer nav a.btn {
 }
 
 /* About section */
+#about .content {
+  background-size: cover;
+}
 #about header {
   background-color: #cd3e2f;
 }
@@ -347,7 +355,10 @@ footer nav a.btn {
   font-size: 1.3125em;
 }
 #about .text {
-  margin-top: 30em;
+  margin-top: 23em;
+}
+#about img {
+  width: 100%;
 }
 
 /* Gallery section */
@@ -386,7 +397,8 @@ footer nav a.btn {
   background: url("../img/play.png") no-repeat;
   opacity: 0;
   border: 0;
-  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+          transition: all 0.5s;
 }
 
 .gal-descr {
@@ -454,7 +466,8 @@ footer nav a.btn {
   z-index: 1;
   text-align: center;
   vertical-align: top;
-  transition: width 0.3s;
+  -webkit-transition: width 0.3s;
+          transition: width 0.3s;
 }
 #price .inner i + span > span {
   position: absolute;
@@ -467,7 +480,7 @@ footer nav a.btn {
   display: block;
   position: relative;
   top: -62px;
-  margin-left: 57px;
+  margin-left: 70px;
   color: #252525;
   text-align: center;
   text-transform: none;
@@ -481,7 +494,7 @@ footer nav a.btn {
   background-color: #cd3e2f;
 }
 #price .text {
-  padding: 0;
+  padding: 0 90px;
 }
 #price p {
   font-size: 0.8125em;
@@ -496,7 +509,6 @@ footer nav a.btn {
   word-spacing: 0.12em;
 }
 #connect .content {
-  padding-top: 80px;
   background-color: #fff;
   text-align: center;
 }
@@ -513,35 +525,39 @@ footer nav a.btn {
 }
 #connect .content i {
   display: block;
-  height: 100px;
+  height: 90px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
-#connect .content .blue i {
-  background: url("../img/icon_skype.png") center no-repeat;
+#connect .blue i {
+  background-image: url("../img/icon_skype.png");
 }
-#connect .content .red i {
-  background: url("../img/icon_mail.png") center no-repeat;
+#connect .red i {
+  background-image: url("../img/icon_mail.png");
 }
-#connect .content .red .btn-8, #connect .content .red .btn-8:active {
+#connect .red .btn-8, #connect .red .btn-8:active {
   background-color: #cd3e2f;
 }
-#connect .content .red .btn-8e:after {
+#connect .red .btn-8e:after {
   background: #cc6633;
 }
-#connect .content .red h4 {
+#connect .red h4 {
   color: #cd3e2f;
 }
 #connect h2 {
   color: #252525;
 }
 #connect form {
-  margin-top: 60px;
+  font-size: 20px;
+  margin-top: 40px;
   padding: 0 15px;
 }
 #connect form label, #connect form input, #connect form textarea, #connect form button {
   display: block;
   width: 100%;
   border: none;
-  font-size: 20px;
+  font-size: inherit;
   text-transform: uppercase;
   resize: none;
   text-align: center;

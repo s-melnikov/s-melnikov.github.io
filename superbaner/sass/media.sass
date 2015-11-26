@@ -41,10 +41,8 @@
 				height: 75%
 			h3
 				font-size: 50px
-				margin-top: 10px
 	#connect
 		.content
-			padding-top: 40px
 			h4
 				margin-bottom: 30px
 		form
@@ -103,6 +101,9 @@
 			h3
 				margin-bottom: 0
 				font-size: 45px
+		.text
+			margin: 0 60px
+			padding: 0
 		.description
 			margin-left: 50px
 			margin-right: 0
@@ -113,7 +114,8 @@
 			width: 325px
 	#connect
 		.content
-			padding-top: 10px
+			i
+				height: 80px
 			h4
 				margin-bottom: 20px
 		form
@@ -126,8 +128,13 @@
 @media only screen and (max-width : 1250px)
 	.main-menu,
 	.horizon-next, 
-	.cap	
-		display: none !important 
+	.cap,
+	video	
+		display: none !important
+
+	header,
+	.content
+		position: relative 
 	
 	footer
 		nav.cl-effect-5 
@@ -135,7 +142,8 @@
 				padding: 0 14px
 			.copyright
 				display: none
-
+	h1,h2
+		margin-bottom: 25px
 	.container
 		padding: 0
 	.logo
@@ -158,19 +166,21 @@
 			padding: 0 30px
 	section
 		position: relative
-		min-height: 720px
 		width: 100%
 	.content
-		bottom: 0
-
+		top: 0
+		padding-bottom: 50px
+		padding-top: 30px
 	#main_section
 		.content
+			min-height: 620px
 			.text
 				padding-left: 30px
-				padding-top: 10px
-	#price
+	#gallery
 		.content
-			padding-left: 10px
+			padding-bottom: 0
+			padding-top: 0
+	#price
 		.img_wrap
 			height: 13em
 			img
@@ -178,6 +188,9 @@
 			h3
 				margin-bottom: 5px
 				font-size: 50px
+		.text
+			margin: 0 20px
+			padding: 0
 		.description
 			margin-left: 25px
 			margin-right: 0
@@ -186,26 +199,33 @@
 				right: 70px
 		a:hover .inner>span
 			width: 325px
-
+	#connect
+		form
+			margin-top: 30px
 
 /* Medium Devices, Desktops */
 @media only screen and (max-width : 992px)
 	footer
 		display: none
+			
 	.logo
 		position: absolute
 		width: 470px
 		margin-left: -235px
-		top: 160px
+		top: 176px
 	.main_button
 		top: 420px
+	#about
+		.text
+			margin-top: 7em
+	#price
+		.description
+			margin: 20px auto
+			width: 435px
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px)
 	header
-		top: 32px
-		transform: rotate(-5deg)
-		z-index: 1
 		height: 105px
 		&::before, &::after
 			border-width: 0
@@ -217,12 +237,27 @@
 		&::after
 			right: 99%
 	h1, h2
-		font-size: 38px
+		font-size: 45px
 		margin-top: 25px
-		margin-bottom: 0 
+		margin-bottom: 5px 
+		&+span
+			font-size: 12px
+	h1, #gallery h2
+		font-size: 37px
 		&+span
 			font-size: 10px
-
+	#connect
+		form
+			padding: 0 20px
+			font-size: 16px
+	
+	#about
+		.content
+			min-height: 450px
+			background-size: cover
+		header
+			span
+				font-size: 12px
 	
 	/*Disable Animation on Mobile Devices*/
 	.animated
@@ -244,12 +279,105 @@
 	
 /* Extra Small Devices, Phones */
 @media only screen and (max-width : 480px)
+	#connect .content i, h4
+		display: none
+
+
+	.logo
+		left: 0
+		margin-left: 0
+		width: 100%
+		a
+			display: none
+	.logo>img
+		display: block !important
+	.mob
+		display: block
+	.content
+		padding: 0
+		margin-top: -110px
+		margin-bottom: 120px
+	.main_button
+		top: 0
 	#main_section
 		background-image: url(../img/main_bg_mob.jpg)
 		background-repeat: no-repeat
 		background-size: cover
-
-
+		.main_button
+			top: 375px
+		.content
+			min-height: 500px
+		header
+			top: 32px	
+	header
+		transform: rotate(-5deg)
+		z-index: 1
+		height: 105px
+		top: -90px
+	#about
+		background-color: #fff
+		.text
+			padding: 10px
+			margin-top: 0
+			text-align: justify
+			color: #252525
+	#price
+		.content
+			padding: 60px 0
+			margin-bottom: 60px
+		h3+img+img
+			display: none
+		.img_wrap
+			height: 6em
+			float: right
+			margin: 0 15px
+			h3
+				font-size: 14px
+			img
+				height: 55%
+		.text
+			margin: 16px 12px
+			p
+				font-size: 12px
+				text-align: right
+		.left
+			.img_wrap
+				float: left
+			.text
+				p
+					text-align: left
+			.description
+				text-align: right
+			.inner+span
+				margin-right: 70px
+				margin-left: 0
+		.description
+			width: 100%
+			margin: 30px 0
+			.inner
+				font-size: 26px
+				line-height: 3
+				i
+					width: 70px
+					height: 80px
+					background-position: 54px 4px
+			a
+				height: 80px
+			a:hover .inner>span
+				width: 0
+			.inner+span
+				height: 80px
+				top: -80px
+				padding: 23px 0
+				font-size: 12px
+				background-color: #f3f3f3
+				
+	#connect
+		.content
+			padding: 50px 0
+			margin-bottom: 0
+		form
+			display: none				
 
 /* Custom, iPhone Retina */
 @media only screen and (max-width : 320px)
@@ -272,21 +400,18 @@
 			background-repeat: no-repeat
 			background-size: cover
 	#about
+		img
+			display: none
 		.content
 			background-image: url(../img/about_bg.jpg)
 			background-repeat: no-repeat
-			background-size: cover		
+	#price
+		h3+img
+			display: none		
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px)
-	#price
-		h3+img
-			display: none			
-	#about
-		img
-			display: none	
 	
-
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px)
@@ -323,6 +448,14 @@
 		left: 30px
 	.horizon-next 
 		right: 30px
+
+	.content_table
+		display: table
+		width: 100%
+		height: 100%
+	.content_cell
+		display: table-cell
+		vertical-align: middle
 	
 @media only screen and (min-width : 1850px)
 	

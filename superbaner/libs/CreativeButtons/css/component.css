@@ -264,8 +264,10 @@
   background-color: #5580cd;
 }
 
+
+
 /* Button 8e */
-.btn-8e {
+.btn-8e:hover {
   -webkit-transform: rotateX(-15deg);
           transform: rotateX(-15deg);
 }
@@ -274,7 +276,7 @@
   width: 100%;
   height: 42%;
   left: 0;
-  top: -40%;
+  top: -42%;
   background: #49a7df;
   -webkit-transform-origin: 0% 100%;
       -ms-transform-origin: 0% 100%;
