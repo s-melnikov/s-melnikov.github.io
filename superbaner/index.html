@@ -42,7 +42,7 @@
 	</div>
 	<div class="cap"></div>
 
-		 <!-- <a href="#" class="toggle-menu hidden-lg hidden-md">|||</a>  -->
+		 <a href="#" class="toggle-menu"><span></span></a> 
 	 <nav class="main-menu">
 	 	<ul>
 			<li>
@@ -85,10 +85,10 @@
 				</div>
 			</header>	
 			<div class="content">
-				<!-- <video autoplay loop class="video_bg">
+				<video autoplay loop class="video_bg">
 					<source src="video/moon2.mp4" type="video/mp4">
 					<source src="video/moon2.webm" type="video/webm">
-				</video> -->
+				</video>
 				<div class="text hidden-xs">
 					<div class="col-lg-11 col-lg-offset-1">
 						<p>This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non  mauris vitae erat consequat auctor eu in elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit. Sed ut imperdiet nisi. Proin condimentum fermentum nunc. Etiam pharetra, erat sed fermentum feugiat, velit mauris egestas quam, ut aliquam massa nisl quis neque. Suspendisse in orci enim.</p>
@@ -377,7 +377,9 @@
 							</form>
 						</div>
 					</div>
-					
+				</div>
+				<div class="main_button mob">
+					<a href="#callback" class=""><b>Заказать </b>Super<b>Баннер</b></a>
 				</div>
 			</div>
 		</div>
@@ -398,7 +400,20 @@
 			
 		</div>
 		
-	</footer>		
+	</footer>
+
+<div class="menu_modal">
+	<ul>
+		<li class="menu_close"><span></span></li>
+		<li><a href="#about">О студии</a></li>
+		<li><a href="#gallery">Портфолио</a></li>
+		<li><a href="#price">Цены</a></li>
+		<li><a href="blog.html">Блог</a></li>
+		<li><a href="#connect">Контактная информация</a></li>
+		<li><a href="#">Заказать баннер</a></li>
+	</ul>
+</div>
+
 <div class="hidden">
 	<form class="form" id="callback">
 		<label>
@@ -418,11 +433,11 @@
 </div>
 
 <script type="text/javascript">
-  // By default, swipe is enabled.
-  $('section').horizon();
+    // By default, swipe is enabled.
+    $('section').horizon();
 
-  // If you do not want to include another plugin, TouchSwipe, you can set it to false in the default options by passing in the option as false.
-  //$('section').horizon({swipe: false});
+    // If you do not want to include another plugin, TouchSwipe, you can set it to false in the default options by passing in the option as false.
+    //$('section').horizon({swipe: false});
 </script>
 
 	<!--[if lt IE 9]>
@@ -433,25 +448,32 @@
 	<![endif]-->
 	<script src="libs/modernizr/modernizr.js"></script>
 	<script src="libs/Magnific-Popup/jquery.magnific-popup.min.js"></script>
-	<script src="libs/CreativeButtons/classie.js"></script>	
+	<script src="libs/CreativeButtons/classie.js"></script>
+	
 	<script src="js/common.js"></script>
-
 	<script>
-		var buttons7Click = Array.prototype.slice.call( document.querySelectorAll( '#btn-click button' ) ),
-				totalButtons7Click = buttons7Click.length;
-		buttons7Click.forEach(function(el, i) { el.addEventListener( 'click', activate, false ); } );			
-		function activate() {
-			var self = this, activatedClass = 'btn-activated';
-			if( classie.has( this, 'btn-7h' ) ) {
-				// if it is the first of the two btn-7h then activatedClass = 'btn-error';
-				// if it is the second then activatedClass = 'btn-success'
-				activatedClass = buttons7Click.indexOf( this ) === totalButtons7Click-2 ? 'btn-error' : 'btn-success';
-			}				
-			if( !classie.has( this, activatedClass ) ) {
-				classie.add( this, activatedClass );
-				setTimeout( function() { classie.remove( self, activatedClass ) }, 2000 );
+			var buttons7Click = Array.prototype.slice.call( document.querySelectorAll( '#btn-click button' ) ),
+					totalButtons7Click = buttons7Click.length;
+
+			buttons7Click.forEach( function( el, i ) { el.addEventListener( 'click', activate, false ); } );
+			
+			function activate() {
+				var self = this, activatedClass = 'btn-activated';
+
+				if( classie.has( this, 'btn-7h' ) ) {
+					// if it is the first of the two btn-7h then activatedClass = 'btn-error';
+					// if it is the second then activatedClass = 'btn-success'
+					activatedClass = buttons7Click.indexOf( this ) === totalButtons7Click-2 ? 'btn-error' : 'btn-success';
+				}
+				
+				if( !classie.has( this, activatedClass ) ) {
+					classie.add( this, activatedClass );
+					setTimeout( function() { classie.remove( self, activatedClass ) }, 2000 );
+				}
 			}
-		}	
-	</script>	
+	
+	</script>
+
+	
 </body>
 </html>

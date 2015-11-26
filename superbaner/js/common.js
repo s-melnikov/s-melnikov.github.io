@@ -12,6 +12,10 @@ $(function() {
 		midClick: true
 	});
 	
+	$(".toggle-menu").click(function() {
+		$(this).toggleClass("on");
+		$(".menu_modal").slideToggle();
+	});
 	
 	/*$(".gallery-item").each(function(i) {
 		$(this).find("a").attr("href", "#work_" + i);

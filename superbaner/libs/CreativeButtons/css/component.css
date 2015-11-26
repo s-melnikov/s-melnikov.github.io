@@ -61,10 +61,6 @@
   top: 0;
 }
 
-.btn-4c:hover:before {
-  
-}
-
 .icon-arrow-right:before {
   content: "\e00d";
   position: absolute;
@@ -259,12 +255,6 @@
   -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d;
 }
-
-.btn-8:active {
-  background-color: #5580cd;
-}
-
-
 
 /* Button 8e */
 .btn-8e:hover {

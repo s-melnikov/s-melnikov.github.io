@@ -12,7 +12,6 @@
 
   .main-menu {
     margin-left: -755px;
-    top: 440px;
   }
   .main-menu i {
     height: 70px;
@@ -94,7 +93,6 @@
 
   .main-menu {
     margin-left: -629px;
-    top: 345px;
   }
 
   .cap {
@@ -222,10 +220,10 @@
     padding-top: 30px;
   }
 
-  #main_section .content {
+  #main_section .content, #about .content {
     min-height: 620px;
   }
-  #main_section .content .text {
+  #main_section .content .text, #about .content .text {
     padding-left: 30px;
   }
 
@@ -259,6 +257,9 @@
     width: 325px;
   }
 
+  #connect header {
+    background-color: #f6f6f6;
+  }
   #connect form {
     margin-top: 30px;
   }
@@ -288,17 +289,49 @@
     margin: 20px auto;
     width: 435px;
   }
+
+  .menu_modal {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100%;
+    text-align: center;
+    background-color: #cd3e2f;
+    opacity: 0.9;
+  }
+  .menu_modal ul {
+    display: table;
+    width: 100%;
+    height: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  .menu_modal ul li {
+    display: table-row;
+  }
+  .menu_modal ul li a {
+    display: block;
+    font-family: "Open Sans" sans-serif;
+    font-weight: 800;
+    line-height: 2;
+  }
+  .menu_modal ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
 }
 /* Small Devices, Tablets */
 @media only screen and (max-width: 768px) {
   header {
-    height: 105px;
+    height: 110px;
   }
   header::before, header::after {
     border-width: 0;
     width: 15px;
     height: 100%;
-    background: inherit;
+    background-color: inherit;
   }
   header::before {
     left: 99%;
@@ -394,6 +427,7 @@
   }
   #main_section header {
     top: 32px;
+    background-image: none;
   }
 
   header {
@@ -401,14 +435,17 @@
         -ms-transform: rotate(-5deg);
             transform: rotate(-5deg);
     z-index: 1;
-    height: 105px;
     top: -90px;
+    background-image: url("../img/logo_header_mob.png");
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   #about {
     background-color: #fff;
   }
   #about .text {
+    position: relative;
     padding: 10px;
     margin-top: 0;
     text-align: justify;
@@ -475,7 +512,7 @@
   #price .description .inner + span {
     height: 80px;
     top: -80px;
-    padding: 23px 0;
+    padding: 23px 4px;
     font-size: 12px;
     background-color: #f3f3f3;
   }
@@ -483,6 +520,30 @@
   #connect .content {
     padding: 50px 0;
     margin-bottom: 0;
+  }
+  #connect .content .data {
+    font-size: 14px;
+    margin-bottom: 35px;
+  }
+  #connect .content .data a::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 70px;
+    height: 80px;
+    border-right: 1px solid #fff;
+    background: url("../img/icon_mail_mob.png") no-repeat center;
+  }
+  #connect .content .data a {
+    line-height: 80px;
+    padding-right: 10px;
+    text-align: right;
+  }
+  #connect .content .blue a {
+    padding-right: 50px;
+  }
+  #connect .content .blue a:before {
+    background: url("../img/icon_skype_mob.png") no-repeat center;
   }
   #connect form {
     display: none;
@@ -549,7 +610,6 @@
     position: fixed;
     top: 50%;
     margin-top: -75px;
-    z-index: 9999;
   }
 
   .horizon-prev {
