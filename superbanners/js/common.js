@@ -12,11 +12,18 @@ $(function() {
 		midClick: true
 	});
 	
-	$(".toggle-menu").click(function() {
-		$(this).toggleClass("on");
+	$(".toggle").click(function() {
+		
 		$(".menu_modal").slideToggle();
 	});
-	
+
+	$("[data-modal]").on("click", function() {
+		$($(this).data("modal")).addClass("show");
+			});
+		$(".modal [data-close]").on("click", function() {
+			$(this).parents(".modal").removeClass("show");
+	});
+				
 	/*$(".gallery-item").each(function(i) {
 		$(this).find("a").attr("href", "#work_" + i);
 		$(this).find(".gal-descr").attr("id", "work_" + i);
@@ -48,13 +55,10 @@ $(function() {
 
 	//Chrome Smooth Scroll
 	
-	$("img, a").on("dragstart", function(event) { event.preventDefault(); });
-	
+	$("img, a").on("dragstart", function(event) { event.preventDefault(); });	
 });
 
 $(window).load(function() {
-
 	$(".loader_inner").fadeOut();
 	$(".loader").delay(400).fadeOut("slow");
-
 });

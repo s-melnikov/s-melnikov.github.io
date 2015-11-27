@@ -55,28 +55,28 @@ body textarea {
 
 body input:required:valid,
 body textarea:required:valid {
-  color: #e7a49d;
+  color: #cd3e2f;
   border: none;
   outline: none;
 }
 
 *::-webkit-input-placeholder {
-  color: #e7a49d;
+  color: #cd3e2f;
   opacity: 1;
 }
 
 *:-moz-placeholder {
-  color: #e7a49d;
+  color: #cd3e2f;
   opacity: 1;
 }
 
 *::-moz-placeholder {
-  color: #e7a49d;
+  color: #cd3e2f;
   opacity: 1;
 }
 
 *:-ms-input-placeholder {
-  color: #e7a49d;
+  color: #cd3e2f;
   opacity: 1;
 }
 
@@ -130,7 +130,7 @@ a, a:hover, a:focus, a:active {
 .video_bg {
   position: absolute;
   left: 0;
-  top: -50px;
+  top: -30px;
   width: 100%;
   height: auto;
 }
@@ -176,121 +176,48 @@ h5:after {
   border-bottom: 1px solid #ccc;
 }
 
+.btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  -webkit-transition: all 0.3s;
+          transition: all 0.3s;
+}
+
+.btn.main_button {
+  display: block;
+}
+
 .main_button {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-left: -267px;
+  margin-left: -270px;
   margin-top: 66px;
-  font-size: 1.875em;
 }
-.main_button a {
+
+.main_button span,
+.modal-footer button span {
+  font-family: "Open Sans Condensed", "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  font-weight: 300;
+  font-size: 32px;
+  text-transform: uppercase;
+  text-align: center;
   background-color: #cd3e2f;
   line-height: 4;
-  padding: 0 110px;
-  display: inline-block;
+  display: block;
+  padding: 0 119px;
 }
 
-.menu_modal {
+.menu_modal,
+.toggle {
   display: none;
-}
-
-.toggle-menu {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  line-height: 22px;
-  display: block;
-  width: 22px;
-  height: 22px;
-  z-index: 5;
-}
-
-.toggle-menu span:after,
-.toggle-menu span:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 7px;
-}
-
-.toggle-menu span:after {
-  top: 14px;
-}
-
-.toggle-menu span {
-  position: relative;
-  display: block;
-}
-
-.toggle-menu span,
-.toggle-menu span:after,
-.toggle-menu span:before {
-  width: 100%;
-  height: 2px;
-  background-color: #fff;
-  -webkit-transition: all 0.3s;
-          transition: all 0.3s;
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-  border-radius: 2px;
-}
-
-.toggle-menu.on span {
-  background-color: transparent;
-}
-
-.toggle-menu.on span:before {
-  -webkit-transform: rotate(45deg) translate(-1px, 0px);
-      -ms-transform: rotate(45deg) translate(-1px, 0px);
-          transform: rotate(45deg) translate(-1px, 0px);
-}
-
-.toggle-menu.on span:after {
-  -webkit-transform: rotate(-45deg) translate(5px, -6px);
-      -ms-transform: rotate(-45deg) translate(5px, -6px);
-          transform: rotate(-45deg) translate(5px, -6px);
-}
-
-.menu_close {
-  text-align: right;
-}
-
-.menu_close span {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  margin: 20px 20px 0;
-  width: 30px;
-  height: 30px;
-}
-
-.menu_close span:after,
-.menu_close span:before {
-  width: 100%;
-  height: 2px;
-  background-color: #fff;
-  border-radius: 2px;
-}
-
-.menu_close span:after,
-.menu_close span:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 13px;
-}
-
-.menu_close span:before {
-  -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-          transform: rotate(45deg);
-}
-
-.menu_close span:after {
-  -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
-          transform: rotate(-45deg);
 }
 
 header {
@@ -646,12 +573,12 @@ footer nav a.btn {
 #connect h2 {
   color: #252525;
 }
-#connect form {
+
+form {
   font-size: 20px;
   margin-top: 40px;
-  padding: 0 15px;
 }
-#connect form label, #connect form input, #connect form textarea, #connect form button {
+form label, form input, form textarea {
   display: block;
   width: 100%;
   border: none;
@@ -660,26 +587,16 @@ footer nav a.btn {
   resize: none;
   text-align: center;
 }
-#connect form label {
+form label {
   border-bottom: 1px solid #e1e1e1;
   margin-bottom: 16px;
   padding-top: 32px;
 }
-#connect form .button-wrap {
+form .button-wrap {
   background-color: #cd3e2f;
 }
-
-#callback {
-  max-width: 740px;
-  background-color: #fff;
-  margin: auto;
-  padding: 55px;
-  position: relative;
-}
-#callback .button-wrap {
-  margin-top: 50px;
-  position: relative;
-  z-index: 1;
+form .button-wrap .btn-7h {
+  width: 100%;
 }
 
 /* Blog */
@@ -704,4 +621,60 @@ footer nav a.btn {
   padding: 15px 20px;
   font-family: inherit;
   font-size: 15px;
+}
+
+/* Modal css */
+.modal {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2000;
+  visibility: hidden;
+}
+
+.modal-content {
+  margin: 50px auto auto;
+  max-width: 540px;
+  background-color: #fff;
+}
+
+.modal.show {
+  visibility: visible;
+}
+
+.modal-header {
+  text-align: right;
+}
+.modal-header span {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 15px;
+  cursor: pointer;
+}
+.modal-header span:after, .modal-header span:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 100%;
+  height: 2px;
+  background-color: #d5d5d5;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  border-radius: 2px;
+}
+.modal-header span:before {
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.modal-header span:after {
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
 }

@@ -1,16 +1,5 @@
 /* CreativeButton */
-.btn {
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  -webkit-transition: all 0.3s;
-          transition: all 0.3s;
-}
+
 .btn:after {
   content: "";
   position: absolute;

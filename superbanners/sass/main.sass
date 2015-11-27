@@ -51,23 +51,23 @@ body textarea
 	outline: none
 body input:required:valid,
 body textarea:required:valid
-	color: #e7a49d
+	color: #cd3e2f
 	border: none
 	outline: none
 *::-webkit-input-placeholder
-	color: #e7a49d
+	color: #cd3e2f
 	opacity: 1
 
 *:-moz-placeholder
-	color: #e7a49d
+	color: #cd3e2f
 	opacity: 1
 
 *::-moz-placeholder
-	color: #e7a49d
+	color: #cd3e2f
 	opacity: 1
 
 *:-ms-input-placeholder
-	color: #e7a49d
+	color: #cd3e2f
 	opacity: 1
 
 a, a:hover, a:focus, a:active
@@ -110,7 +110,7 @@ a, a:hover, a:focus, a:active
 .video_bg
 	position: absolute
 	left: 0 
-	top: -50px
+	top: -30px
 	width: 100%
 	height: auto
 	
@@ -150,89 +150,39 @@ h5
 		width: 25em
 		border-bottom: 1px solid #ccc
 	
+.btn
+	border: none
+	background: none
+	padding: 0
+	font-family: inherit
+	font-size: inherit
+	color: inherit
+	cursor: pointer
+	display: inline-block
+	position: relative
+	transition: all 0.3s
+.btn.main_button
+	display: block
 .main_button
 	position: absolute
 	top: 50%
 	left: 50%
-	margin-left: -267px
+	margin-left: -270px
 	margin-top: 66px
-	font-size: em(30px)
-	a
-		background-color: $main_color
-		line-height: 4
-		padding: 0 110px
-		display: inline-block
-.menu_modal
+.main_button span,
+.modal-footer button span
+	font-family: "Open Sans Condensed", $helvetica
+	font-weight: 300
+	font-size: 32px
+	text-transform: uppercase
+	text-align: center
+	background-color: $main_color
+	line-height: 4
+	display: block
+	padding: 0 119px
+.menu_modal,
+.toggle
 	display: none	
-.toggle-menu
-	position: absolute
-	top: 15px
-	left: 15px
-	line-height: 22px  
-	display: block
-	width: 22px
-	height: 22px
-	z-index: 5
-
-.toggle-menu span:after,
-.toggle-menu span:before 
-	content: ""
-	position: absolute
-	left: 0
-	top: 7px
-
-.toggle-menu span:after
-	top: 14px
-
-.toggle-menu span 
-	position: relative
-	display: block
-
-.toggle-menu span,
-.toggle-menu span:after,
-.toggle-menu span:before
-	width: 100%
-	height: 2px
-	background-color: #fff
-	transition: all 0.3s
-	backface-visibility: hidden
-	border-radius: 2px
-
-
-.toggle-menu.on span 
-	background-color: transparent
-
-.toggle-menu.on span:before 
-	transform: rotate(45deg) translate(-1px, 0px)
-
-.toggle-menu.on span:after 
-	transform: rotate(-45deg) translate(5px, -6px)
-
-.menu_close
-	text-align: right
-.menu_close span
-	position: relative
-	display: inline-block
-	cursor: pointer
-	margin: 20px 20px 0
-	width: 30px
-	height: 30px
-.menu_close span:after,
-.menu_close span:before
-	width: 100%
-	height: 2px
-	background-color: #fff
-	border-radius: 2px
-.menu_close span:after,
-.menu_close span:before 
-	content: ""
-	position: absolute
-	left: 0
-	top: 13px
-.menu_close span:before 
-	transform: rotate(45deg)
-.menu_close span:after 
-	transform: rotate(-45deg)
 
 // Header //	
 header
@@ -523,35 +473,26 @@ footer
 			color: $main_color
 	h2
 		color: $bg_wraper
-	form
-		font-size: 20px
-		margin-top: 40px 
-		padding: 0 15px
-		label, input, textarea, button
-			display: block
-			width: 100%
-			border: none
-			font-size: inherit
-			text-transform: uppercase
-			resize: none
-			text-align: center
-		label
-			border-bottom: 1px solid #e1e1e1
-			margin-bottom: 16px
-			padding-top: 32px
-		.button-wrap
-			background-color: $main_color
-			
-#callback
-	max-width: 740px
-	background-color: #fff
-	margin: auto
-	padding: 55px
-	position: relative
+form
+	font-size: 20px
+	margin-top: 40px 
+	
+	label, input, textarea
+		display: block
+		width: 100%
+		border: none
+		font-size: inherit
+		text-transform: uppercase
+		resize: none
+		text-align: center
+	label
+		border-bottom: 1px solid #e1e1e1
+		margin-bottom: 16px
+		padding-top: 32px
 	.button-wrap
-		margin-top: 50px
-		position: relative
-		z-index: 1
+		background-color: $main_color
+		.btn-7h
+			width: 100%	
 
 /* Blog */
 
@@ -573,3 +514,45 @@ footer
 		font-family: inherit
 		font-size: 15px
 
+/* Modal css */
+.modal
+	background-color: rgba(0, 0, 0, .4)
+	position: fixed
+	left: 0
+	right: 0
+	top: 0
+	bottom: 0
+	z-index: 2000
+	visibility: hidden
+	
+.modal-content
+	margin: 50px auto auto
+	max-width: 540px
+	background-color: #fff
+
+.modal.show 
+	visibility: visible
+.modal-header
+	text-align: right
+	span
+		position: relative
+		display: inline-block
+		width: 30px
+		height: 30px
+		margin: 15px
+		cursor: pointer
+		&:after,
+		&:before
+			content: ""
+			position: absolute
+			left: 0
+			top: 14px
+			width: 100%
+			height: 2px
+			background-color: #d5d5d5
+			backface-visibility: hidden
+			border-radius: 2px
+		&:before 
+			transform: rotate(45deg)
+		&:after 
+			transform: rotate(-45deg)

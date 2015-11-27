@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="ru"> <!--<![endif]-->
+
+<head>
+
+	<meta charset="utf-8">
+
+	<title>Заголовок</title>
+	<meta name="description" content="">
+
+	<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="img/favicon/apple-touch-icon-114x114.png">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+		
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,300,700,800&subset=cyrillic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/media.css">
+	<link rel="stylesheet" href="libs/Magnific-Popup/magnific-popup.css">
+	<link rel="stylesheet" href="libs/CreativeButtons/css/component.css">
+
+	<script src="libs/jquery/jquery-1.11.2.min.js"></script>
+	<script src="libs/horizonScroll/jquery.touchSwipe.js"></script>
+  <script src="libs/horizonScroll/jquery.horizonScroll.js"></script>
+	
+</head>
+
+<body>
+
+	<div class="modal" id="form-modal">
+	<div class="modal-content">
+		<div class="modal-header"><div class="toggle close"><span></span></div></div>
+		<form class="form">
+			<div class="modal-body">
+				<label>
+					<input type="text" name="email" placeholder="Укажите Ваш E-Mail" required>
+				</label>
+				<label>
+					<textarea rows="1" name="message" placeholder="Опишите заказ и ваши пожелания" required></textarea>
+				</label>
+			</div>
+			<div class="modal-footer">
+				<button class="btn">
+					<b>Заказать </b>Super<b>Баннер</b>
+				</button>
+			</div>
+			<input type="hidden" name="formname" value="">
+		</form>
+	</div>
+</div>
+	
+	<script src="libs/modernizr/modernizr.js"></script>
+	<script src="libs/Magnific-Popup/jquery.magnific-popup.min.js"></script>
+	<script src="libs/CreativeButtons/classie.js"></script>
+	
+	<script src="js/common.js"></script>
+	<script>
+							$(function() {
+								$("[data-modal]").on("click", function() {
+									$($(this).data("modal")).addClass("show");
+								});
+								$(".modal [data-close]").on("click", function() {
+									$(this).parents(".modal").removeClass("show");
+								});
+							});
+						</script>
+</body>
+</html>
