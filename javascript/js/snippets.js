@@ -170,20 +170,6 @@ function waitFor(obj, prop, func, self, count) {
   }
 }
 
-/*
-function wait(obj, prop, func, time, self) {
-  var start
-  if (obj[prop])
-    func.apply(self)
-  else {
-    start = new Date()
-    if (count < 1000) setTimeout(function() {
-      waitFor(obj, prop, func, time, self)
-    }, 0);
-  }
-}
-*/
-
 
 /* bling.js */
  
@@ -343,3 +329,48 @@ function copyTextToClipboard(text) {
   document.execCommand('copy');
   textarea.remove();
 }
+
+function randBase64(length) {
+  var ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  var str = "";
+  for (var i=0; i < length; ++i) {
+    var rand = Math.floor(Math.random() * ALPHABET.length);
+    str += ALPHABET.substring(rand, rand+1);
+  }
+  return str;
+}
+
+var prefix = (function () {
+  var styles = window.getComputedStyle(document.documentElement, ''),
+    pre = (Array.prototype.slice
+      .call(styles)
+      .join('') 
+      .match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
+    )[1],
+    dom = ('WebKit|Moz|MS|O').match(new RegExp('(' + pre + ')', 'i'))[1];
+  return {
+    dom: dom,
+    lowercase: pre,
+    css: '-' + pre + '-',
+    js: pre[0].toUpperCase() + pre.substr(1)
+  };
+})();
+
+function whichTransitionEvent(){
+  var t;
+  var el = document.createElement('fakeelement');
+  var transitions = {
+    'transition':'transitionend',
+    'OTransition':'oTransitionEnd',
+    'MozTransition':'transitionend',
+    'WebkitTransition':'webkitTransitionEnd'
+  }
+  for(t in transitions) {
+    if( el.style[t] !== undefined ) {
+      return transitions[t];
+    }
+  }
+}
+
+/* Listen for a transition! */
+var transitionEvent = whichTransitionEvent();
