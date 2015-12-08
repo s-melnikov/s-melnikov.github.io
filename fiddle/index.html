@@ -89,8 +89,8 @@
       var value = snap.val()
       if (value && value.userUid !== userUid) {
         isOtherUserChanges = true
-        var cursor = doc.selection.getCursor()
-        doc.setValue(snap.val().data)
+        var cursor = value.cursor || doc.selection.getCursor()
+        doc.setValue(value.data)
         doc.selection.moveCursorToPosition(cursor)
         editor.scrollToRow(cursor.row - 10);
       }
@@ -106,7 +106,8 @@
       recordref.set({
         userUid: userUid, 
         data: value,
-        time: Date.now()
+        time: Date.now(),
+        cursor: doc.selection.getCursor()
       })
     }, DEBOUNCE_TIME))    
 
