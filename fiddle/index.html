@@ -3,27 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <title>LiveCodding</title>
-  <style>  
+  <style>
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+    }
     body {
       margin: 0;
       padding: 0;
     }
     #editor, #result {
-      box-sizing: border-box;
-      position: fixed;
       height: 100%;
-      top: 0;
+      float: left;
     }
     #result {
       border: none;
-      width: 55%;
     }
     #editor {
       font: 12px/1.2 Consolas, Monaco, Menlo, 'Ubuntu Mono', monospace;
-      width: 45%;
     }
     #result {
       right: 0;
+    }
+    .split {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .gutter {
+      background-color: #eee;
+      background-repeat: no-repeat;
+      background-position: 50%;
+    }
+    .gutter.gutter-horizontal {
+      background-image: url('assets/vertical.png');
+      cursor: ew-resize;
+    }
+    .gutter.gutter-vertical {
+      background-image: url('assets/horizontal.png');
+      cursor: ns-resize;
+    }
+    .split, .gutter.gutter-horizontal {
+      height: 100%;
+      float: left;
     }
   </style>
 </head>
@@ -32,6 +57,7 @@
   <iframe id="result"></iframe>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
   <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  <script src='assets/split.min.js'></script>
   <script>
     var 
       DEBOUNCE_TIME = 500,
@@ -54,7 +80,7 @@
     } else {
       recordref = fbref.push()
       location.hash = recordref.key()
-      get('default.html', function(r) {
+      get('assets/default.html', function(r) {
         doc.setValue(r)
       })
     }
@@ -72,9 +98,7 @@
 
     doc.on('change', debounce(function(e) { 
       var value = doc.getValue()
-      result.contentWindow.document.open()
-      result.contentWindow.document.write(value)
-      result.contentWindow.document.close()
+      result.srcdoc = value
       if (isOtherUserChanges) {
         isOtherUserChanges = false
         return
@@ -115,6 +139,11 @@
       for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));      
       return text;
     }
+
+    Split(["#editor", "#result"], {
+      sizes: [40, 60],
+      minSize: 200
+    })
   </script>
 </body>
 </html>
