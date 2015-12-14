@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+
+  <script>
+    /**
+     * A Javascript test runner in 20 lines of code
+     */
+    (function () {
+      var tests = [];
+      this.test = function test (name, cb) {
+        tests.push({name: name, test: cb});
+      };
+      this.run = function run () {
+        var i = 0, testToRun;
+        (function next (err) {
+          if (testToRun) console[err ? 'error' : 'log'](err ? '✘' : '✔', testToRun.name);
+          if (err || !(testToRun = tests[i++])) return done(err);
+          try {
+            testToRun.test.call(testToRun.test, next);
+          } catch (err) {
+            next(err);
+          }
+        })();
+        function done (err) {
+          tests.slice(i).map(function (skippedTest) { console.log('-', skippedTest.name); });
+          console[err ? 'error' : 'log']('\nTests ' + (err ? 'failed!\n' + err.stack : 'succeeded!'));
+        }
+      };
+      this.assert = function(condition, message) {
+        if (!condition) throw new Error(message);
+      }
+    })();
+
+    test('1+1 equals 2', function (done) {
+      assert(1+1 === 2, '1+1 should be 2');
+      done();
+    });
+    test('1+2 equals 3', function (done) {
+      assert(1+2 === 3, '1+2 should be 3');
+      done();
+    });
+    test('1+2 equals 4', function (done) {
+      assert(1+2 === 4, '1+2 should also be 4');
+      done();
+    });
+
+    run();
+  </script>
+</body>
+</html>

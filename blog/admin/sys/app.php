@@ -17,7 +17,7 @@ error(404, function () {
 
 
 function authenticated() {
-  ret
+  return false;
 }
 
 ?>
