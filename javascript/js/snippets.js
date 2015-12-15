@@ -374,3 +374,48 @@ function whichTransitionEvent(){
 
 /* Listen for a transition! */
 var transitionEvent = whichTransitionEvent();
+
+function observable(el) {
+  var cb = {}, slice = [].slice;
+  el.on = function(events, fn) {
+    if (typeof fn === "function") {
+      events.replace(/[^\s]+/g, function(name, pos) {
+        (cb[name] = cb[name] || []).push(fn)
+        fn.typed = pos > 0
+      })
+    }
+    return el
+  }
+  el.off = function(events, fn) {
+    if (events === "*") cb = {}
+    else if (fn) {
+      var arr = cb[events]
+      for (var i = 0, cb; (cb = arr && arr[i]); ++i) {
+        if (cb === fn) { arr.splice(i, 1); i--; }
+      }
+    } else {
+      events.replace(/[^\s]+/g, function(name) {
+        cb[name] = []
+      });
+    }
+    return el
+  }
+  el.one = function(name, fn) {
+    if (fn) fn.one = true
+    return el.on(name, fn)
+  }
+  el.trigger = function(name) {
+    var args = slice.call(arguments, 1),
+      fns = cb[name] || []
+    for (var i = 0, fn; (fn = fns[i]); ++i) {
+      if (!fn.busy) {
+        fn.busy = true
+        fn.apply(el, fn.typed ? [name].concat(args) : args)
+        if (fn.one) { fns.splice(i, 1);i--; }
+        fn.busy = false
+      }
+    }
+    return el
+  }
+  return el
+}
