@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VK-Dumper</title>
+</head>
+<body>
+
+  <div id="outlet"></div>
+
+  <script type="html/template" id="item">
+    <div class="item"></div>
+  </script>
+  <script>
+  var 
+    offset = 50,
+    outlet = document.querySelector("#outlet"),
+    itemTpl = document.querySelector("#item").innerText,
+    data,
+  
+  request('dump.json', function(r) {
+    data = r
+    build()
+  })
+  
+  function buil() {
+    var d = data.slice()
+  }
+  function render(t, d) {
+    return t.replace(/\{([\S]+)\}/gi, function(n, m) {
+      return d[m] != null ? d[m] : ""
+    })
+  }
+  function request(u, c, r) {
+    r = new XMLHttpRequest
+    r.open('get', u, !0),
+    r.onload = function() {
+      if (r.status >= 200 && r.status < 400) c(JSON.parse(r.response))
+    },
+    r.send()
+  }
+  </script>  
+</body>
+</html>
