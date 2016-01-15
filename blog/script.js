@@ -108,7 +108,6 @@
 
   function renderPageIndex() {
     each($$('.page'), function(el) { el.classList.remove('active') })
-    $('#page-index').classList.add('active')
-    
+    $('#page-index').classList.add('active')    
   }
 }()
