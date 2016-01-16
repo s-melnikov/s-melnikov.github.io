@@ -1,0 +1,11 @@
+{
+  "posts": [
+    {
+      "id": "seven-essential-javascripts-functions",
+      "title": "7 полезных JavaScript функций",
+      "date": "Jan 16 2016",
+      "type": "public",
+      "tags": "javascript, перевод"
+    }
+  ]
+}
