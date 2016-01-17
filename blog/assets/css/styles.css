@@ -6,8 +6,7 @@ html {
 }
 body {
   padding: 0;
-  margin: 15px auto;
-  max-width: 640px;
+  margin: 0;
   color: #444;
   background: #fbfbfb;
 }
@@ -38,16 +37,24 @@ h4 {
 h5 {
   font-size: .9em;
 }
-.logo {
-  margin-bottom: 50px;
-  font-weight: 400;
-  font-size: 1.4em;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 1em
+.header {
+  padding: 5em 0;
+  background: url(../img/bg_3.jpg) center;
+  background-size: cover;
+  margin-bottom: 5em;
 }
-.logo a {
+.header h1 {  
+  margin-bottom: 50px;
+  font-weight: 600;
+  font-size: 3em;
+}
+.header h1 a {
   border-bottom: none;
-  color: #444;
+  color: #fff;
+}
+.container {
+  max-width: 720px;
+  margin: 0 auto;
 }
 .page {
   display: none;
@@ -59,10 +66,11 @@ h5 {
 .post {
   margin-bottom: 1em;
 }
-.post h3 {
+.post h2 {
   margin: 0;
+  font-size: 2em;
 }
-.post h3 a {
+.post h2 a {
   text-shadow: 0 1px 0 #fff;
   font-weight: 400;
   border-bottom: none;

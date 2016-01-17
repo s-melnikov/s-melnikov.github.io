@@ -1,7 +1,7 @@
 !function() {
 
   var 
-    months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'],
+    months = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'],
     converter = new Showdown.converter({ extensions: ['prettify'] }),
     posts = null
 
@@ -97,11 +97,12 @@
       posts[post.id] = post
       if (post.type != 'public') return
       return '<div class="post">'+
-        '<h3>'+
+        '<h2>'+
           '<a href="#/'+post.id+'">'+post.title+'</a>'+
-        '</h3>'+
+        '</h2>'+
+        '<div class="exerpt">'+post.exerpt+'</div>'+
         '<div class="meta">'+
-          '<div class="date">'+date(post.date, 'M d Y')+'</div>'+
+          '<div class="date">'+date(post.date, 'd M Y')+'</div>'+
         '</div>'+
       '</div>'
     }).join(' ') 
