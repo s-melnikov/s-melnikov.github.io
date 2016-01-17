@@ -3,6 +3,7 @@ html {
   line-height: 1.4;
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
+  overflow-y: scroll;
 }
 body {
   padding: 0;
