@@ -1,0 +1,21 @@
+{
+  "font_size": 10,
+
+  "show_encoding": true,
+
+  "tab_size": 2,
+
+  "translate_tabs_to_spaces": true,
+
+  "draw_white_space": "selection", //all
+
+  "trim_trailing_white_space_on_save": true,
+
+  "save_on_focus_lost": true,
+
+  "copy_with_empty_selection": false,
+
+  "drag_text": false,
+
+  "overlay_scroll_bars": "enabled"
+}
