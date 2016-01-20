@@ -1,9 +1,10 @@
 !function() {
 
-  var 
+  var
     months = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'],
     converter = new Showdown.converter({ extensions: ['prettify'] }),
-    posts = null
+    templates = {},
+    postMeta = []
 
   function $(query) {
     return document.querySelector(query)
@@ -13,17 +14,17 @@
     return document.querySelectorAll(query)
   }
 
-  function each(list, cb) {    
+  function each(list, cb) {
     for (var i = 0, ln = list.length; i < ln; i++) cb(list[i], i)
   }
- 
+
   function request(url, callback) {
     var xhttp = new XMLHttpRequest()
     xhttp.open('GET', url, true)
     if (callback) {
-      xhttp.onload = function() { 
+      xhttp.onload = function() {
         if (xhttp.status >= 200 && xhttp.status < 400) {
-          callback(xhttp.responseText) 
+          callback(xhttp.responseText)
         }
       }
     }
@@ -49,21 +50,47 @@
       .replace("s", s[1] ? s : "0" + s[0])
   }
 
+  function tpl(str, obj) {
+    return str.replace(/{\s*([\s\S]+?)\s*}/g, function(match, key) {
+      return obj[key] == null ? '' : obj[key]
+    })
+  }
+
   function markdown(text) {
     return converter.makeHtml(text)
   }
 
-  function router(path, cb) {    
-    if (cb) {
-      function pop() {
-        var match = location.hash.slice(1).match(new RegExp('^'+path+'$'))
-        match && cb.apply(null, match.slice(1))
+  function Router() {
+
+    var routes = [], current;
+
+    this.add = function(re, handler) {
+      if (!handler) {
+        handler = re, re = '';
       }
-      window.addEventListener('hashchange', pop, false)      
-      document.addEventListener('DOMContentLoaded', pop, false)
-    } else {
-      location.hash = path
+      re = re.replace(/^\/|\/$/g, '')
+      routes.push({re: new RegExp('^'+re+'$'), handler: handler});
+      return this;
     }
+
+    this.run = function(hash) {
+      var match;
+      hash = (hash && !hash.type) ? hash : window.location.hash.slice(1);
+      hash = hash.replace(/^\/|\/$/g, '');
+      if (current == hash) return this;
+      for (var i = 0; i < routes.length; i++) {
+        match = hash.match(routes[i].re);
+        if (match) {
+          current = hash;
+          match.shift();
+          routes[i].handler.apply({}, match);
+          return this;
+        }
+      }
+      return this;
+    }
+
+    window.addEventListener('hashchange', this.run.bind(this));
   }
 
   function page(name) {
@@ -71,59 +98,50 @@
     $('#page-' + name).classList.add('active')
   }
 
-  function getPost(id) {
-    request('posts/'+id+'.md', function(response) {
-      if (posts[id].type == 'public') {
-        renderPost(response, posts[id])        
-      }
-    })
-  }
+  var router = new Router();
 
-  function renderPost(post, meta) {
-    $('#page-post .outlet').innerHTML = '<div class="post">'+
-      '<h2>'+meta.title+'</h2>'+
-      '<div class="meta">'+
-        '<div class="date">'+date(meta.date, 'M d Y')+'</div>'+
-      '</div>'+
-      '<div>'+markdown(post)+'</div>'+
-    '</div>'
-    page('post')
-    prettyPrint()
-  } 
+  each($$("script[type='text/template']"), function(el) {
+    templates[el.getAttribute('name')] = el.innerHTML
+  })
 
   request('posts/posts.json', function(response) {
-    posts = {}
-    $('#page-index .outlet').innerHTML = JSON.parse(response).posts.map(function(post) {
-      posts[post.id] = post
+    postMeta._postById = {}
+    $('#page-index').innerHTML = JSON.parse(response).posts.map(function(post) {
+      postMeta.push(post)
+      postMeta._postById[post.id] = post
       if (post.type != 'public') return
-      return '<div class="post">'+
-        '<h2>'+
-          '<a href="#/'+post.id+'">'+post.title+'</a>'+
-        '</h2>'+
-        '<div class="exerpt">'+post.exerpt+'</div>'+
-        '<div class="meta">'+
-          '<div class="date">'+date(post.date, 'd M Y')+'</div>'+
-        '</div>'+
-      '</div>'
-    }).join(' ') 
-  })
-
-  router('', function() {
-    page('index')
-  })
-
-  router('/(.+)', function(id) {
-    if (!posts) {
-      request('posts/posts.json', function(response) {
-        posts = {}
-        each(JSON.parse(response).posts, function(el) {
-          posts[el.id] = el
-        })
-        getPost(id)
+      return tpl(templates['post-list-item'], {
+        id: post.id,
+        title: post.title,
+        date: date(post.date, 'd M Y'),
+        exerpt: post.exerpt
       })
-    } else {
-      getPost(id)
-    }    
+    }).join(' ')
+
+    setRoutes()
   })
-  
+
+  function setRoutes() {
+
+    router
+      .add('/', function() {
+        page('index')
+      })
+      .add('/(.+)', function(id) {
+        console.log(id)
+        request('posts/'+id+'.md', function(response) {
+          var meta = postMeta._postById[id]
+          if (meta.type == 'public') {
+            $('#page-post').innerHTML = tpl(templates['single-post'], {
+              title: meta.title,
+              date: date(meta.date, 'M d Y'),
+              content: markdown(response)
+            })
+            page('post')
+            prettyPrint()
+          }
+        })
+      })
+      .run();
+  }
 }()
