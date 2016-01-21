@@ -114,7 +114,7 @@
         id: post.id,
         title: post.title,
         date: date(post.date, 'd M Y'),
-        exerpt: post.exerpt
+        exerpt: markdown(post.exerpt)
       })
     }).join(' ')
 
