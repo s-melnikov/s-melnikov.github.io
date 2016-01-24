@@ -42,6 +42,12 @@ h5 {
 p {
   font-family: Georgia, serif;
 }
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
 .header {
   padding: 1em 0;
   margin-bottom: 3em;
@@ -105,6 +111,17 @@ p {
 }
 .header nav a {
   border-bottom: 0;
+  color: #444;
+}
+.header nav a:hover {
+  color: #4d6d8c;
+}
+.header nav .icon {
+  font-size: 1.2em;
+  vertical-align: -0.1em;
+}
+.header nav span {
+  margin: 0 0.5em;
 }
 .container {
   max-width: 640px;
