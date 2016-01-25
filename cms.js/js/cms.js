@@ -42,7 +42,7 @@ var CMS = {
       repo: 'yourrepo',
     },
     githubSettings: {
-      branch: 'gh-pages',
+      branch: false,
       host: 'https://api.github.com'
     }
   },
@@ -289,7 +289,7 @@ var CMS = {
     if (CMS.settings.mode == 'Github') {
       var gus = CMS.settings.githubUserSettings,
         gs = CMS.settings.githubSettings;
-      url = gs.host + '/repos/' + gus.username + '/' + gus.repo + '/contents/' + folder + '?ref=' + gs.branch;
+      url = gs.host + '/repos/' + gus.username + '/' + gus.repo + '/contents/' + folder + (gs.branch ? '?ref=' + gs.branch : '');
     } else {
       url = folder;
     }
