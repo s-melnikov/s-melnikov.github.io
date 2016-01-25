@@ -3,20 +3,24 @@ $(function() {
   CMS.init({
 
     // Name of your site or location of logo file ,relative to root directory (img/logo.png)
-    siteName: 'My Site',
+    siteName: 'Web Developers Blog',
 
     // Tagline for your site
-    siteTagline: 'Your site tagline',
+    siteTagline: '',
 
     // Email address
-    siteEmail: 'your_email@example.com',
+    siteEmail: 'mlnkv87@gmail.com',
 
     // Name
-    siteAuthor: 'Your Name',
+    siteAuthor: 'Sergey Melnikov',
 
     // Navigation items
     siteNavItems: [
-      { name: 'Github', href: 'https://github.com/yourname', newWindow: false},
+      {
+        name: 'Github',
+        href: 'https://github.com/s-melnikov',
+        newWindow: false
+      },
       { name: 'About'}
     ],
 
@@ -27,10 +31,10 @@ $(function() {
     postSnippetLength: 120,
 
     // Pages folder name
-          pagesFolder: 'pages',
+    pagesFolder: 'pages',
 
-          // Order of sorting (true for newest to oldest)
-          sortDateOrder: true,
+    // Order of sorting (true for newest to oldest)
+    sortDateOrder: true,
 
     // Site fade speed
     fadeSpeed: 300,
@@ -45,8 +49,8 @@ $(function() {
     // If Github mode is set, your Github username and repo name. Defaults
     // to Github pages branch (gh-pages)
     githubUserSettings: {
-      username: 'yourusername',
-      repo: 'yourrepo'
+      username: 's-melnikov',
+      repo: 's-melnikov.github.io'
     }
 
   });
