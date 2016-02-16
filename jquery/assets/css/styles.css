@@ -1,0 +1,22 @@
+body {
+  font-size: 13px;
+}
+pre, code {
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.4;
+}
+pre {
+  overflow: auto;
+}
+pre.prettyprint {
+  padding: 0.5em 1em;
+  border-radius: 2px;
+  border: none;
+  border-left: 3px solid #eee;
+  margin: 15px 0 20px;
+}
+code.prettyprint {
+  padding: 0 5px 1px;
+  border-bottom: 2px solid #eee;
+}
