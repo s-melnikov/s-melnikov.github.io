@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Close window</title>
+  <style>
+    body {
+      font-family: Consolas, monospace;
+      font-size: 16px;
+      text-align: center;
+      color: #444444;
+      background: #fbfbfb;
+      text-shadow: 0 1px 0 #ffffff;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <p>Пожалуйста подождите, после <span></span> секунд это окно закроется автоматически.</p>
+  <p>Если этого не произошло, закройте окно вручную.</p>
+</div>
+<div>
+  <p>Please wait, after <span></span> seconds the window will close automatically.</p>
+  <p>If not, close the window manually.</p>
+</div>
+</body>
+<script>
+var timeout = 3000;
+var start = Date.now();
+var spans = document.querySelectorAll("span");
+var span1 = spans[0];
+var span2 = spans[1];
+function tik() {
+  var delta = timeout - Date.now() + start;
+  var remain = delta > 0 ? delta : 0;
+  span1.textContent = span2.textContent = Math.round(remain / 1000);
+  if (remain > 0) setTimeout(tik, 1000);
+  else window.close()
+}
+tik();
+</script>
+</html>
