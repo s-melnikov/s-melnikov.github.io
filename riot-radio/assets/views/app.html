@@ -3,7 +3,7 @@
   <input id="page-toggle-chk" type="checkbox" hidden>
 
   <div class="window">
-    <div class="top-bar">      
+    <div class="top-bar">
       <label for="page-toggle-chk" class="left-action">
         <div class="line line-1"></div>
         <div class="line line-2"></div>
@@ -36,10 +36,7 @@
         </div>
       </div>
       <div class="track-info">
-        <div if={ trackInfo.artist } title="Искать в vk.com { trackInfo.artist } { trackInfo.title }">
-          <div class="artist">{ trackInfo.artist }</div>
-          <div class="title"><i>{ trackInfo.title }</i></div>
-        </div>        
+        <track-info info={ trackInfo }></track-info>
       </div>
       <div class="volume-bar">
         <div class="left-icon icon-volume"></div>
@@ -51,7 +48,7 @@
         <ul>
           <li each={ opts.stations } class="station-{ code }">
             <span class="link" onclick={ setStation }>
-              { name }              
+              { name }
               <div class="bar-bouncer">
                 <div class="bar bar1"></div>
                 <div class="bar bar2"></div>
@@ -97,12 +94,12 @@
         code: stationProps.code,
         name: stationProps.name,
         img: 'assets/img/' + self.currentStation + '.jpg'
-      }      
+      }
       self.audio.play()
       self.isPlaying = true
       $('.window').addClass('play')
-      self.setActiveStation()      
-      db.set('station', self.currentStation)      
+      self.setActiveStation()
+      db.set('station', self.currentStation)
       self.update()
       self.checkTrackInfo()
       self.updateFakeArray();
@@ -110,7 +107,7 @@
 
     setStation(e) {
       if (e.item.code == self.currentStation) return
-      self.currentStation = e.item.code  
+      self.currentStation = e.item.code
       self.setSource()
       self['page-toggle-chk'].checked = false
     }
@@ -157,13 +154,13 @@
 
     setActiveStation() {
       $('.station-list li').removeClass('active')
-      $('.station-list .station-' + self.currentStation).addClass('active')      
+      $('.station-list .station-' + self.currentStation).addClass('active')
     }
 
     setVolume(e) {
       self.audio.volume = e.target.value / 100;
       db.set('volume', self.audio.volume)
-    } 
+    }
 
     checkTrackInfo() {
       var url = opts.trackInfoUrl.replace('%s%', self.currentStation)
@@ -175,7 +172,7 @@
             .split(",")
             .forEach(function(el) {
               var matches = regex.exec(el)
-              if (matches && matches[1] && matches[2]) result[matches[1]] = matches[2].replace("\\", "")           
+              if (matches && matches[1] && matches[2]) result[matches[1]] = matches[2].replace("\\", "")
             })
           if (self.trackInfo.title != result.title) {
             self.trackInfo = result
@@ -194,13 +191,13 @@
       $.log('audio error')
     }
 
-    audioOnAbort(e) {    
+    audioOnAbort(e) {
       $.log('audio abort')
     }
 
-    checkAudioState() { 
+    checkAudioState() {
       if (self.audio.networkState === self.audio.NETWORK_IDLE && self.isPlaying) {
-        $.log('reload audio')       
+        $.log('reload audio')
         self.audio.load()
         self.audio.play()
       }
@@ -216,13 +213,24 @@
 
     updateFakeArray() {
       var i = 50;
-      self.fakeArray = [];      
+      self.fakeArray = [];
       while (i--) {
         self.fakeArray.push(Math.floor(Math.random() * 10 + 1));
       }
     }
 
-    this.on('mount', self.init);    
+    this.on('mount', self.init);
 
   </script>
 </body>
+
+<track-info>
+  <div class="artist" id="track_artist"></div>
+  <div class="title" id="track_title"></div>
+  <script>
+    this.on('update', function() {
+      this.track_artist.innerHTML = opts.info.artist
+      this.track_title.innerHTML = opts.info.title
+    })
+  </script>
+</track-info>

@@ -1,4 +1,4 @@
-riot.tag('body', '<input id="page-toggle-chk" type="checkbox" hidden> <div class="window"> <div class="top-bar"> <label for="page-toggle-chk" class="left-action"> <div class="line line-1"></div> <div class="line line-2"></div> <div class="line line-3"></div> </label> <div class="mid-text"> <div class="title page-front-title">Online Radio</div> <div class="title page-saved-stations-title">All stations</div> </div> <span id="playButton" class="right-action" onclick="{togglePlay}"> <div class="line line-1"></div> <div class="line line-2"></div> <div class="line line-3"></div> </span> </div> <div class="page page-front"> <div class="cover"> <div class="img" riot-style="background-image: url({stationInfo.img})" if="{stationInfo.img}"></div> <ul class="tool-buttons bitrates"> <li class="bitrate-{val}" each="{opts.rates}" onclick="{setBitrate}">{name}</li> </ul> <div class="current-station-text"></div> <div class="current-station-name-bar"> <div class="left-action icon-backward" onclick="{prevStation}"></div> <div class="mid-text stroke">{stationInfo.name}</div> <div class="right-action icon-forward" onclick="{nextStation}"></div> </div> <div class="sound-bars"> <div class="bar wave-{val}" each="{val in fakeArray}"></div> </div> </div> <div class="track-info"> <div if="{trackInfo.artist}" title="Искать в vk.com {trackInfo.artist} {trackInfo.title}"> <div class="artist">{trackInfo.artist}</div> <div class="title"><i>{trackInfo.title}</i></div> </div> </div> <div class="volume-bar"> <div class="left-icon icon-volume"></div> <input id="volumeControl" type="range" class="range" oninput="{setVolume}"> </div> </div> <div class="page page-saved-stations"> <menu class="station-list"> <ul> <li each="{opts.stations}" class="station-{code}"> <span class="link" onclick="{setStation}"> {name} <div class="bar-bouncer"> <div class="bar bar1"></div> <div class="bar bar2"></div> <div class="bar bar3"></div> </div> </span> </li> </ul> </menu> </div> </div> <audio id="audio" onerror="{audioOnError}" onabort="{audioOnAbort}"></audio>', function(opts) {
+riot.tag('body', '<input id="page-toggle-chk" type="checkbox" hidden> <div class="window"> <div class="top-bar"> <label for="page-toggle-chk" class="left-action"> <div class="line line-1"></div> <div class="line line-2"></div> <div class="line line-3"></div> </label> <div class="mid-text"> <div class="title page-front-title">Online Radio</div> <div class="title page-saved-stations-title">All stations</div> </div> <span id="playButton" class="right-action" onclick="{togglePlay}"> <div class="line line-1"></div> <div class="line line-2"></div> <div class="line line-3"></div> </span> </div> <div class="page page-front"> <div class="cover"> <div class="img" riot-style="background-image: url({stationInfo.img})" if="{stationInfo.img}"></div> <ul class="tool-buttons bitrates"> <li class="bitrate-{val}" each="{opts.rates}" onclick="{setBitrate}">{name}</li> </ul> <div class="current-station-text"></div> <div class="current-station-name-bar"> <div class="left-action icon-backward" onclick="{prevStation}"></div> <div class="mid-text stroke">{stationInfo.name}</div> <div class="right-action icon-forward" onclick="{nextStation}"></div> </div> <div class="sound-bars"> <div class="bar wave-{val}" each="{val in fakeArray}"></div> </div> </div> <div class="track-info"> <div if="{trackInfo.artist}"> <div class="artist">{trackInfo.artist}</div> <div class="title"><i>{trackInfo.title}</i></div> </div> </div> <div class="volume-bar"> <div class="left-icon icon-volume"></div> <input id="volumeControl" type="range" class="range" oninput="{setVolume}"> </div> </div> <div class="page page-saved-stations"> <menu class="station-list"> <ul> <li each="{opts.stations}" class="station-{code}"> <span class="link" onclick="{setStation}"> {name} <div class="bar-bouncer"> <div class="bar bar1"></div> <div class="bar bar2"></div> <div class="bar bar3"></div> </div> </span> </li> </ul> </menu> </div> </div> <audio id="audio" onerror="{audioOnError}" onabort="{audioOnAbort}"></audio>', function(opts) {
 
   var self = this,
     db = $.storage(opts.appName),
@@ -100,25 +100,16 @@ riot.tag('body', '<input id="page-toggle-chk" type="checkbox" hidden> <div class
   this.checkTrackInfo = function() {
     var url = opts.trackInfoUrl.replace('%s%', self.currentStation)
     $.get(url, function(response) {
-      var result = {}, regex = /"(.+)":"(.+)"/
-      if (response) {
-        response
-          .replace(/^\{|\}$/g, "")
-          .split(",")
-          .forEach(function(el) {
-            var matches = regex.exec(el)
-            if (matches && matches[1] && matches[2]) result[matches[1]] = matches[2].replace("\\", "")
-          })
-        if (self.trackInfo.title != result.title) {
-          self.trackInfo = result
-          self.update()
-        }
+      try {
+        response = JSON.parse(response);
+        self.trackInfo = response
+        self.update()
         if (checkTrackInfoTimeout) {
           clearTimeout(checkTrackInfoTimeout)
           checkTrackInfoTimeout = null
         }
-      }
-      checkTrackInfoTimeout = setTimeout(self.checkTrackInfo, opts.pingInterval)
+        checkTrackInfoTimeout = setTimeout(self.checkTrackInfo, opts.pingInterval)
+      } catch(e) { $.log('Parse JSON error', e, response) }
     })
   }.bind(this)
 
@@ -140,10 +131,6 @@ riot.tag('body', '<input id="page-toggle-chk" type="checkbox" hidden> <div class
 
   this.currentStationIndex = function() {
     return opts.stations.indexOf($.find(opts.stations, 'code', self.currentStation))
-  }.bind(this)
-
-  this.searchTrack = function() {
-    open('http://vk.com/audio?q=' + encodeURIComponent(self.trackInfo.artist + ' ' + self.trackInfo.title), '_blank')
   }.bind(this)
 
   this.updateFakeArray = function() {

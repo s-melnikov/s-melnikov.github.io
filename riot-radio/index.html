@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Radio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" />
-
   <link href="assets/css/styles.css" rel="stylesheet" />
 </head>
 <body>
 
-  
-  <script src="assets/js/riot+compiler.min.js"></script> 
+  <script src="assets/js/riot+compiler.min.js"></script>
   <script src="assets/views/app.js"></script>
   <script>
     (function(global) {
@@ -33,7 +31,7 @@
       }
       $.find = function(source, key, val) {
         for (var i = 0; i < source.length; i++) {
-          if (source[i][key] == val) 
+          if (source[i][key] == val)
             return source[i]
         }
       }
@@ -60,7 +58,7 @@
     var configs = {
       appName: 'online-radio',
       trackInfoUrl: 'http://www.radiorecord.ru/xml/%s%_online_v8.txt',
-      pingInterval: 15000,
+      pingInterval: 10000,
       url: 'http://air.radiorecord.ru:',
       rates: [
         { name: '32 kbps', val: 'aac' },
@@ -86,9 +84,9 @@
         { code: 'deep', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Deep' },
         { code: 'trap', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Trap' },
         { code: 'rock', port: { 'aac': 8102, '128': 8102, '320': 8102 }, name: 'Rock' }
-      ]  
+      ]
     }
-    riot.mount('*', configs)       
+    riot.mount('*', configs)
   </script>
 </body>
 </html>
