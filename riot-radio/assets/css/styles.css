@@ -76,7 +76,7 @@ input[type="range"]::-webkit-slider-thumb {
 .top-bar .right-action .line {
   transition-duration: .3s;
 }
-.top-bar .right-action .line-1 {   
+.top-bar .right-action .line-1 {
   position: absolute;
   border-style: solid;
   border-color: transparent #777777 transparent;
@@ -85,7 +85,7 @@ input[type="range"]::-webkit-slider-thumb {
   top: 25px;
 }
 .top-bar .right-action .line-2,
-.top-bar .right-action .line-3 {  
+.top-bar .right-action .line-3 {
   position: absolute;
   top: 26px;
   left: 40px;
@@ -376,19 +376,9 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 .volume-bar .range::-webkit-slider-runnable-track {
-  height: 70px;
-  background: transparent;
+  background: #cccccc;
   outline: none;
   position: relative;
-}
-.volume-bar .range::-webkit-slider-runnable-track::after {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  top: 50%;
-  background: #cccccc;
-  content: '';
 }
 .volume-bar .range::-webkit-slider-thumb {
   position: relative;
@@ -403,10 +393,10 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 100px;
   transition: box-shadow 0.2s;
 }
-.volume-bar .range::-webkit-slider-thumb:hover {  
+.volume-bar .range::-webkit-slider-thumb:hover {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 1px 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 5px rgba(0, 0, 0, 0.2);
 }
-.volume-bar .range::-webkit-slider-thumb:active {  
+.volume-bar .range::-webkit-slider-thumb:active {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 1px 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 5px rgba(0, 0, 0, 0.5);
 }
 .volume-bar .range::-moz-slider-runnable-track {
@@ -592,7 +582,7 @@ input[type="range"]::-webkit-slider-thumb {
   margin-left: -1px;
 }
 .icon-forward::after,
-.icon-forward::before {  
+.icon-forward::before {
   border-width: 7px 0 7px 14px;
 }
 .bitrates li {
@@ -603,7 +593,7 @@ input[type="range"]::-webkit-slider-thumb {
   transform: scale(1.1);
 }
 .stroke {
-  text-shadow: 
+  text-shadow:
     1px 1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000,
     1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000;
 }
