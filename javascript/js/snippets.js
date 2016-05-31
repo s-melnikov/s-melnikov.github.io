@@ -21,11 +21,11 @@ function cookie(key, value, hours, domain, path) {
 /*
  * Query parameters
  */
-function params(str) {
+function query(str) {
   var res = {};
   (str || location.search).replace(/^\?/, "").split("&").forEach(function(str) {
     str = str.split("=");
-    res[str[0].toLowerCase()] = str[1] || true;
+    res[str[0].toLowerCase()] = str[1] && decodeURIComponent(str[1]) || true;
   });
   return res;
 }
