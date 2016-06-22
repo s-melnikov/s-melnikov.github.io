@@ -21,7 +21,7 @@ function cookie(key, value, hours, domain, path) {
 /*
  * Query parameters
  */
-function query(str) {
+function parseQueryString(str) {
   var res = {};
   (str || location.search).replace(/^\?/, "").split("&").forEach(function(str) {
     str = str.split("=");
@@ -33,7 +33,7 @@ function query(str) {
 /*
  *
  */
-function query(obj) {
+function toQueryString(obj) {
   var str = "";
   for (var prop in obj) {
     str && (str += "&") || (str = "?");
