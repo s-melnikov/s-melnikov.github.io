@@ -1,0 +1,5 @@
+name: MarkSheet
+markdown: kramdown
+kramdown:
+  input: GFM
+permalink: :title.html
