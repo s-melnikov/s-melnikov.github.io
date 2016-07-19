@@ -21,7 +21,7 @@ function ajax(url) {
     };
     request.onerror = reject;
     request.send();
-  });    
+  });
 }
 
 ajax("index.html")
