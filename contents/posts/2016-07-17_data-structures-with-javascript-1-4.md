@@ -1,3 +1,8 @@
+---
+layout: post
+title: Data Structures With JavaScript: Part 1 of 4
+---
+
 ![](posts/images/data-structures-1-of-4.jpg "Data Structures With JavaScript: Part 1 of 4")
 
 ## What's a Data Structure?

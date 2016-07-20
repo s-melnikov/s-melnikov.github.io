@@ -1,3 +1,9 @@
+---
+layout: post
+title: Data Structures With JavaScript: Part 2 of 4
+---
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt perferendis impedit mollitia obcaecati ad quasi, magnam ipsa nostrum, ipsum voluptatem neque fugit alias doloribus quo quam repudiandae maiores, iste voluptate!
 ![](posts/images/data-structures-2-of-4.jpg "Data Structures With JavaScript: Part 2 of 4")
 
 Two of the most commonly used data structures in web development are stacks and queues. Many users of the Internet, including web developers, are unaware of this amazing fact. If you are one of these developers, then prepare yourself for two enlightening examples: the 'undo' operation of a text editor uses a stack to organize data; the event-loop of a web browser, which handles events (clicks, hoovers, etc.), uses a queue to process data.

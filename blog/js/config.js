@@ -44,6 +44,11 @@ $(function() {
 		githubUserSettings: {
 			username: 's-melnikov',
 			repo: 's-melnikov.github.io'
+		},
+
+		githubSettings: {
+			branch: 'master',
+			host: 'https://api.github.com'
 		}
 
 	});
