@@ -3,20 +3,20 @@ $(function() {
 	CMS.init({
 
 		// Name of your site or location of logo file ,relative to root directory (img/logo.png)
-		siteName: 'My Site',
+		siteName: 'Developers blog',
 
 		// Tagline for your site
-		siteTagline: 'My site tagline',
+		siteTagline: 'Your site tagline',
 
 		// Email address
-		siteEmail: 'mlnkv87@gmail.com',
+		siteEmail: 'your_email@example.com',
 
 		// Name
-		siteAuthor: 'Sergey Melnikov',
+		siteAuthor: 'Your Name',
 
 		// Navigation items
 		siteNavItems: [
-			{ name: 'Github', href: 'https://github.com/s-melnikov', newWindow: true},
+			{ name: 'Github', href: 'https://github.com/yourname', newWindow: false},
 			{ name: 'About'}
 		],
 
@@ -37,18 +37,13 @@ $(function() {
 
 		// Mode 'Github' for Github Pages, 'Apache' for Apache server. Defaults
 		// to Github
-		mode: 'Github',
+		mode: 'Apache',
 
 		// If Github mode is set, your Github username and repo name. Defaults
 		// to Github pages branch (gh-pages)
 		githubUserSettings: {
-			username: 's-melnikov',
-			repo: 's-melnikov.github.io'
-		},
-
-		githubSettings: {
-			branch: 'master',
-			host: 'https://api.github.com'
+			username: 'yourusername',
+			repo: 'yourrepo'
 		}
 
 	});
