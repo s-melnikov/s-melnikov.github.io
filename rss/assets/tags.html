@@ -1,0 +1,229 @@
+<x-app>
+  <div id="header">
+    <h1><a href="#/">RSS Reader</a></h1>
+    <div class="nav">
+      <a href="#/articles">articles</a> |
+      <a href="#/channels">channels</a> |
+      <a href="#/settings">settings</a>
+    </div>
+  </div>
+  <div id="view"></div>
+  <script>
+    var self = this
+    riot.route.base('#/')
+    riot.route('*', function(tag) {
+      riot.mount(self.view, 'x-' + tag)
+    })
+    riot.route('*/*', function(tag, uid) {
+      riot.mount(self.view, 'x-' + tag, {uid: uid})
+    })
+    riot.route(function() {
+      riot.route('articles')
+    })
+    riot.route.start(true)
+  </script>
+</x-app>
+
+<x-articles>
+  <p>Articles</p>
+  <ul class="articles">
+    <li each={ articles } class={ seen: seen, readed: readed }>
+      <a href="#/article/{ uid }" class="item" onmouseenter={ articleOver }>
+        <span class="index">{ getIndex() }.</span>
+        <p>
+          <span class="title">{ title }</span>
+          <span class="domain">
+            (<span>{ channel }</span>)
+          </span>
+        </p>
+        <p class="description">{ exerpt }</p>
+        <p class="subtext">
+          <span class="creator">{ creator }</span> |
+          <span class="date">{ formattedDate }</span>
+        </p>
+      </a>
+    </li>
+  </ul>
+  <a href="#news/2">more...</a>
+  <script>
+    var self = this
+    self.articles = utils.ls.get().articles || []
+    getIndex() {
+      return self.index++
+    }
+    hasUpdate() {
+      var articles = utils.ls.get().articles
+      if (articles.length - self.articles.length > 0) {
+        self.articles = utils.sortArticles(articles)
+        self.update()
+      }
+    }
+    articleOver(e) {
+      if (!e.item.seen) {
+        e.item.seen = true
+        utils.ls.set('articles', self.articles)
+      }
+    }
+    self.on('mount', function() {
+      self.update()
+      utils.getChannelsContent(self.hasUpdate)
+    })
+    this.on('update', function() {
+      self.index = 1
+    })
+    scrollTo(0, 0)
+  </script>
+</x-articles>
+
+<x-article>
+  <div class="article">
+    <p><a href="#/articles" class="back">&lt;- back</a></p>
+    <h1>{ article.title }</h1>
+    <div class="content" name="content">
+      <raw-html html={ article.encoded }></raw-html>
+    </div>
+    <p class="subtext">
+      <span class="creator">{ article.creator }</span> |
+      <span class="date">{ date }</span> |
+      <a href="{ article.comments }" target="_blank">comments</a> |
+      <span>
+        (<a href="{ article.channel }" target="_blank">{ article.channel }</a>)
+      </span>
+    </p>
+    <p><a href="#/articles" class="back">&lt;- back</a></p>
+  </div>
+  <script>
+    var self = this
+    var articles = utils.ls.get().articles
+    self.article = articles.filter(function(article) {
+      return article.uid == opts.uid
+    })[0]
+    if (!self.article.readed) {
+      self.article.readed = true
+      utils.ls.set('articles', articles)
+    }
+    fix() {
+      var width = self.content.offsetWidth
+      Array.prototype.forEach.call(
+        self.content.querySelectorAll('img, iframe'),
+        function(el) {
+          var _width = el.getAttribute('width'),
+            _height = el.getAttribute('height')
+          if (_width && _height) {
+            el.width = width
+            el.height = width * _height / _width
+          }
+        })
+    }
+    setTimeout(self.fix, 100)
+    scrollTo(0, 0)
+  </script>
+</x-article>
+
+<x-channels>
+  <p>Channels</p>
+  <ul class="channels item-view">
+    <li each={channels} class="item">
+      <div class="title">
+        { title || src }
+        <span class="domain" onclick={ deleteChannel }>(delete)</span>
+      </div>
+      <div class="subtext">
+        <span>{ src }</span>
+      </div>
+    </li>
+  </ul>
+  <input type="text" class="add_channel" name="control">
+  <button onclick={ addChannel }>add</button>
+  <script>
+    var self = this
+    deleteChannel(e) {
+      self.channels = self.channels.filter(function(channel) {
+        return channel !== e.item
+      })
+      utils.ls.set('channels', self.channels)
+    }
+    addChannel(e) {
+      if (!self.control.value)
+        return alert('Enter RSS url!')
+      self.channels.push({src: self.control.value})
+      self.control.value = ''
+      utils.ls.set('channels', self.channels)
+    }
+    this.on('mount', function() {
+      self.channels = utils.ls.get().channels || []
+      self.update()
+    })
+  </script>
+</x-channels>
+
+<x-settings>
+  <p>Settings</p>
+  <table class="settings" if={ !busy }>
+    <tr>
+      <td>Delete all storred articles:</td>
+      <td><button onclick={ resetArticles }>delete</button></td>
+    </tr>
+    <tr>
+      <td>Reset channels info:</td>
+      <td><button onclick={ resetChannels }>reset</button></td>
+    </tr>
+    <tr>
+      <td>Import RSS data</td>
+      <td><input onchange={ importData } type="file"></td>
+    </tr>
+    <tr>
+      <td>Export RSS data</td>
+      <td><button onclick={ exportData }>export</button></td>
+    </tr>
+  </table>
+  <div class="loader" if={ busy }></div>
+  <script>
+    var self = this
+
+    resetArticles() {
+      if (confirm('Are your sure?')) {
+        utils.ls.set('articles', [])
+      }
+    }
+    resetChannels() {
+      if (confirm('Are your sure?')) {
+        utils.ls.set('channels', (utils.ls.get().channels || []).map(function(item) {
+          return {src: item.src}
+        }))
+      }
+    }
+    importData(e) {
+      if (e.target.files && e.target.files[0]) {
+        var file = e.target.files[0]
+        var reader = new FileReader()
+        reader.addEventListener('loadend', function() {
+          self.busy = false
+          var data = JSON.parse(reader.result)
+          utils.ls.set('channels', data.channels)
+          utils.ls.set('articles', data.articles)
+          self.update()
+        })
+        reader.readAsText(file)
+        self.busy = true
+      }
+    }
+    exportData() {
+      var a = document.createElement('a')
+      a.download = 'rss_export_' + new Date().toISOString() + '.json'
+      a.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(utils.ls.get()))
+      a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    }
+  </script>
+</x-settings>
+
+<raw-html>
+  <script>
+    this.on('update', function() {
+      this.root.innerHTML = opts.html
+    })
+  </script>
+</raw-html>
