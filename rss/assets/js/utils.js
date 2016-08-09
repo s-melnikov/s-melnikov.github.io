@@ -5,7 +5,8 @@ var utils = {
   settings: {
     proxy: 'http://query.yahooapis.com/v1/public/yql?q=',
     descLength: 180,
-    onPage: 100
+    perPage: 25,
+    maxArticlesCount: 500
   }
 }
 
@@ -124,7 +125,6 @@ utils.getChannelArticles = function(callback, index) {
         log('channel.updateFrequency', channel.updateFrequency)
         log('channel.updatePeriod', channel.updatePeriod)
         log('channel.link', channel.link)
-        console.log('!!!', data)
         utils.ls.set('channels', channels)
         var articles = utils.ls.get().articles || []
         log('data.item', data.item)
@@ -143,6 +143,10 @@ utils.getChannelArticles = function(callback, index) {
               articles.push(item)
             }
           })
+        }
+        articles = utils.sortArticles(articles)
+        if (articles.length > utils.settings.maxArticlesCount) {
+          articles = articles.splice(articles.length - utils.settings.maxArticlesCount)
         }
         utils.ls.set('articles', articles)
       }

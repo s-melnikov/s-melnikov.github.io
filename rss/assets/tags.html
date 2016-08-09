@@ -1,4 +1,4 @@
-<x-app>
+<app>
   <div id="header">
     <h1><a href="#/">RSS Reader</a></h1>
     <div class="nav">
@@ -12,22 +12,21 @@
     var self = this
     riot.route.base('#/')
     riot.route('*', function(tag) {
-      riot.mount(self.view, 'x-' + tag)
+      riot.mount(self.view, tag)
     })
     riot.route('*/*', function(tag, uid) {
-      riot.mount(self.view, 'x-' + tag, {uid: uid})
+      riot.mount(self.view, tag, {uid: uid})
     })
     riot.route(function() {
       riot.route('articles')
     })
     riot.route.start(true)
   </script>
-</x-app>
+</app>
 
-<x-articles>
-  <p>Articles</p>
+<articles>
   <ul class="articles">
-    <li each={ articles } class={ seen: seen, readed: readed }>
+    <li each={ articles } class={ readed: readed }>
       <a href="#/article/{ uid }" class="item" onmouseenter={ articleOver }>
         <span class="index">{ getIndex() }.</span>
         <p>
@@ -44,24 +43,23 @@
       </a>
     </li>
   </ul>
-  <a href="#news/2">more...</a>
+  <a href="#/articles/{ nextPage }">more...</a>
   <script>
-    var self = this
-    self.articles = utils.ls.get().articles || []
+    var self = this,
+      articles = utils.ls.get().articles || [],
+      perPage = utils.settings.perPage,
+      page = +opts.uid || 1,
+      offset = page * perPage
+    self.articles = articles.slice(offset - perPage, offset)
+    self.nextPage = page + 1
     getIndex() {
       return self.index++
     }
     hasUpdate() {
-      var articles = utils.ls.get().articles
-      if (articles.length - self.articles.length > 0) {
-        self.articles = utils.sortArticles(articles)
+      var newArticles = utils.ls.get().articles
+      if (newArticles.length - articles.length > 0) {
+        articles = utils.sortArticles(newArticles)
         self.update()
-      }
-    }
-    articleOver(e) {
-      if (!e.item.seen) {
-        e.item.seen = true
-        utils.ls.set('articles', self.articles)
       }
     }
     self.on('mount', function() {
@@ -69,18 +67,21 @@
       utils.getChannelsContent(self.hasUpdate)
     })
     this.on('update', function() {
-      self.index = 1
+      self.index = (page - 1) * perPage + 1
     })
     scrollTo(0, 0)
   </script>
-</x-articles>
+</articles>
 
-<x-article>
+<article>
   <div class="article">
-    <p><a href="#/articles" class="back">&lt;- back</a></p>
+    <p>
+      <a href="#/articles" class="back">&lt;- back</a> |
+      <a href="{ article.link }" target="_blank">in new tab</a>
+    </p>
     <h1>{ article.title }</h1>
     <div class="content" name="content">
-      <raw-html html={ article.encoded }></raw-html>
+      <raw-html html={ article.encoded || article.description }></raw-html>
     </div>
     <p class="subtext">
       <span class="creator">{ article.creator }</span> |
@@ -115,13 +116,11 @@
           }
         })
     }
-    setTimeout(self.fix, 100)
     scrollTo(0, 0)
   </script>
-</x-article>
+</article>
 
-<x-channels>
-  <p>Channels</p>
+<channels>
   <ul class="channels item-view">
     <li each={channels} class="item">
       <div class="title">
@@ -155,11 +154,10 @@
       self.update()
     })
   </script>
-</x-channels>
+</channels>
 
-<x-settings>
-  <p>Settings</p>
-  <table class="settings" if={ !busy }>
+<settings>
+  <table class="settings">
     <tr>
       <td>Delete all storred articles:</td>
       <td><button onclick={ resetArticles }>delete</button></td>
@@ -177,7 +175,7 @@
       <td><button onclick={ exportData }>export</button></td>
     </tr>
   </table>
-  <div class="loader" if={ busy }></div>
+  <div class="loader"></div>
   <script>
     var self = this
 
@@ -218,7 +216,7 @@
       document.body.removeChild(a)
     }
   </script>
-</x-settings>
+</settings>
 
 <raw-html>
   <script>
