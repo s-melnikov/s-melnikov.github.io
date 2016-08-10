@@ -1,14 +1,13 @@
 var log = !!~location.search.indexOf('debug') ?
   console.log.bind(console) : function log() {}
 
-var utils = {
-  settings: {
-    proxy: 'http://query.yahooapis.com/v1/public/yql?q=',
-    descLength: 180,
-    perPage: 25,
-    maxArticlesCount: 500
-  }
+var settings = {
+  proxy: 'http://query.yahooapis.com/v1/public/yql?q=',
+  maxArticlesCounts: 1000,
+  articlesPerPage: 50
 }
+
+var utils = {}
 
 utils.ls = {
   name: 'rss',
@@ -106,7 +105,7 @@ utils.getChannelArticles = function(callback, index) {
     return false
   }
   log('Channel nedd update')
-  utils.ajax(utils.settings.proxy + query + '&format=json').then(function(response) {
+  utils.ajax(settings.proxy + query + '&format=json').then(function(response) {
     var data = utils.dot(response.json(), 'query.results.rss.channel')
     if (data) {
       log('Last build date:', channel.lastBuildDate, ';', data.lastBuildDate)
@@ -134,19 +133,21 @@ utils.getChannelArticles = function(callback, index) {
                 return article.link == item.link
               }).length) {
               log('Added new article: ', item.title)
-              item.channel = channel.link
-              item.exerpt = item.description.replace(/<[\s\S]+?>/g, '')
-                .slice(0, utils.settings.descLength) + '...'
-              item.formattedDate = utils.date(item.pubDate, 'd-m-Y'),
-              item.uid = utils.uid()
-              item.comments = item.comments && item.comments[0]
-              articles.push(item)
+              articles.push({
+                uid: utils.uid(),
+                channel: channel.link,
+                link: item.link,
+                pubDate: item.pubDate,
+                creator: item.creator,
+                description: item.description,
+                title: item.title
+              })
             }
           })
         }
         articles = utils.sortArticles(articles)
-        if (articles.length > utils.settings.maxArticlesCount) {
-          articles = articles.splice(articles.length - utils.settings.maxArticlesCount)
+        if (articles.length > settings.maxArticlesCounts) {
+          articles = articles.splice(articles.length - settings.maxArticlesCounts)
         }
         utils.ls.set('articles', articles)
       }

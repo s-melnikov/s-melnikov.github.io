@@ -1,30 +1,21 @@
 body, html {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 13px;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10pt;
   height: 100%;
   padding: 0;
   margin: 0;
   color: #444;
-  line-height: 1.4;
+  line-height: 1.2;
+  background: #fbfbfb;
 }
 h1, h2, h3, h4, h5 {
   font-weight: 400
 }
-h1 {
-  font-size: 21px
-}
-h2 {
-  font-size: 19px
-}
-h3 {
-  font-size: 17px
-}
-h4 {
-  font-size: 15px
-}
-h5 {
-  font-size: 13px
-}
+h1 { font-size: 18pt }
+h2 { font-size: 16pt }
+h3 { font-size: 14pt }
+h4 { font-size: 12pt }
+h5 { font-size: 10pt }
 ul {
   list-style-type: none;
   padding: 0;
@@ -57,8 +48,9 @@ button {
   font-size: 11px;
 }
 #header {
-  padding: 10px;
-  border-bottom: 1px solid #eee
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
 }
 #header h1 {
   font-size: 14px;
@@ -66,35 +58,38 @@ button {
   vertical-align: middle;
   margin: 0
 }
+#header h1 a {
+  color: #222
+}
 #header .nav {
   display: inline-block;
   margin-left: 20px;
-  font-size: 11px;
-  vertical-align: middle;
+  font-size: 12px;
 }
 #header .nav a {
- color: #666
+  color: #222;
 }
 #view {
-  padding: 10px 20px;
-  max-width: 640px;
+  padding: 10px;
 }
 .item {
-  padding: 2px 0 2px 40px;
+  padding: 2px 0 2px 27px;
   position: relative;
-  transition: background-color .2s ease;
-  display: block
+  display: block;
 }
 .item .title {
-  color: #1483b7;
-  font-weight: 400;
-  font-size: 14px;
+  color: #222;
+  font-size: 10pt;
+}
+.item .title:hover,
+.item .title:visited {
+  color: #999;
 }
 .item p {
   margin: 2px 0
 }
 a.item {
-  display: block;
+  display: inline-block;
   color: #222
 }
 .readed .title,
@@ -107,10 +102,11 @@ a.item {
 .item .index {
   color: #828282;
   position: absolute;
-  width: 30px;
+  width: 24px;
   text-align: right;
   left: 0;
-  top: 4px
+  top: 5px;
+  font-size: 7pt;
 }
 .item .domain, .item .subtext,
 .article .domain, .article .subtext {
@@ -132,9 +128,6 @@ a.item {
 }
 .item .description {
   font-size: 11px
-}
-.item:hover .title {
-  color: #99bbcc;
 }
 .item:hover .description {
   color: #666;
@@ -219,6 +212,9 @@ blockquote {
   -webkit-animation-delay: 0.6s;
   animation-delay: 0.6s;
 }
+.article {
+  max-width: 640px;
+}
 @-webkit-keyframes loaderFade {
   50% {
     background-color: #444;
@@ -236,16 +232,16 @@ blockquote {
   }
 }
 @media(max-width: 480px) {
-  #view {
-    padding: 15px;
-  }
-  .item {
-    padding: 2px 0 2px 20px;
-  }
-  .item .index {
-    width: 18px;
-    left: -3px;
-    top: 6px;
-    font-size: 11px;
-  }
+  // #view {
+  //   padding: 15px;
+  // }
+  // .item {
+  //   padding: 2px 0 2px 20px;
+  // }
+  // .item .index {
+  //   width: 18px;
+  //   left: -3px;
+  //   top: 6px;
+  //   font-size: 11px;
+  // }
 }

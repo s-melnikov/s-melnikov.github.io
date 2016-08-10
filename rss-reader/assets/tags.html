@@ -26,39 +26,27 @@
 
 <articles>
   <ul class="articles">
-    <li each={ articles } class={ readed: readed }>
-      <a href="#/article/{ uid }" class="item" onmouseenter={ articleOver }>
-        <span class="index">{ getIndex() }.</span>
-        <p>
-          <span class="title">{ title }</span>
-          <span class="domain">
-            (<span>{ channel }</span>)
-          </span>
-        </p>
-        <p class="description">{ exerpt }</p>
-        <p class="subtext">
-          <span class="creator">{ creator }</span> |
-          <span class="date">{ formattedDate }</span>
-        </p>
-      </a>
+    <li each={ item, i in articles } class="item">
+      <span class="index">{ i + 1 }.</span>
+      <p>
+        <a href="#/article/{ item.uid }" class="title">{ item.title }</a>
+        <a class="domain" href={ item.channel } target="_blank">({ item.channel })</a>
+      </p>
+      <p class="subtext">
+        <span class="creator">{ item.creator || 'Unknow author' }</span> |
+        <span class="date">{ utils.date(item.pubDate, 'd-m-Y') }</span>
+      </p>
     </li>
   </ul>
-  <a href="#/articles/{ nextPage }">more...</a>
+  <!-- <a href="#/articles/{ page + 1 }">more...</a> -->
   <script>
-    var self = this,
-      articles = utils.ls.get().articles || [],
-      perPage = utils.settings.perPage,
-      page = +opts.uid || 1,
-      offset = page * perPage
-    self.articles = articles.slice(offset - perPage, offset)
-    self.nextPage = page + 1
-    getIndex() {
-      return self.index++
-    }
+    var self = this
+    self.articles = utils.ls.get().articles || []
+    self.page = +opts.uid || 1
     hasUpdate() {
-      var newArticles = utils.ls.get().articles
-      if (newArticles.length - articles.length > 0) {
-        articles = utils.sortArticles(newArticles)
+      var articles = utils.ls.get().articles
+      if (articles.length - self.articles.length > 0) {
+        self.articles = utils.sortArticles(articles)
         self.update()
       }
     }
@@ -66,22 +54,18 @@
       self.update()
       utils.getChannelsContent(self.hasUpdate)
     })
-    this.on('update', function() {
-      self.index = (page - 1) * perPage + 1
-    })
-    scrollTo(0, 0)
   </script>
 </articles>
 
 <article>
   <div class="article">
     <p>
-      <a href="#/articles" class="back">&lt;- back</a> |
-      <a href="{ article.link }" target="_blank">in new tab</a>
+      <a href="#/articles" class="back">&lt; back</a> |
+      <a href="{ article.link }" target="_blank">to source &gt;</a>
     </p>
     <h1>{ article.title }</h1>
     <div class="content" name="content">
-      <raw-html html={ article.encoded || article.description }></raw-html>
+      <raw-html html={ article.description }></raw-html>
     </div>
     <p class="subtext">
       <span class="creator">{ article.creator }</span> |
@@ -91,7 +75,7 @@
         (<a href="{ article.channel }" target="_blank">{ article.channel }</a>)
       </span>
     </p>
-    <p><a href="#/articles" class="back">&lt;- back</a></p>
+    <p><a href="#/articles" class="back">&lt; back</a></p>
   </div>
   <script>
     var self = this
@@ -116,7 +100,6 @@
           }
         })
     }
-    scrollTo(0, 0)
   </script>
 </article>
 
@@ -175,7 +158,6 @@
       <td><button onclick={ exportData }>export</button></td>
     </tr>
   </table>
-  <div class="loader"></div>
   <script>
     var self = this
 
