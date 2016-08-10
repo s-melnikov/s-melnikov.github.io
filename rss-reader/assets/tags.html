@@ -83,10 +83,6 @@
     self.article = articles.filter(function(article) {
       return article.uid == opts.uid
     })[0]
-    if (!self.article.readed) {
-      self.article.readed = true
-      utils.ls.set('articles', articles)
-    }
     fix() {
       var width = self.content.offsetWidth
       Array.prototype.forEach.call(
