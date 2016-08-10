@@ -77,7 +77,6 @@
         (<a href="{ article.channel }" target="_blank">{ article.channel }</a>)
       </span>
     </p>
-    <p><a href="{ article.link }" target="_blank">Read more ...</a></p>
     <p><a href="#/articles" class="back">&lt; back</a></p>
   </div>
   <script>
@@ -89,19 +88,6 @@
     if (!self.article.seen) {
       self.article.seen = true
       utils.ls.set('articles', articles)
-    }
-    fix() {
-      var width = self.content.offsetWidth
-      Array.prototype.forEach.call(
-        self.content.querySelectorAll('img, iframe'),
-        function(el) {
-          var _width = el.getAttribute('width'),
-            _height = el.getAttribute('height')
-          if (_width && _height) {
-            el.width = width
-            el.height = width * _height / _width
-          }
-        })
     }
   </script>
 </article>

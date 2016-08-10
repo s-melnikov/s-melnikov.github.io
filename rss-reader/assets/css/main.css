@@ -164,7 +164,8 @@ a.item {
 .article .content img {
   display: block;
   max-width: 100%;
-  margin: 12px auto
+  margin: 15px auto;
+  height: auto
 }
 .article >.back {
   font-family: Consolas, monospace
