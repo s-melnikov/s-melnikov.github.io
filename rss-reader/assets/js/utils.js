@@ -172,6 +172,8 @@ utils.genKey = function(length) {
 
 utils.sortArticles = function(articles) {
   return articles.sort(function(a, b) {
+    if (a.seen && !b.seen) return 1
+    if (!a.seen && b.seen) return -1
     var _a = new Date(a.pubDate),
       _b = new Date(b.pubDate)
     if (_a < _b) return 1

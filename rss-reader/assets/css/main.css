@@ -5,7 +5,7 @@ body, html {
   padding: 0;
   margin: 0;
   color: #444;
-  line-height: 1.2;
+  line-height: 1.4;
   background: #fbfbfb;
 }
 h1, h2, h3, h4, h5 {
@@ -86,7 +86,7 @@ button {
   color: #999;
 }
 .item p {
-  margin: 2px 0
+  margin: 0
 }
 a.item {
   display: inline-block;
