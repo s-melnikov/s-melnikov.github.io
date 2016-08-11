@@ -43,17 +43,22 @@
   <!-- <a href="#/articles/{ page + 1 }">more...</a> -->
   <script>
     var self = this
-    self.articles = utils.ls.get().articles || []
     self.page = +opts.uid || 1
-    hasUpdate() {
-      var articles = utils.ls.get().articles
-      if (articles.length - self.articles.length > 0) {
+    onUpdate() {
+      var articles = ls.get('articles')
+      if (articles.length > self.articles.length) {
         self.update()
       }
     }
+    onProgress() {
+
+    }
     self.on('mount', function() {
       self.update()
-      utils.getChannelsContent(self.hasUpdate)
+      api.checkUpdates(self.onUpdate, self.onProgress)
+    })
+    self.on('update', function() {
+      self.articles = ls.get('articles') || []
     })
   </script>
 </articles>
@@ -81,13 +86,13 @@
   </div>
   <script>
     var self = this
-    var articles = utils.ls.get().articles
+    var articles = ls.get('articles')
     self.article = articles.filter(function(article) {
       return article.uid == opts.uid
     })[0]
     if (!self.article.seen) {
       self.article.seen = true
-      utils.ls.set('articles', articles)
+      ls.set('articles', articles)
     }
   </script>
 </article>
@@ -112,17 +117,17 @@
       self.channels = self.channels.filter(function(channel) {
         return channel !== e.item
       })
-      utils.ls.set('channels', self.channels)
+      ls.set('channels', self.channels)
     }
     addChannel(e) {
       if (!self.control.value)
         return alert('Enter RSS url!')
       self.channels.push({src: self.control.value})
       self.control.value = ''
-      utils.ls.set('channels', self.channels)
+      ls.set('channels', self.channels)
     }
     this.on('mount', function() {
-      self.channels = utils.ls.get().channels || []
+      self.channels = ls.get('channels') || []
       self.update()
     })
   </script>
@@ -152,13 +157,13 @@
 
     resetArticles() {
       if (confirm('Are your sure?')) {
-        utils.ls.set('articles', [])
+        ls.set('articles', [])
       }
     }
     resetChannels() {
       if (confirm('Are your sure?')) {
-        utils.ls.set('channels', (utils.ls.get().channels || []).map(function(item) {
-          return {src: item.src}
+        ls.set('channels', (ls.get('channels') || []).map(function(item) {
+          return { src: item.src }
         }))
       }
     }
@@ -169,8 +174,8 @@
         reader.addEventListener('loadend', function() {
           self.busy = false
           var data = JSON.parse(reader.result)
-          utils.ls.set('channels', data.channels)
-          utils.ls.set('articles', data.articles)
+          ls.set('channels', data.channels)
+          ls.set('articles', data.articles)
           self.update()
         })
         reader.readAsText(file)
@@ -180,7 +185,7 @@
     exportData() {
       var a = document.createElement('a')
       a.download = 'rss_export_' + new Date().toISOString() + '.json'
-      a.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(utils.ls.get()))
+      a.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(ls.get()))
       a.dataset.downloadurl = ['application/json', a.download, a.href].join(':')
       document.body.appendChild(a)
       a.click()

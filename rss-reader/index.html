@@ -9,23 +9,9 @@
 <body>
 
   <div id="app"></div>
-  <script type="riot/tag" src="assets/tags.html"></script>
+
+  <script src="assets/tags.html" type="riot/tag"></script>
   <script src="assets/js/riot+compiler.min.js"></script>
-  <script src="assets/js/utils.js"></script>
-  <script>
-    var scrollPositions = {}
-    document.body.addEventListener('click', function() {
-      scrollPositions[location.hash] = document.body.scrollTop
-    })
-    window.addEventListener('hashchange', function() {
-      setTimeout(function() {
-        scrollTo(0, scrollPositions[location.hash] || 0)
-      }, 50)
-    })
-    utils.ls.set('articles', utils.sortArticles(utils.ls.get().articles || []))
-    riot.compile(function() {
-      riot.mount('#app', 'app')
-    })
-  </script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
