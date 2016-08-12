@@ -51,11 +51,11 @@
     self.page = +opts.uid || 1
     self.start = (self.page - 1) * settings.per_page
     self.end = self.page * settings.per_page
-    self.articles = articles.slice(self.stat, self.end)
+    self.articles = articles.slice(self.start, self.end)
     self.articlesLength = articles.length
     riot.dispatcher.on('articles_update', function() {
       articles = ls.get('articles')
-      self.articles = articles.slice(self.stat, self.end)
+      self.articles = articles.slice(self.start, self.end)
       self.update()
     })
   </script>
