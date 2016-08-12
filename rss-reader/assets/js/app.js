@@ -46,6 +46,7 @@ var api = {
                 channel.link = data.link && data.link[1] && (data.link[1].href || data.link[1])
                 if (data.item) {
                   var articles = ls.get('articles') || []
+                  var length = articles.length
                   data.item.forEach(function(item) {
                     if (!articles.filter(function(article) {
                         return article.link == item.link
@@ -61,9 +62,11 @@ var api = {
                       })
                     }
                   })
-                  articles = api.sortArticles(articles)
-                  if (articles.length > settings.max_entries) {
-                    articles = articles.splice(articles.length - settings.max_entries)
+                  if (length !== articles.length) {
+                    articles = api.sortArticles(articles)
+                    if (articles.length > settings.max_entries) {
+                      articles = articles.splice(articles.length - settings.max_entries)
+                    }
                   }
                 }
                 ls.set('articles', articles)
