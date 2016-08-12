@@ -25,7 +25,9 @@ var api = {
   },
   checkUpdates: function(cb) {
     var channels = ls.get('channels') || [],
-      index = 0
+      index = 0,
+      articles = ls.get('articles') || [],
+      articlesLength = articles.length
     function loop() {
       var channel = channels[index],
         query = encodeURIComponent('select * from xml where url="' + channel.src + '"'),
@@ -45,7 +47,6 @@ var api = {
                 channel.lastBuildDate = data.lastBuildDate
                 channel.link = data.link && data.link[1] && (data.link[1].href || data.link[1])
                 if (data.item) {
-                  var articles = ls.get('articles') || []
                   var length = articles.length
                   data.item.forEach(function(item) {
                     if (!articles.filter(function(article) {
@@ -78,17 +79,17 @@ var api = {
           index++
           ls.set('channels', channels)
           if (channels[index]) loop()
-          else cb()
+          else cb(articles.length - articlesLength)
         })
       } else {
         index++
         ls.set('channels', channels)
         if (channels[index]) loop()
-        else cb()
+        else cb(articles.length - articlesLength)
       }
     }
     if (channels[index]) loop()
-    else cb()
+    else cb(articles.length - articlesLength)
   },
   sortArticles: function(articles) {
     return articles.sort(function(a, b) {
@@ -118,6 +119,12 @@ var ls = {
     localStorage.rss = JSON.stringify(data)
   }
 }
+riot.dispatcher = riot.observable({})
 riot.compile(function() {
+  api.checkUpdates(function(newArticlesCount) {
+    if (newArticlesCount) {
+      riot.dispatcher.trigger('articles_update')
+    }
+  })
   riot.mount('#app', 'app')
 })

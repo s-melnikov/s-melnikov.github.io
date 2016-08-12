@@ -9,13 +9,15 @@
   </div>
   <div id="view"></div>
   <script>
-    var self = this
+    var self = this,
+      mounted = null
     riot.route.base('#/')
     riot.route('*', function(tag) {
       riot.mount(self.view, tag)
     })
     riot.route('*/*', function(tag, uid) {
-      riot.mount(self.view, tag, {uid: uid})
+      if (mounted) mounted.unmount(true)
+      mounted = riot.mount(self.view, tag, {uid: uid})[0]
     })
     riot.route(function() {
       riot.route('articles')
@@ -27,7 +29,7 @@
 <articles>
   <a href="#/articles/{ page - 1 }" if={ start } class="paginator">back</a>
   <ul class="articles">
-    <li each={ item, i in articles.slice(start, end)} class="item">
+    <li each={ item, i in articles} class="item">
       <span class="index">{start + i + 1 }.</span>
       <p>
         <a href="#/article/{ item.uid }" class="title">{ item.title }</a>
@@ -41,26 +43,20 @@
       </p>
     </li>
   </ul>
-  <a href="#/articles/{ page + 1 }" if={ articles.length > end }
+  <a href="#/articles/{ page + 1 }" if={ articlesLength > end }
     class="paginator">next</a>
   <script>
-    var self = this
+    var self = this,
+      articles = ls.get('articles') || []
     self.page = +opts.uid || 1
     self.start = (self.page - 1) * settings.per_page
     self.end = self.page * settings.per_page
-    onUpdate() {
-      var articles = ls.get('articles')
-      if (articles.length > self.articles.length) {
-        self.update()
-      }
-    }
-    onProgress() {}
-    self.on('mount', function() {
+    self.articles = articles.slice(self.stat, self.end)
+    self.articlesLength = articles.length
+    riot.dispatcher.on('articles_update', function() {
+      articles = ls.get('articles')
+      self.articles = articles.slice(self.stat, self.end)
       self.update()
-      api.checkUpdates(self.onUpdate, self.onProgress)
-    })
-    self.on('update', function() {
-      self.articles = ls.get('articles') || []
     })
   </script>
 </articles>
@@ -146,6 +142,10 @@
       <td><button onclick={ resetChannels }>reset</button></td>
     </tr>
     <tr>
+      <td>Updates channels:</td>
+      <td><button onclick={ updateChannels }>update</button></td>
+    </tr>
+    <tr>
       <td>Import RSS data</td>
       <td><input onchange={ importData } type="file"></td>
     </tr>
@@ -156,7 +156,6 @@
   </table>
   <script>
     var self = this
-
     resetArticles() {
       if (confirm('Are your sure?')) {
         ls.set('articles', [])
@@ -167,6 +166,19 @@
         ls.set('channels', (ls.get('channels') || []).map(function(item) {
           return { src: item.src }
         }))
+      }
+    }
+    updateChannels() {
+      if (confirm('Are your sure?')) {
+        ls.set('channels', (ls.get('channels') || []).map(function(item) {
+          item.lastUpdate = 0
+          return item
+        }))
+        api.checkUpdates(function(newArticlesCount) {
+          if (newArticlesCount) {
+            riot.dispatcher.trigger('articles_update')
+          }
+        })
       }
     }
     importData(e) {
