@@ -1,9 +1,9 @@
 <app>
-  <div id="header">
+  <div id="header" class="clearfix">
     <h1><a href="#/">RSS Reader</a></h1>
     <div class="nav">
-      <a href="#/articles">articles</a> |
-      <a href="#/channels">channels</a> |
+      <a href="#/articles">articles</a>
+      <a href="#/channels">channels</a>
       <a href="#/settings">settings</a>
     </div>
   </div>
@@ -25,9 +25,10 @@
 </app>
 
 <articles>
+  <a href="#/articles/{ page - 1 }" if={ start } class="paginator">back</a>
   <ul class="articles">
-    <li each={ item, i in articles } class="item">
-      <span class="index">{ i + 1 }.</span>
+    <li each={ item, i in articles.slice(start, end)} class="item">
+      <span class="index">{start + i + 1 }.</span>
       <p>
         <a href="#/article/{ item.uid }" class="title">{ item.title }</a>
         <a class="domain" href={ item.channel } target="_blank">({ item.channel })</a>
@@ -40,19 +41,20 @@
       </p>
     </li>
   </ul>
-  <!-- <a href="#/articles/{ page + 1 }">more...</a> -->
+  <a href="#/articles/{ page + 1 }" if={ articles.length > end }
+    class="paginator">next</a>
   <script>
     var self = this
     self.page = +opts.uid || 1
+    self.start = (self.page - 1) * settings.per_page
+    self.end = self.page * settings.per_page
     onUpdate() {
       var articles = ls.get('articles')
       if (articles.length > self.articles.length) {
         self.update()
       }
     }
-    onProgress() {
-
-    }
+    onProgress() {}
     self.on('mount', function() {
       self.update()
       api.checkUpdates(self.onUpdate, self.onProgress)
