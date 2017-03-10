@@ -50,24 +50,26 @@ var ItemsListView = type => (model, actions) => {
 var ItemView = (item, model, actions) => h('div',
   { 'class': 'item' },
   h('span', { 'class': 'score' }, item.score),
-  h('div', { 'class': 'title' },
-    h('a', { href: item.url, target: '_blank' }, item.title),
-    ' ',
-    h('a', {
-      'class': 'host',
-      href: '//' + domain(item.url),
-      target: '_blank'
-    },
-      '(' + domain(item.url) + ')'
+  h('div', { 'class': 'inner' },
+    h('div', { 'class': 'title' },
+      h('a', { href: item.url, target: '_blank' }, item.title),
+      ' ',
+      h('a', {
+        'class': 'host',
+        href: '//' + domain(item.url),
+        target: '_blank'
+      },
+        '(' + domain(item.url) + ')'
+      )
+    ),
+    h('div', { 'class': 'info' },
+      'by ',
+      h('a', { href: '#' }, item.by),
+      ' ',
+      fromNow(item.time),
+      ' ago',
+      item.kids ? ' | ' + item.kids.length + ' comments' : ''
     )
-  ),
-  h('div', { 'class': 'info' },
-    'by ',
-    h('a', { href: '#' }, item.by),
-    ' ',
-    fromNow(item.time),
-    ' ago',
-    item.kids ? ' | ' + item.kids.length + ' comments' : ''
   )
 )
 

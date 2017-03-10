@@ -76,6 +76,9 @@ header a.active::after {
   margin-top: 6px;
   margin-right: 10px;
 }
+.items-list .item .inner {
+  overflow: hidden;
+}
 .items-list .item .title a {
   text-decoration: none;
 }
@@ -126,16 +129,10 @@ header a.active::after {
     font-size: 1em;
     width: 32px;
     margin-right: 7px;
-    height: 47px;
+    height: 32px;
+    margin-top: 20px;
   }
   .items-list .item {
-    padding: 10px 10px 10px 0;
-  }
-  .items-list .item .title a {
-    font-size: 13px;
-  }
-  .items-list .item a.host,
-  .items-list .item .info {
-    font-size: 11px;
+    padding: 15px 15px 15px 10px;
   }
 }
