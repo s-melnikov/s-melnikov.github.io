@@ -1,19 +1,29 @@
+var log = ~location.search.indexOf('debug') ? console.log.bind(console, '[RSS]') : function() {}
 var settings = {
   proxy: 'http://query.yahooapis.com/v1/public/yql?q=',
   max_entries: 2000,
   per_page: 25
 }
 var scrollPositions = {}
+var progressLine = document.querySelector('#progress-line');
+
 document.body.addEventListener('click', function() {
   scrollPositions[location.hash] = document.body.scrollTop
 })
+
 window.addEventListener('hashchange', function() {
   setTimeout(function() {
     scrollTo(0, scrollPositions[location.hash] || 0)
   }, 50)
 })
+
+function progress(i) {
+  progressLine.style.width = i * 100 + '%'
+}
+
 var api = {
   get: function(url, cb) {
+    log('api:get(', url, ')')
     var xhr = new XMLHttpRequest()
     xhr.open('GET', url, true)
     xhr.onload = function() {
@@ -24,6 +34,7 @@ var api = {
     xhr.send()
   },
   checkUpdates: function(cb) {
+    log('api:checkUpdates()')
     var channels = ls.get('channels') || [],
       index = 0,
       articles = ls.get('articles') || [],
@@ -32,9 +43,11 @@ var api = {
       var channel = channels[index],
         query = encodeURIComponent('select * from xml where url="' + channel.src + '"'),
         passed = new Date() - new Date(channel.lastUpdate || 0)
+      log('api:checkUpdates() channel:', channel.src, 'passed:', Math.floor(passed / 1000 / 60), 'm')
       if (passed > 60 * 60 * 1000) {
         channel.lastUpdate = new Date()
         api.get(settings.proxy + query + '&format=json', function(response) {
+          progress(index / (channels.length - 1))
           var data = null
           try {
             data = JSON.parse(response)
@@ -79,17 +92,26 @@ var api = {
           index++
           ls.set('channels', channels)
           if (channels[index]) loop()
-          else cb(articles.length - articlesLength)
+          else {
+            cb(articles.length - articlesLength)
+            setTimeout(function() { progress(0) }, 1000)
+          }
         })
       } else {
         index++
         ls.set('channels', channels)
         if (channels[index]) loop()
-        else cb(articles.length - articlesLength)
+        else {
+          cb(articles.length - articlesLength)
+          setTimeout(function() { progress(0) }, 1000)
+        }
       }
     }
     if (channels[index]) loop()
-    else cb(articles.length - articlesLength)
+    else {
+      cb(articles.length - articlesLength)
+      setTimeout(function() { progress(0) }, 1000)
+    }
   },
   sortArticles: function(articles) {
     return articles.sort(function(a, b) {
@@ -119,7 +141,9 @@ var ls = {
     localStorage.rss = JSON.stringify(data)
   }
 }
+
 riot.dispatcher = riot.observable({})
+
 riot.compile(function() {
   api.checkUpdates(function(newArticlesCount) {
     if (newArticlesCount) {

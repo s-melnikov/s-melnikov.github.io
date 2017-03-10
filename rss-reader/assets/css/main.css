@@ -263,17 +263,26 @@ blockquote {
     background-color: rgba(0, 0, 0, 0.3);
   }
 }
-@media(max-width: 480px) {
-  // #view {
-  //   padding: 15px;
-  // }
-  // .item {
-  //   padding: 2px 0 2px 20px;
-  // }
-  // .item .index {
-  //   width: 18px;
-  //   left: -3px;
-  //   top: 6px;
-  //   font-size: 11px;
-  // }
+/* @media(max-width: 480px) {
+  #view {
+    padding: 15px;
+  }
+  .item {
+    padding: 2px 0 2px 20px;
+  }
+  .item .index {
+    width: 18px;
+    left: -3px;
+    top: 6px;
+    font-size: 11px;
+  }
+} */
+#progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #00adff;
+  transition: width .1s;
 }
