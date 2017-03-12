@@ -36,7 +36,25 @@ var MenuView = (model) => h('header', null,
 var ItemsListView = type => (model, actions) => {
   return h('div',
     { 'class': 'items-list ' + type + '-list' },
-    model.stories.map(story => ItemView(story)),
+    model.stories.map(story => {
+      switch (story.type) {
+        case 'story':
+          return StoryView(story)
+          break
+        case 'job':
+          return JobView(story)
+          break
+        case 'comment':
+          return CommentView(story)
+          break
+        case 'poll':
+          return PollView(story)
+          break
+        case 'pollopt':
+          return PolloptView(story)
+          break
+      }
+    }),
     model.loading ? h('div', { 'class': 'item loader' }, h('span')) : '',
     !model.loading && model.ids.length > model.limit ?
       h('div', {
@@ -47,8 +65,112 @@ var ItemsListView = type => (model, actions) => {
   )
 }
 
-var ItemView = (item, model, actions) => h('div',
-  { 'class': 'item' },
+var StoryView = (item, model, actions) => h('div',
+  { 'class': 'item item-story' },
+  h('span', { 'class': 'score' }, item.score),
+  h('div', { 'class': 'inner' },
+    h('div', { 'class': 'title' },
+      h('a', { href: item.url, target: '_blank' }, item.title),
+      ' ',
+      h('a', {
+        'class': 'host',
+        href: '//' + domain(item.url),
+        target: '_blank'
+      },
+        '(' + domain(item.url) + ')'
+      )
+    ),
+    h('div', { 'class': 'info' },
+      'by ',
+      h('a', { href: '#' }, item.by),
+      ' ',
+      fromNow(item.time),
+      ' ago',
+      item.kids ? ' | ' + item.kids.length + ' comments' : ''
+    )
+  )
+)
+
+var JobView = (item, model, actions) => h('div',
+  { 'class': 'item item-job' },
+  h('span', { 'class': 'score' }, item.score),
+  h('div', { 'class': 'inner' },
+    h('div', { 'class': 'title' },
+      h('a', { href: item.url, target: '_blank' }, item.title),
+      ' ',
+      h('a', {
+        'class': 'host',
+        href: '//' + domain(item.url),
+        target: '_blank'
+      },
+        '(' + domain(item.url) + ')'
+      )
+    ),
+    h('div', { 'class': 'info' },
+      'by ',
+      h('a', { href: '#' }, item.by),
+      ' ',
+      fromNow(item.time),
+      ' ago',
+      item.kids ? ' | ' + item.kids.length + ' comments' : ''
+    )
+  )
+)
+
+var CommentView = (item, model, actions) => h('div',
+  { 'class': 'item item-comment' },
+  h('span', { 'class': 'score' }, item.score),
+  h('div', { 'class': 'inner' },
+    h('div', { 'class': 'title' },
+      h('a', { href: item.url, target: '_blank' }, item.title),
+      ' ',
+      h('a', {
+        'class': 'host',
+        href: '//' + domain(item.url),
+        target: '_blank'
+      },
+        '(' + domain(item.url) + ')'
+      )
+    ),
+    h('div', { 'class': 'info' },
+      'by ',
+      h('a', { href: '#' }, item.by),
+      ' ',
+      fromNow(item.time),
+      ' ago',
+      item.kids ? ' | ' + item.kids.length + ' comments' : ''
+    )
+  )
+)
+
+var PollView = (item, model, actions) => h('div',
+  { 'class': 'item item-poll' },
+  h('span', { 'class': 'score' }, item.score),
+  h('div', { 'class': 'inner' },
+    h('div', { 'class': 'title' },
+      h('a', { href: item.url, target: '_blank' }, item.title),
+      ' ',
+      h('a', {
+        'class': 'host',
+        href: '//' + domain(item.url),
+        target: '_blank'
+      },
+        '(' + domain(item.url) + ')'
+      )
+    ),
+    h('div', { 'class': 'info' },
+      'by ',
+      h('a', { href: '#' }, item.by),
+      ' ',
+      fromNow(item.time),
+      ' ago',
+      item.kids ? ' | ' + item.kids.length + ' comments' : ''
+    )
+  )
+)
+
+var PolloptView = (item, model, actions) => h('div',
+  { 'class': 'item item-pollopt' },
   h('span', { 'class': 'score' }, item.score),
   h('div', { 'class': 'inner' },
     h('div', { 'class': 'title' },

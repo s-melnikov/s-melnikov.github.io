@@ -55,6 +55,7 @@ header a.active::after {
   margin: 15px auto;
 }
 .items-list .item {
+  position: relative;
   background-color: #fff;
   padding: 15px;
 }
@@ -114,13 +115,11 @@ header a.active::after {
   margin: -18px 0 0 -18px;
   animation: rotate .4s infinite linear;
 }
-
 @keyframes rotate {
   to {
     transform: rotate(180deg);
   }
 }
-
 @media (max-width: 800px) {
   header {
     text-align: center;
