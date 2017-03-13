@@ -5,17 +5,6 @@ var hyperapp = function() {
   var h = function() {
     var i, node, children, stack = []
 
-    function svg(tag, data, children) {
-      data.ns = "http://www.w3.org/2000/svg"
-
-      for (var i = 0; i < children.length; i++) {
-        var node = children[i]
-        if (node.data) {
-          svg(node.tag, node.data, node.children)
-        }
-      }
-    }
-
     return function h(tag, data) {
       var canConcat, oldCanConcat
 
@@ -58,10 +47,6 @@ var hyperapp = function() {
         return tag(data, children)
       }
 
-      if (tag === "svg") {
-        svg(tag, data, children)
-      }
-
       return {
         tag: tag,
         data: data || {},
@@ -70,6 +55,8 @@ var hyperapp = function() {
     }
 
   }()
+
+  var SVG_NS = "http://www.w3.org/2000/svg"
 
   function app(app) {
     var view = app.view || function () {
@@ -228,7 +215,7 @@ var hyperapp = function() {
       return a.tag !== b.tag || typeof a !== typeof b || isPrimitive(a) && a !== b
     }
 
-    function createElementFrom(node) {
+    function createElementFrom(node, isSVG) {
       var element
 
       // There are only two types of nodes. A string node, which is
@@ -239,8 +226,8 @@ var hyperapp = function() {
         element = document.createTextNode(node)
 
       } else {
-        element = node.data && node.data.ns
-          ? document.createElementNS(node.data.ns, node.tag)
+        element = (isSVG = isSVG || node.tag === "svg")
+          ? document.createElementNS(SVG_NS, node.tag)
           : document.createElement(node.tag)
 
         for (var name in node.data) {
@@ -252,7 +239,7 @@ var hyperapp = function() {
         }
 
         for (var i = 0; i < node.children.length; i++) {
-          element.appendChild(createElementFrom(node.children[i]))
+          element.appendChild(createElementFrom(node.children[i], isSVG))
         }
       }
 
@@ -260,13 +247,8 @@ var hyperapp = function() {
     }
 
     function removeElementData(element, name, value) {
-      // Hyperx adds a className attribute to nodes we must handle.
-
-      element.removeAttribute(name === "className" ? "class" : name)
-
-      if (typeof value === "boolean" || value === "true" || value === "false") {
-        element[name] = false
-      }
+      element[name] = value
+      element.removeAttribute(name)
     }
 
     function setElementData(element, name, value, oldValue) {
@@ -281,17 +263,22 @@ var hyperapp = function() {
         element.removeEventListener(event, oldValue)
         element.addEventListener(event, value)
 
+      } else if (value === false) {
+        removeElementData(element, name, value)
+
       } else {
-        if (value === "false" || value === false) {
-          element.removeAttribute(name)
-          element[name] = false
+        element.setAttribute(name, value)
 
-        } else {
-          element.setAttribute(name, value)
-          if (element.namespaceURI !== "http://www.w3.org/2000/svg") {
-            // SVG element's props are read only in strict mode.
+        if (element.namespaceURI !== SVG_NS) {
+          if (element.type === "text") {
+            var oldSelStart = element.selectionStart
+            var oldSelEnd = element.selectionEnd
+          }
 
-            element[name] = value
+          element[name] = value
+
+          if (oldSelStart >= 0) {
+            element.setSelectionRange(oldSelStart, oldSelEnd)
           }
         }
       }
@@ -304,7 +291,7 @@ var hyperapp = function() {
         var realValue = element[name]
 
         if (value === undefined) {
-          removeElementData(element, name, oldValue)
+          removeElementData(element, name, value)
 
         } else if (name === "onUpdate") {
           defer(value, element)
@@ -393,7 +380,6 @@ var hyperapp = function() {
 
   function match(routes, path) {
     var match, params = {}
-
     for (var route in routes) {
       var keys = []
 
@@ -405,15 +391,13 @@ var hyperapp = function() {
         .replace(/\//g, "\\/")
         .replace(/:([A-Za-z0-9_]+)/g, function (_, key) {
           keys.push(key)
-          return "([A-Za-z0-9_]+)"
+          return "([-A-Za-z0-9_.]+)"
         }) + "/?$", "g"), function () {
-
           for (var i = 1; i < arguments.length - 2; i++) {
             params[keys.shift()] = arguments[i]
           }
           match = route
         })
-
       if (match) {
         break
       }

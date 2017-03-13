@@ -5,7 +5,6 @@ firebase.initializeApp({
 })
 
 var PER_PAGE = 25
-
 var { h, app, Router } = hyperapp
 var db = firebase.database().ref('/v0')
 var menu = []
@@ -21,7 +20,7 @@ var LayoutView = (model, actions, view) => h('div', { id: 'app' },
 
 var MenuView = (model) => h('header', null,
   h('div', { 'class': 'container' },
-    ['Top', 'New', 'Show', 'Ask', 'Job'].map(type => h('a',
+    ['Top', 'New', 'Best', 'Show', 'Ask', 'Job'].map(type => h('a',
         {
           href: '#!/' + type.toLowerCase(),
           'class': type.toLowerCase() === (model.router.params.type || 'top') ?
@@ -77,7 +76,7 @@ var StoryView = (item, model, actions) => h('div',
         href: '//' + domain(item.url),
         target: '_blank'
       },
-        '(' + domain(item.url) + ')'
+      h('a', { href: '#!/site/' + domain(item.url) }, '(' + domain(item.url) + ')')
       )
     ),
     h('div', { 'class': 'info' },
@@ -85,8 +84,8 @@ var StoryView = (item, model, actions) => h('div',
       h('a', { href: '#' }, item.by),
       ' ',
       fromNow(item.time),
-      ' ago',
-      item.kids ? ' | ' + item.kids.length + ' comments' : ''
+      ' ago | ',
+      h('a', { href: '#' }, item.descendants ? (item.descendants + ' comments') : 'discuss')
     )
   )
 )
@@ -262,6 +261,24 @@ app({
           actions.setIds(snapshot.val())
         )
       }
+      return LayoutView(model, actions,
+        ItemsListView(model.router.params.type || 'top')
+      )
+    },
+    '/site/:site': (model, actions) => {
+      /*var type = model.router.params.type || 'top'
+      if (stories_type !== type) {
+        stories_type = type
+        model.limit = PER_PAGE
+        model.stories = []
+        model.ids = []
+        model.loading = true
+        if (stories_ref) stories_ref.off()
+        stories_ref = db.child(type + 'stories')
+        stories_ref.on('value', snapshot =>
+          actions.setIds(snapshot.val())
+        )
+      }*/
       return LayoutView(model, actions,
         ItemsListView(model.router.params.type || 'top')
       )

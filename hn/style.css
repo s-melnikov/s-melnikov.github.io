@@ -16,7 +16,11 @@ body {
   margin: auto;
 }
 a {
-  color: #666;
+  color: #999;
+  text-decoration: none;
+}
+a:hover {
+  color: #733003;
 }
 header {
   background-color: #f60;
