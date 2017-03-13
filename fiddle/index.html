@@ -59,7 +59,7 @@
   <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
   <script src='assets/split.min.js'></script>
   <script>
-    var 
+    var
       DEBOUNCE_TIME = 500,
       editor = ace.edit(document.querySelector('#editor')),
       doc = editor.getSession(),
@@ -70,13 +70,13 @@
       userUid = localStorage.fiddle_client || randomString(16),
       isOtherUserChanges = false
 
-    editor.setTheme('ace/theme/monokai')
+    editor.setTheme('ace/theme/chrome')
     doc.setMode('ace/mode/html')
     doc.setTabSize(2)
     editor.session.setUseWorker(false)
 
     if (recordkey) {
-      recordref = fbref.child(recordkey)      
+      recordref = fbref.child(recordkey)
     } else {
       recordref = fbref.push()
       location.hash = recordref.key()
@@ -96,20 +96,20 @@
       }
     })
 
-    doc.on('change', debounce(function(e) { 
+    doc.on('change', debounce(function(e) {
       var value = doc.getValue()
       result.srcdoc = value
       if (isOtherUserChanges) {
         isOtherUserChanges = false
         return
-      }   
+      }
       recordref.set({
-        userUid: userUid, 
+        userUid: userUid,
         data: value,
         time: Date.now(),
         cursor: doc.selection.getCursor()
       })
-    }, DEBOUNCE_TIME))    
+    }, DEBOUNCE_TIME))
 
     function get(url, cb) {
       var r = new XMLHttpRequest()
@@ -137,12 +137,12 @@
 
     function randomString(length) {
       var text = '', possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));      
+      for (var i = 0; i < length; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
       return text;
     }
 
     Split(["#editor", "#result"], {
-      sizes: [40, 60],
+      sizes: [50, 50],
       minSize: 200
     })
   </script>
