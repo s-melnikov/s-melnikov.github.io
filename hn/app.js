@@ -92,6 +92,14 @@ var UserView = (item, model, actions) => h('div',
       h('tr', null,
         h('td', null, 'About:'),
         h('td', { innerHTML: item.about || '[no info]' })
+      ),
+      h('tr', null,
+        h('td'),
+        h('td', null,
+          h('a', { href: '#!/user/submissions/' + item.id }, 'submissions'),
+          ' | ',
+          h('a', { href: '#!/user/comments/' + item.id }, 'comments')
+        )
       )
     )
   )
@@ -195,6 +203,27 @@ app({
             actions.setStories([user])
           })
         })
+      }
+      return LayoutView(model, actions, ItemsListView, type)
+    },
+    '/user/submissions/:id': (model, actions) => {
+      var type = 'user-submissions'
+      if (model.type !== type) {
+        model.type = type
+        model.limit = PER_PAGE
+        model.stories = []
+        model.ids = []
+        model.loading = true
+        if (model.ref) model.ref.off()
+        db.child('user/' + model.router.params.id).once('value', snapshot =>
+
+          getStories(
+            snapshot.val().submitted,
+            items => actions.setStories(
+              items.filter(i => i.type === 'story' && !i.deleted)
+            )
+          )
+        )
       }
       return LayoutView(model, actions, ItemsListView, type)
     },
