@@ -21,9 +21,9 @@ function createMenu() {
   var sidebar = document.querySelector('#sidebar'),
     list = Showdown.extensions.headings._list,
     h3, ul, li, a
-
+    console.log(Showdown.extensions.headings._list)
   list.forEach(function(el, i) {
-    if (el.level == '1') {
+    if (el.level == '2') {
       if (ul) sidebar.appendChild(ul)
       ul = document.createElement('ul')
       a = document.createElement('a')
@@ -32,7 +32,8 @@ function createMenu() {
       a.textContent = el.text
       h3.appendChild(a)
       sidebar.appendChild(h3)
-    } else {
+    }
+    if (el.level == '3') {
       li = document.createElement('li')
       a = document.createElement('a')
       a.textContent = el.text
@@ -49,7 +50,6 @@ function createMenu() {
       var el = document.getElementById(location.hash.slice(1))
       if (el) {
         el.scrollIntoView();
-        console.log("!")
       }
     }
   }, 0)

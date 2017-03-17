@@ -4,42 +4,103 @@ firebase.initializeApp({
   databaseURL: 'https://hacker-news.firebaseio.com/'
 })
 
-var PER_PAGE = 25
+var now = Date.now()
 var { h, app, Router } = hyperapp
+var PER_PAGE = 25
 var db = firebase.database().ref('/v0')
-var menu = []
-
+var types = ['top', 'new', 'best', 'show', 'ask', 'job']
+var model = {
+  type: 'top',
+  limit: PER_PAGE,
+  loading: true,
+  ids: {},
+  stories: {}
+}
+var actions = {
+  setIds: (model, { type, items }, actions) => {
+    var ids = model.ids
+    ids[type] = items
+    if (model.type == type) {
+      actions.loading(true)
+      getStories(items.slice(0, model.limit), items =>
+        actions.setStories({ type, items })
+      )
+    }
+    return { ids }
+  },
+  setStories: (model, { type, items }, actions) => {
+    var stories = model.stories
+    stories[type] = items
+    actions.loading(false)
+    return stories
+  },
+  setType: (model, type, actions) => {
+    actions.loading(true)
+    getStories(model.ids[type].slice(0, model.limit), items =>
+      actions.setStories({ type, items })
+    )
+    return { type }
+  },
+  setLimit: (model, limit, actions) => {
+    actions.loading(true)
+    getStories(model.ids[model.type].slice(0, limit), items =>
+      actions.setStories({ type: model.type, items })
+    )
+    return { limit }
+  },
+  loading: (_, loading) => ({ loading })
+}
+var view = {}
+var subscriptions = [
+  (model, actions) => types.map(type =>
+    db.child(type + 'stories').on('value', snapshot => {
+      actions.setIds({ type, items: snapshot.val() })
+    })
+  )
+]
+types.map(type => {
+  view['/' + type] = (model, actions) => {
+    if (type != model.type) {
+      setTimeout(() => actions.setType(type), 0)
+    }
+    return LayoutView(
+      model,
+      actions,
+      MenuView,
+      ItemsListView
+    )
+  }
+  model.ids[type] = []
+  model.stories[type] = []
+})
 
 // Views
-
-var LayoutView = (model, actions, view, type) => h('div', { id: 'app' },
-  MenuView(model, actions, type), view(model, actions, type)
+var LayoutView = (model, actions, ...childs) => h('div', { id: 'app' },
+  childs.map(child => child(model, actions))
 )
 
-var MenuView = (model, actions, type) => h('header', null,
+var MenuView = (model) => h('header', null,
   h('div', { 'class': 'container' },
-    ['Top', 'New', 'Best', 'Show', 'Ask', 'Job'].map(t => h('a',
-        {
-          href: '#!/' + t.toLowerCase(),
-          'class': t.toLowerCase() === type ? 'active' : ''
-        },
-        t
-      )
+    types.map(type => h('a', {
+        href: '#!/' + type,
+        'class': type === model.type ? 'active' : ''
+      }, capitalize(type))
     )
   )
 )
 
-var ItemsListView = (model, actions, type) => h('div',
-  { 'class': 'items-list ' + type + '-list' },
-  model.stories.map(story => {
+var ItemsListView = (model, actions) => h('div',
+  { 'class': 'items-list ' + model.type + '-list' },
+  model.stories[model.type].map(story => {
     if (!story) return false;
     if (model.type === 'user') {
       return UserView(story)
     }
-    return StoryView(story, type)
+    return StoryView(story)
   }),
   model.loading ? h('div', { 'class': 'item loader' }, h('span')) : '',
-  !model.loading && model.ids.length > model.limit ?
+  !model.loading && model.ids[model.type].length >
+    model.stories[model.type].length ?
     h('div', {
       'class': 'item more',
       onclick: () => actions.setLimit(model.limit + PER_PAGE)
@@ -47,31 +108,31 @@ var ItemsListView = (model, actions, type) => h('div',
 )
 
 
-var StoryView = (item, type) => h('div',
+var StoryView = story => h('div',
   {
-    'class': 'item item-' + type,
-    onclick: () => console.log(item)
+    'class': 'item item-' + model.type,
+    onclick: () => console.log(story)
   },
-  h('span', { 'class': 'score' }, item.score),
+  h('span', { 'class': 'score' }, story.score),
   h('div', { 'class': 'inner' },
     h('div', { 'class': 'title' },
-      h('a', { href: item.url, target: '_blank' }, item.title),
+      h('a', { href: story.url, target: '_blank' }, story.title),
       ' ',
       h('a', {
           'class': 'host',
-          href: '//' + domain(item.url),
+          href: '//' + domain(story.url),
           target: '_blank'
         },
-        '(' + domain(item.url) + ')'
+        '(' + domain(story.url) + ')'
       )
     ),
     h('div', { 'class': 'info' },
       'by ',
-      h('a', { href: '#!/user/' + item.by }, item.by),
+      h('a', { href: '#!/user/' + story.by }, story.by),
       ' ',
-      fromNow(item.time),
+      fromNow(story.time),
       ' ago | ',
-      h('a', { href: '#' }, item.descendants ? (item.descendants + ' comments') : 'discuss')
+      h('a', { href: '#' }, story.descendants ? (story.descendants + ' comments') : 'discuss')
     )
   )
 )
@@ -113,13 +174,10 @@ var ErrorView = () => h('div', { 'class': 'items-list' },
 
 var parser = document.createElement('a')
 
-function domain(url) {
-  parser.href = url
-  return parser.hostname
-}
+var domain = url => (parser.href = url) && parser.hostname
 
-function fromNow(time) {
-  var between = Date.now() / 1000 - Number(time)
+var fromNow = (time, between) => {
+  between = Date.now() / 1000 - Number(time)
   if (between < 3600) {
     return ~~(between / 60) + ' minutes'
   } else if (between < 86400) {
@@ -129,19 +187,13 @@ function fromNow(time) {
   }
 }
 
-function shuffle(a) {
-  for (let i = a.length; i; i--) {
-    let j = Math.floor(Math.random() * i);
-    [a[i - 1], a[j]] = [a[j], a[i - 1]]
-  }
-}
+var capitalize = str => str[0].toUpperCase() + str.slice(1)
 
-function getStories(ids, cb) {
-  var stories = []
-  ids.map(id => db.child('item/' + id).once('value', snapshot => {
-    stories.push(snapshot.val())
-    if (stories.length === ids.length) {
-      cb(stories)
+var getStories = (items, callback, result = []) => {
+  items.map(item => db.child('item/' + item).once('value', snapshot => {
+    result.push(snapshot.val())
+    if (result.length === items.length) {
+      callback(result)
     }
   }))
 }
@@ -149,85 +201,51 @@ function getStories(ids, cb) {
 // Init
 
 app({
-  model: {
-    ids: [],
-    stories: [],
-    type: null,
-    ref: null,
-    limit: null,
-    loading: false
-  },
-  actions: {
-    setIds: (model, ids, actions) => {
-      getStories(ids.slice(0, model.limit), stories =>
-        actions.setStories(stories))
-      return { ids }
-    },
-    setLimit: (model, limit, actions) => {
-      getStories(model.ids.slice(0, limit), stories =>
-        actions.setStories(stories))
-      return { limit, loading: true }
-    },
-    setStories: (_, stories) => ({ stories, loading: false })
-  },
-  view: {
-    '/:type?': (model, actions) => {
-      var type = model.router.params.type || 'top'
-      if (model.type !== type) {
-        model.type = type
-        model.limit = PER_PAGE
-        model.stories = []
-        model.ids = []
-        model.loading = true
-        if (model.ref) model.ref.off()
-        model.ref = db.child(type + 'stories')
-        model.ref.on('value', snapshot =>
-          actions.setIds(snapshot.val())
-        )
-      }
-      return LayoutView(model, actions, ItemsListView, type)
-    },
-    '/user/:id': (model, actions) => {
-      var type = 'user'
-      if (model.type !== type) {
-        model.type = type
-        model.limit = PER_PAGE
-        model.stories = []
-        model.ids = []
-        model.loading = true
-        if (model.ref) model.ref.off()
-        db.child('user/' + model.router.params.id).once('value', snapshot => {
-          var user = snapshot.val()
-          getStories(user.submitted || [], submitted => {
-            user.submitted = submitted
-            actions.setStories([user])
-          })
-        })
-      }
-      return LayoutView(model, actions, ItemsListView, type)
-    },
-    '/user/submissions/:id': (model, actions) => {
-      var type = 'user-submissions'
-      if (model.type !== type) {
-        model.type = type
-        model.limit = PER_PAGE
-        model.stories = []
-        model.ids = []
-        model.loading = true
-        if (model.ref) model.ref.off()
-        db.child('user/' + model.router.params.id).once('value', snapshot =>
-
-          getStories(
-            snapshot.val().submitted,
-            items => actions.setStories(
-              items.filter(i => i.type === 'story' && !i.deleted)
-            )
-          )
-        )
-      }
-      return LayoutView(model, actions, ItemsListView, type)
-    },
-    '*': (model, actions) => LayoutView(model, actions, ErrorView)
-  },
+  model,
+  actions,
+  view,
+  subscriptions,
   plugins: [Router]
 })
+
+
+/*'/user/:id': (model, actions) => {
+  var type = 'user'
+  if (model.type !== type) {
+    model.type = type
+    model.limit = PER_PAGE
+    model.stories = []
+    model.ids = []
+    model.loading = true
+    if (model.ref) model.ref.off()
+    db.child('user/' + model.router.params.id).once('value', snapshot => {
+      var user = snapshot.val()
+      getStories(user.submitted || [], submitted => {
+        user.submitted = submitted
+        actions.setStories([user])
+      })
+    })
+  }
+  return LayoutView(model, actions, ItemsListView, type)
+},
+'/user/submissions/:id': (model, actions) => {
+  var type = 'user-submissions'
+  if (model.type !== type) {
+    model.type = type
+    model.limit = PER_PAGE
+    model.stories = []
+    model.ids = []
+    model.loading = true
+    if (model.ref) model.ref.off()
+    db.child('user/' + model.router.params.id).once('value', snapshot =>
+      getStories(
+        snapshot.val().submitted,
+        items => actions.setStories(
+          items.filter(i => i.type === 'story' && !i.deleted)
+        )
+      )
+    )
+  }
+  return LayoutView(model, actions, ItemsListView, type)
+},
+'*': (model, actions) => LayoutView(model, actions, ErrorView)*/

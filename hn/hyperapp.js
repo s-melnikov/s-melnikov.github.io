@@ -2,67 +2,55 @@
 
 var hyperapp = function() {
 
-  var h = function() {
-    var i, node, children, stack = []
+  var SVG_NS = "http://www.w3.org/2000/svg", i, node, children, stack = []
 
-    return function h(tag, data) {
-      var canConcat, oldCanConcat
+  function h(tag, data) {
+    var canConcat, oldCanConcat
+    children = []
+    i = arguments.length
 
-      children = []
-      i = arguments.length
+    while (i-- > 2) {
+      stack.push(arguments[i])
+    }
 
-      while (i-- > 2) {
-        stack.push(arguments[i])
-      }
+    while (stack.length) {
+      if (Array.isArray(node = stack.pop())) {
+        i = node.length
 
-      while (stack.length) {
-        if (Array.isArray(node = stack.pop())) {
-          i = node.length
-
-          while (i--) {
-            stack.push(node[i])
-          }
-        } else if (node != null && node !== true && node !== false) {
-          // Ignore nulls and booleans; this is conditional rendering.
-
-          if (typeof node === "number") {
-            node = node + ""
-          }
-
-          // Concatenate contiguous number/string nodes into one string.
-          // The idea is to avoid creating unnecessary text nodes.
-
-          canConcat = typeof node === "string"
-
-          if (canConcat && oldCanConcat) {
-            children[children.length - 1] += node
-          } else {
-            children.push(node)
-            oldCanConcat = canConcat
-          }
+        while (i--) {
+          stack.push(node[i])
         }
-      }
+      } else if (node != null && node !== true && node !== false) {
+        if (typeof node === "number") {
+          node = node + ""
+        }
 
-      if (typeof tag === "function") {
-        return tag(data, children)
-      }
+        canConcat = typeof node === "string"
 
-      return {
-        tag: tag,
-        data: data || {},
-        children: children
+        if (canConcat && oldCanConcat) {
+          children[children.length - 1] += node
+        } else {
+          children.push(node)
+          oldCanConcat = canConcat
+        }
       }
     }
 
-  }()
+    if (typeof tag === "function") {
+      return tag(data, children)
+    }
 
-  var SVG_NS = "http://www.w3.org/2000/svg"
+    return {
+      tag: tag,
+      data: data || {},
+      children: children
+    }
+  }
 
   function app(app) {
     var view = app.view || function () {
       return ""
     }
-
     var model
     var actions = {}
     var subscriptions = []
@@ -132,7 +120,7 @@ var hyperapp = function() {
 
             var result = action(model, data, actions, onError)
 
-            if (result === undefined || typeof result.then === "function") {
+            if (result == null || typeof result.then === "function") {
               return result
 
             } else {
@@ -196,7 +184,6 @@ var hyperapp = function() {
       for (key in b) {
         obj[key] = b[key]
       }
-
       return obj
     }
 
@@ -217,10 +204,6 @@ var hyperapp = function() {
 
     function createElementFrom(node, isSVG) {
       var element
-
-      // There are only two types of nodes. A string node, which is
-      // converted into a Text node or an object that describes an
-      // HTML element and may also contain children.
 
       if (typeof node === "string") {
         element = document.createTextNode(node)
@@ -252,20 +235,21 @@ var hyperapp = function() {
     }
 
     function setElementData(element, name, value, oldValue) {
-      if (name === "style") {
+      name = name.toLowerCase()
+
+      if (!value) {
+        removeElementData(element, name, value, oldValue)
+
+      } else if (name === "style") {
+        for (var i in oldValue) {
+          if (!(i in value)) {
+            element.style[i] = ""
+          }
+        }
+
         for (var i in value) {
           element.style[i] = value[i]
         }
-
-      } else if (name[0] === "o" && name[1] === "n") {
-        var event = name.substr(2).toLowerCase()
-
-        element.removeEventListener(event, oldValue)
-        element.addEventListener(event, value)
-
-      } else if (value === false) {
-        removeElementData(element, name, value)
-
       } else {
         element.setAttribute(name, value)
 
@@ -290,33 +274,24 @@ var hyperapp = function() {
         var oldValue = oldData[name]
         var realValue = element[name]
 
-        if (value === undefined) {
-          removeElementData(element, name, value)
-
-        } else if (name === "onUpdate") {
+        if (name === "onUpdate") {
           defer(value, element)
 
         } else if (
-          value !== oldValue ||
-          typeof realValue === "boolean" &&
-          realValue !== value
+          value !== oldValue || typeof realValue === "boolean" && realValue !== value
         ) {
-          // This prevents cases where the node's data is out of sync with
-          // the element's. For example, a list of checkboxes in which one
-          // of the elements is recycled.
-
           setElementData(element, name, value, oldValue)
         }
       }
     }
 
     function patch(parent, oldNode, node, index) {
+      var element = parent.childNodes[index]
+
       if (oldNode === undefined) {
         parent.appendChild(createElementFrom(node))
 
       } else if (node === undefined) {
-        var element = parent.childNodes[index]
-
         // Removing a child one at a time updates the DOM, so we end up
         // with an index out of date that needs to be adjusted. Instead,
         // collect all the elements and delete them in a batch.
@@ -328,19 +303,19 @@ var hyperapp = function() {
         }
 
       } else if (shouldUpdate(node, oldNode)) {
-        parent.replaceChild(createElementFrom(node), parent.childNodes[index])
+        if (typeof node === "string") {
+          element.textContent = node
+        } else {
+          parent.replaceChild(createElementFrom(node), element)
+        }
 
       } else if (node.tag) {
-        var element = parent.childNodes[index]
-
         updateElementData(element, node.data, oldNode.data)
 
         var len = node.children.length, oldLen = oldNode.children.length
 
         for (var i = 0; i < len || i < oldLen; i++) {
-          var child = node.children[i]
-
-          patch(element, oldNode.children[i], child, i)
+          patch(element, oldNode.children[i], node.children[i], i)
         }
       }
     }
