@@ -10,6 +10,12 @@ body {
   color: #666;
   box-sizing: border-box;
 }
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
 .container {
   max-width: 720px;
   padding: 20px;
@@ -56,4 +62,7 @@ body {
   height: 6px;
   content: "";
   transform: translate(4px, 4px) rotate(-45deg);
+}
+.add-todo {
+  padding: 15px;
 }
