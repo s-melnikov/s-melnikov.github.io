@@ -24,7 +24,8 @@ a:hover {
   border-top: 1px solid #eee;
 }
 .todo {
-  padding: 15px;
+  position: relative;
+  padding: 15px 35px;
   border-bottom: 1px solid #eee;
 }
 .todo::after {
@@ -33,7 +34,9 @@ a:hover {
   content: '';
 }
 .todo .checkbox {
-  float: left;
+  position: absolute;
+  left: 10px;
+  top: 15px;
   width: 18px;
   height: 18px;
   border: 1px solid #ddd;
@@ -63,6 +66,42 @@ a:hover {
   content: "";
   transform: translate(4px, 4px) rotate(-45deg);
 }
+.todo .time {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  font-size: 10px;
+  color: #999;
+  margin-top: -7px;
+}
 .add-todo {
   padding: 15px;
+}
+input {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 8px;
+  outline: none;
+}
+input:focus {
+  border-color: #999;
+}
+button {
+  border: none;
+  border-radius: 2px;
+  background: #444;
+  padding: 8px 12px;
+  color: #fff;
+  margin: 5px 0;
+  cursor: pointer;
+  outline: none;
+}
+button:focus {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .2);
+}
+button:hover {
+  background: #555;
+}
+button:active {
+  background: #333;
 }
