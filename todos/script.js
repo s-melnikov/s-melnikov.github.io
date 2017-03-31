@@ -57,7 +57,13 @@ const TodoView = (todo, i, actions) =>
             (todo.updated ? '; updated: ' + date(todo.updated) : '')
         },
         date(todo.updated || todo.time)
-      )
+      ),
+      todo.completed ?
+        h('span', {
+          'class': 'remove',
+          innerHTML: '&times;',
+          onclick: e => actions.remove(todo)
+        }) : null
     )
 
 let AddTodoView = (model, actions) =>
@@ -183,7 +189,11 @@ app({
     sync: model => {
       localStorage[APP_NAME] = JSON.stringify(model.todos)
     },
-    setType: (_, type) => ({ type })
+    setType: (_, type) => ({ type }),
+    remove: (model, todo) => {
+      model.todos.splice(model.todos.indexOf(todo), 1)
+      return { todos: model.todos }
+    }
   },
   subscriptions: [
     (_, actions) => {

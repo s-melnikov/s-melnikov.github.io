@@ -96,6 +96,19 @@ a:hover {
 .aside a.active {
   font-weight: 500;
 }
+.todo .remove {
+  position: absolute;
+  right: 3px;
+  top: -5px;
+  line-height: 1;
+  font-size: 24px;
+  opacity: .5;
+  cursor: pointer;
+}
+.todo .remove:hover {
+  opacity: 1;
+  color: #222;
+}
 input {
   width: 100%;
   border: 1px solid #ccc;
@@ -144,4 +157,18 @@ button:active {
   opacity: 1;
   visibility: visible;
   transition: .2s .2s;
+}
+@media (max-width: 720px) {
+  .container {
+    max-width: 570px;
+    padding: 50px 20px 20px;
+  }
+  .aside {
+    width: 100%;
+    padding: 10px 20px 0;
+  }
+  .aside a {
+    display: inline-block;
+    padding: 5px 10px;
+  }
 }
