@@ -3,32 +3,67 @@ const APP_NAME = 'hypertodos'
 
 const LayoutView = (model, actions) =>
   h('div', { 'class': 'container' },
-    TodosView(model, actions),
-    AddTodoView(model, actions)
+    [
+      AsideView,
+      TodosView,
+      AddTodoView
+    ].map(v => v(model, actions))
   )
 
 const TodosView = (model, actions) =>
   h('div', { 'class': 'todos' },
-    model.todos.map((todo, i) => TodoView(todo, i, actions))
+    model.todos
+    .filter(todo => {
+      if (!model.type) return true
+      if (model.type === 'actived') return !todo.completed
+      return todo.completed
+    })
+    .map((todo, i) => TodoView(todo, i, actions))
   )
 
 const TodoView = (todo, i, actions) =>
-  h('div', {
-      'class': 'todo' + (todo.completed ? ' completed' : '')
-    },
+  todo.edited ?
+    h('form', {
+        'class': 'todo',
+        onsubmit: ev => {
+          ev.preventDefault()
+          actions.toggleEdit(todo)
+        }
+      },
+      h('input', {
+        required: true,
+        type: 'text',
+        placeholder: 'Type something...',
+        value: todo.text,
+        onCreate: el => el.focus(),
+        oninput: ev => actions.edit({ todo, text: ev.target.value })
+      }),
+      h('button', null, 'Save')
+    ) :
     h('div', {
-      'class': 'checkbox',
-      onclick: () => actions.toggleTodoState(todo)
-    }),
-    h('div', { 'class': 'text' }, todo.text),
-    h('div', { 'class': 'time' }, fromNow(todo.time))
-  )
+        'class': 'todo' + (todo.completed ? ' completed' : '')
+      },
+      h('div', {
+        'class': 'checkbox',
+        onclick: () => actions.toggleState(todo)
+      }),
+      h('span', {
+        'class': 'text',
+        onclick: e => actions.toggleEdit(todo)
+      }, todo.text),
+      h('div', {
+          'class': 'time',
+          tooltip: 'created: ' + date(todo.time) +
+            (todo.updated ? '; updated: ' + date(todo.updated) : '')
+        },
+        date(todo.updated || todo.time)
+      )
+    )
 
 let AddTodoView = (model, actions) =>
   h('div', { 'class': 'add-todo' },
     model.formShowed ?
-      h('form',
-        {
+      h('form', {
           onsubmit: e => {
             e.preventDefault()
             actions.addTodo()
@@ -50,8 +85,29 @@ let AddTodoView = (model, actions) =>
       }, '+ Add')
   )
 
-var fromNow = (time, between) => {
-  between = Date.now() / 1000 - Number(time)
+let AsideView = (model, actions) =>
+  h('div', {
+      'class': 'aside'
+    },
+    h('a', {
+      href: '#',
+      'class': model.type ? '' : 'active',
+      onclick: e => actions.setType(null)
+    }, 'All'),
+    h('a', {
+      href: '#',
+      'class': model.type === 'actived' ? 'active' : '',
+      onclick: e => actions.setType('actived')
+    }, 'Active'),
+    h('a', {
+      href: '#',
+      'class': model.type === 'completed' ? 'active' : '',
+      onclick: e => actions.setType('completed')
+    }, 'Completed')
+  )
+
+var fromNow = (time) => {
+  var between = Date.now() / 1000 - Number(time)
   if (between < 3600) {
     return ~~(between / 60) + ' m.'
   } else if (between < 86400) {
@@ -61,20 +117,34 @@ var fromNow = (time, between) => {
   }
 }
 
+let monthes = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+  'Oct', 'Nov', 'Dec']
+
+let date = time => {
+  var d = new Date(time * 1000)
+  return d.getDate() + ' ' + monthes[d.getMonth()] + ', ' +
+    d.toTimeString().substr(0, 5)
+}
+
 app({
   model: {
     todos: [
-      { text: "Lorem ipsum dolor sit amet", time: 1490608041 },
-      { text: "Consectetur adipisicing elit", time: 1490608051 },
-      { text: "Voluptas consequuntur omnis", time: 1490608061 },
-      { text: "Quisquam magnam adipisci", time: 1490608071, completed: true },
-      { text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio sunt, error eius temporibus, voluptate illo consectetur dicta mollitia perferendis dolores repellendus numquam? Rem dolor autem earum vitae numquam natus similique.", time: 1490608080 }
+      { text: 'Lorem ipsum dolor sit amet', time: 1490608041 },
+      { text: 'Consectetur adipisicing elit', time: 1490608051 },
+      { text: 'Voluptas consequuntur omnis', time: 1490608061 },
+      { text: 'Quisquam magnam adipisci', time: 1490608071, completed: true },
+      { text:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio sunt,'+
+        ' error eius temporibus, voluptate illo consectetur dicta mollitia per'+
+        'ferendis dolores repellendus numquam? Rem dolor autem earum vitae num'+
+        'quam natus similique.', time: 1490608080 }
     ],
     formShowed: false,
-    input: ""
+    input: "",
+    type: 'actived'
   },
   actions: {
-    toggleTodoState: (model, todo, actions) => {
+    toggleState: (model, todo, actions) => {
       model.todos.map(_todo => {
         if (_todo === todo) _todo.completed = !_todo.completed
         return _todo
@@ -93,10 +163,33 @@ app({
       return { todos: model.todos, input: '', formShowed: false }
     },
     addTodos: (_, todos) => ({ todos }),
-    sync: model => { localStorage[APP_NAME] = JSON.stringify(model.todos) }
+    toggleEdit: (model, todo, actions) => {
+      var todos = model.todos.map(_todo => {
+        if (_todo === todo) _todo.edited = !_todo.edited
+        return _todo
+      })
+      actions.sync()
+      return { todos }
+    },
+    edit: (model, { todo, text }) => ({
+      todos: model.todos.map(_todo => {
+        if (_todo === todo) {
+          _todo.text = text
+          _todo.updated = ~~(Date.now() / 1000)
+        }
+        return _todo
+      })
+    }),
+    sync: model => {
+      localStorage[APP_NAME] = JSON.stringify(model.todos)
+    },
+    setType: (_, type) => ({ type })
   },
   subscriptions: [
-    (_, actions) => actions.addTodos(JSON.parse(localStorage[APP_NAME] || "[]"))
+    (_, actions) => {
+      if (localStorage[APP_NAME])
+        actions.addTodos(JSON.parse(localStorage[APP_NAME]))
+    }
   ],
   view: LayoutView
 })

@@ -4,6 +4,7 @@
   font: inherit;
   color: inherit;
   box-sizing: inherit;
+  position: relative;
 }
 body {
   font: 300 14px/1.4 Roboto, Tahoma, sans-serif;
@@ -18,7 +19,7 @@ a:hover {
 }
 .container {
   max-width: 720px;
-  padding: 20px;
+  padding: 20px 20px 20px 150px;
 }
 .todo:first-child {
   border-top: 1px solid #eee;
@@ -68,14 +69,32 @@ a:hover {
 }
 .todo .time {
   position: absolute;
-  top: 50%;
-  right: 10px;
+  right: 4px;
+  bottom: 0px;
   font-size: 10px;
-  color: #999;
+  color: #bfbfbf;
   margin-top: -7px;
+  font-style: italic;
+}
+.todo .time:hover {
+  color: #444;
 }
 .add-todo {
   padding: 15px;
+}
+.aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 150px;
+  padding: 20px;
+}
+.aside a {
+  display: block;
+  padding: 5px 0;
+}
+.aside a.active {
+  font-weight: 500;
 }
 input {
   width: 100%;
@@ -104,4 +123,25 @@ button:hover {
 }
 button:active {
   background: #333;
+}
+[tooltip]::before {
+  position: absolute;
+  bottom: 100%;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #222;
+  white-space: nowrap;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-style: normal;
+  opacity: 0;
+  visibility: hidden;
+  transition: .2s;
+  content: attr(tooltip);
+}
+[tooltip]:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transition: .2s .2s;
 }
