@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Giffy</title>
+  <style>
+    input {
+      border: 1px solid #ddd;
+      padding: 6px 12px;
+      font: 16px/1.4 'Segoe UI', Tahoma, sans-serif;
+      color: #444;
+      width: 200px;
+    }
+    img {
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<script src="https://unpkg.com/hyperapp"></script>
+<script>
+const { h, app } = hyperapp
+
+function debounce(func, wait, immediate) {
+  var timeout
+  return function() {
+    var context = this, args = arguments
+    var later = function() {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+    var callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) func.apply(context, args)
+  }
+}
+
+var request = debounce(function(actions, text) {
+  actions.toggleFetching()
+  actions.set([])
+  fetch(`//api.giphy.com/v1/gifs/search?q=${text}&api_key=dc6zaTOxFJmzC`)
+    .then(data => data.json())
+    .then(({ data }) => {
+      actions.toggleFetching()
+      data[0] && actions.set(data)
+    })
+}, 500)
+
+app({
+  model: {
+    data: [],
+    isFetching: false
+  },
+  actions: {
+    search: (model, { target }, actions) => {
+      const text = target.value
+      if (!model.isFetching && text.length > 2) {
+        request(actions, text)
+      }
+    },
+    set: (_, data) => ({ data }),
+    toggleFetching: model => ({ isFetching: !model.isFetching })
+  },
+  view: (model, actions) =>
+    h("div", null,
+      h("input", {
+        type: "text",
+        placeholder: "Type to search...",
+        onKeyUp: actions.search
+      }),
+      h("div", null,
+        model.data.map(i => h("div", null,
+          h("img", {
+            src: i.images.original.url
+          })
+        ))
+      )
+    )
+})
+</script>
+</body>
+</html>
