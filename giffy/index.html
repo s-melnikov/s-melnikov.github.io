@@ -22,6 +22,7 @@
 <script src="https://unpkg.com/hyperapp"></script>
 <script>
 const { h, app } = hyperapp
+const url = `//api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=${text}`
 
 function debounce(func, wait, immediate) {
   var timeout
@@ -42,9 +43,10 @@ var request = debounce(function(actions, text) {
   actions.toggleFetching()
   actions.set([])
   fetch(`//api.giphy.com/v1/gifs/search?q=${text}&api_key=dc6zaTOxFJmzC`)
-    .then(data => data.json())
+    .then(resp => resp.json())
     .then(({ data }) => {
       actions.toggleFetching()
+      console.log(data);
       data[0] && actions.set(data)
     })
 }, 500)

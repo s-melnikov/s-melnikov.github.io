@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>MicroJS</title>
+  <style>
+    * {
+      box-sizing: border-box; }
+    body {
+      font: 14px/1.4 "Segoe UI", Tahoma, sans-serif;
+      color: #444; }
+    a {
+      text-decoration: none;
+      color: inherit; }
+    .container {
+      max-width: 720px;
+      padding: 15px; }
+    .item {
+      padding: 5px 10px;
+      border-bottom: 1px solid #eee; }
+    .name {
+      color: #28d; }
+    .name a:visited {
+      color: #444; }
+    .desc {
+      font-size: 12px;
+      font-style: italic;
+      color: #666; }
+    .tags a {
+      margin-right: 5px;
+      font-size: 12px;
+      display: inline-block;
+      color: #f60; }
+    .tags a::before {
+      content: "#"; }
+    input[type=search] {
+      display: block;
+      width: 100%;
+      max-width: 640px;
+      border: 1px solid #eee;
+      padding: 6px 12px;
+      font: inherit;
+      color: inherit;
+      margin: 0 auto 10px; }
+  </style>
+</head>
+<body>
+<script src="https://unpkg.com/hyperapp@0.7.1"></script>
+<script src="//www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
+<script>
+(function(source) {
+
+  const { h, app } = hyperapp
+
+  firebase.initializeApp({
+    databaseURL: 'https://microjs-1c074.firebaseio.com/'
+  })
+
+  app({
+    model: {
+      items: [],
+      input: ""
+    },
+    actions: {
+      items: (_, items) => ({ items }),
+      input: (_, input) => ({ input })
+    },
+    subscriptions: [
+      (_, actions) => {
+        firebase.database().ref("items")
+          .once("value", snapshot => {
+            var items = []
+            var source = snapshot.val()
+            for (var prop in source) {
+              source[prop].uid = prop
+              items.push(source[prop])
+            }
+            actions.items(items)
+          })
+      }
+    ],
+    view: (model, actions) => h("div", { "class": "container" },
+      h("input", {
+        type: "search",
+        value: model.input,
+        onInput: e => actions.input(e.target.value.toLowerCase())
+      }),
+      h("div", { "class": "items" },
+        model.items
+          .filter(item => {
+            if (model.input === "" ||
+              item.name.toLowerCase().indexOf(model.input) > -1 ||
+              item.tags.join(", ").toLowerCase().indexOf(model.input) > -1 ||
+              item.description.toLowerCase().indexOf(model.input) > -1 ) {
+              return true
+            }
+            return false
+          })
+          .map(item => h("div", { "class": "item" },
+            h("div", { "class": "name" },
+              h("a", { href: item.url, target: "_blank" }, item.name)
+            ),
+            h("div", { "class": "desc" }, item.description),
+            h("div", { "class": "tags" },
+              item.tags.map(tag => h("a", { href: "#/tag/" + tag }, tag))
+            ),
+            h("div", { "class": "xml" }, item.github)
+          )
+        )
+      )
+    )
+  })
+
+})()
+</script>
+</body>
+</html>
