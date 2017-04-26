@@ -6,34 +6,36 @@
   <title>MicroJS</title>
   <style>
     * {
-      box-sizing: border-box; }
+      box-sizing: border-box }
     body {
       font: 14px/1.4 "Segoe UI", Tahoma, sans-serif;
-      color: #444; }
+      color: #444 }
     a {
       text-decoration: none;
-      color: inherit; }
+      color: inherit }
     .container {
       max-width: 720px;
       padding: 15px; }
     .item {
+      position: relative;
       padding: 5px 10px;
-      border-bottom: 1px solid #eee; }
+      border-bottom: 1px solid #eee }
     .name {
-      color: #28d; }
+      color: #28d }
     .name a:visited {
-      color: #444; }
+      color: #444 }
     .desc {
       font-size: 12px;
       font-style: italic;
-      color: #666; }
-    .tags a {
+      color: #666 }
+    .tags span {
       margin-right: 5px;
       font-size: 12px;
       display: inline-block;
+      cursor: pointer;
       color: #f60; }
-    .tags a::before {
-      content: "#"; }
+    .tags span::before {
+      content: "#" }
     input[type=search] {
       display: block;
       width: 100%;
@@ -42,33 +44,77 @@
       padding: 6px 12px;
       font: inherit;
       color: inherit;
-      margin: 0 auto 10px; }
+      margin: 0 0 10px }
+    .loader {
+      position: absolute;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      margin: 12px 0;
+      font-size: 0;
+      color: transparent;
+      border-radius: 100%;
+      background-color: rgba(61, 70, 77, 0.3) }
+    .loader, .loader:after, .loader:before {
+      -webkit-animation: loaderFade 0.9s ease-in-out infinite;
+      animation: loaderFade 0.9s ease-in-out infinite }
+    .loader:after, .loader:before {
+      content: "";
+      vertical-align: middle;
+      position: absolute;
+      left: 100%;
+      width: 6px;
+      height: 6px;
+      margin-left: 4px;
+      border-radius: 100%;
+      background-color: rgba(61, 70, 77, 0.3);
+      -webkit-animation-delay: 0.3s;
+      animation-delay: 0.3s }
+    .loader:after {
+      left: 200%;
+      margin-left: 8px;
+      -webkit-animation-delay: 0.6s;
+      animation-delay: 0.6s }
+    @keyframes loaderFade {
+      50% {
+        background-color: #3d464d }
+      0%, 100% {
+        background-color: rgba(61, 70, 77, 0.3) }}
   </style>
 </head>
 <body>
-<script src="https://unpkg.com/hyperapp@0.7.1"></script>
+<script src="//unpkg.com/hyperapp@0.8.1"></script>
 <script src="//www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
 <script>
-(function(source) {
+(function(Router) {
 
   const { h, app } = hyperapp
 
   firebase.initializeApp({
-    databaseURL: 'https://microjs-1c074.firebaseio.com/'
+    databaseURL: '//microjs-1c074.firebaseio.com/'
   })
 
+  let parser = document.createElement("a")
+  let url = href => {
+    parser.href = href
+    return parser
+  }
+
   app({
-    model: {
+    state: {
       items: [],
       input: ""
     },
     actions: {
       items: (_, items) => ({ items }),
-      input: (_, input) => ({ input })
+      input: (_, input) => ({ input }),
     },
-    subscriptions: [
-      (_, actions) => {
-        firebase.database().ref("items")
+    events: {
+      loaded: (_, actions) => {
+        actions.items(JSON.parse(localStorage.microjs || "[]"))
+        firebase
+          .database()
+          .ref("items")
           .once("value", snapshot => {
             var items = []
             var source = snapshot.val()
@@ -78,37 +124,49 @@
             }
             actions.items(items)
           })
+      },
+      update: (s, a, data) => {
+        if (data.items) {
+          localStorage.microjs = JSON.stringify(data.items)
+        }
       }
-    ],
-    view: (model, actions) => h("div", { "class": "container" },
-      h("input", {
-        type: "search",
-        value: model.input,
-        onInput: e => actions.input(e.target.value.toLowerCase())
-      }),
-      h("div", { "class": "items" },
-        model.items
-          .filter(item => {
-            if (model.input === "" ||
-              item.name.toLowerCase().indexOf(model.input) > -1 ||
-              item.tags.join(", ").toLowerCase().indexOf(model.input) > -1 ||
-              item.description.toLowerCase().indexOf(model.input) > -1 ) {
-              return true
-            }
-            return false
-          })
-          .map(item => h("div", { "class": "item" },
-            h("div", { "class": "name" },
-              h("a", { href: item.url, target: "_blank" }, item.name)
-            ),
-            h("div", { "class": "desc" }, item.description),
-            h("div", { "class": "tags" },
-              item.tags.map(tag => h("a", { href: "#/tag/" + tag }, tag))
-            ),
-            h("div", { "class": "xml" }, item.github)
+    },
+    view: (state, actions) => h("div", { "class": "container" },
+      state.items.length ? [
+        h("input", {
+          type: "search",
+          value: state.input,
+          onInput: e => actions.input(e.target.value)
+        }),
+        h("div", { "class": "items" },
+          state.items
+            .filter(item => {
+              var input = state.input.toLowerCase()
+              if (input.indexOf("#") === 0) {
+                if (item.tags.map(tag => tag.toLowerCase())
+                  .indexOf(input.slice(1)) !== -1) {
+                  return true
+                }
+              } else if (input === "" ||
+                item.name.toLowerCase().indexOf(input) > -1 ||
+                item.tags.join(", ").toLowerCase().indexOf(input) > -1 ||
+                item.description.toLowerCase().indexOf(input) > -1 ) {
+                return true
+              }
+              return false
+            })
+            .map(item => h("div", { "class": "item" },
+              h("div", { "class": "name" },
+                h("a", { href: item.url, target: "_blank" }, item.name)
+              ),
+              h("div", { "class": "desc" }, item.description),
+              h("div", { "class": "tags" },
+                item.tags.map(tag => h("span", { onClick: e => actions.input("#" + tag) }, tag))
+              )
+            )
           )
         )
-      )
+      ] : h("div", { "class": "loader" })
     )
   })
 
