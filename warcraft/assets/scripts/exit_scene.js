@@ -4,9 +4,11 @@ define("exit_scene", ["config"], Config => {
 
   // Exit scene
   class ExitScene {
+
     update(delta) {
       // nothing to do here
     }
+
     render(delta, context, canvas) {
       // clear the canvas
       context.clearRect(0, 0, canvas.width, canvas.height)
@@ -22,6 +24,11 @@ define("exit_scene", ["config"], Config => {
         canvas.height / 2 - 50
       )
     }
+
+    destroy() {
+      // nothing to do here
+    }
+
   }
 
   return ExitScene

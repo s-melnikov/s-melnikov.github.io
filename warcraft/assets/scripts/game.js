@@ -40,6 +40,9 @@ define("game", ["config"], (Config) => {
     }
 
     setScene(name) {
+      if (this.activeScene) {
+        this.activeScene.destroy()
+      }
       this.activeScene = new this.scenes[name](this)
     }
 

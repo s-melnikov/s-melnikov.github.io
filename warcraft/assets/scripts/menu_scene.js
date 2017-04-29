@@ -90,6 +90,11 @@ define("menu_scene", ["config"], (Config) => {
         )
       }
     }
+
+    destroy() {
+      // nothing to do here
+    }
+
   }
 
   return MenuScene

@@ -31,6 +31,10 @@ define("game_scene", ["config"], Config => {
       context.fillRect(0, 0, rectSize, rectSize)
     }
 
+    destroy() {
+      // nothing to do here
+    }
+
   }
 
   return GameScene

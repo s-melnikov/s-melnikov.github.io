@@ -7,9 +7,9 @@ define("intro_scene",
   class IntroScene {
 
     constructor(game) {
-      this.logoRevealTime = 2
-      this.textTypingTime = 2
-      this.sceneDisplayTime = 6
+      this.logoRevealTime = 4
+      this.textTypingTime = 6
+      this.sceneDisplayTime = 10
 
       this.elapsedTime = 0
       this.bigText = "Intro"
@@ -22,8 +22,6 @@ define("intro_scene",
       }, sources => {
         this.sounds = new Sounds(sources)
         this.sounds.play("intro")
-        // setTimeout(() => { this.sounds.play("intro") }, 1000)
-        // setTimeout(() => { this.sounds.pause() }, 2000)
       })
     }
 
@@ -65,6 +63,10 @@ define("intro_scene",
           canvas.height / 2 + 80
         )
       }
+    }
+
+    destroy() {
+      this.sounds.pause("intro")
     }
   }
 
