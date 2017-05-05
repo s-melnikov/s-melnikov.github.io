@@ -15,14 +15,6 @@ define("intro_scene",
       this.bigText = "Intro"
       this.infoText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit..."
       this.game = game
-
-      let loader = new Loader()
-      loader.sound({
-        intro: "assets/sounds/intro.mp3"
-      }, sources => {
-        this.sounds = new Sounds(sources)
-        this.sounds.play("intro")
-      })
     }
 
     update(delta) {
@@ -66,7 +58,7 @@ define("intro_scene",
     }
 
     destroy() {
-      this.sounds.pause("intro")
+
     }
   }
 
