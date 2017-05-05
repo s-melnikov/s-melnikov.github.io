@@ -1,10 +1,10 @@
 define("sprite", [], () => {
 
   class Sprite {
-    constructor(monde, parent, sprite) {
-      this.ctx = monde.ctx;
+    constructor(game, parent, sprite) {
+      this.ctx = game.ctx;
       this.sprite = sprite;
-      this.size = monde.size;
+      this.size = game.size;
       this.l = Math.round(this.sprite.img.width / this.sprite.frames),
         this.h = this.sprite.img.height / this.sprite.lines
       this.pos = {
@@ -13,7 +13,7 @@ define("sprite", [], () => {
       };
       this.length = this.sprite.frames;
       this.frame = 0;
-      this.size = monde.size;
+      this.size = game.size;
       this.line = 0;
       this.animation = true;
       this.speed = 0.2;

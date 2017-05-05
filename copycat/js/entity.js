@@ -1,4 +1,7 @@
-define("entity", ["sprite", "effect", "utils"], (Sprite, Effect, Utils) => {
+define(
+  "entity",
+  ["sprite", "effect", "utils"],
+  (Sprite, Effect, Utils) => {
 
   class Entity {
     constructor(game, x, y, sprite) {

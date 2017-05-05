@@ -1,9 +1,11 @@
 define("game",
-  ["utils", "menu", "entity"],
-  (Utils, Menu, Entity) => {
+  ["utils", "menu", "levels-menu", "entity"],
+  (Utils, Menu, LevelsMenu, Entity) => {
 
   class Game {
+
     constructor(params, levels) {
+      let self = this
       this.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789 ?!():'"
       this.size = params.size
       this.keys = []
@@ -19,73 +21,25 @@ define("game",
       this.volume = 0.05
       this.createContext()
       if (this.prop !== 0) {
-        this.processing(params.images, params.sounds, params.tiles);
+        this.processing(params.images, params.sounds, params.tiles)
       }
-      this.levels = levels;
-      this.niveauActuel = 0;
+      this.levels = levels
+      this.currentLevel = 0
       if (localStorage.copycat) {
-        console.info('Memory recovered')
-        this.niveauMax = JSON.parse(localStorage.copycat);
+        console.info("Memory recovered")
+        this.maxLevel = JSON.parse(localStorage.copycat)
       } else {
-        localStorage.setItem("copycat", JSON.stringify(5));
-        this.niveauMax = JSON.parse(localStorage.copycat);
+        localStorage.setItem("copycat", JSON.stringify(5))
+        this.maxLevel = JSON.parse(localStorage.copycat)
       }
-      this.cat = [];
-
-      let self = this;
-      this.menuLevels = {
-          monde: self,
-          ctx: self.ctx,
-          nombre: self.levels.length,
-          selection: 0,
-          rendu: function() {
-            this.ctx.fillStyle = "#fff1e8";
-            this.monde.boite(10, 10, this.monde.L - 20, 200 - 20);
-            this.monde.ecrire("select level", this.monde.L / 2, 25);
-            for (let i = 0; i < this.nombre; i++) {
-              let numero = i + 1;
-              if (i > this.monde.niveauMax-1) {
-                this.ctx.globalAlpha = 0.6;
-                this.monde.ctx.drawImage(this.monde.resources.lock.img, (32 + Math.floor(i % 7) * 32) - this.monde.resources.lock.img.width / 2, (64 + Math.floor(i / 7) * 32) + 10);
-              }
-              this.monde.ecrire(numero.toString(), 32 + Math.floor(i % 7) * 32, 64 + Math.floor(i / 7) * 32);
-              this.ctx.globalAlpha = 1;
-            }
-            this.monde.ctx.drawImage(this.monde.resources.cursor.img, 0, 16, 32, 32, 16 + Math.floor(this.selection % 7) * 32, 51 + Math.floor(this.selection / 7) * 32, 32, 32);
-          },
-          changement: function(keyCode) {
-            if (keyCode === 38 && this.selection - 6 > 0) {
-              // haut
-              this.monde.sounds.selection.url.play();
-              this.selection -= 7;
-              this.render();
-            }
-            if (keyCode === 40 && this.selection + 7 < this.monde.niveauMax) {
-              // bas
-              this.monde.sounds.selection.url.play();
-              this.selection += 7;
-              this.render();
-            }
-            if (keyCode === 37 && this.selection > 0) {
-              // gauche
-              this.monde.sounds.selection.url.play();
-              this.selection -= 1;
-              this.render();
-            }
-            if (keyCode === 39 && this.selection +1 < this.monde.niveauMax) {
-              // droit
-              this.monde.sounds.selection.url.play();
-              this.selection += 1;
-              this.render();
-            }
-          }
-        }
-        //transition
+      this.cat = []
+      this.levelsMenu = new LevelsMenu(this)
       this.transition = {
         duration: 800,
       }
-      this.effects = [];
+      this.effects = []
     }
+
     createContext() {
       this.canvas = document.createElement("canvas")
       this.ctx = this.canvas.getContext("2d")
@@ -102,12 +56,11 @@ define("game",
       console.log("game created")
     }
 
-    chargement() {
-      this.prop.count += 1;
+    onload() {
+      this.prop.count += 1
       if (this.prop.count === this.prop.length) {
-        console.log('Resources are loaded ' + this.prop.length + " / " + this.prop.length)
-        // menu
-        let bouttons = [{
+        console.log("Resources are loaded" + this.prop.length + " / " + this.prop.length)
+        let buttons = [{
           name: "start game",
           lien: "start"
         }, {
@@ -119,42 +72,43 @@ define("game",
         }, {
           name: "about",
           lien: "info"
-        }, ];
-        this.menu = new Menu(this, this.L / 2, 110, bouttons);
-        // Fin de chargement
-        this.phase("menu");
-        document.addEventListener("keydown", event => this.touchePresse(event), false);
-        document.addEventListener("keyup", event => this.toucheLache(event), false);
+        }]
+        this.menu = new Menu(this, this.L / 2, 110, buttons)
+        this.setState("menu")
+        document.addEventListener("keydown", event => this.keyDown(event))
+        document.addEventListener("keyup", event => this.keyUp(event))
       } else {
-        // écran de chargement
-        this.ctx.fillStyle = "#000";
-        this.ctx.fillRect(0, 0, this.L, this.H);
-        this.ctx.fillStyle = "#fff";
-        this.ctx.fillRect(0, (this.H / 2) - 1, (this.prop.count * this.L) / this.prop.length, 2);
+        this.ctx.fillStyle = "#000"
+        this.ctx.fillRect(0, 0, this.L, this.H)
+        this.ctx.fillStyle = "#fff"
+        this.ctx.fillRect(0, (this.H / 2) - 1, (this.prop.count * this.L) / this.prop.length, 2)
       }
     }
-    chargerImages(url) {
-      let img = new Image();
-      let self = this;
-      img.onload = function() {
-        self.chargement();
+
+    loadImage(url) {
+      let img = new Image()
+      img.onload = () => this.onload()
+      img.src = url
+      return img
+    }
+
+    loadSound(url) {
+      let audio = new Audio(url)
+      let onload = () => {
+        this.onload()
+        audio.removeEventListener("canplaythrough", onload)
       }
-      img.src = url;
-      return img;
+      audio.addEventListener("canplaythrough", onload)
+      audio.volume = this.volume
+      return audio
     }
-    chargerSon(url) {
-      let audio = new Audio(url);
-      audio.addEventListener('canplaythrough', this.chargement(), false);
-      audio.volume = this.volume;
-      return audio;
-    }
+
     processing(images, sounds, tiles) {
-      // processing images
       let IM = {};
       for (let i = 0; i < images.length; i++) {
         let sujet = images[i];
         let name = sujet.name;
-        sujet.img = this.chargerImages(images[i].img);
+        sujet.img = this.loadImage(images[i].img);
         IM[name] = images[i];
       }
       this.resources = IM;
@@ -163,7 +117,7 @@ define("game",
       for (let i = 0; i < sounds.length; i++) {
         let sujet = sounds[i];
         let name = sujet.name;
-        sujet.url = this.chargerSon(sounds[i].url);
+        sujet.url = this.loadSound(sounds[i].url);
         IS[name] = sounds[i];
       }
       this.sounds = IS;
@@ -184,7 +138,7 @@ define("game",
       }
       this.tiles = CM;
     }
-    touchePresse(event) {
+    keyDown(event) {
       this.keys[event.keyCode] = true;
       if (this.keys[70]) {
         this.activeRemplissage();
@@ -196,7 +150,7 @@ define("game",
         case "start":
           if (this.keys[69] && this.animation) {
             this.sounds.validation.url.play();
-            this.phase("menu")
+            this.setState("menu")
           }
           if (this.keys[82] && this.animation) {
             this.sounds.validation.url.play();
@@ -209,37 +163,37 @@ define("game",
         case "fin":
           if (this.keys[67]) {
             this.sounds.validation.url.play();
-            this.phase("menu")
+            this.setState("menu")
           }
           break;
         case "regles":
           if (this.keys[67]) {
             this.sounds.validation.url.play();
-            this.phase("menu")
+            this.setState("menu")
           }
           break;
         case "info":
           if (this.keys[67]) {
             this.sounds.validation.url.play();
-            this.phase("menu")
+            this.setState("menu")
           }
           break;
         case "levels":
-          this.menuLevels.changement(event.keyCode);
+          this.levelsMenu.changement(event.keyCode);
           if (this.keys[67]) {
             this.sounds.validation.url.play();
-            this.phase("menu")
+            this.setState("menu")
           }
           if (this.keys[88]) {
-            this.niveauActuel = this.menuLevels.selection;
-            this.phase("start")
+            this.currentLevel = this.levelsMenu.selection;
+            this.setState("start")
           }
           break;
         default:
           console.log("No recognized key");
       }
     }
-    toucheLache(event) {
+    keyUp(event) {
       this.keys[event.keyCode] = false;
     }
     activeRemplissage() {
@@ -280,7 +234,7 @@ define("game",
         return false;
       }
     }
-    ecrire(texte, x, y) {
+    write(texte, x, y) {
       let largeur = 6,
         hauteur = 9;
       let centre = (texte.length * largeur) / 2
@@ -291,7 +245,7 @@ define("game",
         this.ctx.drawImage(this.resources.pixelFont.img, clipX, 0, largeur, hauteur, posX, y, largeur, hauteur);
       }
     }
-    boite(x, y, l, h) {
+    box(x, y, l, h) {
       this.ctx.fillStyle = "#fff1e8";
       // dessiner le fond
       this.ctx.fillRect(x + 1, y + 1, l - 2, h - 2);
@@ -360,7 +314,7 @@ define("game",
       }
       this.land.apparence = Utils.morceler(this.land.apparence, this.land.dimension.x);
     }
-    renduland() {
+    renderland() {
       for (let j = 0; j < this.land.dimension.y; j++) {
         for (let i = 0; i < this.land.dimension.x; i++) {
           let id = this.land.geometry[j][i];
@@ -396,16 +350,16 @@ define("game",
           this.tiles[i].memoireBoucle = false;
         }
       }
-      if (this.levels[this.niveauActuel].indice) {
-        this.boite(0, this.H - 32, this.L, 32);
-        this.ecrire(this.levels[this.niveauActuel].indice, this.L / 2, this.H - 20);
+      if (this.levels[this.currentLevel].indice) {
+        this.box(0, this.H - 32, this.L, 32);
+        this.write(this.levels[this.currentLevel].indice, this.L / 2, this.H - 20);
       }
 
     }
     initialiserMap() {
       this.land = {};
       this.arret = false;
-      this.land.geometry = JSON.parse(JSON.stringify(this.levels[this.niveauActuel].geometry));
+      this.land.geometry = JSON.parse(JSON.stringify(this.levels[this.currentLevel].geometry));
       this.land.dimension = {
         x: this.land.geometry[0].length,
         y: this.land.geometry.length
@@ -422,7 +376,7 @@ define("game",
       }
     }
     render() {
-      this.renduland();
+      this.renderland();
       for (var i = 0; i < this.cat.length; i++) {
         this.cat[i].render();
       }
@@ -447,26 +401,26 @@ define("game",
       let x = 0;
       let targetX = this.H / 2;
       let startX = 0;
-      let monde = this;
+      let game = this;
       this.transition.time = new Date();
       boucle();
 
       function boucle() {
-        let time = new Date() - monde.transition.time;
-        if (time < monde.transition.duration) {
-          monde.ctx.fillRect(0, 0, monde.L, x);
-          monde.ctx.fillRect(0, monde.H, monde.L, x * -1);
-          x = Utils.easeInOutQuart(time, startX, targetX - startX, monde.transition.duration);
+        let time = new Date() - game.transition.time;
+        if (time < game.transition.duration) {
+          game.ctx.fillRect(0, 0, game.L, x);
+          game.ctx.fillRect(0, game.H, game.L, x * -1);
+          x = Utils.easeInOutQuart(time, startX, targetX - startX, game.transition.duration);
           requestAnimationFrame(boucle);
         } else {
-          if (monde.niveauActuel < monde.levels.length) {
-            monde.phase("start");
+          if (game.currentLevel < game.levels.length) {
+            game.setState("start");
             cancelAnimationFrame(boucle);
           } else {
             // fin du jeu
-            monde.arret = true;
-            monde.phase("fin");
-            monde.niveauActuel = 0;
+            game.arret = true;
+            game.setState("fin");
+            game.currentLevel = 0;
           }
         }
       }
@@ -477,36 +431,36 @@ define("game",
       let x = this.H / 2;
       let targetX = 0;
       let startX = this.H / 2;
-      let monde = this;
+      let game = this;
       this.transition.time = new Date();
       boucle();
 
       function boucle() {
-        let time = new Date() - monde.transition.time;
-        if (time < monde.transition.duration) {
-          monde.renduland();
-          monde.ctx.fillStyle = "black";
-          monde.ctx.fillRect(0, 0, monde.L, x);
-          monde.ctx.fillRect(0, monde.H, monde.L, x * -1);
-          x = Utils.easeInOutQuart(time, startX, targetX - startX, monde.transition.duration);
+        let time = new Date() - game.transition.time;
+        if (time < game.transition.duration) {
+          game.renderland();
+          game.ctx.fillStyle = "black";
+          game.ctx.fillRect(0, 0, game.L, x);
+          game.ctx.fillRect(0, game.H, game.L, x * -1);
+          x = Utils.easeInOutQuart(time, startX, targetX - startX, game.transition.duration);
           requestAnimationFrame(boucle);
         } else {
 
-          monde.initJoueur();
+          game.initJoueur();
 
-          monde.boucle();
+          game.boucle();
           cancelAnimationFrame(boucle);
         }
       }
     }
 
-    phase(phase) {
-      this.state = phase;
+    setState(state) {
+      this.state = state;
       cancelAnimationFrame(this.animation);
       this.animation = null;
       this.ctx.fillStyle = "#fff1e8";
       this.ctx.fillRect(0, 0, this.L, this.H);
-      switch (phase) {
+      switch (state) {
         case "menu":
           // affiche le menu du jeu
 
@@ -518,51 +472,51 @@ define("game",
           this.menu.render();
           this.ctx.fillStyle = "#83769c";
           this.ctx.fillRect(0, this.H - 35, this.L, 18);
-          this.ecrire("arrow keys to select 'x' to confirm", this.L / 2, this.H - 30);
+          this.write("arrow keys to select 'x' to confirm", this.L / 2, this.H - 30);
           break;
         case "start":
           this.intro();
           break;
         case "fin":
           // affiche le tableau de mort du player
-          this.ecrire("thanks for playing :) !", this.L / 2, 15);
-          this.ecrire("if you have something to tell me about", this.L / 2, 40);
-          this.ecrire("this pen please do so", this.L / 2, 55);
-          this.ecrire("in the comment section.", this.L / 2, 70);
-          this.ecrire("any feedback is appreciated", this.L / 2, 85);
+          this.write("thanks for playing :) !", this.L / 2, 15);
+          this.write("if you have something to tell me about", this.L / 2, 40);
+          this.write("this pen please do so", this.L / 2, 55);
+          this.write("in the comment section.", this.L / 2, 70);
+          this.write("any feedback is appreciated", this.L / 2, 85);
           this.ctx.fillStyle = "#83769c";
           this.ctx.fillRect(0, this.H - 35, this.L, 18);
-          this.ecrire("press 'c' to return to menu", this.L / 2, this.H - 30);
+          this.write("press 'c' to return to menu", this.L / 2, this.H - 30);
           break;
         case "regles":
           // affiche les regles
-          this.ecrire("game control : ", this.L / 2, 15);
-          this.ecrire("arrow keys to move", this.L / 2, 60);
-          this.ecrire("'f' to toggle fullscreen", this.L / 2, 80);
-          this.ecrire("'r' if you're stuck", this.L / 2, 100);
-          this.ecrire("'e' to exit the game", this.L / 2, 120);
+          this.write("game control : ", this.L / 2, 15);
+          this.write("arrow keys to move", this.L / 2, 60);
+          this.write("'f' to toggle fullscreen", this.L / 2, 80);
+          this.write("'r' if you're stuck", this.L / 2, 100);
+          this.write("'e' to exit the game", this.L / 2, 120);
           this.ctx.fillStyle = "#83769c";
           this.ctx.fillRect(0, this.H - 35, this.L, 18);
-          this.ecrire("press 'c' to return to menu", this.L / 2, this.H - 30);
+          this.write("press 'c' to return to menu", this.L / 2, this.H - 30);
           break;
         case "info":
           // Affiche les infos
-          this.ecrire("about : ", this.L / 2, 15);
-          this.ecrire("made with html5 canvas", this.L / 2, 40);
-          this.ecrire("by gtibo on codepen", this.L / 2, 55);
-          this.ecrire("credits:", this.L / 2, 80);
-          this.ecrire("sound effect : noiseforfun.com", this.L / 2, 100);
+          this.write("about : ", this.L / 2, 15);
+          this.write("made with html5 canvas", this.L / 2, 40);
+          this.write("by gtibo on codepen", this.L / 2, 55);
+          this.write("credits:", this.L / 2, 80);
+          this.write("sound effect : noiseforfun.com", this.L / 2, 100);
           this.ctx.fillStyle = "#83769c";
           this.ctx.fillRect(0, this.H - 35, this.L, 18);
-          this.ecrire("press 'c' to return to menu", this.L / 2, this.H - 30);
+          this.write("press 'c' to return to menu", this.L / 2, this.H - 30);
           break;
         case "levels":
           // Afficher menu levels
-          this.menuLevels.render();
+          this.levelsMenu.render();
           this.ctx.fillStyle = "#83769c";
           this.ctx.fillRect(0, this.H - 35, this.L, 28);
-          this.ecrire("arrow keys to select 'x' to confirm", this.L / 2, this.H - 30);
-          this.ecrire("press 'c' to return to menu", this.L / 2, this.H - 20);
+          this.write("arrow keys to select 'x' to confirm", this.L / 2, this.H - 30);
+          this.write("press 'c' to return to menu", this.L / 2, this.H - 20);
           break;
         default:
           console.log("No recognized action");
@@ -579,10 +533,10 @@ define("game",
             return vrai === true;
           });
           if (confirmation) {
-              this.niveauActuel += 1;
-            if (this.niveauMax < this.niveauActuel) {
-              this.niveauMax = this.niveauActuel;
-              localStorage.setItem("copycat", JSON.stringify(this.niveauActuel));
+              this.currentLevel += 1;
+            if (this.maxLevel < this.currentLevel) {
+              this.maxLevel = this.currentLevel;
+              localStorage.setItem("copycat", JSON.stringify(this.currentLevel));
             }
             this.outro();
             this.sounds.bravo.url.play();

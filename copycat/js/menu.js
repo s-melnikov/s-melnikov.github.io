@@ -33,7 +33,7 @@ define("menu", [], () => {
         // action
         this.parent.sounds.validation.url.play()
         this.actif = false
-        this.parent.phase(this.choix[this.selection].lien)
+        this.parent.setState(this.choix[this.selection].lien)
       }
     }
 
@@ -42,11 +42,11 @@ define("menu", [], () => {
     render() {
       this.ctx.fillStyle = "#fff1e8"
       // dessiner le cadre
-      this.parent.boite(this.pos.x - this.texteMax / 2, this.pos.y - 10,
+      this.parent.box(this.pos.x - this.texteMax / 2, this.pos.y - 10,
         this.texteMax, 26 * this.choix.length)
       // on affiche le title
       for (var i = 0; i < this.choix.length; i++) {
-        this.parent.ecrire(this.choix[i].name, this.pos.x, this.pos.y + 25 * i)
+        this.parent.write(this.choix[i].name, this.pos.x, this.pos.y + 25 * i)
       }
       // on affiche la selection
       this.ctx.drawImage(this.cursor.img, 48, 0, 16, 16, this.pos.x -
