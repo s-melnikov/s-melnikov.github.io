@@ -1,0 +1,66 @@
+{
+    "settings": {
+        "created": "2017-06-09 18:14:44",
+        "updated": "2017-06-09 18:58:09",
+        "schema": {
+            "fields": [
+                {
+                    "name": "first_name",
+                    "title": "First Name",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "name": "last_name",
+                    "title": "Last Name",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "name": "email",
+                    "title": "Email Address",
+                    "type": "string",
+                    "required": true,
+                    "uniq": true
+                },
+                {
+                    "name": "username",
+                    "title": "Username",
+                    "type": "string",
+                    "required": true,
+                    "uniq": true
+                },
+                {
+                    "name": "aboutme",
+                    "title": "About Me",
+                    "type": "text"
+                }
+            ]
+        }
+    },
+    "items": [
+        {
+            "first_name": "Dakota",
+            "last_name": "Rice",
+            "email": "dakota.rice@gmai.com",
+            "username": "dakotarice",
+            "aboutme": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sint magni ratione delectus, id laborum ex aut non eius, reiciendis quae beatae at fuga cum dolores dicta nihil! Culpa, totam!",
+            "_uid": "593ac5210a548"
+        },
+        {
+            "last_name": "Rice",
+            "email": "dakota.rice@gmai.com",
+            "username": "dakotarice",
+            "aboutme": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sint magni ratione delectus, id laborum ex aut non eius, reiciendis quae beatae at fuga cum dolores dicta nihil! Culpa, totam!",
+            "_uid": "593ac54990af8"
+        },
+        {
+            "first_name": "Dakota",
+            "last_name": "Rice",
+            "email": "dakota.rice@gmai.com",
+            "username": "dakotarice",
+            "aboutme": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sint magni ratione delectus, id laborum ex aut non eius, reiciendis quae beatae at fuga cum dolores dicta nihil! Culpa, totam!",
+            "_uid": "593ac5914f867"
+        }
+    ]
+}

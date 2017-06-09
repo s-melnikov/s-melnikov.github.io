@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>API</title>
+</head>
+<body>
+<script>
+
+var api = (function(url) {
+  var callbacks = {}
+  document.addEventListener("DOMContentLoaded", function() {
+    get("auth", function(resp) {
+
+    })
+  })
+  function get(path, cb) {
+    fetch(url)
+      .then(function(resp) {
+        return resp.json()
+      })
+      .then(function(json) {
+        console.log(json)
+      })
+  }
+  function on(event, cb) {
+    if (!callbacks[event]) callbacks[event] = []
+    callbacks[event].push(cb)
+  }
+  function off(event, cb) {
+    if (event === "*") {
+      return callbacks = {}
+    }
+    if (callbacks[event]) {
+      if (cb) {
+        var i = 0
+        while (i < callbacks[event].length) {
+          if (callbacks[event][i] === cb)
+            callbacks[event].splice(i, 1)
+          else i++
+        }
+      } else {
+        callbacks[event] = []
+      }
+    }
+  }
+  function trigger(event, data) {
+    (callbacks[event] || []).map(function(cb) { cb(data) });
+    (callbacks["*"] || []).map(function(cb) { cb(event, data) })
+  }
+  return {
+    on: on,
+    off: off,
+    trigger: trigger
+  }
+})("api/")
+
+api.on("auth.changed", function(user) {
+  console.log("api: user.changed", user)
+})
+
+
+</script>
+</body>
+</html>
