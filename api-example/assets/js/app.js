@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   componentWillMount(state, props) {
-    firebase.auth().onAuthStateChanged(user => this.setState({ user }))
+    // firebase.auth().onAuthStateChanged(user => this.setState({ user }))
     store.subscribe(this, ({ action, value: alerts }) => {
       switch (action) {
         case "ALERT_ADD":

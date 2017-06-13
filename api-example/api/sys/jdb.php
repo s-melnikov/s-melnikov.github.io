@@ -1,171 +1,276 @@
 <?php
 
-class JDB {
+# Set true, if work in debug mode
+if (!defined('DEBUG')) {
+  define('DEBUG', false);
+}
 
-  # Check is exists table with current name
-  static function exists($name) {
-    return file_exists(Config::STORAGE . $name . '.json');
+# Path to store json files
+if (!defined('JDB_STORAGE')) {
+  define('JDB_STORAGE', 'storage' . DIRECTORY_SEPARATOR);
+}
+
+
+# Check is exists table with current name
+function jdb_exists($name) {
+  return file_exists(JDB_STORAGE . $name . '.json');
+}
+
+function jdb_create($name) {
+
+  if (jdb_exists($name)) {
+    throw new RuntimeException(
+       "JSON DB table [{$name}] already exist.",
+      500
+    );
   }
 
-  static function create($name) {
+  $data = [
+    'settings' => [
+      'created' => date('Y-m-d H:i:s')
+    ],
+    'items' => []
+  ];
 
-    if (JDB::exists($name)) {
-      throw new RuntimeException(
-         "JSON DB table [{$name}] is already exists.",
-        500
-      );
-    }
+  return !!jdb_set_file_data($name, $data);
+}
 
-    $data = [
-      'settings' => [
-        'created' => date('Y-m-d H:i:s')
-      ],
-      'items' => []
-    ];
+function jdb_drop($name) {
 
-    return !!JDB::set_file_data($name, $data);
+  if (!jdb_exists($name)) {
+    throw new RuntimeException(
+       "JSON DB table [{$name}] not exist.",
+      500
+    );
   }
 
-  static function drop($name) {
+  return unlink(JDB_STORAGE . $name . '.json');
+}
 
-    if (!JDB::exists($name)) {
-      throw new RuntimeException(
-         "JSON DB table [{$name}] not exists.",
-        500
-      );
-    }
+function jdb_get_file_data($name) {
 
-    return unlink(Config::STORAGE . $name . '.json');
+  $file = JDB_STORAGE . $name . '.json';
+
+  if (!file_exists($file)) {
+    throw new RuntimeException(
+       "File [{$file}] not exists.",
+      500
+    );
   }
 
-  static function get_file_data($name) {
+  $json = file_get_contents($file);
+  $data = json_decode($json, true);
+  $err = json_last_error();
 
-    $file = Config::STORAGE . $name . '.json';
-
-    if (!file_exists($file)) {
-      throw new RuntimeException(
-         "File [{$file}] not exists.",
-        500
-      );
-    }
-
-    $json = file_get_contents($file);
-    $data = json_decode($json, true);
-    $err = json_last_error();
-
-    if ($err !== JSON_ERROR_NONE) {
-      throw new RuntimeException(
-        "JSON encoding failed [{$err}].",
-        500
-      );
-    }
-
-    return $data;
+  if ($err !== JSON_ERROR_NONE) {
+    throw new RuntimeException(
+      "JSON encoding failed [{$err}].",
+      500
+    );
   }
 
-  static function set_file_data($name, $data) {
+  return $data;
+}
 
-    if (!is_string($name)) {
-      throw new InvalidArgumentException(
-        "String expected as first argument",
-        500
-      );
+function jdb_set_file_data($name, $data) {
+
+  if (!is_string($name)) {
+    throw new InvalidArgumentException(
+      "String expected as first argument",
+      500
+    );
+  }
+
+  $file = JDB_STORAGE . $name . '.json';
+
+  if (!is_array($data) || !is_array($data['settings']) ||
+    !is_array($data['items'])) {
+    throw new InvalidArgumentException(
+      "Associative array expected as second argument",
+      500
+    );
+  }
+
+  $data['settings']['updated'] = date('Y-m-d H:i:s');
+
+  $json = json_encode($data, DEBUG ?
+    JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : 0);
+
+  if (!file_exists($file)) {
+    return file_put_contents($file, $json);
+  }
+
+  $attempt = 100;
+  while ($attempt-- && !($fp = fopen($file, 'r+'))) {
+    usleep(1000);
+  }
+
+  if (flock($fp, LOCK_EX)) {
+    ftruncate($fp, 0);
+    fwrite($fp, $json);
+    fflush($fp);
+    flock($fp, LOCK_UN);
+  } else {
+    throw new RuntimeException(
+      "Could not write in file [{$file}].",
+      500
+    );
+  }
+
+  fclose($fp);
+
+  return true;
+}
+
+function jdb_settings($name, $key = null, $value = null) {
+
+  $argc = func_num_args();
+
+  $data = jdb_get_file_data($name);
+
+  if ($argc == 1) {
+    return $data['settings'];
+  }
+
+  if ($argc == 2) {
+    return isset($data['settings'][$key]) ? $data['settings'][$key] : null;
+  }
+
+  if ($argc == 3) {
+    $data['settings'][$key] = $value;
+  }
+
+  return jdb_set_file_data($name, $data);
+}
+
+function jdb_insert($name, $new_item) {
+
+  if (!is_array($new_item)) {
+    throw new InvalidArgumentException(
+      "Array expected as second argument",
+      500
+    );
+  }
+
+  $data = jdb_get_file_data($name);
+  $uid = uniqid('', true);
+
+  $new_item['_uid'] = $uid;
+  $data['items'][] = $new_item;
+
+  if (!jdb_set_file_data($name, $data)) {
+    return false;
+  }
+
+  return $uid;
+}
+
+function jdb_select($name, $where = null) {
+  $data = jdb_get_file_data($name);
+
+  if ($where == null) {
+    return $data['items'];
+  }
+
+  if (is_callable($where)) {
+
+    $result = array_filter($data['items'], $where);
+
+  } else {
+
+    if (is_string($where)) {
+      $where = ['_uid' => $where];
     }
 
-    $file = Config::STORAGE . $name . '.json';
+    $result = array_filter($data['items'], function($item) use ($where) {
+      foreach ($where as $key => $value) {
+        if (!isset($item[$key]) || $item[$key] !== $value) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+  return array_values($result);
+}
 
-    if (!is_array($data) || !is_array($data['settings']) ||
-      !is_array($data['items'])) {
-      throw new InvalidArgumentException(
-        "Associative array expected as second argument",
-        500
-      );
-    }
+function jdb_update($name, $update, $where = null) {
 
-    $data['settings']['updated'] = date('Y-m-d H:i:s');
+  if (!is_array($update) && !is_callable($update)) {
+    throw new InvalidArgumentException(
+      "Array or function expected as second argument",
+      500
+    );
+  }
 
-    $json = json_encode($data, Config::DEBUG ?
-      JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : 0);
+  $data = jdb_get_file_data($name);
 
-    if (!file_exists($file)) {
-      return file_put_contents($file, $json);
-    }
+  $counter = 0;
 
-    $attempt = 100;
-    while ($attempt-- && !($fp = fopen($file, 'r+'))) {
-      usleep(1000);
-    }
-
-    if (flock($fp, LOCK_EX)) {
-      ftruncate($fp, 0);
-      fwrite($fp, $json);
-      fflush($fp);
-      flock($fp, LOCK_UN);
+  if (func_num_args() === 2) {
+    if (is_callable($update)) {
+      $data['items'] = array_map($update, $data['items']);
+      $counter = count($data['items']);
     } else {
-      throw new RuntimeException(
-        "Could not write in file [{$file}].",
-        500
-      );
+      foreach ($data['items'] as &$item) {
+        foreach ($update as $key => $val) {
+          $item[$key] = $val;
+        }
+        $counter++;
+      }
     }
 
-    fclose($fp);
+  } else {
 
-    return true;
+    if (is_string($where)) {
+      $where = ['_uid' => $where];
+    }
+
+    foreach ($data['items'] as &$item) {
+
+      $next = false;
+
+      foreach ($where as $key => $value) {
+        if (!isset($item[$key]) || $item[$key] !== $value) {
+          $next = true;
+        }
+      }
+
+      if ($next) continue;
+
+      foreach ($update as $key => $value) {
+        $item[$key] = $value;
+      }
+
+      $counter++;
+    }
+
   }
 
-  static function settings($name, $key = null, $value = null) {
-
-    $argc = func_num_args();
-
-    $data = JDB::get_file_data($name);
-
-    if ($argc == 1) {
-      return $data['settings'];
-    }
-
-    if ($argc == 2) {
-      return isset($data['settings'][$key]) ? $data['settings'][$key] : null;
-    }
-
-    if ($argc == 3) {
-      $data['settings'][$key] = $value;
-    }
-
-    return JDB::set_file_data($name, $data);
+  if (jdb_set_file_data($name, $data)) {
+    return $counter;
   }
 
-  static function insert($name, $new_item) {
+  return null;
+}
 
-    if (!is_array($new_item)) {
-      throw new InvalidArgumentException(
-        "Array expected as second argument",
-        500
-      );
-    }
+function jdb_delete($name, $where = null) {
 
-    $data = JDB::get_file_data($name);
-    $uid = uniqid();
+  $data = jdb_get_file_data($name);
 
-    $new_item['_uid'] = $uid;
-    $data['items'][] = $new_item;
-
-    if (!JDB::set_file_data($name, $data)) {
-      return false;
-    }
-
-    return $uid;
-  }
-
-  static function select($name, $where = null) {
-    $data = JDB::get_file_data($name);
-
-    if ($where == null) {
-      return $data['items'];
-    }
+  if (func_num_args() === 2) {
 
     if (is_callable($where)) {
 
-      $result = array_filter($data['items'], $where);
+      $new_items = [];
+
+      foreach ($data['items'] as $item) {
+        if (!$where($item)) {
+          $new_items[] = $item;
+        }
+      }
+
+      $data['items'] = $new_items;
 
     } else {
 
@@ -173,127 +278,31 @@ class JDB {
         $where = ['_uid' => $where];
       }
 
-      $result = array_filter($data['items'], function($item) use ($where) {
-        foreach ($where as $key => $value) {
-          if (!isset($item[$key]) || $item[$key] !== $value) {
-            return false;
-          }
-        }
-        return true;
-      });
-    }
-    return array_values($result);
-  }
-
-  static function update($name, $update, $where = null) {
-
-    if (!is_array($update) && !is_callable($update)) {
-      throw new InvalidArgumentException(
-        "Array or function expected as second argument",
-        500
-      );
-    }
-
-    $data = JDB::get_file_data($name);
-
-    $counter = 0;
-
-    if (func_num_args() === 2) {
-      if (is_callable($update)) {
-        $data['items'] = array_map($update, $data['items']);
-        $counter = count($data['items']);
-      } else {
-        foreach ($data['items'] as &$item) {
-          foreach ($update as $key => $val) {
-            $item[$key] = $val;
-          }
-          $counter++;
-        }
-      }
-
-    } else {
-
-      if (is_string($where)) {
-        $where = ['_uid' => $where];
-      }
-
-      foreach ($data['items'] as &$item) {
+      foreach ($data['items'] as $item_key => $item_value) {
 
         $next = false;
 
         foreach ($where as $key => $value) {
-          if (!isset($item[$key]) || $item[$key] !== $value) {
+          if (!isset($item_value[$key]) || $item_value[$key] !== $value) {
             $next = true;
           }
         }
 
         if ($next) continue;
 
-        foreach ($update as $key => $value) {
-          $item[$key] = $value;
-        }
-
-        $counter++;
+        unset($data['items'][$item_key]);
       }
 
     }
 
-    if (JDB::set_file_data($name, $data)) {
-      return $counter;
-    }
+    $data['items'] = array_values($data['items']);
 
-    return null;
+  } else {
+
+    $data['items'] = [];
   }
 
-  static function delete($name, $where = null) {
-
-    $data = JDB::get_file_data($name);
-
-    if (func_num_args() === 2) {
-
-      if (is_callable($where)) {
-
-        $new_items = [];
-
-        foreach ($data['items'] as $item) {
-          if (!$where($item)) {
-            $new_items[] = $item;
-          }
-        }
-
-        $data['items'] = $new_items;
-
-      } else {
-
-        if (is_string($where)) {
-          $where = ['_uid' => $where];
-        }
-
-        foreach ($data['items'] as $item_key => $item_value) {
-
-          $next = false;
-
-          foreach ($where as $key => $value) {
-            if (!isset($item_value[$key]) || $item_value[$key] !== $value) {
-              $next = true;
-            }
-          }
-
-          if ($next) continue;
-
-          unset($data['items'][$item_key]);
-        }
-
-      }
-
-      $data['items'] = array_values($data['items']);
-
-    } else {
-
-      $data['items'] = [];
-    }
-
-    return JDB::set_file_data($name, $data);
-  }
-
+  return jdb_set_file_data($name, $data);
 }
+
+?>

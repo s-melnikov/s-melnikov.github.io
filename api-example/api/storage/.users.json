@@ -1,66 +1,16 @@
 {
     "settings": {
-        "created": "2017-06-09 18:14:44",
-        "updated": "2017-06-09 18:58:09",
-        "schema": {
-            "fields": [
-                {
-                    "name": "first_name",
-                    "title": "First Name",
-                    "type": "string",
-                    "required": true
-                },
-                {
-                    "name": "last_name",
-                    "title": "Last Name",
-                    "type": "string",
-                    "required": true
-                },
-                {
-                    "name": "email",
-                    "title": "Email Address",
-                    "type": "string",
-                    "required": true,
-                    "uniq": true
-                },
-                {
-                    "name": "username",
-                    "title": "Username",
-                    "type": "string",
-                    "required": true,
-                    "uniq": true
-                },
-                {
-                    "name": "aboutme",
-                    "title": "About Me",
-                    "type": "text"
-                }
-            ]
-        }
+        "created": "2017-06-13 10:02:31",
+        "updated": "2017-06-13 10:09:06"
     },
     "items": [
         {
-            "first_name": "Dakota",
-            "last_name": "Rice",
-            "email": "dakota.rice@gmai.com",
-            "username": "dakotarice",
-            "aboutme": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sint magni ratione delectus, id laborum ex aut non eius, reiciendis quae beatae at fuga cum dolores dicta nihil! Culpa, totam!",
-            "_uid": "593ac5210a548"
-        },
-        {
-            "last_name": "Rice",
-            "email": "dakota.rice@gmai.com",
-            "username": "dakotarice",
-            "aboutme": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sint magni ratione delectus, id laborum ex aut non eius, reiciendis quae beatae at fuga cum dolores dicta nihil! Culpa, totam!",
-            "_uid": "593ac54990af8"
-        },
-        {
-            "first_name": "Dakota",
-            "last_name": "Rice",
-            "email": "dakota.rice@gmai.com",
-            "username": "dakotarice",
-            "aboutme": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam sint magni ratione delectus, id laborum ex aut non eius, reiciendis quae beatae at fuga cum dolores dicta nihil! Culpa, totam!",
-            "_uid": "593ac5914f867"
+            "email": "test@test.com",
+            "hash": "1f26cad523a43f9ef1ab511ab0a9e7792e6e515bc793dbf43760b400cfbf85ca",
+            "_uid": "593f8f92315f35.10760309",
+            "nickname": "admin",
+            "first_name": "Sergey",
+            "last_name": "Melnikov"
         }
     ]
 }

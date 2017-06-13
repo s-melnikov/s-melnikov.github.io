@@ -1,0 +1,25 @@
+#alerts {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 560px;
+}
+.container {
+  max-width: 960px;
+  padding: 0 15px;
+}
+.main-header {
+  padding-top: 15px;
+  height: 54px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.muted {
+  color: #ccc;
+}
+.nav .nav-item a.active {
+  font-weight: 700;
+}
+.nav .nav-item a.active:focus,
+.nav .nav-item a.active:hover {
+  color: #5764c6;
+}

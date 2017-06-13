@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="<?php css('specter') ?>">
+  <link rel="stylesheet" href="<?php css('main') ?>">
+</head>
+<body>
+
+  <div class="main-header">
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-section">
+          <a href="<?php base_url() ?>" class="navbar-brand">
+            Content System
+          </a>
+        </div>
+        <div class="navbar-section">
+          <a href="<?php base_url('logout') ?>">
+            Logout (<?php print session('user')['nickname'] ?>)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="columns">
+      <div class="column col-3">
+        <ul class="nav">
+          <li class="nav-item">
+            <a href="<?php base_url('collections') ?>">Collections</a>
+          </li>
+          <li class="nav-item">
+            <a href="<?php base_url('users') ?>">Users</a>
+          </li>
+          <li class="nav-item">
+            <a href="<?php base_url('settings') ?>">Settings</a>
+          </li>
+        </ul>
+      </div>
+      <div class="column col-9">
+        <?php print $body ?>
+      </div>
+    </div>
+  </div>
+  <script src="<?php js('main') ?>"></script>
+</body>
+</html>
