@@ -7,7 +7,7 @@
         {
             "email": "test@test.com",
             "hash": "1f26cad523a43f9ef1ab511ab0a9e7792e6e515bc793dbf43760b400cfbf85ca",
-            "_uid": "593f8f92315f35.10760309",
+            "uid": "uid593f8f92315f35",
             "nickname": "admin",
             "first_name": "Sergey",
             "last_name": "Melnikov"

@@ -4,21 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="<?php css('specter') ?>">
-  <link rel="stylesheet" href="<?php css('main') ?>">
+  <link rel="stylesheet" href="<?php print css('specter') ?>">
+  <link rel="stylesheet" href="<?php print css('main') ?>">
+  <script src="<?php print js('main') ?>"></script>
 </head>
 <body>
+
+  <?php if ($error) { ?>
+    <div id="alerts">
+      <div class="toast toast-error"><?php print $error ?></div>
+    </div>
+  <?php } ?>
 
   <div class="main-header">
     <div class="container">
       <div class="navbar">
         <div class="navbar-section">
-          <a href="<?php base_url() ?>" class="navbar-brand">
+          <a href="<?php print base_url() ?>" class="navbar-brand">
             Content System
           </a>
         </div>
         <div class="navbar-section">
-          <a href="<?php base_url('logout') ?>">
+          <a href="<?php print base_url('collections') ?>"
+            class="btn btn-link">Collections</a>
+          <a href="<?php print base_url('content') ?>"
+            class="btn btn-link">Content</a>
+          <a href="<?php print base_url('settings') ?>"
+            class="btn btn-link">Settings</a>
+          <a href="<?php print base_url('logout') ?>" class="btn btn-link">
             Logout (<?php print session('user')['nickname'] ?>)
           </a>
         </div>
@@ -27,25 +40,7 @@
   </div>
 
   <div class="container">
-    <div class="columns">
-      <div class="column col-3">
-        <ul class="nav">
-          <li class="nav-item">
-            <a href="<?php base_url('collections') ?>">Collections</a>
-          </li>
-          <li class="nav-item">
-            <a href="<?php base_url('users') ?>">Users</a>
-          </li>
-          <li class="nav-item">
-            <a href="<?php base_url('settings') ?>">Settings</a>
-          </li>
-        </ul>
-      </div>
-      <div class="column col-9">
-        <?php print $body ?>
-      </div>
-    </div>
+    <?php print $body ?>
   </div>
-  <script src="<?php js('main') ?>"></script>
 </body>
 </html>

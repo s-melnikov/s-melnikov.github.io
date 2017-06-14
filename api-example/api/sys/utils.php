@@ -22,13 +22,38 @@ function auth_check() {
 }
 
 function base_url($path = '') {
-  print config('url') . $path;
+  return config('url') . $path;
 }
 
 function css($name = '') {
-  base_url('assets/css/' . $name . '.css');
+  return base_url('assets/css/' . $name . '.css');
 }
 
 function js($name = '') {
-  base_url('assets/js/' . $name . '.js');
+  return base_url('assets/js/' . $name . '.js');
+}
+
+function params($name = null, $default = null) {
+
+  static $source = null;
+
+  if (!$source) {
+    $source = array_merge($_GET, $_POST);
+    if (get_magic_quotes_gpc()) {
+      array_walk_recursive($source, function(&$value) {
+        $value = stripslashes($value);
+      });
+    }
+  }
+
+  if (is_string($name))
+    return (isset($source[$name]) ? $source[$name] : $default);
+
+  if (is_array($name)) {
+    $result = [];
+    foreach ($name as $value) {
+      $result[$value] = params($value, $default);
+    }
+    return $result;
+  }
 }

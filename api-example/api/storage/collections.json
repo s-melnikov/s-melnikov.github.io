@@ -1,0 +1,22 @@
+{
+    "settings": {
+        "created": "2017-06-14 14:10:27",
+        "updated": "2017-06-14 18:36:01"
+    },
+    "items": [
+        {
+            "id": "authors",
+            "name": "Authors",
+            "description": "Lorem ipsum dolor",
+            "fields": [],
+            "uid": "uid5941570dc8945"
+        },
+        {
+            "id": "authors2",
+            "name": "Authors2",
+            "description": "",
+            "fields": [],
+            "uid": "uid594157e190b2e"
+        }
+    ]
+}

@@ -153,9 +153,9 @@ function jdb_insert($name, $new_item) {
   }
 
   $data = jdb_get_file_data($name);
-  $uid = uniqid('', true);
+  $uid = uniqid('uid');
 
-  $new_item['_uid'] = $uid;
+  $new_item['uid'] = $uid;
   $data['items'][] = $new_item;
 
   if (!jdb_set_file_data($name, $data)) {
@@ -179,7 +179,7 @@ function jdb_select($name, $where = null) {
   } else {
 
     if (is_string($where)) {
-      $where = ['_uid' => $where];
+      $where = ['uid' => $where];
     }
 
     $result = array_filter($data['items'], function($item) use ($where) {
@@ -223,7 +223,7 @@ function jdb_update($name, $update, $where = null) {
   } else {
 
     if (is_string($where)) {
-      $where = ['_uid' => $where];
+      $where = ['uid' => $where];
     }
 
     foreach ($data['items'] as &$item) {
@@ -275,7 +275,7 @@ function jdb_delete($name, $where = null) {
     } else {
 
       if (is_string($where)) {
-        $where = ['_uid' => $where];
+        $where = ['uid' => $where];
       }
 
       foreach ($data['items'] as $item_key => $item_value) {
