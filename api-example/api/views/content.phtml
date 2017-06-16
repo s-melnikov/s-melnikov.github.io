@@ -1,0 +1,62 @@
+<h2>Collections</h2>
+
+<div class="columns">
+  <div class="column col-3">
+    <ul class="nav">
+      <?php foreach ($collections as $collection) { ?>
+        <li class="nav-item">
+          <a href="<?php print base_url('content/' . $collection['id'])?>">
+            <?php print $collection['name'] ?>
+          </a>
+        </li>
+      <?php } ?>
+    </ul>
+  </div>
+  <div class="column col-9">
+  </div>
+</div>
+
+<div class="modal" id="add-collection">
+  <div class="modal-overlay"></div>
+  <form class="modal-container" style="width:420px" method="post">
+    <div class="modal-header">
+      <a href="#" class="btn btn-clear float-right"></a>
+      <div class="modal-title">New collection</div>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-input" type="text" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>Identifier</label>
+          <input class="form-input" type="text" name="id" required>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-input" name="description" rows="6" maxlength="500"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-link btn-close">Close</a>
+      <button class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+var input = $('[name=name]'),
+  output = $('[name=id]')
+if (!output.val()) {
+  input.on('input', function() {
+    output.val(slugify(translit(this.value)))
+  })
+  output.on('input', function() {
+    input.off('input')
+    output.off('input')
+  })
+}
+location.hash = "#"
+</script>

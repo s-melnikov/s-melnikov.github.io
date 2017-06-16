@@ -6,17 +6,6 @@ function dd() {
   exit();
 }
 
-function from($source, $key) {
-  if (is_array($key)) {
-    $result = [];
-    foreach ($key as $k) {
-      $result[$k] = isset($source[$k]) ? $source[$k] : null;
-    }
-    return $result;
-  }
-  return isset($source[$key]) ? $source[$key] : null;
-}
-
 function auth_check() {
   if (!session('user')) redirect(config('url') . 'signin', 302, true);
 }
@@ -33,7 +22,7 @@ function js($name = '') {
   return base_url('assets/js/' . $name . '.js');
 }
 
-function params($name = null, $default = null) {
+function request($name = null, $default = null) {
 
   static $source = null;
 

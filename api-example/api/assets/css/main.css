@@ -1,8 +1,9 @@
 #alerts {
-  position: absolute;
+  position: fixed;
   top: 1rem;
   right: 1rem;
   width: 560px;
+  z-index: 999;
 }
 .container {
   max-width: 960px;

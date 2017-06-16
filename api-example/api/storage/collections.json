@@ -1,22 +1,135 @@
 {
     "settings": {
         "created": "2017-06-14 14:10:27",
-        "updated": "2017-06-14 18:36:01"
+        "updated": "2017-06-16 18:51:14"
     },
     "items": [
         {
-            "id": "authors",
-            "name": "Authors",
-            "description": "Lorem ipsum dolor",
-            "fields": [],
-            "uid": "uid5941570dc8945"
+            "id": "author",
+            "name": "Author",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+            "fields": [
+                {
+                    "name": "Name",
+                    "id": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "Website",
+                    "id": "website",
+                    "type": "string"
+                },
+                {
+                    "name": "Profile Photo",
+                    "id": "profile_photo",
+                    "type": "media"
+                },
+                {
+                    "name": "Biography",
+                    "id": "biography",
+                    "type": "text"
+                },
+                {
+                    "name": "Created Entries",
+                    "id": "created_entries",
+                    "type": "reference"
+                },
+                {
+                    "name": "Country",
+                    "id": "country",
+                    "type": "reference"
+                }
+            ],
+            "uid": "uid594297d613eaf"
         },
         {
-            "id": "authors2",
-            "name": "Authors2",
+            "id": "category",
+            "name": "Category",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+            "fields": [
+                {
+                    "name": "Title",
+                    "id": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "Short description",
+                    "id": "short_description",
+                    "type": "text"
+                },
+                {
+                    "name": "Icon",
+                    "id": "icon",
+                    "type": "media"
+                }
+            ],
+            "uid": "uid5942ae6fbb9fa"
+        },
+        {
+            "id": "post",
+            "name": "Post",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+            "fields": [
+                {
+                    "name": "Title",
+                    "id": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "Slug",
+                    "id": "slug",
+                    "type": "string"
+                },
+                {
+                    "name": "Author",
+                    "id": "author",
+                    "type": "reference"
+                },
+                {
+                    "name": "Body",
+                    "id": "body",
+                    "type": "text"
+                },
+                {
+                    "name": "Category",
+                    "id": "category",
+                    "type": "reference"
+                },
+                {
+                    "name": "Tags",
+                    "id": "tags",
+                    "type": "string"
+                },
+                {
+                    "name": "Featured image",
+                    "id": "featured_image",
+                    "type": "media"
+                },
+                {
+                    "name": "Date",
+                    "id": "date",
+                    "type": "string"
+                },
+                {
+                    "name": "Comments",
+                    "id": "comments",
+                    "type": "boolean"
+                }
+            ],
+            "uid": "uid5942ae8083b49"
+        },
+        {
+            "id": "test_collection",
+            "name": "Test collection",
             "description": "",
-            "fields": [],
-            "uid": "uid594157e190b2e"
+            "fields": [
+                {
+                    "name": "Test field",
+                    "id": "test_field",
+                    "type": "string"
+                }
+            ],
+            "uid": "uid5943fe67cd89e"
         }
     ]
 }

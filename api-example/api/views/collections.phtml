@@ -7,7 +7,9 @@
         <tr>
           <th>Name</th>
           <th>Identifier</th>
+          <th>Description</th>
           <th class="text-right">Updated</th>
+          <th class="text-right">About</th>
         </tr>
       </thead>
       <tbody>
@@ -15,7 +17,9 @@
           <tr onclick="location.href='<?php print base_url('collection/'.$collection['uid'].'/fields') ?>'">
             <td><?php print $collection['name'] ?></td>
             <td><?php print $collection['id'] ?></td>
+            <td><?php print $collection['description'] ?></td>
             <td class="text-right"><?php print date("M d, Y", strtotime($collection['updated'])) ?></td>
+            <td class="text-right"><?php print $collection['about'] ?></td>
           </tr>
         <?php } ?>
       </tbody>
@@ -39,15 +43,18 @@
       <div class="content">
         <div class="form-group">
           <label>Name</label>
-          <input class="form-input" type="text" name="name" required>
+          <input class="form-input" type="text" name="name"
+            value="<?php print $name ?>" required>
         </div>
         <div class="form-group">
           <label>Identifier</label>
-          <input class="form-input" type="text" name="id" required>
+          <input class="form-input" type="text" name="id"
+            value="<?php print $id ?>" required>
         </div>
         <div class="form-group">
           <label>Description</label>
-          <textarea class="form-input" name="description"></textarea>
+          <textarea class="form-input" name="description" rows="6"
+            value="<?php print $description ?>" maxlength="500"></textarea>
         </div>
       </div>
     </div>
@@ -59,16 +66,20 @@
 </div>
 
 <script>
-let input = Q('[name=name]')[0],
-  output = Q('[name=id]')[0],
-  listener = e => output.value = slugify(translit(e.target.value)),
-  listener2 = e => {
-    input.removeEventListener('input', listener)
-    output.removeEventListener('input', listener2)
-  }
-if (!output.value) {
-  input.addEventListener('input', listener)
-  output.addEventListener('input', listener2)
+var input = $('[name=name]'),
+  output = $('[name=id]')
+if (!output.val()) {
+  input.on('input', function() {
+    output.val(slugify(translit(this.value)))
+  })
+  output.on('input', function() {
+    input.off('input')
+    output.off('input')
+  })
 }
-location.hash = "#"
+if ("<?php print $id ?>") {
+  location.hash = "#add-collection"
+} else {
+  location.hash = "#"
+}
 </script>
