@@ -1,18 +1,12 @@
-Q("a").map(function(el) {
-  if (el.href == location.href) {
-    el.classList.add("active")
-  }
+$(function () {
+
+  $("a").each(function(i, el) {
+    if (location.href.indexOf(el.href) > -1) {
+      el.classList.add("active")
+    }
+  })
+
 })
-
-function Q(selector, context) {
-  return [].slice.call((context || document).querySelectorAll(selector))
-}
-
-function makeNode(html) {
-  var div = document.createElement("div")
-  div.innerHTML = html.trim()
-  return div.childNodes[0]
-}
 
 function slugify(text) {
   return text.toString().toLowerCase()

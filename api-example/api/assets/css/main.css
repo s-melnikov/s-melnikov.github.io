@@ -17,6 +17,7 @@
 .muted {
   color: #ccc;
 }
+.navbar a.active:not(.navbar-brand),
 .nav .nav-item a.active {
   font-weight: 700;
 }

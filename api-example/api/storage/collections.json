@@ -1,7 +1,7 @@
 {
     "settings": {
         "created": "2017-06-14 14:10:27",
-        "updated": "2017-06-16 18:51:14"
+        "updated": "2017-06-19 14:48:47"
     },
     "items": [
         {
@@ -117,19 +117,6 @@
                 }
             ],
             "uid": "uid5942ae8083b49"
-        },
-        {
-            "id": "test_collection",
-            "name": "Test collection",
-            "description": "",
-            "fields": [
-                {
-                    "name": "Test field",
-                    "id": "test_field",
-                    "type": "string"
-                }
-            ],
-            "uid": "uid5943fe67cd89e"
         }
     ]
 }

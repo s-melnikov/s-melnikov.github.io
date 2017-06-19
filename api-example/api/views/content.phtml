@@ -1,18 +1,23 @@
-<h2>Collections</h2>
+<h2>Content</h2>
 
 <div class="columns">
   <div class="column col-3">
     <ul class="nav">
-      <?php foreach ($collections as $collection) { ?>
+      <?php foreach ($collections as $item) { ?>
         <li class="nav-item">
-          <a href="<?php print base_url('content/' . $collection['id'])?>">
-            <?php print $collection['name'] ?>
+          <a href="<?php print base_url('content/' . $item['uid'])?>">
+            <?php print $item['name'] ?>
           </a>
         </li>
       <?php } ?>
     </ul>
   </div>
   <div class="column col-9">
+    <?php if ($collection) { ?>
+      <div class="text-right">
+        <a href="<?php print base_url('content/'.$collection['uid'].'/item') ?>" class="btn">Add item</a>
+      </div>
+    <?php } ?>
   </div>
 </div>
 

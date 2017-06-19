@@ -27,24 +27,29 @@ config(parse_ini_file(SYS . 'config.ini'));
 
 map('GET', '/', function() {
   auth_check();
-  echo phtml('index', []);
+  echo phtml('index', [
+    'error' => null
+  ]);
 });
 
 map(['GET', 'POST'], '/signin', function() {
-  $locals = ['errors' => []];
-  $locals = array_marge($locals, from($_POST, ['email', 'password']));
-  if ($locals['email'] && $locals['password']) {
-    if ($result = jdb_select('.users', ['email' => $locals['email']])) {
-      $user = $result[0];
+  $error = null;
+  $email = request('email');
+  $password = request('password');
+  if ($email && $password) {
+    if ($user = jdb_select('.users', ['email' => $email])) {
+      $user = $user[0];
       if ($user['hash'] ==
-        hash('sha256', config('salt') . $locals['password'] . config('salt'))) {
+        hash('sha256', config('salt') . $password . config('salt'))) {
         session('user', $user);
         redirect(base_url(), null, true);
       }
     }
-    $locals['error'] = 'Unknow user or wrong password.';
+    $error = 'Unknow user or wrong password.';
   }
-  print phtml('signin', $locals, false);
+  print phtml('signin', [
+    'error' => $error
+  ], false);
 });
 
 map('GET', '/logout', function() {
@@ -53,7 +58,9 @@ map('GET', '/logout', function() {
 });
 
 map(404, function () {
-  print phtml('404');
+  print phtml('404', [
+    'error' => null
+  ]);
 });
 
 map(['GET', 'POST'], '/collections', function() {
@@ -146,7 +153,25 @@ map(['GET', 'POST'], '/collection/<uid>/fields', function($params) {
 map('GET', '/content', function() {
   $collections = jdb_select('collections');
   print phtml('content', [
-    'collections' => $collections
+    'error' => null,
+    'collections' => $collections,
+    'collection' => null,
+    'items' => null
+  ]);
+});
+
+map('GET', '/content/<uid>', function($params) {
+  $error = null;
+  $uid = $params['uid'];
+  $collections = jdb_select('collections');
+  $collection = jdb_select('collections', $uid);
+  $collection = $collection[0];
+  $items = jdb_select('collections/'.$uid);
+  print phtml('content', [
+    'error' => $error,
+    'collections' => $collections,
+    'collection' => $collection,
+    'items' => $items
   ]);
 });
 
