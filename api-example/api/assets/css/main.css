@@ -28,3 +28,7 @@
 [onclick] {
   cursor: pointer;
 }
+a.card:hover {
+  text-decoration: none;
+  border-color: #dee3f1;
+}

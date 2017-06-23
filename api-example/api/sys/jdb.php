@@ -194,6 +194,11 @@ function jdb_select($name, $where = null) {
   return array_values($result);
 }
 
+function jdb_select_one($name, $where = null) {
+  $result = jdb_select($name, $where);
+  return count($result) ? $result[0] : null;
+}
+
 function jdb_update($name, $update, $where = null) {
 
   if (!is_array($update) && !is_callable($update)) {

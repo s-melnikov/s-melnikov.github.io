@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -172,6 +176,18 @@ map('GET', '/content/<uid>', function($params) {
     'collections' => $collections,
     'collection' => $collection,
     'items' => $items
+  ]);
+});
+
+map(['GET', 'POST'], '/content/<uid>/item', function($params) {
+  $error = null;
+  $uid = $params['uid'];
+  $collections = jdb_select('collections');
+  $collection = jdb_select_one('collections', $uid);
+  print phtml('item', [
+    'error' => $error,
+    'collections' => $collections,
+    'collection' => $collection
   ]);
 });
 
