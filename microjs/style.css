@@ -1,0 +1,146 @@
+* {
+  box-sizing: border-box
+}
+body {
+  font: 14px/1.4 "Segoe UI", "Open Sans", Tahoma, sans-serif;
+  color: #444;
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: inherit
+}
+a:hover {
+  text-decoration: none;
+}
+.mb-15 {
+  display: inline-block;
+  margin-bottom: 15px;
+}
+.header {
+  text-align: right;
+}
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 15px;
+}
+.item {
+  position: relative;
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee
+}
+.name {
+  color: #28d
+}
+.name a:visited {
+  color: #444
+}
+.desc {
+  font-size: 12px;
+  font-style: italic;
+  color: #666
+}
+.tags a {
+  font-size: 12px;
+  display: inline-block;
+  cursor: pointer;
+  color: #f60;
+}
+.tags a::before {
+  content: "#"
+}
+button,
+.button,
+input,
+textarea {
+  border: 1px solid #eee;
+  font: inherit;
+  color: inherit;
+  margin: 0 0 10px;
+}
+button,
+.button {
+  display: inline-block;
+  background: #f5f5f5;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+button:hover,
+button:hober {
+  background: #eee;
+}
+input,
+textarea {
+  background: #fff;
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+}
+.control {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 12px;
+  color: #777;
+}
+.control a,
+.control span {
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+.control a:hover,
+.control span:hover {
+  text-decoration: none;
+}
+.loader {
+  position: absolute;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: 12px 0;
+  font-size: 0;
+  color: transparent;
+  border-radius: 100%;
+  background-color: rgba(61, 70, 77, 0.3) }
+.loader, .loader:after, .loader:before {
+  -webkit-animation: loaderFade 0.9s ease-in-out infinite;
+  animation: loaderFade 0.9s ease-in-out infinite
+}
+.loader:after, .loader:before {
+  content: "";
+  vertical-align: middle;
+  position: absolute;
+  left: 100%;
+  width: 6px;
+  height: 6px;
+  margin-left: 4px;
+  border-radius: 100%;
+  background-color: rgba(61, 70, 77, 0.3);
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s
+}
+.loader:after {
+  left: 200%;
+  margin-left: 8px;
+  -webkit-animation-delay: 0.6s;
+  animation-delay: 0.6s
+}
+@keyframes loaderFade {
+  50% {
+    background-color: #3d464d;
+  }
+  0%, 100% {
+    background-color: rgba(61, 70, 77, 0.3)
+  }
+}
+#sign-in {
+  padding: 15px;
+  width: 240px;
+}
+#edit {
+  font-size: 13px;
+  padding: 15px;
+  max-width: 480px;
+}
