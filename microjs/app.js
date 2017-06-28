@@ -65,55 +65,65 @@ Views.Search = function(state, actions) {
   return h("input", {
     type: "search",
     value: state.input,
-    onInput: function(e) {
+    oninput: function(e) {
       actions.input(e.target.value)
     }
   })
 }
 
 Views.Items = function(state, actions) {
+  var input = state.input
+  var tag = input.indexOf("#") === 0 ? input.slice(1) : null
+  var items = state.items
+  if (tag) {
+    console.log(tag)
+    items = state.items.filter(function(item) {
+      return item.tags.indexOf(tag) > -1
+    })
+  } else if (input.length > 1) {
+    input = input.toLowerCase()
+    items = state.items.filter(function(item) {
+      return item.name.toLowerCase().indexOf(input) > -1
+    }).concat(state.items.filter(function(item) {
+      return item.description.toLowerCase().indexOf(input) > -1
+    }))
+  }
   return h("div", { "class": "items" },
-    state.items
-      /*.filter(function(item) {
-        var input = state.input.toLowerCase()
-        if (input.indexOf("#") === 0) {
-          if (item.tags.map(function(tag) {
-              return tag.toLowerCase()
-            })
-            .indexOf(input.slice(1)) !== -1) {
-            return true
+    items.map(function(item) {
+      return Views.Item(state, actions, item)
+    })
+  )
+}
+
+Views.Item = function(state, actions, item) {
+  return h("div", { "class": "item" },
+    state.user && Views.Control(item),
+    h("div", { "class": "name" },
+      h("a", { href: item.url, target: "_blank" }, item.name)
+    ),
+    h("div", { "class": "desc" }, item.description),
+    h("div", { "class": "tags" },
+      item.tags && item.tags.map(function(tag) {
+        return h("span", {
+          onclick: function() {
+            actions.input("#" + tag)
           }
-        } else if (input === "" ||
-          item.name.toLowerCase().indexOf(input) > -1 ||
-          item.tags.join(", ").toLowerCase().indexOf(input) > -1 ||
-          item.description.toLowerCase().indexOf(input) > -1 ) {
-          return true
-        }
-        return false
-      })*/
-      .map(function(item) {
-        return h("div", { "class": "item" },
-          state.user && h("div", { class: "control" },
-            h("a", { href: "#/edit/" + item.uid, class: "edit" }, "edit"),
-            h("span", {
-              onclick: function() {
-                if (confirm("Are you sure to delete \"" + item.name + "\"")) {
-                  firebase.database().ref("items/" + item.uid).remove()
-                }
-              }
-            }, "del")
-          ),
-          h("div", { "class": "name" },
-            h("a", { href: item.url, target: "_blank" }, item.name)
-          ),
-          h("div", { "class": "desc" }, item.description),
-          h("div", { "class": "tags" },
-            item.tags && item.tags.map(function(tag) {
-              return [h("a", { href: "#/tag/" + tag }, tag), " "]
-            })
-          )
-        )
+        }, tag)
       })
+    )
+  )
+}
+
+Views.Control = function(item) {
+  return h("div", { class: "control" },
+    h("a", { href: "#/edit/" + item.uid, class: "edit" }, "edit"),
+    h("span", {
+      onclick: function() {
+        if (confirm("Are you sure to delete \"" + item.name + "\"")) {
+          firebase.database().ref("items/" + item.uid).remove()
+        }
+      }
+    }, "del")
   )
 }
 

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Title</title>
+  <style>
+    body {
+      font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
+      font-size: 14px;
+      color: #444;
+      margin: 0;
+    }
+    h2 {
+      font-size: 17px;
+      margin: 15px 0 10px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .container {
+      max-width: 360px;
+      padding: 15px;
+    }
+    form label span {
+      display: block;
+      float: left;
+      width: 50%;
+      text-align: right;
+      padding: 3px 5px 0 0;
+    }
+    form label input {
+      width: 100px;
+      padding: 3px 5px;
+      display: block;
+      border: 1px solid #c1c1c1;
+      margin-bottom: 5px;
+      font: inherit;
+      color: inherit;
+    }
+    .total div {
+      padding: 5px 5px 0 0;
+    }
+    .total div:first-child {
+      width: 50%;
+      text-align: right;
+      float: left;
+    }
+    canvas {
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+<script>
+function h(e,t){for(var n,r=[],a=[],o=arguments.length;o-- >2;)r[r.length]=arguments[o];for(;r.length;)if(Array.isArray(n=r.pop()))for(var o=n.length;o--;)r[r.length]=n[o];else null!=n&&n!==!0&&n!==!1&&("number"==typeof n&&(n+=""),a[a.length]=n);return"string"==typeof e?{tag:e,data:t||{},children:a}:e(t,a)}function app(e){function t(e,n,i){Object.keys(n||[]).map(function(l){var c=n[l],f=i?i+"."+l:l;"function"==typeof c?e[l]=function(e){var t=c(s,y,r("action",{name:f,data:e}).data,r);return null==t||"function"==typeof t.then?t:void a(s=o(s,r("update",t)),g)}:t(e[l]||(e[l]={}),c,f)})}function n(){a(s,g),r("loaded")}function r(e,t){return(p[e]||[]).map(function(e){var n=e(s,y,t,r);null!=n&&(t=n)}),t}function a(t,n){h=d(e.root||(e.root=document.body),h,v,v=r("render",n)(t,y))}function o(e,t){var n={};if("object"!=typeof t||Array.isArray(t))return t;for(var r in e)n[r]=e[r];for(var r in t)n[r]=t[r];return n}function i(e,t){if("string"==typeof e)var n=document.createTextNode(e);else{for(var n=(t=t||"svg"===e.tag)?document.createElementNS("http://www.w3.org/2000/svg",e.tag):document.createElement(e.tag),r=0;r<e.children.length;)n.appendChild(i(e.children[r++],t));for(var r in e.data)"oncreate"===r?e.data[r](n):l(n,r,e.data[r])}return n}function l(e,t,n,r){if("key"===t);else if("style"===t)for(var a in o(r,n=n||{}))e.style[a]=n[a]||"";else{try{e[t]=n}catch(i){}"function"!=typeof n&&(n?e.setAttribute(t,n):e.removeAttribute(t))}}function c(e,t,n){for(var r in o(t,n)){var a=n[r],i="value"===r||"checked"===r?e[r]:t[r];"onupdate"===r&&a?a(e):a!==i&&l(e,r,a,i)}}function f(e){return e&&(e=e.data)?e.key:void 0}function u(e,t,n){function r(){e.removeChild(t)}(n.data&&n.data.onremove||r)(t,r)}function d(e,t,n,r){if(null==n)t=e.insertBefore(i(r),t);else if(r.tag&&r.tag===n.tag){c(t,n.data,r.data);for(var a=r.children.length,o=n.children.length,l={},v=[],h={},s=0;o>s;s++){var g=t.childNodes[s];v[s]=g;var y=n.children[s],p=f(y);null!=p&&(l[p]=[g,y])}for(var s=0,m=0;a>m;){var g=v[s],y=n.children[s],b=r.children[m],p=f(y);if(h[p])s++;else{var k=f(b),A=l[k]||[];null==k?(null==p&&(d(t,g,y,b),m++),s++):(p===k?(d(t,A[0],A[1],b),s++):A[0]?(t.insertBefore(A[0],g),d(t,A[0],A[1],b)):d(t,g,null,b),m++,h[k]=b)}}for(;o>s;){var y=n.children[s],p=f(y);null==p&&u(t,v[s],y),s++}for(var s in l){var A=l[s],w=A[1];h[w.data.key]||u(t,A[0],w)}}else if(r!==n){var s=t;e.replaceChild(t=i(r),s)}return t}for(var v,h,s={},g=e.view,y={},p={},m=-1,b=[];m<b.length;m++){var k=b[m]?b[m](e):e;b=b.concat(k.mixins||[]),null!=k.state&&(s=o(s,k.state)),t(y,k.actions),Object.keys(k.events||[]).map(function(e){p[e]=(p[e]||[]).concat(k.events[e])})}"l"!==document.readyState[0]?n():addEventListener("DOMContentLoaded",n)}
+</script>
+<script>
+  app({
+    state: {
+      amount: 0,
+      apr: 0,
+      years: 0
+    },
+    actions: {
+      amount: (s, a, amount) => ({ amount: parseFloat(amount) || 0 }),
+      apr: (s, a, apr) => ({ apr: parseFloat(apr) || 0 }),
+      years: (s, a, years) => ({ years: parseFloat(years) || 0 })
+    },
+    view: (state, actions) => {
+      var principal = parseFloat(state.amount)
+      var interest = parseFloat(state.apr) / 100 / 12
+      var payments = parseFloat(state.years) * 12
+      var x = Math.pow(1 + interest, payments)
+      var monthly = (principal * x * interest) / (x - 1)
+      monthly = isFinite(monthly) ? monthly : 0
+      let canvas, ctx
+      return h("div", { class: "container"},
+        h("h2", null, "Введите данные займа"),
+        h("form", null,
+          h("label", null,
+            h("span", null, "Сумма кредита ($):"),
+            h("input", { oninput: e => actions.amount(e.target.value) })
+          ),
+          h("label", null,
+            h("span", null, "Годовой процент (%):"),
+            h("input", { oninput: e => actions.apr(e.target.value) })
+          ),
+          h("label", null,
+            h("span", null, "Период погашения (лет):"),
+            h("input", { oninput: e => actions.years(e.target.value) })
+          ),
+        ),
+        h("h2", null, "Приблизительные платежи:"),
+        h("div", null,
+          h("div", { class: "total" },
+            h("div", null, "Ежемесячный платеж:"),
+            h("div", null, "$" + (monthly).toFixed(2))
+          ),
+          h("div", { class: "total" },
+            h("div", null, "Общая сумма платежей:"),
+            h("div", null, "$" + (monthly * payments || 0).toFixed(2))
+          ),
+          h("div", { class: "total" },
+            h("div", null, "Общая сумма переплаты:"),
+            h("div", null, "$" + ((monthly*payments)-principal || 0).toFixed(2))
+          )
+        ),
+        h("canvas", {
+          width: 360,
+          height: 240,
+          oncreate(element) {
+            chart(element, element.getContext("2d"),
+              principal, interest, monthly, payments)
+          },
+          onupdate(element) {
+            chart(element, element.getContext("2d"),
+              principal, interest, monthly, payments)
+          }
+        })
+      )
+    }
+  })
+
+  function chart(canvas, ctx, principal, interest, monthly, payments) {
+    canvas.width = canvas.width
+    const width = canvas.width
+    const height = canvas.height
+    const paymentToX = n => n * width / payments
+    const amountToY = a => height - (a * height / (monthly * payments * 1.05))
+    ctx.moveTo(paymentToX(0), amountToY(0))
+    ctx.lineTo(paymentToX(payments), amountToY(monthly * payments))
+    ctx.lineTo(paymentToX(payments), amountToY(0))
+    ctx.closePath()
+    ctx.fillStyle = "#f88"
+    ctx.fill()
+    ctx.font = "12px 'Open Sans'"
+    ctx.fillText("Общие процентные платежи", 20, 20)
+    var equity = 0
+    ctx.beginPath()
+    ctx.moveTo(paymentToX(0), amountToY(0))
+    for (var p = 1; p <= payments; p++) {
+      var thisMonthsInterest = (principal-equity)*interest
+      equity += (monthly - thisMonthsInterest)
+      ctx.lineTo(paymentToX(p),amountToY(equity))
+    }
+    ctx.lineTo(paymentToX(payments), amountToY(0))
+    ctx.closePath()
+    ctx.fillStyle = "green"
+    ctx.fill();
+    ctx.fillText("Общий капитал", 20, 35)
+    var bal = principal
+    ctx.beginPath()
+    ctx.moveTo(paymentToX(0),amountToY(bal))
+    for (var p = 1; p <= payments; p++) {
+      var thisMonthsInterest = bal * interest
+      bal -= (monthly - thisMonthsInterest)
+      ctx.lineTo(paymentToX(p), amountToY(bal))
+    }
+    ctx.lineWidth = 3
+    ctx.stroke()
+    ctx.fillStyle = "black"
+    ctx.fillText("Кредитный баланс", 20, 50)
+    ctx.textAlign = "center"
+    var y = amountToY(0)
+    for (var year = 1; year * 12 <= payments; year++) {
+      var x = paymentToX(year * 12)
+      ctx.fillRect(x - 0.5, y - 3, 1, 3)
+      if (year == 1) ctx.fillText("Год", x, y - 5)
+      if (year % 5 == 0 && year * 12 !== payments)
+        ctx.fillText(String(year), x, y-5)
+    }
+    ctx.textAlign = "right"
+    ctx.textBaseline = "middle"
+    var ticks = [monthly * payments, principal]
+    var rightEdge = paymentToX(payments)
+    for (var i = 0; i < ticks.length; i++) {
+      var y = amountToY(ticks[i])
+      ctx.fillRect(rightEdge - 3, y - 0.5, 3, 1)
+      ctx.fillText(String(ticks[i].toFixed(0)), rightEdge-5, y)
+    }
+  }
+
+</script>
+</body>
+</html>
