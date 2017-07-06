@@ -1,122 +1,15 @@
 {
     "settings": {
         "created": "2017-06-14 14:10:27",
-        "updated": "2017-06-19 14:48:47"
+        "updated": "2017-06-30 17:05:40"
     },
     "items": [
         {
-            "id": "author",
-            "name": "Author",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-            "fields": [
-                {
-                    "name": "Name",
-                    "id": "name",
-                    "type": "string"
-                },
-                {
-                    "name": "Website",
-                    "id": "website",
-                    "type": "string"
-                },
-                {
-                    "name": "Profile Photo",
-                    "id": "profile_photo",
-                    "type": "media"
-                },
-                {
-                    "name": "Biography",
-                    "id": "biography",
-                    "type": "text"
-                },
-                {
-                    "name": "Created Entries",
-                    "id": "created_entries",
-                    "type": "reference"
-                },
-                {
-                    "name": "Country",
-                    "id": "country",
-                    "type": "reference"
-                }
-            ],
-            "uid": "uid594297d613eaf"
-        },
-        {
-            "id": "category",
-            "name": "Category",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-            "fields": [
-                {
-                    "name": "Title",
-                    "id": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "Short description",
-                    "id": "short_description",
-                    "type": "text"
-                },
-                {
-                    "name": "Icon",
-                    "id": "icon",
-                    "type": "media"
-                }
-            ],
-            "uid": "uid5942ae6fbb9fa"
-        },
-        {
-            "id": "post",
-            "name": "Post",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-            "fields": [
-                {
-                    "name": "Title",
-                    "id": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "Slug",
-                    "id": "slug",
-                    "type": "string"
-                },
-                {
-                    "name": "Author",
-                    "id": "author",
-                    "type": "reference"
-                },
-                {
-                    "name": "Body",
-                    "id": "body",
-                    "type": "text"
-                },
-                {
-                    "name": "Category",
-                    "id": "category",
-                    "type": "reference"
-                },
-                {
-                    "name": "Tags",
-                    "id": "tags",
-                    "type": "string"
-                },
-                {
-                    "name": "Featured image",
-                    "id": "featured_image",
-                    "type": "media"
-                },
-                {
-                    "name": "Date",
-                    "id": "date",
-                    "type": "string"
-                },
-                {
-                    "name": "Comments",
-                    "id": "comments",
-                    "type": "boolean"
-                }
-            ],
-            "uid": "uid5942ae8083b49"
+            "id": "test",
+            "name": "Test",
+            "description": "Lorem ipsum dolor",
+            "fields": [],
+            "uid": "uid59565ab4c1410"
         }
     ]
 }

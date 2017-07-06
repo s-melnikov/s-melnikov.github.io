@@ -32,3 +32,6 @@ a.card:hover {
   text-decoration: none;
   border-color: #dee3f1;
 }
+.field-types label [type=radio] {
+  display: none;
+}
