@@ -34,8 +34,8 @@ a:hover, .link:hover {
   border-bottom: 1px solid #eee
 }
 .name {
-  color: #28d;
-  font-size: 21px;
+  color: #1467ad;
+  font-size: 18px;
 }
 .name a {
   text-decoration: none;
@@ -48,8 +48,7 @@ a:hover, .link:hover {
 }
 .desc {
   font-size: 12px;
-  font-style: italic;
-  color: #666
+  color: #444
 }
 .tags span {
   font-size: 12px;

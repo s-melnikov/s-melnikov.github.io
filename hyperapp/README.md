@@ -164,7 +164,7 @@ h("main", { id: "app" }, "Hi.")
 
 # Hyperx
 
-## About Hyperx
+## Про Hyperx
 
 [Hyperx](https://github.com/substack/hyperx) представляет собой стандартную фабрику, совместимую с ES6 [тегированными шаблонными строками](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals). Это чистая альтернатива [JSX]
 
@@ -183,11 +183,11 @@ const main = html`
 
 ## Установка
 
-We'll use [Hyperxify](https://github.com/substack/hyperxify) to transform Hyperx into [h()](/docs/h.md#h) function calls and a bundler to create a single file we can deliver to the browser.
+Мы будем использовать [Hyperxify](https://github.com/substack/hyperxify) для трансформации Hyperx в вызов функции [h()](/docs/h.md#h) и пакет для создания одного файла, который мы можем запустить в браузере.
 
-The ES6 import syntax is incompatible with Hyperxify, so we'll use the Node.js require function.
+Синтаксис импорта ЕС6 `import` несовместим с Hyperxify, поэтому мы будем использовать Node.js функцию `require`.
 
-In a new directory, create an <samp>index.html</samp> file:
+В новом каталоге создайте файл `index.html`:
 
 ```html
 <!doctype html>
@@ -200,7 +200,7 @@ In a new directory, create an <samp>index.html</samp> file:
 </html>
 ```
 
-And and <samp>index.js</samp> file:
+И `index.js` файл:
 
 ```js
 const { h, app } = require("hyperapp")
@@ -213,14 +213,16 @@ app({
 })
 ```
 
-Install dependencies:
-<pre>
+Установите зависимости:
+
+```
 npm i -S <a href="https://www.npmjs.com/package/hyperapp">hyperapp</a>
-</pre>
+```
 
 ### [Browserify](https://gist.github.com/jbucaran/48c1edb4fb0ea1aa5415b6686cc7fb45 "Get this gist")
 
-Install development dependencies:
+Установите зависимости:
+
 <pre>
 npm i -D \
   <a href="https://www.npmjs.com/package/browserify">browserify</a> \
@@ -232,7 +234,7 @@ npm i -D \
   <a href="https://www.npmjs.com/package/uglify-js">uglify-js</a>
 </pre>
 
-Create a <samp>.babelrc</samp> file:
+Создайте файл `.babelrc`:
 
 ```
 {
@@ -240,7 +242,8 @@ Create a <samp>.babelrc</samp> file:
 }
 ```
 
-Bundle the application:
+Сборка приложения:
+
 <pre>
 $(<a href="https://docs.npmjs.com/cli/bin">npm bin</a>)/browserify \
   -t hyperxify \
@@ -251,7 +254,8 @@ $(<a href="https://docs.npmjs.com/cli/bin">npm bin</a>)/browserify \
 
 ### [Webpack](https://gist.github.com/jbucaran/c6a6bdb5383a985cec6b0ae4ebe5a4b1 "Get this gist")
 
-Install development dependencies:
+Установите зависимости:
+
 <pre>
 npm i -D \
   <a href="https://www.npmjs.com/package/hyperx">hyperx</a> \
@@ -263,14 +267,15 @@ npm i -D \
   <a href="https://www.npmjs.com/package/babel-preset-es2015">babel-preset-es2015</a>
 </pre>
 
-Create a <samp>.babelrc</samp> file:
+Создайте файл `.babelrc`:
+
 ```js
 {
   "presets": ["es2015"]
 }
 ```
 
-Create a <samp>webpack.config.js</samp> file:
+Создайте файл `webpack.config.js`:
 
 ```jsx
 module.exports = {
@@ -290,14 +295,15 @@ module.exports = {
 }
 ```
 
-Bundle the application:
-<pre>
+Сборка приложения:
+
+```
 $(<a href="https://docs.npmjs.com/cli/bin">npm bin</a>)/webpack -p
-</pre>
+```
 
 ### [Rollup](https://gist.github.com/jbucaran/fac2c3de24e5171596fb189f9c1feb8e "Get this gist")
 
-Install development dependencies:
+Установите зависимости:
 
 <pre>
 npm i -D \
@@ -312,8 +318,7 @@ npm i -D \
   <a href="https://www.npmjs.com/package/rollup-plugin-uglify">rollup-plugin-uglify</a>
 </pre>
 
-
-Create a <samp>rollup.config.js</samp> file:
+Создайте файл `rollup.config.js`:
 
 ```jsx
 import buble from "rollup-plugin-buble"
@@ -337,14 +342,15 @@ export default {
 }
 ```
 
-Bundle the application:
+Сборка приложения:
+
 <pre>
 $(<a href="https://docs.npmjs.com/cli/bin">npm bin</a>)/rollup -cf iife -i index.js -o bundle.js
 </pre>
 
 # JSX
 
-## About JSX
+## Про JSX
 
 [JSX](https://facebook.github.io/jsx/) is an XML-like syntax extension to ECMAScript. It allows you to mix HTML and JavaScript.
 

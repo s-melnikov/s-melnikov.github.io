@@ -14,6 +14,7 @@ firebase.initializeApp({
 
 var state = {
   items: [],
+  tags: [],
   input: "",
   user: null
 }
@@ -65,6 +66,7 @@ Views.Search = function(state, actions) {
   return h("input", {
     type: "search",
     value: state.input,
+    placeholder: "Search...",
     oninput: function(e) {
       actions.input(e.target.value)
     }
