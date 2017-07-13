@@ -2,39 +2,92 @@
 <html>
 	<head>
 		<title>Sergey Melnikov</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+			body {
+			  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+			  line-height: 1.4;
+			  font-size: 16px;
+			  color: #fff;
+			  margin: 0;
+			  padding: 0;
+			  text-align: center;
+			  background-color: #282C34;
+			}
+			h1 {
+				font-size: 48px;
+				color: #fff;
+				margin-top: 0;
+			}
+			a {
+			  color: #bbb;
+			  text-decoration: none;
+			}
+			a:hover  {
+			  color: #fff;
+			}
+			nav {
+				display: block;
+			}
+			nav a {
+				display: inline-block;
+			  padding: 5px;
+			  border: 1px solid rgba(255, 255, 255, 0.3);
+			  text-align: center;
+			  width: 90px;
+			}
+			nav a:hover {
+			  border: 1px solid rgba(255, 255, 255, 0.7);
+			}
+			.secondary {
+				width: 320px;
+				font-size: 14px;
+				margin: 20px auto 0;
+			}
+			.secondary a {
+				border: none;
+				width: auto;
+			}
+			.secondary a:hover {
+				border: none;
+			}
+			.container {
+				padding: 15px;
+				position: absolute;
+				width: 100%;
+				top: 50%;
+				margin-top: -180px;
+			}
+		</style>
 	</head>
 	<body class="loading">
-		<div id="wrapper">
-			<div id="bg"></div>
-			<div id="overlay"></div>
-			<div id="main">
-
-				<header id="header">
-					<h1>Sergey Melnikov</h1>
-					<p>Front-end web developer &nbsp;&bull;&nbsp; JavaScript ninja</p>
-					<nav>
-						<ul>
-							<li><a href="https://www.facebook.com/mlnkv87" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-							<li><a href="https://gitlab.com/s-melnikov" class="icon fa-github"><span class="label">Github</span></a></li>
-							<li><a href="https://gitlab.com/mlnkv" class="icon fa-gitlab"><span class="label">Gitlab</span></a></li>
-							<li><a href="mailto:mlnkv87@gmail.com" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
-						</ul>
-					</nav>
-				</header>
-
-				<footer id="footer">
-					<span class="copyright">&copy; Untitled. Design: <a href="http://html5up.net">HTML5 UP</a>.</span>
-				</footer>
-
-			</div>
+		<div class="container">
+			<h1>Sergey Melnikov</h1>
+			<p>Web developer &nbsp;&bull;&nbsp; JavaScript ninja</p>
+			<nav>
+				<a href="https://www.facebook.com/mlnkv87">Facebook</a>
+				<a href="https://gitlab.com/s-melnikov">Github</a>
+				<a href="https://gitlab.com/mlnkv">Gitlab</a>
+				<a href="mailto:mlnkv87@gmail.com">Email</a>
+			</nav>
+			<nav class="secondary">
+				<a href="blog/">Blog</a>
+				<a href="microjs/">MicroJS</a>
+				<a href="fiddle/">Fiddle</a>
+				<a href="giffy/">Giffy</a>
+				<a href="hn/">HN</a>
+				<a href="hyperapp/">Hyperapp</a>
+				<a href="jquery-tricks/">jQuery Tricks</a>
+				<a href="keeweb/">KeeWeb</a>
+				<a href="site-viewer/">Site Viewer</a>
+				<a href="smart-questions/">Smart Questions</a>
+				<a href="todos/">Todos</a>
+				<a href="game-engine/">Game Engine</a>
+			</nav>
 		</div>
-		<script>
-			window.onload = function() { document.body.className = ''; }
-			window.ontouchmove = function() { return false; }
-			window.onorientationchange = function() { document.body.scrollTop = 0; }
-		</script>
 	</body>
 </html>

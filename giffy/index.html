@@ -19,10 +19,9 @@
 </head>
 <body>
 
-<script src="https://unpkg.com/hyperapp"></script>
+<script src="https://unpkg.com/hyperapp@0.10.0"></script>
 <script>
 const { h, app } = hyperapp
-const url = `//api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=${text}`
 
 function debounce(func, wait, immediate) {
   var timeout
@@ -46,35 +45,34 @@ var request = debounce(function(actions, text) {
     .then(resp => resp.json())
     .then(({ data }) => {
       actions.toggleFetching()
-      console.log(data);
       data[0] && actions.set(data)
     })
 }, 500)
 
 app({
-  model: {
+  state: {
     data: [],
     isFetching: false
   },
   actions: {
-    search: (model, { target }, actions) => {
+    search: (state, actions, { target }) => {
       const text = target.value
-      if (!model.isFetching && text.length > 2) {
+      if (!state.isFetching && text.length > 2) {
         request(actions, text)
       }
     },
-    set: (_, data) => ({ data }),
-    toggleFetching: model => ({ isFetching: !model.isFetching })
+    set: (state, actions, data) => ({ data }),
+    toggleFetching: state => ({ isFetching: !state.isFetching })
   },
-  view: (model, actions) =>
+  view: (state, actions) =>
     h("div", null,
       h("input", {
         type: "text",
         placeholder: "Type to search...",
-        onKeyUp: actions.search
+        onkeyup: actions.search
       }),
       h("div", null,
-        model.data.map(i => h("div", null,
+        state.data.map(i => h("div", null,
           h("img", {
             src: i.images.original.url
           })
