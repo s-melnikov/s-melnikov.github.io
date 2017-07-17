@@ -70,8 +70,7 @@ Views.ItemsList = (state, actions) => {
       h("div", { "class": "item loader" }, h("span"))
     )
   }
-  return h("div",
-    { "class": "item-list " + state.params[0] + "-list" },
+  return h("div", { "class": "item-list " + state.params[0] + "-list" },
     state.stories.map(story => {
       if (!story) return false;
       if (state.type === "user") {
@@ -82,7 +81,7 @@ Views.ItemsList = (state, actions) => {
     state.stories.length && (page * PER_PAGE) < state.ids.length ?
       h('div', {
         'class': 'item more',
-      }, h("a", { href: "#/" + state.type + "/" + (1 + page)}, "More..."))
+      }, h("a", { href: "#/" + state.type + "/" + (page + 1)}, "More..."))
       : null
   )
 }
@@ -152,7 +151,7 @@ app({
   state: {
     params: [],
     type: null,
-    page: 1,
+    page: null,
     loading: true,
     ids: [],
     stories: []
