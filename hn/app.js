@@ -71,13 +71,7 @@ Views.ItemsList = (state, actions) => {
     )
   }
   return h("div", { "class": "item-list " + state.params[0] + "-list" },
-    state.stories.map(story => {
-      if (!story) return false;
-      if (state.type === "user") {
-        return Views.User(story)
-      }
-      return Views.Story(story)
-    }),
+    state.stories.map(story => Views.Item(story)),
     state.stories.length && (page * PER_PAGE) < state.ids.length ?
       h('div', {
         'class': 'item more',
@@ -86,6 +80,16 @@ Views.ItemsList = (state, actions) => {
   )
 }
 
+Views.Item = story => {
+  if (!story || story.deleted) return false;
+  switch (story.type) {
+    case "user":
+      return Views.User(story)
+      break
+    default:
+      return Views.Story(story)
+  }
+}
 
 Views.Story = story => h("div", {
     "class": "item item-" + story.type,

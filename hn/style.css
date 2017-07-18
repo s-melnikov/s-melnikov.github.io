@@ -16,6 +16,8 @@ body {
   max-width: 800px;
   padding: 0 15px;
   margin: auto;
+  overflow: auto;
+  white-space: nowrap;
 }
 a {
   color: #999;
@@ -145,14 +147,5 @@ table td {
 @media (max-width: 800px) {
   header {
     text-align: center;
-  }
-  .item-list .item .score {
-    font-size: 1em;
-    width: 32px;
-    margin-right: 7px;
-    height: 32px;
-    margin-top: 20px;
-  }
-  .item-list .item {
   }
 }
