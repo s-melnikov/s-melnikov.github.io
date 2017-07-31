@@ -1,22 +1,18 @@
 "use strict"
-
-firebase.initializeApp({
-  databaseURL: "https://hacker-news.firebaseio.com/"
-})
-var now = Date.now()
-var { h, app } = hyperapp
-var PER_PAGE = 20
-var db = firebase.database().ref("/v0")
-var types = ["top", "new", "best", "show", "ask", "job"]
-
-
-// Utils
-
-var parser = document.createElement("a")
-
-var domain = url => (parser.href = url) && parser.hostname
-
-var fromNow = (time, between) => {
+const now = Date.now()
+const { h, app } = hyperapp
+const pp = 20
+const ttl = 1000 * 60 * 15
+const db = firebase.database().ref("/v0")
+const types = ["top", "new", "best", "show", "ask", "job"]
+let cache = {
+  stories: {},
+  users: {}
+}
+const parser = document.createElement("a")
+const domain = url => (parser.href = url) && parser.hostname
+const capitalize = str => str[0].toUpperCase() + str.slice(1)
+const fromNow = (time, between) => {
   between = Date.now() / 1000 - Number(time)
   if (between < 3600) {
     return ~~(between / 60) + " minutes"
@@ -26,74 +22,67 @@ var fromNow = (time, between) => {
     return ~~(between / 86400) + " days"
   }
 }
-
-var capitalize = str => str[0].toUpperCase() + str.slice(1)
-
-var getStories = (items, callback, result = []) => {
-  items.map(item => db.child("item/" + item).once("value", snapshot => {
-    result.push(snapshot.val())
-    if (result.length === items.length) {
-      callback(result)
+const fetchItems = ids => {
+  return Promise.all(ids.map(id => new Promise(resolve => {
+      let item = cache[id]
+      if (item && item._timestamp + ttl > Date.now()) {
+        resolve(item)
+      } else {
+        db.child("item/" + id).once("value", snapshot => {
+          let item = snapshot.val()
+          if (item) {
+            item._timestamp = Date.now()
+            cache[item.id] = item
+          }
+          resolve(item)
+        })
+      }
+    })
+  ))
+}
+const Router = (state, actions, routes) => {
+  return (routes[state.type] || routes["*"])(state, actions)
+}
+const MainView = (state, actions) => h("div", { id: "app" },
+  h("header", null,
+    h("div", { "class": "container" },
+      types.map(type => h("a", {
+          href: "#/" + type,
+          "class": type == state.type ? "active" : ""
+        }, capitalize(type))
+      )
+    )
+  ),
+  Router(state, actions, routes)
+)
+const ListView = type => {
+  return (state, actions) => {
+    if (state.loading) {
+      return h("div", { "class": "items-list" },
+        h("div", { "class": "item loader" }, h("span"))
+      )
     }
-  }))
-}
-
-// Views
-
-var Views = {}
-
-Views.Layout = (state, actions) => h("div", { id: "app" },
-  Views.Menu(state, actions),
-  Views.ItemsList(state, actions)
-)
-
-Views.Menu = (state, actions) => h("header", null,
-  h("div", { "class": "container" },
-    types.map(type => h("a", {
-        href: "#/" + type,
-        "class": type === state.type ? "active" : ""
-      }, capitalize(type))
-    )
-  )
-)
-
-Views.ItemsList = (state, actions) => {
-  var page = +state.params[1] || 1
-  if (state.type !== state.params[0]) {
-    actions.setType(state.params[0])
-    return h("div", { "class": "item-list" },
-      h("div", { "class": "item loader" }, h("span"))
-    )
-  } else if (state.page !== page) {
-    actions.setPage(page)
-    return h("div", { "class": "item-list" },
-      h("div", { "class": "item loader" }, h("span"))
+    return h("div", { "class": "items-list" },
+      state.items.map(item => {
+        switch (type) {
+          case "user":
+            return UserView(item)
+            break;
+          default:
+            return StoryView(item)
+            break;
+        }
+      }),
+      h("div", { "class": "item more" },
+        h("a", { href: "#/" + state.type + "/" + ((+state.params[0] || 1) + 1) }, "More...")
+      )
     )
   }
-  return h("div", { "class": "item-list " + state.params[0] + "-list" },
-    state.stories.map(story => Views.Item(story)),
-    state.stories.length && (page * PER_PAGE) < state.ids.length ?
-      h('div', {
-        'class': 'item more',
-      }, h("a", { href: "#/" + state.type + "/" + (page + 1)}, "More..."))
-      : null
-  )
 }
-
-Views.Item = story => {
-  if (!story || story.deleted) return false;
-  switch (story.type) {
-    case "user":
-      return Views.User(story)
-      break
-    default:
-      return Views.Story(story)
-  }
-}
-
-Views.Story = story => h("div", {
-    "class": "item item-" + story.type,
-    onclick: () => console.log(story)
+const StoryView = story => h("div", {
+    key: story.id,
+    "class": "item item-" + story.type + " id-" + story.id,
+    onclick: () => { console.log(story) }
   },
   h("span", { "class": "score" }, story.score),
   h("div", { "class": "inner" },
@@ -110,7 +99,7 @@ Views.Story = story => h("div", {
     ),
     h("div", { "class": "info" },
       "by ",
-      h("a", { href: "#!/user/" + story.by }, story.by),
+      h("a", { href: "#/user/" + story.by }, story.by),
       " ",
       fromNow(story.time),
       " ago | ",
@@ -119,74 +108,103 @@ Views.Story = story => h("div", {
   )
 )
 
-Views.User = (item, state, actions) => h("div",
-  { "class": "item item-user" },
-  h("div", { "class": "user-id" }, item.id),
-  h("table", null,
-    h("tbody", null,
-      h("tr", null,
-        h("td", null, "Karma:"),
-        h("td", null, item.karma)
-      ),
-      h("tr", null,
-        h("td", null, "Created:"),
-        h("td", null, new Date(item.created * 1000).toLocaleString())
-      ),
-      h("tr", null,
-        h("td", null, "About:"),
-        h("td", { innerHTML: item.about || "[no info]" })
-      ),
-      h("tr", null,
-        h("td"),
-        h("td", null,
-          h("a", { href: "#!/user/submissions/" + item.id }, "submissions"),
-          " | ",
-          h("a", { href: "#!/user/comments/" + item.id }, "comments")
+const UserView = user => {
+  return h("div", { "class": "item item-user" },
+    h("table", null,
+      h("tbody", null,
+        h("tr", null,
+          h("td"),
+          h("td", null,
+            h("div", { "class": "user-id" }, user.id)
+          )
+        ),
+        h("tr", null,
+          h("td", null, "Karma:"),
+          h("td", null, user.karma)
+        ),
+        h("tr", null,
+          h("td", null, "Created:"),
+          h("td", null, new Date(user.created * 1000).toLocaleString())
+        ),
+        h("tr", null,
+          h("td", null, "About:"),
+          h("td", { innerHTML: user.about || "[no info]" })
+        ),
+        h("tr", null,
+          h("td"),
+          h("td", null,
+            h("a", {
+              href: "//news.ycombinator.com/submitted?id=" + user.id,
+              target: "_blank"
+            }, "submissions"),
+            h("a", {
+              href: "//news.ycombinator.com/threads?id=" + user.id,
+              target: "_blank"
+          }, "comments")
+          )
         )
       )
     )
   )
+}
+const ErrorView = () => h("div", { "class": "container" },
+  h("h2", null, "[404] Page not found.")
 )
-
-
-
+let routes = {
+  "user": ListView("user"),
+  "*": ErrorView
+}
+types.map(type => routes[type] = ListView(type))
 // Init
 app({
   state: {
-    params: [],
-    type: null,
-    page: null,
     loading: true,
+    type: null,
+    params: [],
+    page: 1,
     ids: [],
-    stories: []
+    items: []
   },
   actions: {
-    hashchange: (state, actions) => {
-      var params = location.hash.slice(2).split("/")
-      if (!params[0]) params = ["top"]
-      return { params }
+    hashchange(state, actions) {
+      scrollTo(0, 0)
+      let params = (location.hash.slice(2) || "top").split("/")
+      let type = params.shift()
+      let page = + params[0] || 1
+      if (type != state.type) {
+        actions.type(type)
+      } else if (page !== state.page) {
+        actions.page(page)
+      }
+      return { params, page }
     },
-    setType: (state, actions, type) => {
-      db.child(type + "stories").once("value", snapshot => {
-        actions.setIds(snapshot.val())
-      })
-      return { type, stories: [] }
+    type(state, actions, type) {
+      db.child(state.type + "stories").off()
+      switch (type) {
+        case "user":
+          db.child("user/" + params[0]).once("value", snapshot => {
+            actions.items([snapshot.val()])
+          })
+          break
+        default:
+          db.child(type + "stories").on("value", snapshot => {
+            actions.ids(snapshot.val())
+            actions.page(state.page)
+          })
+      }
+      return { type, loading: true }
     },
-    setPage: (state, actions, page) => {
-      var end = page * PER_PAGE
-      var start = end - PER_PAGE
-      getStories(state.ids.slice(start, end), stories => actions.setStories(stories))
-      return { page, stories: [] }
+    page(state, actions, page) {
+      let end = page * pp
+      let start = end - pp
+      fetchItems(state.ids.slice(start, end)).then(items => actions.items(items))
+      return { page, loading: true }
     },
-    setIds: (state, actions, ids) => {
-      var end = state.page * PER_PAGE
-      var start = end - PER_PAGE
-      getStories(ids.slice(start, end), stories => actions.setStories(stories))
+    ids(state, actions, ids) {
       return { ids }
     },
-    setStories: (state, actions, stories) => {
-      scrollTo(0, 0)
-      return { stories }
+    items(state, actions, items) {
+      return { items, loading: false }
     }
   },
   events: {
@@ -195,5 +213,5 @@ app({
       actions.hashchange()
     }
   },
-  view: Views.Layout
+  view: MainView
 })
