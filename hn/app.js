@@ -73,9 +73,9 @@ const ListView = type => {
             break;
         }
       }),
-      h("div", { "class": "item more" },
+      ((state.page * pp) < state.ids.length) ? h("div", { "class": "item more" },
         h("a", { href: "#/" + state.type + "/" + ((+state.params[0] || 1) + 1) }, "More...")
-      )
+      ) : null
     )
   }
 }
@@ -168,31 +168,27 @@ app({
   actions: {
     hashchange(state, actions) {
       scrollTo(0, 0)
-      let params = (location.hash.slice(2) || "top").split("/")
-      let type = params.shift()
-      let page = + params[0] || 1
+      let params = location.hash.slice(2).split("/")
+      let type = params.shift() || "top"
+      let page = parseInt(params[0]) || 1
       if (type != state.type) {
-        actions.type(type)
+        db.child(state.type + "stories").off()
+        switch (type) {
+          case "user":
+            db.child("user/" + state.params[0]).once("value", snapshot => {
+              actions.items([snapshot.val()])
+            })
+            break
+          default:
+            db.child(type + "stories").on("value", snapshot => {
+              actions.ids(snapshot.val())
+              actions.page(page)
+            })
+        }
       } else if (page !== state.page) {
         actions.page(page)
       }
-      return { params, page }
-    },
-    type(state, actions, type) {
-      db.child(state.type + "stories").off()
-      switch (type) {
-        case "user":
-          db.child("user/" + params[0]).once("value", snapshot => {
-            actions.items([snapshot.val()])
-          })
-          break
-        default:
-          db.child(type + "stories").on("value", snapshot => {
-            actions.ids(snapshot.val())
-            actions.page(state.page)
-          })
-      }
-      return { type, loading: true }
+      return { params, type }
     },
     page(state, actions, page) {
       let end = page * pp
