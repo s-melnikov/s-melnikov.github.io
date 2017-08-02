@@ -1,7 +1,7 @@
 "use strict"
 const now = Date.now()
 const { h, app } = hyperapp
-const pp = 20
+const pp = 30
 const ttl = 1000 * 60 * 15
 const db = firebase.database().ref("/v0")
 const types = ["top", "new", "best", "show", "ask", "job"]
@@ -12,6 +12,7 @@ let cache = {
 const parser = document.createElement("a")
 const domain = url => (parser.href = url) && parser.hostname
 const capitalize = str => str[0].toUpperCase() + str.slice(1)
+const log = location.search.indexOf("debug") > 0 ? console.log.bind(console) : () => {}
 const fromNow = (time, between) => {
   between = Date.now() / 1000 - Number(time)
   if (between < 3600) {
@@ -63,13 +64,14 @@ const ListView = type => {
       )
     }
     return h("div", { "class": "items-list" },
-      state.items.map(item => {
+      state.items.map((item, i) => {
+        if (!item) return null;
         switch (type) {
           case "user":
             return UserView(item)
             break;
           default:
-            return StoryView(item)
+            return StoryView(item, i)
             break;
         }
       }),
@@ -79,10 +81,10 @@ const ListView = type => {
     )
   }
 }
-const StoryView = story => h("div", {
+const StoryView = (story, i) => h("div", {
     key: story.id,
     "class": "item item-" + story.type + " id-" + story.id,
-    onclick: () => { console.log(story) }
+    onclick: () => { log(story) }
   },
   h("span", { "class": "score" }, story.score),
   h("div", { "class": "inner" },
@@ -167,6 +169,7 @@ app({
   },
   actions: {
     hashchange(state, actions) {
+      log("actions.hashchange()", location.hash)
       scrollTo(0, 0)
       let params = location.hash.slice(2).split("/")
       let type = params.shift() || "top"
@@ -174,6 +177,11 @@ app({
       if (type != state.type) {
         db.child(state.type + "stories").off()
         switch (type) {
+          case "submitted":
+            /*db.child("user/" + state.params[0]).once("value", snapshot => {
+              actions.items([snapshot.val()])
+            })*/
+            break
           case "user":
             db.child("user/" + state.params[0]).once("value", snapshot => {
               actions.items([snapshot.val()])
@@ -191,15 +199,18 @@ app({
       return { params, type }
     },
     page(state, actions, page) {
+      log("actions.page()", page)
       let end = page * pp
       let start = end - pp
       fetchItems(state.ids.slice(start, end)).then(items => actions.items(items))
       return { page, loading: true }
     },
     ids(state, actions, ids) {
+      log("actions.ids()", ids)
       return { ids }
     },
     items(state, actions, items) {
+      log("actions.items()", items)
       return { items, loading: false }
     }
   },

@@ -60,19 +60,19 @@ header a:hover {
   max-width: 800px;
   margin: 15px auto;
 }
-.items-list .item {
+.item {
   background-color: #fff;
   padding: 9px 5px 10px 40px;
 }
-.items-list .item:after {
+.item:after {
   content: "";
   display: table;
   clear: both;
 }
-.items-list .item:not(:last-child) {
+.item:not(:last-child) {
   border-bottom: 1px solid #f5f5f5;
 }
-.items-list .item .score {
+.item .score {
   position: absolute;
   top: 50%;
   margin-top: -10px;
@@ -83,41 +83,41 @@ header a:hover {
   text-align: center;
   width: 35px;
 }
-.items-list .item .inner {
+.item .inner {
   overflow: hidden;
 }
-.items-list .item .title a {
+.item .title a {
   color: #58c;
 }
-.items-list .item .title a:hover {
+.item .title a:hover {
   color: #247;
 }
-.items-list .item .title a:visited {
+.item .title a:visited {
   color: #777;
 }
-.items-list .item .title a:visited:hover {
+.item .title a:visited:hover {
   color: #555;
 }
-.items-list .item .host,
-.items-list .item .info {
+.item .title .host,
+.item .info {
   color: #999;
   font-size: 12px;
 }
-.items-list .item.more {
+.item.more {
   padding: 15px 0 15px 40px;
 }
-.items-list .item.more a {
+.item.more a {
   color: #f60;
 }
-.items-list .item.more a:hover {
+.item.more a:hover {
   color: #777;
 }
-.items-list .item.loader {
+.item.loader {
   height: 50px;
 }
-.items-list .item.loader span,
-.items-list .item.loader span::before,
-.items-list .item.loader span::after {
+.item.loader span,
+.item.loader span::before,
+.item.loader span::after {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -128,16 +128,16 @@ header a:hover {
   background-color: rgba(255, 102, 0, 1);
   animation: blink .6s infinite linear alternate;
 }
-.items-list .item.loader span::before,
-.items-list .item.loader span::after {
+.item.loader span::before,
+.item.loader span::after {
   top: 4px;
   content: "";
 }
-.items-list .item.loader span::before {
+.item.loader span::before {
   animation-delay: .2s;
   left: 18px;
 }
-.items-list .item.loader span::after {
+.item.loader span::after {
   animation-delay: .4s;
   left: 32px;
 }
