@@ -183,7 +183,8 @@ app({
             })*/
             break
           case "user":
-            db.child("user/" + state.params[0]).once("value", snapshot => {
+            let user =  params[0]
+            db.child("user/" + user).once("value", snapshot => {
               actions.items([snapshot.val()])
             })
             break
@@ -196,7 +197,7 @@ app({
       } else if (page !== state.page) {
         actions.page(page)
       }
-      return { params, type }
+      return { params, type, items: [] }
     },
     page(state, actions, page) {
       log("actions.page()", page)
