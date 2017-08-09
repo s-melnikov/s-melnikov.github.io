@@ -64,14 +64,17 @@ const ListView = type => {
       )
     }
     return h("div", { "class": "items-list" },
-      state.items.map((item, i) => {
+      state.items.map(item => {
         if (!item) return null;
         switch (type) {
           case "user":
             return UserView(item)
             break;
+          case "item":
+            return ItemView(item)
+            break;
           default:
-            return StoryView(item, i)
+            return StoryView(item)
             break;
         }
       }),
@@ -81,7 +84,7 @@ const ListView = type => {
     )
   }
 }
-const StoryView = (story, i) => h("div", {
+const StoryView = story => h("div", {
     key: story.id,
     "class": "item item-" + story.type + " id-" + story.id,
     onclick: () => { log(story) }
@@ -89,11 +92,11 @@ const StoryView = (story, i) => h("div", {
   h("span", { "class": "score" }, story.score),
   h("div", { "class": "inner" },
     h("div", { "class": "title" },
-      h("a", { href: story.url, target: "_blank" }, story.title),
+      h("a", { href: story.url || ("#/item/" + story.id), target: story.url ? "_blank" : "_self" }, story.title),
       " ",
-      h("a", {
+      story.url && h("a", {
           "class": "host",
-          href: "//" + domain(story.url),
+          href: story.url ? "//" + domain(story.url) : "#/item/" + story.id,
           target: "_blank"
         },
         "(" + domain(story.url) + ")"
@@ -149,11 +152,17 @@ const UserView = user => {
     )
   )
 }
+const ItemView = story => {
+  return h("div", { "class": "item" },
+    "!!!"
+  )
+}
 const ErrorView = () => h("div", { "class": "container" },
   h("h2", null, "[404] Page not found.")
 )
 let routes = {
   "user": ListView("user"),
+  "item": ListView("item"),
   "*": ErrorView
 }
 types.map(type => routes[type] = ListView(type))
@@ -177,14 +186,12 @@ app({
       if (type != state.type) {
         db.child(state.type + "stories").off()
         switch (type) {
-          case "submitted":
-            /*db.child("user/" + state.params[0]).once("value", snapshot => {
-              actions.items([snapshot.val()])
-            })*/
+          case "item":
             break
           case "user":
             let user =  params[0]
             db.child("user/" + user).once("value", snapshot => {
+              actions.ids([])
               actions.items([snapshot.val()])
             })
             break
