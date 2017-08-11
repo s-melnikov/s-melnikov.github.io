@@ -3,20 +3,77 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>API  Example</title>
-  <link rel="stylesheet" href="assets/css/spectre.css">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <style>
-  </style>
+  <title>API</title>
 </head>
 <body>
-  <div id="main"></div>
-  <script src="assets/js/libs/firebase.js"></script>
-  <script src="assets/js/libs/preact.dev.js"></script>
-  <script src="assets/js/libs/redux.js"></script>
-  <script src="assets/js/libs/router.js"></script>
-  <script src="assets/js/stores/alerts-store.js"></script>
-  <script src="assets/js/components.js"></script>
-  <script src="assets/js/app.js"></script>
+<script>
+
+var api = (function() {
+
+  var callbacks = {}
+  var settings = {
+    path: ""
+  }
+
+  function init() {
+
+  }
+
+  function get(path, cb) {
+    fetch(url)
+      .then(function(resp) {
+        return resp.json()
+      })
+      .then(function(json) {
+        console.log(json)
+      })
+  }
+
+  function on(event, cb) {
+    if (!callbacks[event]) callbacks[event] = []
+    callbacks[event].push(cb)
+  }
+
+  function off(event, cb) {
+    if (event === "*") {
+      return callbacks = {}
+    }
+    if (callbacks[event]) {
+      if (cb) {
+        var i = 0
+        while (i < callbacks[event].length) {
+          if (callbacks[event][i] === cb)
+            callbacks[event].splice(i, 1)
+          else i++
+        }
+      } else {
+        callbacks[event] = []
+      }
+    }
+  }
+
+  function trigger(event, data) {
+    (callbacks[event] || []).map(function(cb) { cb(data) });
+    (callbacks["*"] || []).map(function(cb) { cb(event, data) })
+  }
+
+  function setSettings(newSettings) {
+    Object.assign(settings, newSettings)
+  }
+
+  document.addEventListener("DOMContentLoaded", init)
+
+  return {
+    on: on,
+    off: off,
+    trigger: trigger,
+    settings: setSettings
+  }
+
+})()
+
+api.settings({ path: "/api" })
+
+</script>
 </body>
 </html>

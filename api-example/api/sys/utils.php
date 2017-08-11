@@ -6,20 +6,10 @@ function dd() {
   exit();
 }
 
-function auth_check() {
-  if (!session('user')) redirect(config('url') . 'signin', 302, true);
-}
-
-function base_url($path = '') {
-  return config('url') . $path;
-}
-
-function css($name = '') {
-  return base_url('assets/css/' . $name . '.css');
-}
-
-function js($name = '') {
-  return base_url('assets/js/' . $name . '.js');
+function check_auth() {
+  if (!session('user')) {
+    redirect(config('url') . 'signin', 302, true);
+  }
 }
 
 function request($name = null, $default = null) {

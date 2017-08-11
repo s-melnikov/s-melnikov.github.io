@@ -1,5 +1,8 @@
 <?php
 
+function save_sntry($name) {
+}
+
 class Collection {
 
   private $name = null;

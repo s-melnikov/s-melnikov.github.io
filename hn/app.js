@@ -89,26 +89,27 @@ const StoryView = story => h("div", {
     "class": "item item-" + story.type + " id-" + story.id,
     onclick: () => { log(story) }
   },
-  h("span", { "class": "score" }, story.score),
   h("div", { "class": "inner" },
     h("div", { "class": "title" },
       h("a", { href: story.url || ("#/item/" + story.id), target: story.url ? "_blank" : "_self" }, story.title),
-      " ",
-      story.url && h("a", {
-          "class": "host",
-          href: story.url ? "//" + domain(story.url) : "#/item/" + story.id,
-          target: "_blank"
-        },
-        "(" + domain(story.url) + ")"
-      )
     ),
     h("div", { "class": "info" },
+      story.score + " points",
       "by ",
       h("a", { href: "#/user/" + story.by }, story.by),
       " ",
       fromNow(story.time),
       " ago | ",
-      h("a", { href: "#" }, story.descendants ? (story.descendants + " comments") : "discuss")
+      h("a", { href: "#" }, story.descendants ? (story.descendants + " comments") : "discuss"),
+      story.url && [
+        " | ",
+        h("a", {
+            "class": "host",
+            href: story.url ? "//" + domain(story.url) : "#/item/" + story.id,
+            target: "_blank"
+          }, domain(story.url)
+        )
+      ]
     )
   )
 )
