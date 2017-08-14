@@ -13,9 +13,16 @@ define('SYS', ROOT . 'sys' . DS);
 define('DEBUG', true);
 define('JDB_STORAGE', 'storage' . DIRECTORY_SEPARATOR);
 
-require SYS . 'utils.php';
+require SYS . 'functions.php';
 require SYS . 'dispatch.php';
 require SYS . 'jdb.php';
 
-config(parse_ini_file(SYS . 'config.ini'));
+config("url", "/git/s-melnikov/api-example/api/");
 
+// map(["GET", "POST"], "/", function() {
+//   print json(response());
+// });
+
+// dispatch();
+
+print "Table [emploees] " . (jdb_exists("employees") ? "" : "not") . " exists";

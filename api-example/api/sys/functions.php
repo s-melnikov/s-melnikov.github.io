@@ -36,3 +36,15 @@ function request($name = null, $default = null) {
     return $result;
   }
 }
+
+function response($key = "*", $val = null) {
+
+  static $data = [];
+
+  if ($val) {
+    return $data[$key] = $val;
+  } else {
+    return $key === "*" ? $data : $data[$key];
+  }
+
+}

@@ -8,15 +8,11 @@
 <body>
 <script>
 
-var api = (function() {
+var db = (function() {
 
   var callbacks = {}
   var settings = {
     path: ""
-  }
-
-  function init() {
-
   }
 
   function get(path, cb) {
@@ -72,7 +68,7 @@ var api = (function() {
 
 })()
 
-api.settings({ path: "/api" })
+db.settings({ path: "/api" })
 
 </script>
 </body>
