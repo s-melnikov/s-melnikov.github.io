@@ -1,5 +1,8 @@
 <?php
 
+// set default timezone
+date_default_timezone_set('UTC');
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -17,12 +20,4 @@ require SYS . 'functions.php';
 require SYS . 'dispatch.php';
 require SYS . 'jdb.php';
 
-config("url", "/git/s-melnikov/api-example/api/");
-
-// map(["GET", "POST"], "/", function() {
-//   print json(response());
-// });
-
-// dispatch();
-
-print "Table [emploees] " . (jdb_exists("employees") ? "" : "not") . " exists";
+config('url', str_replace(DS, '/', str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
