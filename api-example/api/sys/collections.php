@@ -1,6 +1,21 @@
 <?php
 
-function save_sntry($name) {
+function create_collection($name, $schema) {
+    if (!is_string($name))
+      throw new Exception("Collection name must be a string.", 500);
+
+    if (!is_array($schema))
+      throw new Exception("Store schema must be an array.", 500);
+
+    if (JDB::exists($name))
+      throw new Exception("Store with name '{$name}' is alredy exists.");
+
+    // if (!JDB::create($name)) return false;
+
+    // JDB::settings($name, 'shema', $schema);
+
+    // return true;
+
 }
 
 class Collection {

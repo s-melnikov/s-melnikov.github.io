@@ -1,0 +1,46 @@
+{
+    "settings": {
+        "created": "2017-08-16 10:16:47",
+        "updated": "2017-08-16 11:03:44"
+    },
+    "items": [
+        {
+            "name": "employees",
+            "title": "Employees",
+            "fields": [
+                {
+                    "name": "first_name",
+                    "title": "First name",
+                    "type": "text",
+                    "default": "",
+                    "required": true
+                },
+                {
+                    "name": "last_name",
+                    "title": "Last name",
+                    "type": "text",
+                    "default": "",
+                    "required": true
+                },
+                {
+                    "name": "email",
+                    "title": "Email",
+                    "type": "text",
+                    "default": "",
+                    "required": true
+                },
+                {
+                    "name": "gender",
+                    "title": "Gender",
+                    "type": "select",
+                    "default": "",
+                    "options": [
+                        "male",
+                        "femail"
+                    ]
+                }
+            ],
+            "uid": "uid5994269089254"
+        }
+    ]
+}
