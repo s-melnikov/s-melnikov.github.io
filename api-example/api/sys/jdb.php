@@ -135,7 +135,7 @@ class JDB {
     if (func_num_args() === 1) {
 
       if (is_callable($update)) {
-        $this->data['items'] = array_map($update, $this->data['items']);
+        array_walk($this->data['items'], $update);
         $counter = count($this->data['items']);
       } else {
         foreach ($this->data['items'] as &$item) {
@@ -180,23 +180,24 @@ class JDB {
     return 0;
   }
 
-  public function delete($name, $where = null) {
+  /**
+   * Delete items from collection
+   */
+  public function delete($where = null) {
 
-    $data = jdb_get_file_data($name);
-
-    if (func_num_args() === 2) {
+    if ($where) {
 
       if (is_callable($where)) {
 
         $new_items = [];
 
-        foreach ($data['items'] as $item) {
+        foreach ($this->data['items'] as $item) {
           if (!$where($item)) {
             $new_items[] = $item;
           }
         }
 
-        $data['items'] = $new_items;
+        $this->data['items'] = $new_items;
 
       } else {
 
@@ -204,7 +205,7 @@ class JDB {
           $where = ['uid' => $where];
         }
 
-        foreach ($data['items'] as $item_key => $item_value) {
+        foreach ($this->data['items'] as $item_key => $item_value) {
 
           $next = false;
 
@@ -216,23 +217,23 @@ class JDB {
 
           if ($next) continue;
 
-          unset($data['items'][$item_key]);
+          unset($this->data['items'][$item_key]);
         }
 
       }
 
-      $data['items'] = array_values($data['items']);
+      $this->data['items'] = array_values($this->data['items']);
 
     } else {
 
-      $data['items'] = [];
+      $this->data['items'] = [];
     }
 
-    return jdb_set_file_data($name, $data);
+    return self::save_data($this->name, $this->data);
   }
 
   /**
-   *
+   * Get data from collection
    */
   public function get_data() {
 
@@ -251,6 +252,9 @@ class JDB {
     }
   }
 
+  /**
+   * Save collection to file
+   */
   static function save_data($name, $data) {
 
     if (!is_string($name)) {
@@ -293,7 +297,7 @@ class JDB {
   }
 
   /**
-   *
+   * Create new collection
    */
   static function create($name) {
 
@@ -313,7 +317,7 @@ class JDB {
   }
 
   /**
-   *
+   * Delete collection
    */
   static function drop($name) {
 
@@ -325,21 +329,21 @@ class JDB {
   }
 
   /**
-   *
+   * Check is collection exists
    */
   static function exists($name) {
     return file_exists(self::$path . $name . '.json');
   }
 
   /**
-   *
+   * Return new instance
    */
   static function table($name) {
     return new self($name);
   }
 
   /**
-   *
+   *  Create uniq id
    */
   static function uid() {
     $now = microtime(true) * 10000;
