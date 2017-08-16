@@ -93,8 +93,8 @@ dd($time_start, microtime(), time());*/
 // }
 // dd($i);
 
-$result = JDB::table('test')->find([
-  'ip_address' => '12.200.4.81'
-]);
+// $result = JDB::table('test')->find_one("2Pgn0pC7D0RUoYgEi4hm");
+
+// $result = JDB::table('test')->update(function($item) {});
 
 dd($result);

@@ -5,42 +5,66 @@
  */
 class JDB {
 
+  /**
+   * Symbols for generating an unique id
+   */
   const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
 
+  /**
+   * Path to folder with files
+   */
   static $path = 'storage' . DIRECTORY_SEPARATOR;
 
+  /**
+   * Debug mode
+   */
   static $debug = true;
 
+  /**
+   * Name of table
+   */
   private $name = null;
 
+  /**
+   * Collection data
+   */
   private $data = null;
 
+  /**
+   * Constructor
+   */
   public function __construct($name) {
     $this->name = $name;
     $this->get_data();
   }
 
-  public function settings($key = null, $value = null) {
+  /**
+   *  Collection meta
+   */
+  public function meta($key = null, $value = null) {
 
     $argc = func_num_args();
 
     if ($argc == 0) {
-      return $this->data['settings'];
+      return $this->data['meta'];
     }
 
     if ($argc == 1) {
-      return isset($this->data['settings'][$key]) ?
-        $this->data['settings'][$key] : null;
+      return isset($this->data['meta'][$key]) ?
+        $this->data['meta'][$key] : null;
     }
 
     if ($argc == 2) {
-      $this->data['settings'][$key] = $value;
+      $this->data['meta'][$key] = $value;
     }
 
     return self::save_data($this->name, $this->data);
   }
 
-  public function insert($item) {
+  /**
+   * Push new item to collection
+   */
+  public function push($item) {
 
     if (!is_array($item)) {
       throw new Exception("Array expected as second argument");
@@ -58,6 +82,9 @@ class JDB {
     return $uid;
   }
 
+  /**
+   * Find items in collection
+   */
   public function find($where = null) {
 
     if ($where == null) {
@@ -86,27 +113,32 @@ class JDB {
     return array_values($result);
   }
 
+  /**
+   * Find first one item in collection
+   */
   public function find_one($where = null) {
-    $result = $this->select($where);
+    $result = $this->find($where);
     return count($result) ? $result[0] : null;
   }
 
-  public function update($name, $update, $where = null) {
+  /**
+   * Update collection items
+   */
+  public function update($update, $where = null) {
 
     if (!is_array($update) && !is_callable($update)) {
       throw new Exception("Array or function expected as second argument");
     }
 
-    $data = jdb_get_file_data($name);
-
     $counter = 0;
 
-    if (func_num_args() === 2) {
+    if (func_num_args() === 1) {
+
       if (is_callable($update)) {
-        $data['items'] = array_map($update, $data['items']);
-        $counter = count($data['items']);
+        $this->data['items'] = array_map($update, $this->data['items']);
+        $counter = count($this->data['items']);
       } else {
-        foreach ($data['items'] as &$item) {
+        foreach ($this->data['items'] as &$item) {
           foreach ($update as $key => $val) {
             $item[$key] = $val;
           }
@@ -120,7 +152,7 @@ class JDB {
         $where = ['uid' => $where];
       }
 
-      foreach ($data['items'] as &$item) {
+      foreach ($this->data['items'] as &$item) {
 
         $next = false;
 
@@ -141,11 +173,11 @@ class JDB {
 
     }
 
-    if (jdb_set_file_data($name, $data)) {
+    if (self::save_data($this->name, $this->data)) {
       return $counter;
     }
 
-    return null;
+    return 0;
   }
 
   public function delete($name, $where = null) {
@@ -227,12 +259,12 @@ class JDB {
 
     $file = self::$path . $name . '.json';
 
-    if (!is_array($data) || !is_array($data['settings']) ||
+    if (!is_array($data) || !is_array($data['meta']) ||
       !is_array($data['items'])) {
       throw new Exception("Associative array expected as second argument");
     }
 
-    $data['settings']['updated'] = date('Y-m-d H:i:s');
+    $data['meta']['updated'] = date('Y-m-d H:i:s');
 
     $json = json_encode($data, self::$debug ?
       JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : 0);
@@ -270,8 +302,9 @@ class JDB {
     }
 
     $data = [
-      'settings' => [
-        'created' => date('Y-m-d H:i:s')
+      'meta' => [
+        'created' => date('Y-m-d H:i:s'),
+        'updated' => date('Y-m-d H:i:s')
       ],
       'items' => []
     ];
