@@ -37,6 +37,28 @@ function request($name = null, $default = null) {
   }
 }
 
+function request_body() {
+
+  static $content = null;
+
+  if ($content)
+    return $content;
+
+  $content_type = isset($_SERVER['HTTP_CONTENT_TYPE']) ?
+    $_SERVER['HTTP_CONTENT_TYPE'] :
+    $_SERVER['CONTENT_TYPE'];
+
+  $content = file_get_contents('php://input');
+  $content_type = preg_split('/ ?; ?/', $content_type);
+
+  if ($content_type[0] == 'application/json')
+    $content = json_decode($content, true);
+  else if ($content_type[0] == 'application/x-www-form-urlencoded')
+    parse_str($content, $content);
+
+  return $content;
+}
+
 function response($key = "*", $val = null) {
 
   static $data = [];

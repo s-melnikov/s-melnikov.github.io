@@ -30,55 +30,109 @@ class JDB {
    */
   private $data = null;
 
+  private $handle = null;
+
   /**
    * Constructor
    */
   public function __construct($name) {
     $this->name = $name;
-    $this->get_data();
+    $this->file = self::$path . $this->name . '.json';
+    if (!file_exists($this->file)) {
+      throw new Exception("File [{$this->file}] not exists.");
+    }
+  }
+
+  /**
+   * Lock table
+   */
+  private function lock() {
+    $attempt = 100000;
+    while ($attempt-- && !($this->handle = fopen($this->file, 'a+'))) {
+      usleep(10);
+    }
+    if (!flock($this->handle, LOCK_EX)) {
+      throw new Exception("Could not write in file [{$file}].");
+    }
+  }
+
+  /**
+   * Unlock table
+   */
+  private function unlock() {
+    flock($this->handle, LOCK_UN);
+    fclose($this->handle);
+  }
+
+  /**
+   * Get data from collection
+   */
+  public function get_data() {
+    $contents = fread($this->handle, filesize($this->file));
+    if (!$contents) {
+      throw new Exception("Table data is corrupted");
+    }
+    $data = json_decode($contents, true);
+    $err = json_last_error();
+    if ($err !== JSON_ERROR_NONE) {
+      throw new Exception("JSON encoding failed [{$err}].");
+    }
+    $this->data = $data;
+  }
+
+  /**
+   * Save collection to file
+   */
+  public function save_data() {
+    if (!is_string($this->name)) {
+      throw new Exception("String expected as first argument");
+    }
+    $this->data['meta']['updated'] = date('Y-m-d H:i:s');
+    $json = json_encode($this->data, self::$debug ?
+      JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : 0);
+    ftruncate($this->handle, 0);
+    fwrite($this->handle, $json);
+    return true;
   }
 
   /**
    *  Collection meta
    */
   public function meta($key = null, $value = null) {
-
+    $this->lock();
+    $this->get_data();
     $argc = func_num_args();
-
     if ($argc == 0) {
       return $this->data['meta'];
     }
-
     if ($argc == 1) {
       return isset($this->data['meta'][$key]) ?
         $this->data['meta'][$key] : null;
     }
-
     if ($argc == 2) {
       $this->data['meta'][$key] = $value;
     }
-
-    return self::save_data($this->name, $this->data);
+    $this->save_data($this->name, $this->data);
+    $this->unlock();
+    return true;
   }
 
   /**
    * Push new item to collection
    */
   public function push($item) {
-
+    $this->lock();
+    $this->get_data();
     if (!is_array($item)) {
       throw new Exception("Array expected as second argument");
     }
-
     $uid = self::uid();
-
     $item['uid'] = $uid;
     $this->data['items'][] = $item;
-
-    if (!self::save_data($this->name, $this->data)) {
+    if (!$this->save_data($this->name, $this->data)) {
       return false;
     }
-
+    $this->unlock();
     return $uid;
   }
 
@@ -86,21 +140,18 @@ class JDB {
    * Find items in collection
    */
   public function find($where = null) {
-
+    $this->lock();
+    $this->get_data();
+    $result = null;
     if ($where == null) {
       return $this->data['items'];
     }
-
     if (is_callable($where)) {
-
       $result = array_filter($this->data['items'], $where);
-
     } else {
-
       if (is_string($where)) {
         $where = ['uid' => $where];
       }
-
       $result = array_filter($this->data['items'], function($item) use ($where) {
         foreach ($where as $key => $value) {
           if (!isset($item[$key]) || $item[$key] !== $value) {
@@ -110,6 +161,7 @@ class JDB {
         return true;
       });
     }
+    $this->unlock();
     return array_values($result);
   }
 
@@ -125,15 +177,13 @@ class JDB {
    * Update collection items
    */
   public function update($update, $where = null) {
-
+    $this->lock();
+    $this->get_data();
     if (!is_array($update) && !is_callable($update)) {
       throw new Exception("Array or function expected as second argument");
     }
-
     $counter = 0;
-
     if (func_num_args() === 1) {
-
       if (is_callable($update)) {
         array_walk($this->data['items'], $update);
         $counter = count($this->data['items']);
@@ -145,38 +195,29 @@ class JDB {
           $counter++;
         }
       }
-
     } else {
-
       if (is_string($where)) {
         $where = ['uid' => $where];
       }
-
       foreach ($this->data['items'] as &$item) {
-
         $next = false;
-
         foreach ($where as $key => $value) {
           if (!isset($item[$key]) || $item[$key] !== $value) {
             $next = true;
           }
         }
-
         if ($next) continue;
-
         foreach ($update as $key => $value) {
           $item[$key] = $value;
         }
-
         $counter++;
       }
-
     }
-
-    if (self::save_data($this->name, $this->data)) {
+    $this->save_data($this->name, $this->data);
+    $this->unlock();
+    if () {
       return $counter;
     }
-
     return 0;
   }
 
@@ -232,79 +273,14 @@ class JDB {
     return self::save_data($this->name, $this->data);
   }
 
-  /**
-   * Get data from collection
-   */
-  public function get_data() {
-
-    $file = self::$path . $this->name . '.json';
-
-    if (!file_exists($file)) {
-      throw new Exception("File [{$file}] not exists.");
-    }
-
-    $json = file_get_contents($file);
-    $this->data = json_decode($json, true);
-    $err = json_last_error();
-
-    if ($err !== JSON_ERROR_NONE) {
-      throw new Exception("JSON encoding failed [{$err}].");
-    }
-  }
-
-  /**
-   * Save collection to file
-   */
-  static function save_data($name, $data) {
-
-    if (!is_string($name)) {
-      throw new Exception("String expected as first argument");
-    }
-
-    $file = self::$path . $name . '.json';
-
-    if (!is_array($data) || !is_array($data['meta']) ||
-      !is_array($data['items'])) {
-      throw new Exception("Associative array expected as second argument");
-    }
-
-    $data['meta']['updated'] = date('Y-m-d H:i:s');
-
-    $json = json_encode($data, self::$debug ?
-      JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : 0);
-
-    if (!file_exists($file)) {
-      return file_put_contents($file, $json);
-    }
-
-    $attempt = 1000;
-    while ($attempt-- && !($fp = fopen($file, 'r+'))) {
-      usleep(10000);
-    }
-
-    if (flock($fp, LOCK_EX)) {
-      ftruncate($fp, 0);
-      fwrite($fp, $json);
-      fflush($fp);
-      flock($fp, LOCK_UN);
-    } else {
-      throw new Exception("Could not write in file [{$file}].");
-    }
-
-    fclose($fp);
-
-    return true;
-  }
 
   /**
    * Create new collection
    */
   static function create($name) {
-
     if (self::exists($name)) {
       throw new Exception("JSON DB table [{$name}] already exist.");
     }
-
     $data = [
       'meta' => [
         'created' => date('Y-m-d H:i:s'),
@@ -312,20 +288,19 @@ class JDB {
       ],
       'items' => []
     ];
-
-    return !!self::save_data($name, $data);
+    $content = json_encode($data, self::$debug ?
+      JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE : 0);
+    return !!file_put_contents(self::$path . $name . '.json', $content);
   }
 
   /**
    * Delete collection
    */
   static function drop($name) {
-
     if (!self::exists($name)) {
       throw new Exception("JSON DB table [{$name}] not exist.");
     }
-
-    return unlink(JDB_STORAGE . $name . '.json');
+    return unlink(self::$path . $name . '.json');
   }
 
   /**
