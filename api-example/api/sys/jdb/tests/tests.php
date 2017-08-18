@@ -1,6 +1,7 @@
 <?php
 
 $start_time = microtime(true);
+$table_name = "test_" . $start_time;
 
 define('DEBUG', true);
 
@@ -11,156 +12,168 @@ echo "<pre>";
 
 echo "\n<span style='color:#444'># EXISTS \n";
 
-test('jdb_exists()', function() {
-  assert(jdb_exists('.test'), '#1');
-  assert(!jdb_exists('users'), '#2');
+test('exists()', function() use ($table_name) {
+  assert(JDB::exists('.test'), '#1');
+  assert(!JDB::exists($table_name), '#2');
 });
 
 echo "\n<span style='color:#444'># CREATE \n";
 
-test('jdb_create()', function() {
-  jdb_create('users');
-  assert(jdb_exists('users'), '#1');
+test('create()', function() use ($table_name) {
+  JDB::create($table_name);
+  assert(JDB::exists($table_name), '#1');
 });
 
 echo "\n<span style='color:#444'># SETTINGS \n";
 
-test('jdb_settings()', function() {
-  $settings = jdb_settings('users');
-  assert(is_array($settings) && count($settings) === 2, '#1');
-  $created = jdb_settings('users', 'created');
+test('meta()', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $meta = $table->meta();
+  assert(is_array($meta) && count($meta) === 2, '#1');
+  $created = $table->meta('created');
   assert(is_string($created), '#2');
-  jdb_settings('users', 'foo', 'bar');
-  $foo = jdb_settings('users', 'foo');
+  $table->meta('foo', 'bar');
+  $foo = $table->meta('foo');
   assert($foo === 'bar', '#3');
 });
 
 echo "\n<span style='color:#444'># INSERT \n";
 
-test('jdb_insert()', function() {
+test('push()', function() use ($table_name) {
+  $table = JDB::table($table_name);
   $json = file_get_contents('users.dump.json');
   $data = json_decode($json, true);
   foreach ($data as $key => $user) {
-    $uid = jdb_insert('users', $user);
-    assert(is_string($uid) && strlen($uid) === 23, '#' . $key);
+    $uid = $table->push($user);
+    assert(is_string($uid) && strlen($uid) === 20, '#' . $key);
   }
-  $json = file_get_contents('storage/users.json');
+  $json = file_get_contents('storage/'.$table_name.'.json');
   $data = json_decode($json, true);
-  assert(is_array($data['settings']), '#101');
-  assert(is_array($data['items'][0]), '#102');
 });
 
 echo "\n<span style='color:#444'># SELECT \n";
 
-test('jdb_select()', function() {
-  $result = jdb_select('users');
+test('find()', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $result = $table->find();
   assert(count($result) === 50, '#1');
 });
 
-test('jdb_select(uid)', function() {
-  $result = jdb_select('users');
-  $uid = $result[0]['_uid'];
-  $result = jdb_select('users', $uid);
+test('find(uid)', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $result = $table->find();
+  $uid = $result[0]['uid'];
+  $result = $table->find($uid);
   assert(is_array($result), '#1');
-  assert($result[0]['_uid'] === $uid, '#2');
+  assert($result[0]['uid'] === $uid, '#2');
 });
 
-test('jdb_select(where)', function() {
+test('find(where)', function() use ($table_name) {
+  $table = JDB::table($table_name);
   $where = ['gender' => 'male'];
-  $result = jdb_select('users', $where);
+  $result = $table->find($where);
   assert(count($result) === 25, '#1');
 });
 
-test('jdb_select(callback)', function() {
+test('find(callback)', function() use ($table_name) {
+  $table = JDB::table($table_name);
   $where = function($user) {
     return strpos($user['location.street'], 'road') !== false;
   };
-  $result = jdb_select('users', $where);
+  $result = $table->find($where);
   assert(count($result) === 14, '#1');
+});
+
+test('find_one()', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $result = $table->find_one();
+  assert(is_string($result['uid']), '#1');
 });
 
 echo "\n<span style='color:#444'># UPDATE \n";
 
-test('jdb_update()', function() {
+test('update()', function() use ($table_name) {
+  $table = JDB::table($table_name);
   $update = ['registered' => time()];
-  $result = jdb_update('users', $update);
+  $result = $table->update($update);
   assert($result === 50, '#1');
 });
 
-test('jdb_update(uid)', function() {
-  $result = jdb_select('users');
-  $uid = $result[0]['_uid'];
+test('update(uid)', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $result = $table->find();
+  $uid = $result[0]['uid'];
   $time = time() - 1000;
   $update = ['registered' => $time];
-  $result = jdb_update('users', $update, $uid);
+  $result = $table->update($update, $uid);
   assert($result === 1, '#1');
-  $result = jdb_select('users', $uid);
+  $result = $table->find($uid);
   assert($result[0]['registered'] === $time, '#2');
 });
 
-test('jdb_update(where)', function() {
-
+test('update(where)', function() use ($table_name) {
+  $table = JDB::table($table_name);
   $update = ['gender' => 'm'];
   $where = ['gender' => 'male'];
-  $result = jdb_update('users', $update, $where);
+  $result = $table->update($update, $where);
   assert($result === 25, '#1');
   $where = ['gender' => 'm'];
-  $result = jdb_select('users', $where);
+  $result = $table->find($where);
   assert(count($result) === 25, '#2');
 });
 
-test('jdb_update(callback)', function() {
-  $result = jdb_update('users', function(&$user) {
+test('update(callback)', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $result = $table->update(function(&$user) {
     if (strpos($user['location.street'], 'road') !== false) {
       $user['location.street'] = strtoupper($user['location.street']);
     }
-    return $user;
   });
   assert($result == 50, '#1');
 });
 
 echo "\n<span style='color:#444'># DELETE \n";
 
-test('jdb_delete(uid)', function() {
-  $users = jdb_select('users');
-  $uid = $users[0]['_uid'];
-  jdb_delete('users', $uid);
-  $users = jdb_select('users');
+test('delete(uid)', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $users = $table->find();
+  $uid = $users[0]['uid'];
+  $table->delete($uid);
+  $users = $table->find();
   assert(count($users) === 49, '#1');
-  $users = jdb_select('users', $uid);
+  $users = $table->find($uid);
   assert(count($users) === 0, '#2');
 });
 
-test('jdb_delete(where)', function() {
-  jdb_delete('users', ['gender' => 'm']);
-  $users = jdb_select('users');
+test('delete(where)', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $table->delete(['gender' => 'm']);
+  $users = $table->find();
   assert(count($users) === 24, '#1');
-  $users = jdb_select('users', ['gender' => 'm']);
+  $users = $table->find(['gender' => 'm']);
   assert(count($users) === 0, '#2');
 });
 
-test('jdb_delete(callback)', function() {
-  jdb_delete('users', function($user) {
+test('delete(callback)', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $table->delete(function($user) {
     return $user['name.last'] === 'romero';
   });
-  $users = jdb_select('users');
+  $users = $table->find();
   assert(count($users) === 23, '#1');
-  $users = jdb_select('users', ['name.last' => 'romero']);
+  $users = $table->find(['name.last' => 'romero']);
   assert(count($users) === 0, '#2');
 });
 
-test('jdb_delete()', function() {
-  jdb_delete('users');
-  $users = jdb_select('users');
+test('delete()', function() use ($table_name) {
+  $table = JDB::table($table_name);
+  $table->delete();
+  $users = $table->find();
   assert(count($users) === 0, '#1');
 });
 
 echo "\n<span style='color:#444'># DROP \n";
 
-test('jdb_drop()', function() {
-  jdb_drop('users');
-  assert(!jdb_exists('users'), '#1');
-});
 
 test_summary();
 

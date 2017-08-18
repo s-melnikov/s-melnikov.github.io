@@ -21,5 +21,6 @@ require SYS . 'dispatch.php';
 require SYS . 'jdb.php';
 require SYS . 'collections.php';
 
-config('url', str_replace(DS, '/', str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
+config('url', str_replace(DS, '/',
+  str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
 

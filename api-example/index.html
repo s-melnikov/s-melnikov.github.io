@@ -8,13 +8,11 @@
 <body>
 <script>
 
-/*var db = (function() {
-
+var db = (function() {
   var callbacks = {}
   var settings = {
     path: ""
   }
-
   function get(path, cb) {
     fetch(url)
       .then(function(resp) {
@@ -24,12 +22,10 @@
         console.log(json)
       })
   }
-
   function on(event, cb) {
     if (!callbacks[event]) callbacks[event] = []
     callbacks[event].push(cb)
   }
-
   function off(event, cb) {
     if (event === "*") {
       return callbacks = {}
@@ -47,38 +43,22 @@
       }
     }
   }
-
   function trigger(event, data) {
     (callbacks[event] || []).map(function(cb) { cb(data) });
     (callbacks["*"] || []).map(function(cb) { cb(event, data) })
   }
-
   function setSettings(newSettings) {
     Object.assign(settings, newSettings)
   }
-
-  document.addEventListener("DOMContentLoaded", init)
-
   return {
     on: on,
     off: off,
     trigger: trigger,
     settings: setSettings
   }
-
 })()
 
-db.settings({ path: "/api" })*/
-
-// fetch("mock_data.json").then(resp => resp.json()).then(json => {
-//   json.slice(0, 100).map((item, i) => {
-//     item.id = i + 1
-//     fetch("api/", {
-//       method: 'POST',
-//       body: JSON.stringify(item)
-//     })
-//   })
-// })
+db.settings({ path: "/api" });
 
 </script>
 </body>

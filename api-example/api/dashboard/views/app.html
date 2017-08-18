@@ -1,0 +1,18 @@
+<app>
+
+  <router></router>
+
+</app>
+
+<script>
+
+  var self = this
+
+  riot.route(function(page) {
+    if (self.currentView) {
+      self.currentView.unmount(true)
+    }
+    self.currentView = riot.mount('router', page, {})[0]
+  })
+
+</script>

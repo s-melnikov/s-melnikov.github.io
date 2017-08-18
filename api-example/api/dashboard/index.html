@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="assets/css/spectre.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <app></app>
+  <script src="https://cdn.jsdelivr.net/npm/riot@3.6/riot+compiler.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/riot-route/2.5.0/route.min.js"></script>
+  <script src="views/app.html" type="riot/tag"></script>
+  <script>
+    riot.compile(() => { riot.mount("*") })
+  </script>
+</body>
+</html>
