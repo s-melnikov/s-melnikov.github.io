@@ -6,6 +6,7 @@
   z-index: 999;
 }
 .container {
+  display: block;
   max-width: 960px;
   padding: 0 15px;
 }

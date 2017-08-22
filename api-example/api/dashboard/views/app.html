@@ -1,18 +1,44 @@
 <app>
 
-  <router></router>
+  <div class="main-header">
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-section">
+          <a href="#" class="navbar-brand">Content System</a>
+        </div>
+        <div class="navbar-section">
+          <a href="#/collections" class="btn btn-link">Collections</a>
+          <a href="#/content" class="btn btn-link">Content</a>
+          <a href="#/settings" class="btn btn-link">Settings</a>
+          <a href="#/logout" class="btn btn-link">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <router class="container"></router>
+
+  <div id="alerts">
+    <div each={ alerts } class="toast toast-error">
+      <button class="btn btn-clear float-right"></button>
+      <p>{ text }</p>
+    </div>
+  </div>
+
+  <script>
+    var self = this
+    var pages = []
+
+    route((page, action, id) => {
+      page = page || "index"
+      if (self.page) {
+        self.page.unmount(true)
+      }
+      self.page = riot.mount("router", "page-" + page, { action, id })[0]
+    })
+
+    self.on("mount", () => {
+      route.start(true)
+    })
+  </script>
 </app>
-
-<script>
-
-  var self = this
-
-  riot.route(function(page) {
-    if (self.currentView) {
-      self.currentView.unmount(true)
-    }
-    self.currentView = riot.mount('router', page, {})[0]
-  })
-
-</script>
