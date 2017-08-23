@@ -9,66 +9,92 @@
           <tr>
             <th>Name</th>
             <th>Identifier</th>
-            <th>Description</th>
             <th class="text-right">Updated</th>
             <th class="text-right">About</th>
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($collections as $collection) { ?>
-            <tr onclick="location.href='<?php print base_url('collection/'.$collection['uid'].'/fields') ?>'">
-              <td><?php print $collection['name'] ?></td>
-              <td><?php print $collection['id'] ?></td>
-              <td><?php print $collection['description'] ?></td>
-              <td class="text-right"><?php print date("M d, Y", strtotime($collection['updated'])) ?></td>
-              <td class="text-right"><?php print $collection['about'] ?></td>
-            </tr>
-          <?php } ?>
+          <tr each={ collections }>
+            <td><a href="#/collection/{ uid }/fields">{ title }</a></td>
+            <td>{ name }</td>
+            <td class="text-right">{ (new Date(updated)).toDateString() }</td>
+            <td class="text-right">{ about.nickname }</td>
+          </tr>
         </tbody>
       </table>
     </div>
     <div class="divider-vert"></div>
     <div class="column">
       <div class="text-center pt-10">
-        <a href="#add-collection" class="btn">New collection</a>
+        <span class="btn" onclick={ showModal }>New collection</span>
       </div>
     </div>
   </div>
 
-  <div class="modal" id="add-collection">
+  <div class="modal modal-add-collection active" show={ modalShowed }>
     <div class="modal-overlay"></div>
-    <form class="modal-container" style="width:420px" method="post">
+    <div class="modal-container">
       <div class="modal-header">
-        <a href="#" class="btn btn-clear float-right"></a>
+        <span class="btn btn-clear float-right"></span>
         <div class="modal-title">New collection</div>
       </div>
       <div class="modal-body">
         <div class="content">
-          <div class="form-group">
-            <label>Name</label>
-            <input class="form-input" type="text" name="name"
-              value="<?php print $name ?>" required>
+          <div class={ "form-group": true, "has-error": formErrors.title }>
+            <label>Title</label>
+            <input class="form-input" type="text" ref="title">
           </div>
-          <div class="form-group">
-            <label>Identifier</label>
-            <input class="form-input" type="text" name="id"
-              value="<?php print $id ?>" required>
+          <div class={ "form-group": true, "has-error": formErrors.name }>
+            <label>Slug</label>
+            <input class="form-input" type="text" ref="name">
           </div>
           <div class="form-group">
             <label>Description</label>
-            <textarea class="form-input" name="description" rows="6"
-              value="<?php print $description ?>" maxlength="500"></textarea>
+            <textarea class="form-input" ref="description" rows="6" maxlength="500"></textarea>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <a href="#" class="btn btn-link btn-close">Close</a>
-        <button class="btn btn-primary">Submit</button>
+        <span class="btn btn-link btn-close" onclick={ closeModal }>Close</span>
+        <button class="btn btn-primary" onclick={ submitModal }>Submit</button>
       </div>
-    </form>
+    </div>
   </div>
 
   <script>
+
+    var self = this
+    self.formErrors = {}
+
+    showModal() {
+      self.modalShowed = true
+    }
+
+    closeModal() {
+      self.modalShowed = false
+    }
+
+    submitModal() {
+      let title = self.refs.title.value
+      let name = self.refs.name.value
+      let description = self.refs.description.value;
+      self.formErrors = {
+        title: !title,
+        name: !name,
+        description: !description,
+      }
+      if (!title || !name || !description) {
+        return
+      }
+    }
+
+    self.on("mount", () => {
+      api.get("collections").then(data => {
+        self.collections = data.collections
+        self.update()
+      })
+    })
+
     /*var input = $('[name=name]'),
       output = $('[name=id]')
     if (!output.val()) {

@@ -24,3 +24,17 @@ require SYS . 'collections.php';
 config('url', str_replace(DS, '/',
   str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
 
+map('GET', '/collections/', function() {
+  $data = [];
+  $collections = JDB::table('collections')->find();
+  foreach ($collections as &$collection) {
+    $user = JDB::table('.users')->find_one($collection['about']);
+    unset($user['hash']);
+    $collection['about'] = $user;
+  }
+  $data['collections'] = $collections;
+  json($data);
+});
+
+dispatch();
+

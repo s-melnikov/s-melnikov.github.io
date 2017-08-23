@@ -33,8 +33,13 @@
       page = page || "index"
       if (self.page) {
         self.page.unmount(true)
+        self.page = null
       }
-      self.page = riot.mount("router", "page-" + page, { action, id })[0]
+      try {
+        self.page = riot.mount("router", "page-" + page, { action, id })[0]
+      } catch(e) {}
+      if (!self.page)
+        self.page = riot.mount("router", "page-404")[0]
     })
 
     self.on("mount", () => {

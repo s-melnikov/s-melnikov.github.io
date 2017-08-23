@@ -1,4 +1,4 @@
-$(function () {
+/*$(function () {
 
   $("a").each(function(i, el) {
     if (location.href.indexOf(el.href) > -1) {
@@ -6,7 +6,7 @@ $(function () {
     }
   })
 
-})
+})*/
 
 function slugify(text) {
   return text.toString().toLowerCase()
@@ -28,5 +28,24 @@ var translit = (function() {
     return (str || "").toLowerCase().split("").map(function(l) {
       return assoc[l] != null ? assoc[l] : l
     }).join("")
+  }
+})()
+
+var date = (() => {
+  return (date) => {
+    return (new Date(date || Date.now())).toDateString()
+  }
+})()
+
+var api = (() => {
+
+  var base_url = "../"
+
+  const get = (path) => {
+    return fetch(base_url + path).then(resp => resp.json())
+  }
+
+  return {
+    get
   }
 })()
