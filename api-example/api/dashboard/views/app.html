@@ -38,8 +38,9 @@
       try {
         self.page = riot.mount("router", "page-" + page, { action, id })[0]
       } catch(e) {}
-      if (!self.page)
+      if (!self.page) {
         self.page = riot.mount("router", "page-404")[0]
+      }
     })
 
     self.on("mount", () => {

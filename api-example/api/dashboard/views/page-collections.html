@@ -33,38 +33,37 @@
 
   <div class="modal modal-add-collection active" show={ modalShowed }>
     <div class="modal-overlay"></div>
-    <div class="modal-container">
+    <form class="modal-container" onsubmit={ submitModal }>
       <div class="modal-header">
         <span class="btn btn-clear float-right"></span>
         <div class="modal-title">New collection</div>
       </div>
       <div class="modal-body">
         <div class="content">
-          <div class={ "form-group": true, "has-error": formErrors.title }>
+          <div class="form-group" required>
             <label>Title</label>
-            <input class="form-input" type="text" ref="title">
+            <input class="form-input" type="text" name="title" required oninput={ onTitleInput }>
           </div>
-          <div class={ "form-group": true, "has-error": formErrors.name }>
+          <div class="form-group" required>
             <label>Slug</label>
-            <input class="form-input" type="text" ref="name">
+            <input class="form-input" type="text" name="name" ref="name" required oninput={ onNameInput }>
           </div>
           <div class="form-group">
             <label>Description</label>
-            <textarea class="form-input" ref="description" rows="6" maxlength="500"></textarea>
+            <textarea class="form-input" name="description" rows="6" maxlength="500"></textarea>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <span class="btn btn-link btn-close" onclick={ closeModal }>Close</span>
-        <button class="btn btn-primary" onclick={ submitModal }>Submit</button>
+        <button class="btn btn-primary">Submit</button>
       </div>
-    </div>
+    </form>
   </div>
 
   <script>
 
     var self = this
-    self.formErrors = {}
 
     showModal() {
       self.modalShowed = true
@@ -74,18 +73,19 @@
       self.modalShowed = false
     }
 
-    submitModal() {
-      let title = self.refs.title.value
-      let name = self.refs.name.value
-      let description = self.refs.description.value;
-      self.formErrors = {
-        title: !title,
-        name: !name,
-        description: !description,
+    submitModal(e) {
+      e.preventDefault()
+      var data = getFormData(e.target)
+    }
+
+    onTitleInput(e) {
+      if (!self.stopListenTitle) {
+        self.refs.name.value = slugify(translit(e.target.value))
       }
-      if (!title || !name || !description) {
-        return
-      }
+    }
+
+    onNameInput(e) {
+      self.stopListenTitle = true
     }
 
     self.on("mount", () => {
@@ -94,23 +94,6 @@
         self.update()
       })
     })
-
-    /*var input = $('[name=name]'),
-      output = $('[name=id]')
-    if (!output.val()) {
-      input.on('input', function() {
-        output.val(slugify(translit(this.value)))
-      })
-      output.on('input', function() {
-        input.off('input')
-        output.off('input')
-      })
-    }
-    if ("<?php print $id ?>") {
-      location.hash = "#add-collection"
-    } else {
-      location.hash = "#"
-    }*/
   </script>
 </page-collections>
 

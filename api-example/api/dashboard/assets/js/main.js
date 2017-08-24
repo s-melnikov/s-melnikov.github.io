@@ -8,6 +8,12 @@
 
 })*/
 
+function getFormData(form) {
+  let res = {}, fd = new FormData(form)
+  for (let e of fd.entries()) res[e[0]] = e[1]
+    return res
+}
+
 function slugify(text) {
   return text.toString().toLowerCase()
     .replace(/\s+/g, '_')
