@@ -24,16 +24,71 @@ require SYS . 'collections.php';
 config('url', str_replace(DS, '/',
   str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
 
+map('GET', '/auth/', function() {
+  $response = [];
+  if (session('user')) {
+    $uid = session('user');
+    $user = JDB::table('.users')->find_one($uid);
+    if (!$user) {
+      $response['status'] = 'USER_NOT_EXISTS';
+    } else {
+      $response['status'] = 'USER_AUTHORISED';
+      unset($user['hash']);
+      $response['user'] = $user;
+    }
+  } else {
+    $response['status'] = 'USER_NOT_AUTHORISED';
+  }
+  json($response);
+});
+
+map('POST', '/auth/', function() {
+  $response = [];
+  $request = request_body();
+  if (!isset($request['email']) || !isset($request['password'])) {
+    $response['status'] = 'EMPTY_DATA';
+  } else {
+    if (session('user')) {
+      session('user', null);
+    }
+    $user = JDB::table('.users')->find_one(['email' => $request['email']]);
+    if (!$user) {
+      $response['status'] = 'USER_NOT_EXISTS';
+    } else {
+      if ($user['hash'] !== hash('sha256', $user['uid'] . $request['password'])) {
+        $response['status'] = 'USER_NOT_EXISTS';
+      } else {
+        session('user', $user['uid']);
+        $response['status'] = 'USER_AUTHORISED';
+        unset($user['hash']);
+        $response['user'] = $user;
+      }
+    }
+  }
+  json($response);
+});
+
 map('GET', '/collections/', function() {
-  $data = [];
+  $response = [];
   $collections = JDB::table('collections')->find();
   foreach ($collections as &$collection) {
     $user = JDB::table('.users')->find_one($collection['about']);
     unset($user['hash']);
     $collection['about'] = $user;
   }
-  $data['collections'] = $collections;
-  json($data);
+  $response['collections'] = $collections;
+  json($response);
+});
+
+map('POST', '/collections/', function() {
+  $response = [];
+  $item = request_body();
+  $item['updated'] = date('Y-m-d H:i:s');
+  $item['about'] = JDB::table('.users')->find_one()['uid'];
+  $item['fields'] = [];
+  $uid = JDB::table('collections')->push($item);
+  $response['uid'] = $uid;
+  json($response);
 });
 
 dispatch();

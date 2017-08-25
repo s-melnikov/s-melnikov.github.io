@@ -47,11 +47,29 @@ var api = (() => {
 
   var base_url = "../"
 
-  const get = (path) => {
-    return fetch(base_url + path).then(resp => resp.json())
+  function req(path, data) {
+    path = path || ""
+    let headers = new Headers()
+    let init = {
+      credentials: "same-origin"
+    }
+    if (data) {
+      headers.append("Content-Type", "application/json")
+      init.method = "POST",
+      init.body = JSON.stringify(data)
+      init.headers = headers
+    }
+    return fetch(base_url + path + "/", init).then(resp => resp.json())
   }
 
   return {
-    get
+    collections: () => ({
+      get: () => req("collections"),
+      push: data => req("collections", data || {})
+    }),
+    auth: () => ({
+      status: () => req("auth"),
+      signin: data => req("auth", data || {}),
+    })
   }
 })()

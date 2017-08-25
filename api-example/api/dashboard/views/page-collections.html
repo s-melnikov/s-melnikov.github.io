@@ -76,6 +76,13 @@
     submitModal(e) {
       e.preventDefault()
       var data = getFormData(e.target)
+      api.collections().push(data).then(resp => {
+        data.uid = resp.uid
+        data.updated = new Date().toDateString()
+        self.collections.push(data)
+        self.update()
+        e.target.reset()
+      })
     }
 
     onTitleInput(e) {
@@ -89,8 +96,8 @@
     }
 
     self.on("mount", () => {
-      api.get("collections").then(data => {
-        self.collections = data.collections
+      api.collections().get().then(resp => {
+        self.collections = resp.collections
         self.update()
       })
     })

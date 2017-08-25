@@ -1,13 +1,13 @@
 {
     "meta": {
         "created": "2017-06-13 10:02:31",
-        "updated": "2017-08-24 14:36:23"
+        "updated": "2017-08-25 14:07:51"
     },
     "items": [
         {
             "email": "test@test.com",
-            "hash": "1f26cad523a43f9ef1ab511ab0a9e7792e6e515bc793dbf43760b400cfbf85ca",
-            "uid": "uid593f8f92315f35",
+            "hash": "6b3f541675f8782a0d0095a50916774873e75ec3955c15157fd17cb3cf9a7b8e",
+            "uid": "-KsObnyRSHjyO5wz-CfB",
             "nickname": "admin",
             "first_name": "Sergey",
             "last_name": "Melnikov"

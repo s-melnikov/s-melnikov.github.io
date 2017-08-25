@@ -279,7 +279,7 @@ class JDB {
    *  Create uniq id
    */
   static function uid() {
-    $now = microtime(true) * 10000;
+    $now = microtime(true) * 1000;
     $timeStampChars = [];
     for ($i = 0; $i < 8; $i++) {
       $timeStampChars[] = substr(self::PUSH_CHARS, $now % 64, 1);

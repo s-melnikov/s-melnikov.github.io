@@ -50,7 +50,6 @@ function request_body() {
 
   $content = file_get_contents('php://input');
   $content_type = preg_split('/ ?; ?/', $content_type);
-
   if ($content_type[0] == 'application/json')
     $content = json_decode($content, true);
   else if ($content_type[0] == 'application/x-www-form-urlencoded')

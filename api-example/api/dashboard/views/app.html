@@ -1,6 +1,6 @@
 <app>
 
-  <div class="main-header">
+  <div class="main-header" if={ user }>
     <div class="container">
       <div class="navbar">
         <div class="navbar-section">
@@ -29,8 +29,11 @@
     var self = this
     var pages = []
 
+    self.user = null
+
     route((page, action, id) => {
       page = page || "index"
+      if (!self.user && page !== "signin") route("//signin")
       if (self.page) {
         self.page.unmount(true)
         self.page = null
@@ -44,7 +47,13 @@
     })
 
     self.on("mount", () => {
-      route.start(true)
+      api.auth().status().then(resp => {
+        if (resp.user) {
+          self.user = resp.user
+          self.update()
+        }
+        route.start(true)
+      })
     })
   </script>
 </app>
