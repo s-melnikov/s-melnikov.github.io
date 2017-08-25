@@ -7,59 +7,6 @@
 </head>
 <body>
 <script>
-
-var db = (function() {
-  var callbacks = {}
-  var settings = {
-    path: ""
-  }
-  function get(path, cb) {
-    fetch(url)
-      .then(function(resp) {
-        return resp.json()
-      })
-      .then(function(json) {
-        console.log(json)
-      })
-  }
-  function on(event, cb) {
-    if (!callbacks[event]) callbacks[event] = []
-    callbacks[event].push(cb)
-  }
-  function off(event, cb) {
-    if (event === "*") {
-      return callbacks = {}
-    }
-    if (callbacks[event]) {
-      if (cb) {
-        var i = 0
-        while (i < callbacks[event].length) {
-          if (callbacks[event][i] === cb)
-            callbacks[event].splice(i, 1)
-          else i++
-        }
-      } else {
-        callbacks[event] = []
-      }
-    }
-  }
-  function trigger(event, data) {
-    (callbacks[event] || []).map(function(cb) { cb(data) });
-    (callbacks["*"] || []).map(function(cb) { cb(event, data) })
-  }
-  function setSettings(newSettings) {
-    Object.assign(settings, newSettings)
-  }
-  return {
-    on: on,
-    off: off,
-    trigger: trigger,
-    settings: setSettings
-  }
-})()
-
-db.settings({ path: "/api" });
-
 </script>
 </body>
 </html>

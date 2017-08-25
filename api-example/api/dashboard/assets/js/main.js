@@ -1,13 +1,3 @@
-/*$(function () {
-
-  $("a").each(function(i, el) {
-    if (location.href.indexOf(el.href) > -1) {
-      el.classList.add("active")
-    }
-  })
-
-})*/
-
 function getFormData(form) {
   let res = {}, fd = new FormData(form)
   for (let e of fd.entries()) res[e[0]] = e[1]
@@ -69,7 +59,8 @@ var api = (() => {
     }),
     auth: () => ({
       status: () => req("auth"),
-      signin: data => req("auth", data || {}),
+      signin: data => req("auth", data),
+      signout: () => req("auth", {})
     })
   }
 })()

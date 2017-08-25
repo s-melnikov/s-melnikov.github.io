@@ -1,15 +1,15 @@
 <page-signin>
   <div class="auth-form">
     <h3 class="text-center">Sign in to System</h3>
-    <form class="card" method="post">
+    <form class="card" onsubmit={ formSubmit }>
       <div class="card-body">
         <div class="form-group">
           <label class="form-label" for="email">Email address</label>
-          <input class="form-input" type="email" name="email" id="email">
+          <input class="form-input" type="email" name="email" required>
         </div>
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
-          <input class="form-input" type="password" name="password" id="password">
+          <input class="form-input" type="password" name="password" required>
         </div>
       </div>
       <div class="card-footer">
@@ -39,6 +39,18 @@
   </style>
 
   <script>
+    var self = this
 
+    self.on('mount', () => {
+      console.log(self)
+    })
+
+    formSubmit(e) {
+      e.preventDefault()
+      let data = getFormData(e.target)
+      api.auth().signin(data).then(resp => {
+        console.log(self.parent)
+      })
+    }
   </script>
 </page-signin>

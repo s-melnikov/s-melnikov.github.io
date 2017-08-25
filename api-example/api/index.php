@@ -45,12 +45,12 @@ map('GET', '/auth/', function() {
 map('POST', '/auth/', function() {
   $response = [];
   $request = request_body();
+  if (session('user')) {
+    session('user', null);
+  }
   if (!isset($request['email']) || !isset($request['password'])) {
     $response['status'] = 'EMPTY_DATA';
   } else {
-    if (session('user')) {
-      session('user', null);
-    }
     $user = JDB::table('.users')->find_one(['email' => $request['email']]);
     if (!$user) {
       $response['status'] = 'USER_NOT_EXISTS';
