@@ -41,15 +41,18 @@
   <script>
     var self = this
 
-    self.on('mount', () => {
-      console.log(self)
-    })
+    self.on('mount', () => {})
 
     formSubmit(e) {
       e.preventDefault()
       let data = getFormData(e.target)
       api.auth().signin(data).then(resp => {
-        console.log(self.parent)
+        log("signin:formSubmit", resp)
+        if (resp.user) {
+          opts.parent.user = resp.user
+          opts.parent.update()
+          route("index")
+        }
       })
     }
   </script>

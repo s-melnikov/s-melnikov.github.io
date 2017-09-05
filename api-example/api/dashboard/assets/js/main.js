@@ -1,3 +1,5 @@
+const log = console.log.bind(console)
+
 function getFormData(form) {
   let res = {}, fd = new FormData(form)
   for (let e of fd.entries()) res[e[0]] = e[1]

@@ -7,10 +7,10 @@
           <a href="#" class="navbar-brand">Content System</a>
         </div>
         <div class="navbar-section">
-          <a href="#/collections" class="btn btn-link">Collections</a>
-          <a href="#/content" class="btn btn-link">Content</a>
-          <a href="#/settings" class="btn btn-link">Settings</a>
-          <a href="#/logout" class="btn btn-link">Logout</a>
+          <a href="#collections" class="btn btn-link">Collections</a>
+          <a href="#content" class="btn btn-link">Content</a>
+          <a href="#settings" class="btn btn-link">Settings</a>
+          <a href="#logout" class="btn btn-link">Logout</a>
         </div>
       </div>
     </div>
@@ -33,29 +33,39 @@
 
     route((page, action, id) => {
       page = page || "index"
-      if (!self.user && page !== "signin") {
-        route("//signin")
+      if (self.user) {
+        if (page == "signin")
+          return route("index")
+      } else {
+        if (page !== "signin") {
+          return route("signin")
+        }
       }
       if (page == "logout") {
+        log("!")
         api.auth().signout()
+        log("!!")
         self.user == null
-        route("//signin")
-      } else {
-        if (self.page) {
-          self.page.unmount(true)
-          self.page = null
-        }
-        try {
-          self.page = riot.mount("router", "page-" + page, { action, id })[0]
-        } catch(e) {}
-        if (!self.page) {
-          self.page = riot.mount("router", "page-404")[0]
-        }
+        log("!!!")
+        self.update()
+        log("!!!!")
+        return route("signin")
+      }
+      if (self.page) {
+        self.page.unmount(true)
+        self.page = null
+      }
+      try {
+        self.page = riot.mount("router", "page-" + page, { action, id, parent: self })[0]
+      } catch(e) {}
+      if (!self.page) {
+        self.page = riot.mount("router", "page-404")[0]
       }
     })
 
     self.on("mount", () => {
       api.auth().status().then(resp => {
+        log("app:mount", resp)
         if (resp.user) {
           self.user = resp.user
           self.update()
