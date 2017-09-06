@@ -27,11 +27,10 @@
 
   <script>
     var self = this
-    var pages = []
-
+    var currentPage
     self.user = null
 
-    route((page, action, id) => {
+    route((page, id) => {
       page = page || "index"
       if (self.user) {
         if (page == "signin")
@@ -42,24 +41,20 @@
         }
       }
       if (page == "logout") {
-        log("!")
         api.auth().signout()
-        log("!!")
-        self.user == null
-        log("!!!")
+        self.user = null
         self.update()
-        log("!!!!")
         return route("signin")
       }
-      if (self.page) {
-        self.page.unmount(true)
-        self.page = null
+      if (currentPage) {
+        currentPage.unmount(true)
+        currentPage = null
       }
       try {
-        self.page = riot.mount("router", "page-" + page, { action, id, parent: self })[0]
+        currentPage = riot.mount("router", "page-" + page, { id, app: self })[0]
       } catch(e) {}
-      if (!self.page) {
-        self.page = riot.mount("router", "page-404")[0]
+      if (!currentPage) {
+       currentPage = riot.mount("router", "page-404")[0]
       }
     })
 

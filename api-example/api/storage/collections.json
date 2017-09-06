@@ -1,14 +1,14 @@
 {
     "meta": {
         "created": "2017-08-16 10:16:47",
-        "updated": "2017-08-25 14:52:25"
+        "updated": "2017-09-06 13:56:26"
     },
     "items": [
         {
             "name": "employees",
             "title": "Employees",
             "updated": "2017-08-23 08:01:26",
-            "about": "uid593f8f92315f35",
+            "about": "-KsObnyRSHjyO5wz-CfB",
             "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo, temporibus, tempora. Qui, a, amet. Quidem doloremque vero nihil, autem officiis molestias, perferendis sequi. Maiores dolores eum labore magni, rem. Consequatur!",
             "fields": [
                 {
@@ -16,21 +16,24 @@
                     "title": "First name",
                     "type": "text",
                     "default": "",
-                    "required": true
+                    "required": true,
+                    "uid": "-KsOcFXfU0BcZNUak0ua"
                 },
                 {
                     "name": "last_name",
                     "title": "Last name",
                     "type": "text",
                     "default": "",
-                    "required": true
+                    "required": true,
+                    "uid": "-KsOcFXfU0BcZNUak0ub"
                 },
                 {
                     "name": "email",
                     "title": "Email",
                     "type": "text",
                     "default": "",
-                    "required": true
+                    "required": true,
+                    "uid": "-KsOcFXfU0BcZNUak0uc"
                 },
                 {
                     "name": "gender",
@@ -40,7 +43,8 @@
                     "options": [
                         "male",
                         "femail"
-                    ]
+                    ],
+                    "uid": "-KsOcFXfU0BcZNUak0ud"
                 }
             ],
             "uid": "-KsOcFXfU0BcZNUak0uq"
@@ -50,7 +54,7 @@
             "name": "afdsfsdaf",
             "description": "",
             "updated": "2017-08-25 07:36:53",
-            "about": "uid593f8f92315f35",
+            "about": "-KsObnyRSHjyO5wz-CfB",
             "uid": "-KsOcJ0oJPNqXeu_Ing_"
         },
         {
@@ -58,7 +62,7 @@
             "name": "asd_asdas",
             "description": "",
             "updated": "2017-08-25 07:37:36",
-            "about": "uid593f8f92315f35",
+            "about": "-KsObnyRSHjyO5wz-CfB",
             "fields": [],
             "uid": "-KsOcOseMJWIKa8-M0PA"
         },
@@ -67,7 +71,7 @@
             "name": "zhczhc",
             "description": "",
             "updated": "2017-08-25 07:39:39",
-            "about": "uid593f8f92315f35",
+            "about": "-KsObnyRSHjyO5wz-CfB",
             "fields": [],
             "uid": "-KsOcQq3Br5BhuPYvjYD"
         }

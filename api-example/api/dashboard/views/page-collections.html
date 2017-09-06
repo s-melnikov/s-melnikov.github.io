@@ -15,10 +15,10 @@
         </thead>
         <tbody>
           <tr each={ collections }>
-            <td><a href="#/collection/{ uid }/fields">{ title }</a></td>
+            <td><a href="#collection/{ uid }">{ title }</a></td>
             <td>{ name }</td>
             <td class="text-right">{ (new Date(updated)).toDateString() }</td>
-            <td class="text-right">{ about.nickname }</td>
+            <td class="text-right">{ about.nickname || "[deleted]" }</td>
           </tr>
         </tbody>
       </table>
@@ -35,7 +35,7 @@
     <div class="modal-overlay"></div>
     <form class="modal-container" onsubmit={ submitModal }>
       <div class="modal-header">
-        <span class="btn btn-clear float-right"></span>
+        <span class="btn btn-clear float-right" onclick={ closeModal }></span>
         <div class="modal-title">New collection</div>
       </div>
       <div class="modal-body">
@@ -62,7 +62,6 @@
   </div>
 
   <script>
-
     var self = this
 
     showModal() {
@@ -97,6 +96,7 @@
 
     self.on("mount", () => {
       api.collections().get().then(resp => {
+        log("api.collections().get()", resp)
         self.collections = resp.collections
         self.update()
       })

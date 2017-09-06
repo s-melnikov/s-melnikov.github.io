@@ -49,8 +49,8 @@
       api.auth().signin(data).then(resp => {
         log("signin:formSubmit", resp)
         if (resp.user) {
-          opts.parent.user = resp.user
-          opts.parent.update()
+          opts.app.user = resp.user
+          opts.app.update()
           route("index")
         }
       })

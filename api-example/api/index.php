@@ -73,8 +73,12 @@ map('GET', '/collections/', function() {
   $collections = JDB::table('collections')->find();
   foreach ($collections as &$collection) {
     $user = JDB::table('.users')->find_one($collection['about']);
-    unset($user['hash']);
-    $collection['about'] = $user;
+    if ($user) {
+      unset($user['hash']);
+      $collection['about'] = $user;
+    } else {
+      $collection['about'] = [];
+    }
   }
   $response['collections'] = $collections;
   json($response);
@@ -88,6 +92,20 @@ map('POST', '/collections/', function() {
   $item['fields'] = [];
   $uid = JDB::table('collections')->push($item);
   $response['uid'] = $uid;
+  json($response);
+});
+
+map('GET', '/collection/<id>', function($params) {
+  $response = [];
+  $collection = JDB::table('collections')->find_one($params['id']);
+  $user = JDB::table('.users')->find_one($collection['about']);
+  if ($user) {
+    unset($user['hash']);
+    $collection['about'] = $user;
+  } else {
+    $collection['about'] = [];
+  }
+  $response['collection'] = $collection;
   json($response);
 });
 

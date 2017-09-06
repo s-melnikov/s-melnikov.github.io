@@ -56,7 +56,7 @@ var api = (() => {
 
   return {
     collections: () => ({
-      get: () => req("collections"),
+      get: id => id ? req("collection/" + id) : req("collections"),
       push: data => req("collections", data || {})
     }),
     auth: () => ({
