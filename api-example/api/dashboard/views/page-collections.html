@@ -40,13 +40,13 @@
       </div>
       <div class="modal-body">
         <div class="content">
-          <div class="form-group" required>
+          <div class="form-group">
             <label>Title</label>
-            <input class="form-input" type="text" name="title" required oninput={ onTitleInput }>
+            <input class="form-input" type="text" name="title" required>
           </div>
-          <div class="form-group" required>
+          <div class="form-group">
             <label>Slug</label>
-            <input class="form-input" type="text" name="name" ref="name" required oninput={ onNameInput }>
+            <input class="form-input" type="text" name="name" ref="name" oninput={ onNameInput }>
           </div>
           <div class="form-group">
             <label>Description</label>
@@ -82,16 +82,6 @@
         self.update()
         e.target.reset()
       })
-    }
-
-    onTitleInput(e) {
-      if (!self.stopListenTitle) {
-        self.refs.name.value = slugify(translit(e.target.value))
-      }
-    }
-
-    onNameInput(e) {
-      self.stopListenTitle = true
     }
 
     self.on("mount", () => {

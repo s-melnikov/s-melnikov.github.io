@@ -27,33 +27,33 @@
     </div>
     <div class="column col-3">
       <div class="text-center">
-        <button class="btn col-6 mb-10" onclick={ showAddFieldModal }>New field</button>
-        <button class="btn col-6 mb-10">Edit</button>
-        <button class="btn col-6">Delete</button>
+        <button class="btn col-6 mb-5">Edit</button>
+        <button class="btn col-6 mb-5">Delete</button>
+        <button class="btn col-6" onclick={ showAddFieldModal }>New field</button>
       </div>
     </div>
   </div>
 
-  <div class="modal active" if={ isAddFieldModalShowed }>
+  <div class="modal active modal-add-field" if={ isAddFieldModalShowed }>
     <div class="modal-overlay"></div>
     <form class="modal-container" onsubmit={ addFieldModalSubmit }>
       <div class="modal-header">
-        <a href="#" class="btn btn-clear float-right" onclick={ hideAddFieldModal }></a>
+        <span class="btn btn-clear float-right" onclick={ hideAddFieldModal }></span>
         <div class="modal-title">Add field</div>
       </div>
       <div class="modal-body">
         <div class="content">
           <div class="form-group">
-            <label>Field name</label>
-            <input class="form-input" type="text" name="field_name" required>
+            <label>Field title</label>
+            <input class="form-input" type="text" name="title" required>
           </div>
           <div class="form-group">
-            <label>Field identifier</label>
-            <input class="form-input" type="text" name="field_id" required>
+            <label>Field name</label>
+            <input class="form-input" type="text" name="name" required>
           </div>
           <div class="form-group">
             <label>Field type</label>
-            <select class="form-select" name="field_type">
+            <select class="form-select" name="type">
               <option value="string">String</option>
               <option value="text">Text</option>
               <option value="number">Number</option>
@@ -63,10 +63,24 @@
               <option value="reference">Reference</option>
             </select>
           </div>
+          <div class="form-group">
+            <label>Default value</label>
+            <input class="form-input" type="text" name="default">
+          </div>
+          <div class="form-group">
+            <label class="form-checkbox is-error">
+              <input type="checkbox" name="required">
+              <i class="form-icon"></i> Required
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-input" rows="3"></textarea>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
-        <span class="btn btn-link btn-close">Close</span>
+        <span class="btn btn-link btn-close" onclick={ hideAddFieldModal }>Close</span>
         <button class="btn btn-primary">Submit</button>
       </div>
     </form>
@@ -130,8 +144,6 @@
   <script>
     var self = this
 
-    self.isAddFieldModalShowed = false
-
     showAddFieldModal() {
       self.isAddFieldModalShowed = true
     }
@@ -141,7 +153,14 @@
     }
 
     addFieldModalSubmit(e) {
-      var data =
+      e.preventDefault()
+      var data = getFormData(e.target)
+      data.required = !!data.required
+      data.uid = pushId()
+      log("!", self.collection.fields[0])
+      log("!!", data)
+      // self.collection.field.push(data)
+      // api.collections().update()
     }
 
     self.on("mount", () => {

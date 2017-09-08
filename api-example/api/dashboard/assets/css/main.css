@@ -39,3 +39,6 @@ a.card:hover {
 .modal-add-collection .modal-container {
   width: 420px;
 }
+.modal-add-field .modal-container {
+  width: 360px;
+}

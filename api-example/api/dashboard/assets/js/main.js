@@ -35,6 +35,41 @@ var date = (() => {
   }
 })()
 
+var PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+function uid() {
+  var now = Date.now(), chars = [], i = 8, id
+  while (i--) {
+    chars[i] = PUSH_CHARS.charAt(now % 64)
+    now = Math.floor(now / 64)
+  }
+  id = chars.join("")
+  i = 12
+  while (i--) id += PUSH_CHARS.charAt(Math.floor(Math.random() * 64))
+  return id
+}
+
+console.log(uid())
+console.log(uid())
+console.log(uid())
+console.log(uid())
+console.log(uid())
+
+/*
+static function uid() {
+  $now = microtime(true) * 1000;
+  $timeStampChars = [];
+  for ($i = 0; $i < 8; $i++) {
+    $timeStampChars[] = substr(self::PUSH_CHARS, $now % 64, 1);
+    $now = floor($now / 64);
+  }
+  $id = implode('', array_reverse($timeStampChars));
+  for ($i = 0; $i < 12; $i++) {
+    $id .= substr(self::PUSH_CHARS, floor(rand(0, 63)), 1);
+  }
+  return $id;
+}
+*/
+
 var api = (() => {
 
   var base_url = "../"
