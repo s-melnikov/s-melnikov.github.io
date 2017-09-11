@@ -3,7 +3,7 @@
 /**
  *
  */
-class JDB {
+class DB {
 
   /**
    * Symbols for generating an unique id

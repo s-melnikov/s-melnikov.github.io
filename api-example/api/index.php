@@ -14,11 +14,11 @@ define('ROOT', realpath(dirname(__FILE__)) . DS);
 define('SYS', ROOT . 'sys' . DS);
 
 define('DEBUG', true);
-define('JDB_STORAGE', 'storage' . DIRECTORY_SEPARATOR);
+define('DB_STORAGE', 'storage' . DIRECTORY_SEPARATOR);
 
 require SYS . 'functions.php';
 require SYS . 'dispatch.php';
-require SYS . 'jdb.php';
+require SYS . 'db.php';
 require SYS . 'collections.php';
 
 config('url', str_replace(DS, '/',
@@ -28,7 +28,7 @@ map('GET', '/auth/', function() {
   $response = [];
   if (session('user')) {
     $uid = session('user');
-    $user = JDB::table('.users')->find_one($uid);
+    $user = DB::table('.users')->find_one($uid);
     if (!$user) {
       $response['status'] = 'USER_NOT_EXISTS';
     } else {
@@ -51,7 +51,7 @@ map('POST', '/auth/', function() {
   if (!isset($request['email']) || !isset($request['password'])) {
     $response['status'] = 'EMPTY_DATA';
   } else {
-    $user = JDB::table('.users')->find_one(['email' => $request['email']]);
+    $user = DB::table('.users')->find_one(['email' => $request['email']]);
     if (!$user) {
       $response['status'] = 'USER_NOT_EXISTS';
     } else {
@@ -70,9 +70,9 @@ map('POST', '/auth/', function() {
 
 map('GET', '/collections/', function() {
   $response = [];
-  $collections = JDB::table('collections')->find();
+  $collections = DB::table('collections')->find();
   foreach ($collections as &$collection) {
-    $user = JDB::table('.users')->find_one($collection['about']);
+    $user = DB::table('.users')->find_one($collection['about']);
     if ($user) {
       unset($user['hash']);
       $collection['about'] = $user;
@@ -86,19 +86,24 @@ map('GET', '/collections/', function() {
 
 map('POST', '/collections/', function() {
   $response = [];
+  $table_collections = DB::table('collections');
   $item = request_body();
-  $item['updated'] = date('Y-m-d H:i:s');
-  $item['about'] = JDB::table('.users')->find_one()['uid'];
-  $item['fields'] = [];
-  $uid = JDB::table('collections')->push($item);
-  $response['uid'] = $uid;
+  if ($table_collections->find_one(['name' => $item['name']])) {
+    $response['status'] = 'COLLECTION_WITH_SAME_NAME_ALREADY_EXISTS';
+  } else {
+    $item['updated'] = date('Y-m-d H:i:s');
+    $item['about'] = DB::table('.users')->find_one()['uid'];
+    $item['fields'] = [];
+    $uid = $table_collections->push($item);
+    $response['uid'] = $uid;
+  }
   json($response);
 });
 
 map('GET', '/collection/<id>', function($params) {
   $response = [];
-  $collection = JDB::table('collections')->find_one($params['id']);
-  $user = JDB::table('.users')->find_one($collection['about']);
+  $collection = DB::table('collections')->find_one($params['id']);
+  $user = DB::table('.users')->find_one($collection['about']);
   if ($user) {
     unset($user['hash']);
     $collection['about'] = $user;
@@ -110,4 +115,3 @@ map('GET', '/collection/<id>', function($params) {
 });
 
 dispatch();
-

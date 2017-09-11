@@ -1,12 +1,12 @@
 const log = console.log.bind(console)
 
-function getFormData(form) {
-  let res = {}, fd = new FormData(form)
-  for (let e of fd.entries()) res[e[0]] = e[1]
-    return res
+const getFormData = f => {
+  let r = {}, fd = new FormData(f)
+  for (let e of fd.entries()) r[e[0]] = e[1]
+  return r
 }
 
-function slugify(text) {
+const slugify = text => {
   return text.toString().toLowerCase()
     .replace(/\s+/g, '_')
     .replace(/[^\w\-]+/g, '')
@@ -15,65 +15,32 @@ function slugify(text) {
     .replace(/-+$/, '')
 }
 
-var translit = (function() {
-  var assoc = {
-    "а":"a","б":"b","в":"v","ґ":"g","г":"g","д":"d","е":"e","ё":"e","є":"ye","ж":"zh",
-    "з":"z","и":"i","і":"i","ї":"yi","й":"i","к":"k","л":"l","м":"m","н":"n","о":"o",
-    "п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","x":"h","ц":"c","ч":"ch","ш":"sh",
-    "щ":"sh'","ъ":"","ы":"i","ь":"","э":"e","ю":"yu","я":"ya"
-  }
-  return function(str) {
-    return (str || "").toLowerCase().split("").map(function(l) {
-      return assoc[l] != null ? assoc[l] : l
-    }).join("")
-  }
+const translit = (() => {
+  const a = "а:a,б:b,в:v,ґ:g,г:g,д:d,е:e,ё:e,є:ye,ж:zh,з:z,и:i,і:i,ї:yi,й:i,к:k,л:l,м:m,н:n,о:o,п:p,р:r,с:s,т:t,у:u,ф:f,x:h,ц:c,ч:ch,ш:sh,щ:sh',ъ:,ы:i,ь:,э:e,ю:yu,я:ya".split(",").reduce((a, b) => {
+    return b = b.split(":"), a[b[0]] = b[1], a
+  }, {})
+  return str => (str || "").toLowerCase().split("").map(l =>  a[l] != null ? a[l] : l ).join("")
 })()
 
-var date = (() => {
-  return (date) => {
-    return (new Date(date || Date.now())).toDateString()
-  }
-})()
+const date = d => (new Date(d || Date.now())).toDateString()
 
-var PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
-function uid() {
-  var now = Date.now(), chars = [], i = 8, id
+const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+const uid = () => {
+  let now = Date.now(), chars = [], i = 8, id
   while (i--) {
     chars[i] = PUSH_CHARS.charAt(now % 64)
     now = Math.floor(now / 64)
   }
   id = chars.join("")
   i = 12
-  while (i--) id += PUSH_CHARS.charAt(Math.floor(Math.random() * 64))
+  while (i--) {
+    id += PUSH_CHARS.charAt(Math.floor(Math.random() * 64))
+  }
   return id
 }
 
-console.log(uid())
-console.log(uid())
-console.log(uid())
-console.log(uid())
-console.log(uid())
-
-/*
-static function uid() {
-  $now = microtime(true) * 1000;
-  $timeStampChars = [];
-  for ($i = 0; $i < 8; $i++) {
-    $timeStampChars[] = substr(self::PUSH_CHARS, $now % 64, 1);
-    $now = floor($now / 64);
-  }
-  $id = implode('', array_reverse($timeStampChars));
-  for ($i = 0; $i < 12; $i++) {
-    $id .= substr(self::PUSH_CHARS, floor(rand(0, 63)), 1);
-  }
-  return $id;
-}
-*/
-
 var api = (() => {
-
   var base_url = "../"
-
   function req(path, data) {
     path = path || ""
     let headers = new Headers()
@@ -88,7 +55,6 @@ var api = (() => {
     }
     return fetch(base_url + path + "/", init).then(resp => resp.json())
   }
-
   return {
     collections: () => ({
       get: id => id ? req("collection/" + id) : req("collections"),
