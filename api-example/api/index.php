@@ -68,7 +68,7 @@ map('POST', '/auth/', function() {
   json($response);
 });
 
-map('GET', '/collections/', function() {
+map('GET', '/collection/', function() {
   $response = [];
   $collections = DB::table('collections')->find();
   foreach ($collections as &$collection) {
