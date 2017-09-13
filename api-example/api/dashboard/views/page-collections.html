@@ -78,10 +78,12 @@
       api.collections().push(data).then(resp => {
         data.uid = resp.uid
         data.updated = new Date().toDateString()
+        data.about = opts.app.user
         self.collections.push(data)
         self.update()
         e.target.reset()
       })
+      self.closeModal()
     }
 
     self.on("mount", () => {

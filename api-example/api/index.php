@@ -84,7 +84,7 @@ map('GET', '/collection/', function() {
   json($response);
 });
 
-map('POST', '/collections/', function() {
+map('POST', '/collection/', function() {
   $response = [];
   $table_collections = DB::table('collections');
   $item = request_body();

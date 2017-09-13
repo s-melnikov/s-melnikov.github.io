@@ -1,3 +1,6 @@
+body {
+  background: #f0f2f7;
+}
 #alerts {
   position: fixed;
   top: 1rem;
@@ -7,13 +10,33 @@
 }
 .container {
   display: block;
-  max-width: 960px;
   padding: 0 15px;
 }
 .main-header {
   padding-top: 10px;
   height: 54px;
   border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+}
+.sidebar {
+  position: fixed;
+  top: 53px;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background: #222233;
+}
+.sidebar .nav {
+  padding: 10px 10px 10px 20px;
+}
+.sidebar .nav-item a {
+  display: block;
+  color: #fff;
+  padding: 1rem;
+}
+router.container {
+  display: block;
+  padding-left: 275px;
 }
 .muted {
   color: #ccc;
