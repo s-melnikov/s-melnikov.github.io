@@ -157,15 +157,14 @@
       var data = getFormData(e.target)
       data.required = !!data.required
       data.uid = pushId()
-      log("!", self.collection.fields[0])
-      log("!!", data)
+      console.log("!", self.collection.fields[0])
+      console.log("!!", data)
       // self.collection.field.push(data)
       // api.collections().update()
     }
 
     self.on("mount", () => {
       api.collections().get(opts.id).then(resp => {
-        log("api.collections().get(id)", resp)
         self.collection = resp.collection
         self.update()
       })

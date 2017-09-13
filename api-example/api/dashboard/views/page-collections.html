@@ -86,7 +86,6 @@
 
     self.on("mount", () => {
       api.collections().get().then(resp => {
-        log("api.collections().get()", resp)
         self.collections = resp.collections
         self.update()
       })

@@ -39,9 +39,9 @@ const uid = () => {
   return id
 }
 
-var api = (() => {
+const api = (() => {
   var base_url = "../"
-  function req(path, data) {
+  const req = (path, data) => {
     path = path || ""
     let headers = new Headers()
     let init = {
@@ -72,3 +72,4 @@ var api = (() => {
     })
   }
 })()
+

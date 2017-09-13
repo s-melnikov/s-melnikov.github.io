@@ -60,7 +60,6 @@
 
     self.on("mount", () => {
       api.auth().status().then(resp => {
-        log("app:mount", resp)
         if (resp.user) {
           self.user = resp.user
           self.update()

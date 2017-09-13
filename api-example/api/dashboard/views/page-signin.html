@@ -47,7 +47,6 @@
       e.preventDefault()
       let data = getFormData(e.target)
       api.auth().signin(data).then(resp => {
-        log("signin:formSubmit", resp)
         if (resp.user) {
           opts.app.user = resp.user
           opts.app.update()
