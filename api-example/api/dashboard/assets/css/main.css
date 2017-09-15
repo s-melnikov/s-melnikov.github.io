@@ -1,5 +1,6 @@
 body {
-  background: #f0f2f7;
+  background: #f4f6f9;
+  padding: 70px 0 50px;
 }
 #alerts {
   position: fixed;
@@ -13,14 +14,28 @@ body {
   padding: 0 15px;
 }
 .main-header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
   padding-top: 10px;
-  height: 54px;
+  height: 60px;
   border-bottom: 1px solid #f0f0f0;
   background: #fff;
 }
+.navbar .navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding: 1rem 1.5rem;
+  text-transform: uppercase;
+  outline: none;
+}
+.navbar .navbar-brand:focus {
+  box-shadow: none;
+}
 .sidebar {
   position: fixed;
-  top: 53px;
+  top: 60px;
   left: 0;
   bottom: 0;
   width: 260px;
@@ -31,26 +46,22 @@ body {
 }
 .sidebar .nav-item a {
   display: block;
-  color: #fff;
   padding: 1rem;
+  color: #94a2bf;
 }
-router.container {
+.sidebar .nav-item a:hover {
+  color: #eee;
+}
+.sidebar .nav-item a:focus {
+  box-shadow: none;
+  color: #fff;
+}
+router.container.auth {
   display: block;
   padding-left: 275px;
 }
 .muted {
   color: #ccc;
-}
-.navbar a.active:not(.navbar-brand),
-.nav .nav-item a.active {
-  font-weight: 700;
-}
-.nav .nav-item a.active:focus,
-.nav .nav-item a.active:hover {
-  color: #5764c6;
-}
-[onclick] {
-  cursor: pointer;
 }
 a.card:hover {
   text-decoration: none;
@@ -64,4 +75,23 @@ a.card:hover {
 }
 .modal-add-field .modal-container {
   width: 360px;
+}
+.panel {
+  background: #fff;
+  padding: 15px;
+}
+.page-header::before,
+.page-header::after {
+  clear: both;
+  display: table;
+  content: "";
+}
+.page-header h1,
+.page-header h2,
+.page-header h3 {
+  float: left;
+}
+.page-header .btn {
+  float: right;
+  margin: 10px 0 0 10px;
 }

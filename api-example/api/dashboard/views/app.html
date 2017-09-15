@@ -6,11 +6,12 @@
         <div class="navbar-section">
           <a href="#" class="navbar-brand">Content System</a>
         </div>
+        <div class="navbar-section"></div>
       </div>
     </div>
   </div>
 
-  <div class="sidebar">
+  <div class="sidebar" if={ user }>
     <ul class="nav">
       <li class="nav-item">
         <a href="#collections">Collections</a>
@@ -27,7 +28,7 @@
     </ul>
   </div>
 
-  <router class="container"></router>
+  <router class="container { auth: user }"></router>
 
   <div id="alerts">
     <div each={ alerts } class="toast toast-error">
