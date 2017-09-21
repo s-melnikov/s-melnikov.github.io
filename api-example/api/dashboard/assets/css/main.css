@@ -2,6 +2,9 @@ body {
   background: #f4f6f9;
   padding: 70px 0 50px;
 }
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+}
 #alerts {
   position: fixed;
   top: 1rem;
@@ -24,9 +27,9 @@ body {
   background: #fff;
 }
 .navbar .navbar-brand {
-  font-size: 1.5rem;
+  font-size: 17px;
   font-weight: 400;
-  padding: 1rem 1.5rem;
+  padding: 10px 25px;
   text-transform: uppercase;
   outline: none;
 }
@@ -46,7 +49,7 @@ body {
 }
 .sidebar .nav-item a {
   display: block;
-  padding: 1rem;
+  padding: 15px 10px;
   color: #94a2bf;
 }
 .sidebar .nav-item a:hover {
@@ -78,7 +81,6 @@ a.card:hover {
 }
 .panel {
   background: #fff;
-  padding: 15px;
 }
 .page-header::before,
 .page-header::after {
