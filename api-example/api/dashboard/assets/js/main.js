@@ -1,11 +1,5 @@
 const log = console.log.bind(console)
 
-const getFormData = f => {
-  let r = {}, fd = new FormData(f)
-  for (let e of fd.entries()) r[e[0]] = e[1]
-  return r
-}
-
 const slugify = text => {
   return text.toString().toLowerCase()
     .replace(/\s+/g, '_')
