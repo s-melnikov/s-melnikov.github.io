@@ -1,25 +1,25 @@
 <page-signin>
   <div class="auth-form">
     <h3 class="text-center">Sign in to System</h3>
-    <form class="card" onsubmit={ formSubmit }>
+    <div class="card">
       <div class="card-body">
-        <div class="form-group">
-          <label class="form-label" for="email">Email address</label>
-          <input class="form-input" type="email" name="email" required>
+        <div class="form-group { 'has-error': error }">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" ref="email">
         </div>
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <input class="form-input" type="password" name="password" required>
+        <div class="form-group { 'has-error': error }">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" ref="password">
         </div>
       </div>
       <div class="card-footer">
-        <button class="btn btn-block">Sign in</button>
+        <button class="btn btn-block { loading: loading }" onclick={ formSubmit }>Sign in</button>
       </div>
-    </form>
+    </div>
   </div>
 
   <div id="alerts" if={ error }>
-    <div class="toast toast-error">{ error }</div>
+    <div class="toast toast-error">Email or password was wrong</div>
   </div>
 
   <style>
@@ -39,18 +39,28 @@
   </style>
 
   <script>
-    var self = this
+    let errors = {}
+    this.errors = false
+    this.loading = false
 
-    self.on('mount', () => {})
-
-    formSubmit(e) {
+    this.formSubmit = e => {
       e.preventDefault()
-      let data = getFormData(e.target)
-      api.auth().signin(data).then(resp => {
+      this.error = false
+      this.loading = true
+      let email = this.refs.email.value,
+        password = this.refs.password.value
+
+      api.auth().signin({ email, password }).then(resp => {
         if (resp.user) {
           opts.app.user = resp.user
           opts.app.update()
           route("index")
+        } else {
+          setTimeout(() => {
+            this.loading = false
+            this.error = true
+            this.update()
+          }, 3000)
         }
       })
     }
