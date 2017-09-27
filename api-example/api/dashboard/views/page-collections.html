@@ -2,15 +2,26 @@
 
   <div class="page-header">
     <h2>Collections</h2>
-    <button class="btn" onclick={ showModal }>New collection</button>
   </div>
 
+  <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="#">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="#collections">Collections</a>
+    </li>
+  </ul>
+
   <div class="columns">
-    <div class="column col-12">
+    <div class="column col-9">
       <div class="panel">
         <div class="panel-header"></div>
         <div class="panel-nav"></div>
         <div class="panel-body">
+          <div class="text-right">
+            <button class="btn" onclick={ showModal }>New collection</button>
+          </div>
           <table class="table table-hover">
             <thead>
               <tr>
