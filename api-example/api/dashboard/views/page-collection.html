@@ -1,35 +1,59 @@
 <page-collection>
 
-  <h2>Collection</h2>
+  <div class="page-header">
+    <h2>Collection</h2>
+  </div>
+
+  <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="#">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="#collections">Collection</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="#collections">{ collection.title }</a>
+    </li>
+  </ul>
 
   <div class="columns">
     <div class="column col-9">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody if={ collection }>
-          <tr each={ collection.fields }>
-            <td>{ title }</td>
-            <td>{ name }</td>
-            <td>{ type }</td>
-            <td class="text-right">
-              <a class="btn btn-link">action</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="column col-3">
-      <div class="text-center">
-        <button class="btn col-6 mb-5">Edit</button>
-        <button class="btn col-6 mb-5">Delete</button>
-        <button class="btn col-6" onclick={ showAddFieldModal }>New field</button>
+      <div class="panel">
+        <div class="panel-header"></div>
+        <div class="panel-nav"></div>
+        <div class="panel-body">
+          <div class="text-right">
+            <div class="columns">
+              <div class="column col-6"></div>
+              <div class="column col-6">
+                <button class="btn col-3" onclick={ showAddFieldModal }>New field</button>
+                <button class="btn col-3">Edit</button>
+                <button class="btn col-3">Delete</button>
+              </div>
+            </div>
+          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody if={ collection }>
+              <tr each={ collection.fields }>
+                <td>{ title }</td>
+                <td>{ name }</td>
+                <td>{ type }</td>
+                <td class="text-right">
+                  <span>action</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-footer"></div>
       </div>
     </div>
   </div>
@@ -143,6 +167,7 @@
 
   <script>
     var self = this
+    self.collection = {}
 
     showAddFieldModal() {
       self.isAddFieldModalShowed = true
@@ -164,7 +189,7 @@
     }
 
     self.on("mount", () => {
-      api.collections().get(opts.id).then(resp => {
+      api.collection(opts.id).get().then(resp => {
         self.collection = resp.collection
         self.update()
       })

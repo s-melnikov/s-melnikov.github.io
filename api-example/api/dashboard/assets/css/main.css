@@ -1,5 +1,5 @@
 body {
-  background: #f4f6f9;
+  background: #fbfbfb;
   padding: 70px 0 50px;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -42,7 +42,8 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   bottom: 0;
   width: 260px;
-  background: #222233;
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
 }
 .sidebar .nav {
   padding: 10px 10px 10px 20px;
@@ -53,11 +54,11 @@ h1, h2, h3, h4, h5, h6 {
   color: #94a2bf;
 }
 .sidebar .nav-item a:hover {
-  color: #eee;
+  color: #777;
 }
 .sidebar .nav-item a:focus {
   box-shadow: none;
-  color: #fff;
+  color: #333;
 }
 router.container.auth {
   display: block;
@@ -99,4 +100,7 @@ a.card:hover {
 }
 .table th {
   border-bottom-width: .05rem;
+}
+.mt-3 {
+  margin-top: .8rem;
 }
