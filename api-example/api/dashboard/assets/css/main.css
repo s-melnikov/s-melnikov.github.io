@@ -104,3 +104,6 @@ a.card:hover {
 .mt-3 {
   margin-top: .8rem;
 }
+.modal-delete-collection .modal-container {
+  width: 360px;
+}

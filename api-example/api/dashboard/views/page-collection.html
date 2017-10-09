@@ -9,10 +9,10 @@
       <a href="#">Home</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="#collections">Collection</a>
+      <a href="#collections">Collections</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="#collections">{ collection.title }</a>
+      <a href="#collection/{ collection.uid }">{ collection.title }</a>
     </li>
   </ul>
 
@@ -27,8 +27,10 @@
               <div class="column col-6"></div>
               <div class="column col-6">
                 <button class="btn col-3" onclick={ showAddFieldModal }>New field</button>
-                <button class="btn col-3">Edit</button>
-                <button class="btn col-3">Delete</button>
+                <button class="btn col-3 btn-primary">Edit</button>
+                <button class="btn btn-link col-3" onclick={ showDeleteCollectionModal }>
+                  <span class="text-error">Delete</span>
+                </button>
               </div>
             </div>
           </div>
@@ -54,6 +56,33 @@
           </table>
         </div>
         <div class="panel-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal active modal-delete-collection" show={ isDeleteCollectionModalShowed }>
+    <div class="modal-overlay"></div>
+    <div class="modal-container" method="post">
+      <div class="modal-header">
+        <a href="#" class="btn btn-clear float-right"></a>
+        <div class="modal-title">Delete collection</div>
+      </div>
+      <div class="modal-body">
+        <div class="content text-center">
+          <p>Are you <strong>ABSOLUTELY</strong> sure?</p>
+          <p>This action <strong>CANNOT</strong> be undone.
+            This will permanently delete the
+            "<strong>{ collection.title }</strong>" collection.</p>
+          <p>Please type in the name of the repository to confirm.</p>
+          <div class="form-group">
+            <input class="form-input" type="text" oninput={ deleteModalInputOnValue }>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-block" disabled={ !isDelColBtnEnabled }>
+          Delete this collection
+        </button>
       </div>
     </div>
   </div>
@@ -138,36 +167,33 @@
     </form>
   </div>
 
-  <div class="modal" id="delete-collection">
-    <div class="modal-overlay"></div>
-    <form class="modal-container" style="width:420px" method="post">
-      <div class="modal-header">
-        <a href="#" class="btn btn-clear float-right"></a>
-        <div class="modal-title">Delete collection</div>
-      </div>
-      <div class="modal-body">
-        <div class="content text-center">
-          <p>Are you <strong>ABSOLUTELY</strong> sure?</p>
-          <p>This action <strong>CANNOT</strong> be undone.
-            This will permanently delete the
-            "<strong><?php print $collection['name'] ?></strong>" collection.</p>
-          <p>Please type in the name of the repository to confirm.</p>
-          <div class="form-group">
-            <input class="form-input" type="text" name="to_delete" required>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-block" disabled>
-          I understand the consequences, delete this collection
-        </button>
-      </div>
-    </form>
-  </div>
-
   <script>
-    var self = this
+    let self = this,
+      ref = api.collection(opts.id)
+
+    self.isDelColBtnEnabled = false
+    self.isDeleteCollectionModalShowed = false
+    self.isAddFieldModalShowed = false
+
     self.collection = {}
+
+    deleteModalInputOnValue(e) {
+      self.isDelColBtnEnabled = e.target.value == self.collection.title
+    }
+
+    deleteCollection() {
+      ref.delete().then(resp => {
+        console.log(resp)
+      })
+    }
+
+    showDeleteCollectionModal() {
+      self.isDeleteCollectionModalShowed = true
+    }
+
+    hideDeleteCollectionModal() {
+      self.isDeleteCollectionModalShowed = false
+    }
 
     showAddFieldModal() {
       self.isAddFieldModalShowed = true
@@ -179,7 +205,7 @@
 
     addFieldModalSubmit(e) {
       e.preventDefault()
-      var data = getFormData(e.target)
+      let data = getFormData(e.target)
       data.required = !!data.required
       data.uid = pushId()
       console.log("!", self.collection.fields[0])
@@ -189,7 +215,7 @@
     }
 
     self.on("mount", () => {
-      api.collection(opts.id).get().then(resp => {
+      ref.get().then(resp => {
         self.collection = resp.collection
         self.update()
       })
