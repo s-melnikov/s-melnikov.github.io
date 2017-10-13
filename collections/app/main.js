@@ -57,6 +57,33 @@ const ls = name => {
   }
 }
 
+let state = {
+  count: 0
+}
+
+let actions = {
+  down: state => ({ count: state.count - 1 }),
+  up: state => ({ count: state.count + 1 })
+}
+
+let router = (state, actions, routes) => h("div", {
+  id: "router",
+  oncreate: () => console.log("!")
+})
+
+let routes = {
+  "/": h("div", null, "Hi!"),
+  "*": h("div", null, "404")
+}
+
+let view = (state, actions) => h("div", { class: "conatiner" },
+  router(state, actions, routes)
+)
+
+app({state, actions, view}, document.querySelector("#root"))
+
+
+
 /*
 fetch("mocks/Users.json").then(resp => resp.json()).then(data => {
   let table = ls("Users")
@@ -75,24 +102,3 @@ fetch("mocks/Companies.json").then(resp => resp.json()).then(data => {
   data.map(item => { table.add(item) })
 })
 */
-
-let state = {
-  count: 0
-}
-
-let actions = {
-  down: state => ({ count: state.count - 1 }),
-  up: state => ({ count: state.count + 1 })
-}
-
-let view = (state, actions) => h("main", null,
-  h("h1", null, state.count),
-  h("button", { onclick: actions.down }, "-"),
-  h("button", { onclick: actions.up }, "+")
-)
-
-app({
-  state,
-  actions,
-  view
-})
