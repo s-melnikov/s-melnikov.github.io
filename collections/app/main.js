@@ -13,6 +13,46 @@ const uniqid = () => {
   return id
 }
 
+function log(prevState, action, nextState) {
+  console.group('%c action', 'color: gray; font-weight: lighter;', action.name);
+  console.log('%c prev state', 'color: #9E9E9E; font-weight: bold;', prevState);
+  console.log('%c data', 'color: #03A9F4; font-weight: bold;', action.data);
+  console.log('%c next state', 'color: #4CAF50; font-weight: bold;', nextState);
+  console.groupEnd();
+}
+
+function logger(options) {
+  options = options || {};
+  options.log = typeof options.log === 'function' ? options.log : log;
+
+  return function(emit) {
+    var actionStack = [];
+    return {
+      events: {
+        action: function(state, actions, action) {
+          actionStack.push(action);
+        },
+        resolve: function(state, actions, result) {
+          if (typeof result === 'function') {
+            var action = actionStack.pop();
+            return function(update) {
+              return result(function(result) {
+                actionStack.push(action);
+                return update(result);
+              });
+            };
+          }
+        },
+        update: function(state, actions, nextState) {
+          options.log(state, actionStack.pop(), nextState);
+        }
+      }
+    };
+  };
+}
+
+"div,h1,h2,h3,h4,h5,p,ul,li,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
+
 const ls = name => {
   name = "Table" + name
   let getItems = () => {
@@ -57,32 +97,32 @@ const ls = name => {
   }
 }
 
-let state = {
-  count: 0
-}
-
-let actions = {
-  down: state => ({ count: state.count - 1 }),
-  up: state => ({ count: state.count + 1 })
-}
-
-let router = (state, actions, routes) => h("div", {
-  id: "router",
-  oncreate: () => console.log("!")
+let Router = (state, actions, routes) => h("div", {
+  id: "router"
 })
 
 let routes = {
-  "/": h("div", null, "Hi!"),
-  "*": h("div", null, "404")
+  "/": div(null, "Hi!"),
+  "*": div(null, "404")
 }
 
-let view = (state, actions) => h("div", { class: "conatiner" },
-  router(state, actions, routes)
-)
+let actions = app({
+  init(state, actions) {
+    console.log("!nit")
+  },
+  state: {
+    count: 0
+  },
+  actions: {
+    down: state => ({ count: state.count - 1 }),
+    up: state => ({ count: state.count + 1 })
+  },
+  view: (state, actions) => h("div", { class: "conatiner" },
+    Router(state, actions, routes)
+  )
+}, document.querySelector("#root"))
 
-app({state, actions, view}, document.querySelector("#root"))
-
-
+window.addEventListener("hashchange", actions.hash)
 
 /*
 fetch("mocks/Users.json").then(resp => resp.json()).then(data => {
