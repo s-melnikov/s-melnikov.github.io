@@ -21,37 +21,7 @@ function log(prevState, action, nextState) {
   console.groupEnd();
 }
 
-function logger(options) {
-  options = options || {};
-  options.log = typeof options.log === 'function' ? options.log : log;
-
-  return function(emit) {
-    var actionStack = [];
-    return {
-      events: {
-        action: function(state, actions, action) {
-          actionStack.push(action);
-        },
-        resolve: function(state, actions, result) {
-          if (typeof result === 'function') {
-            var action = actionStack.pop();
-            return function(update) {
-              return result(function(result) {
-                actionStack.push(action);
-                return update(result);
-              });
-            };
-          }
-        },
-        update: function(state, actions, nextState) {
-          options.log(state, actionStack.pop(), nextState);
-        }
-      }
-    };
-  };
-}
-
-"div,h1,h2,h3,h4,h5,p,ul,li,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
+"div,h1,h2,h3,h4,h5,p,ul,li,form,label,input,button,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
 
 const ls = name => {
   name = "Table" + name
@@ -106,23 +76,64 @@ let routes = {
   "*": div(null, "404")
 }
 
-let actions = app({
+function logger(app) {
+  return props => {
+    return app(enhance(props))
+  }
+  function enhance(props) {
+
+    function proxy(obj) {
+      for ()
+    }
+
+    /*props.init = (state, actions) => {
+      props.actions = new Proxy(props.actions, {
+        apply(target, thisArg, argumentsList) {
+          console.log(target, thisArg, argumentsList)
+          return target.apply(thisArg, argumentsList);
+        }
+        // get(target, prop) {
+        //   log({}, { name: prop }, {})
+        //   return target[prop]
+        // }
+      })
+      return init(state, actions)
+    }*/
+
+
+
+    return props
+  }
+  function log(prevState, action, nextState) {
+    console.groupCollapsed('%c action', 'color: gray; font-weight: lighter;', action.name);
+    console.log('%c prev state', 'color: #9E9E9E; font-weight: bold;', prevState);
+    console.log('%c data', 'color: #03A9F4; font-weight: bold;', action.data);
+    console.log('%c next state', 'color: #4CAF50; font-weight: bold;', nextState);
+    console.groupEnd();
+  }
+}
+
+logger(app)({
   init(state, actions) {
-    console.log("!nit")
+    window.addEventListener("hashchange", actions.route)
+    actions.route()
   },
   state: {
+    route: [""],
     count: 0
   },
   actions: {
+    route: () => ({ route: location.hash.slice(1).split("/") }),
     down: state => ({ count: state.count - 1 }),
     up: state => ({ count: state.count + 1 })
   },
   view: (state, actions) => h("div", { class: "conatiner" },
+    button({ onclick: actions.up }, "+"),
+    span(null, state.count),
+    button({ onclick: actions.down }, "-"),
     Router(state, actions, routes)
   )
 }, document.querySelector("#root"))
-
-window.addEventListener("hashchange", actions.hash)
 
 /*
 fetch("mocks/Users.json").then(resp => resp.json()).then(data => {
