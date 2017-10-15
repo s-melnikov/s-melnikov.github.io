@@ -82,6 +82,7 @@ function logger(app) {
   }
   function enhance(props) {
     proxy(props.actions)
+    console.log(props.actions)
     return props
   }
   function proxy(actions) {
