@@ -81,28 +81,26 @@ function logger(app) {
     return app(enhance(props))
   }
   function enhance(props) {
-
-    function proxy(obj) {
-      for ()
-    }
-
-    /*props.init = (state, actions) => {
-      props.actions = new Proxy(props.actions, {
-        apply(target, thisArg, argumentsList) {
-          console.log(target, thisArg, argumentsList)
-          return target.apply(thisArg, argumentsList);
-        }
-        // get(target, prop) {
-        //   log({}, { name: prop }, {})
-        //   return target[prop]
-        // }
-      })
-      return init(state, actions)
-    }*/
-
-
-
+    proxy(props.actions)
     return props
+  }
+  function proxy(actions) {
+    for (let prop in actions) {
+      if (actions.hasOwnProperty(prop)) {
+        if (typeof actions[prop] == "function") {
+          actions[prop] = new Proxy(actions[prop], {
+            apply(target, self, args) {
+              let prevState = Object.assign({}, args[0])
+              let newState = target.apply(self, args)
+              log(prevState, { name: prop, data: args[2] }, newState)
+              return newState
+            }
+          })
+        } else {
+          proxy(actions[prop])
+        }
+      }
+    }
   }
   function log(prevState, action, nextState) {
     console.groupCollapsed('%c action', 'color: gray; font-weight: lighter;', action.name);
