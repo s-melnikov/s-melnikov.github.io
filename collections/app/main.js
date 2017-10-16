@@ -1,28 +1,5 @@
 const { h, app } = hyperapp
 
-const uniqid = () => {
-  let src = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", now = Date.now(), chars = [], i = 8, id
-  while (i--) {
-    chars[i] = src.charAt(now % 64)
-    now = Math.floor(now / 64)
-  }
-  id = chars.join("")
-  while (i++ < 8) {
-    id += src.charAt(Math.floor(Math.random() * 64))
-  }
-  return id
-}
-
-function log(prevState, action, nextState) {
-  console.group('%c action', 'color: gray; font-weight: lighter;', action.name);
-  console.log('%c prev state', 'color: #9E9E9E; font-weight: bold;', prevState);
-  console.log('%c data', 'color: #03A9F4; font-weight: bold;', action.data);
-  console.log('%c next state', 'color: #4CAF50; font-weight: bold;', nextState);
-  console.groupEnd();
-}
-
-"div,h1,h2,h3,h4,h5,p,ul,li,form,label,input,button,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
-
 const ls = name => {
   name = "Table" + name
   let getItems = () => {
@@ -67,22 +44,16 @@ const ls = name => {
   }
 }
 
-let Router = (state, actions, routes) => h("div", {
-  id: "router"
-})
+"div,h1,h2,h3,h4,h5,p,ul,li,form,label,input,button,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
 
-let routes = {
-  "/": div(null, "Hi!"),
-  "*": div(null, "404")
-}
-
-function logger(app) {
-  return props => {
-    return app(enhance(props))
+function Logger(app) {
+  return (props, root) => {
+    return app(enhance(props), root)
   }
   function enhance(props) {
-    proxy(props.actions)
-    console.log(props.actions)
+    if (props.actions) {
+      proxy(props.actions)
+    }
     return props
   }
   function proxy(actions) {
@@ -112,26 +83,68 @@ function logger(app) {
   }
 }
 
-logger(app)({
-  init(state, actions) {
-    window.addEventListener("hashchange", actions.route)
-    actions.route()
-  },
-  state: {
-    route: [""],
-    count: 0
-  },
+function Router(app) {
+  return (props, root) => {
+    props.init = (state, actions) => {
+      addEventListener("hashchange", () => {
+        actions.router.set()
+      })
+      actions.router.set()
+    }
+    return app(enhance(props), root)
+  }
+  function enhance(props) {
+    let routes = []
+    if (!props.state) props.state = {}
+    if (!props.actions) props.actions = {}
+    props.state.router = {}
+    props.actions.router = {
+      set() {
+        let pathname = location.hash.slice(1) || "/",
+          params = {}, match
+        for (let i = 0; (i < routes.length); i++) {
+          if (match = routes[i].rgx.exec(pathname)) {
+            routes[i].keys.map((key, i) => params[key] = match[i + 1])
+            props.view = routes[i].view
+            return { params, pathname }
+          }
+        }
+      },
+      go() {}
+    }
+    Object.keys(props.view).map(path => {
+      let keys = []
+      routes.push({
+        rgx: RegExp(path === "*" ? ".*" : "^" +
+          path.replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
+            keys.push(key)
+            return "([-\\.%\\w\\(\\)]+)"
+          }) + "/?$"),
+        view: props.view[path],
+        keys
+      })
+    })
+    return props
+  }
+}
+
+const Layout = child => {
+  return (state, actions) => {
+    return div(null, "Layout", child(state, actions))
+  }
+}
+
+const Page404 = () => h3(null, "404")
+
+Router(Logger(app))({
+  state: { count: 0 },
   actions: {
-    route: () => ({ route: location.hash.slice(1).split("/") }),
-    down: state => ({ count: state.count - 1 }),
-    up: state => ({ count: state.count + 1 })
+    up: ({ count }) => ({ count: count++ })
   },
-  view: (state, actions) => h("div", { class: "conatiner" },
-    button({ onclick: actions.up }, "+"),
-    span(null, state.count),
-    button({ onclick: actions.down }, "-"),
-    Router(state, actions, routes)
-  )
+  view: {
+    "/": Layout(),
+    "*": Layout(Page404)
+  }
 }, document.querySelector("#root"))
 
 /*
