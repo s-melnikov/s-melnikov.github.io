@@ -1,50 +1,62 @@
 const { h, app } = hyperapp
 
-const ls = name => {
-  name = "Table" + name
-  let getItems = () => {
+const ls = {
+  tables() {
+    let names = []
+    Object.keys(localStorage).map(name => {
+      if (name.indexOf("Table") === 0) {
+        names.push(name.slice(5))
+      }
+    })
+    return names
+  },
+  table(name) {
+    name = "Table" + name
+    return {
+      add(item) {
+        let items = ls.getItems(name)
+        let uid = ls.uniqid()
+        if (items[uid]) {
+          throw Error("LS Error #1")
+        }
+        items[uid] = item
+        ls.save(items, name)
+        return uid
+      },
+      put(uid, item) {
+        let items = ls.getItems(name)
+        if (!items[uid]) {
+          throw Error("LS Error #2")
+        }
+        Object.assign(items[uid], item)
+        ls.save(items, name)
+      },
+      get(uid) {
+        if (uid) {
+          return ls.getItems(name)[uid]
+        }
+        return ls.getItems(name)
+      },
+      del(uid) {
+        let items = ls.getItems(name)
+        delete items[uid]
+        ls.save(items, name)
+      },
+      drop() { return ls.save({}, name) }
+    }
+  },
+  getItems(name) {
     if (localStorage[name] == null) {
       localStorage[name] = "{}"
     }
     return JSON.parse(localStorage[name])
-  }
-  let save = items => {
+  },
+  save(items, name) {
     localStorage[name] = JSON.stringify(items)
-  }
-  return {
-    add: item => {
-      let items = getItems()
-      let uid = uniqid()
-      if (items[uid]) {
-        throw Error("LS Error #1")
-      }
-      items[uid] = item
-      save(items)
-      return uid
-    },
-    put: (uid, item) => {
-      let items = getItems()
-      if (!items[uid]) {
-        throw Error("LS Error #2")
-      }
-      Object.assign(items[uid], item)
-      save(items)
-    },
-    get: uid => {
-      let item = getItems()[uid]
-      return item
-    },
-    delete: uid => {
-      let items = getItems()
-      delete items[uid]
-      save(items)
-    },
-    getAll: () => getItems(),
-    drop: () => save({})
   }
 }
 
-"div,h1,h2,h3,h4,h5,p,ul,li,form,label,input,button,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
+"header,section,div,h1,h2,h3,h4,h5,p,ul,li,table,th,tr,td,tbody,thead,form,label,input,button,a,span".split(",").map(t => window[t] = (props, ...args) => h(t, props, ...args))
 
 function Logger(app) {
   return (props, root) => {
@@ -52,11 +64,11 @@ function Logger(app) {
   }
   function enhance(props) {
     if (props.actions) {
-      proxy(props.actions)
+      proxy(props.actions, "")
     }
     return props
   }
-  function proxy(actions) {
+  function proxy(actions, path) {
     for (let prop in actions) {
       if (actions.hasOwnProperty(prop)) {
         if (typeof actions[prop] == "function") {
@@ -64,12 +76,12 @@ function Logger(app) {
             apply(target, self, args) {
               let prevState = Object.assign({}, args[0])
               let newState = target.apply(self, args)
-              log(prevState, { name: prop, data: args[2] }, newState)
+              log(prevState, { name: path + prop, data: args[2] }, newState)
               return newState
             }
           })
         } else {
-          proxy(actions[prop])
+          proxy(actions[prop], path + prop + ".")
         }
       }
     }
@@ -85,13 +97,12 @@ function Logger(app) {
 
 function Router(app) {
   return (props, root) => {
-    props.init = (state, actions) => {
-      addEventListener("hashchange", () => {
-        actions.router.set()
-      })
+    let actions = app(enhance(props), root)
+    addEventListener("hashchange", () => {
       actions.router.set()
-    }
-    return app(enhance(props), root)
+    })
+    actions.router.set()
+    return actions
   }
   function enhance(props) {
     let routes = []
@@ -130,19 +141,86 @@ function Router(app) {
 
 const Layout = child => {
   return (state, actions) => {
-    return div(null, "Layout", child(state, actions))
+    return div({ class: "container" },
+      Header(state, actions),
+      div({ class: "columns" },
+        div({ class: "column col-2" },
+          ul({ class: "nav" },
+            state.tables.map(name => li({ class: "nav-item" },
+              a({ href: "#/table/" + name }, name)
+            ))
+          )
+        ),
+        div({ class: "column col-10" },
+          child(state, actions)
+        )
+      )
+    )
   }
 }
 
-const Page404 = () => h3(null, "404")
+const Header = (state, actions) => header({ class: "navbar"},
+  section({ class: "navbar-section" },
+    a({ href: "#", class: "navbar-brand mr-2" }, "Collections")
+  ),
+  section({ class: "navbar-section" })
+)
+
+const Page404 = (state, actions) => div({ class: "page", key: "page-404" },
+  h3(null, "404")
+)
+
+const PageIndex = (state, actions) => div({ class: "page", key: "page-index" },
+  h3(null, "Index Page")
+)
+
+const PageTable = (state, actions) => div({
+    class: "page",
+    key: "page-table-" + state.router.params.table,
+    oncreate: () => actions.table.get(state.router.params.table)
+  },
+  h3(null, "Page Table " + state.router.params.table),
+  ItemsTable(state, actions, state.table[state.router.params.table])
+)
+
+const ItemsTable = (state, actions, items) => {
+  if (!items) {
+    return p(null, "Nothing")
+  }
+  let uids = Object.keys(items)
+  let cols = Object.keys(items[uids[0]])
+  return table({ class: "table table-striped table-hover" },
+    thead(null,
+      cols.map(col => th(null, col))
+    ),
+    tbody(null,
+      uids.map(uid => tr(null,
+        cols.map(col => td({ title: items[uid][col] }, items[uid][col]  ))
+      ))
+    )
+  )
+}
 
 Router(Logger(app))({
-  state: { count: 0 },
+  init(state, actions) {
+    actions.tables(ls.tables())
+  },
+  state: {
+    tables: []
+  },
   actions: {
-    up: ({ count }) => ({ count: count++ })
+    tables: (state, actions, tables) => ({ tables }),
+    table: {
+      get: (state, actions, name) => {
+        return {
+          [name]: ls.table(name).get()
+        }
+      }
+    }
   },
   view: {
-    "/": Layout(),
+    "/": Layout(PageIndex),
+    "/table/:table": Layout(PageTable),
     "*": Layout(Page404)
   }
 }, document.querySelector("#root"))
