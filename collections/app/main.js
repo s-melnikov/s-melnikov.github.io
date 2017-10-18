@@ -1,5 +1,5 @@
 const { h, app } = hyperapp
-const { header, section, div, h1, h2, h3, p, ul, li, table, th, tr, td, tbody, thead, a } = html
+const { header, section, div, h1, h2, h3, h4, h5, p, ul, li, table, th, tr, td, tbody, thead, a } = html
 
 const Layout = child => {
   return (state, actions) => {
@@ -7,11 +7,14 @@ const Layout = child => {
       Header(state, actions),
       div({ class: "columns" }, [
         div({ class: "column col-2" }, [
-          ul({ class: "nav" }, [
-            state.tables.map(name => li({ class: "nav-item" },
-              a({ href: "#/table/" + name }, name)
-            ))
-          ])
+          Panel({
+            title: "Tables",
+            body: ul({ class: "nav" }, [
+              state.tables.map(name => li({ class: "nav-item" },
+                a({ href: "#/table/" + name }, name)
+              ))
+            ])
+          })
         ]),
         div({ class: "column col-10" }, [
           child(state, actions)
@@ -40,9 +43,18 @@ const PageTable = (state, actions) => div({
     class: "page",
     key: "page-table-" + state.router.params.table,
     oncreate: () => actions.table.get(state.router.params.table)
-  }, [
-  h3("Page Table " + state.router.params.table),
-  ItemsTable(state, actions, state.table[state.router.params.table])
+  },
+  Panel({
+    title: h5("Table \"" + state.router.params.table + "\""),
+    body: ItemsTable(state, actions, state.table[state.router.params.table])
+  })
+)
+
+const Panel = opts => div({ class: "panel"}, [
+  div({ class: "panel-header" }, div({ class: "panel-title" }, opts.title)),
+  div({ class: "panel-nav "}, opts.nav),
+  div({ class: "panel-body" }, opts.body),
+  div({ class: "panel-footer" }, opts.footer)
 ])
 
 const ItemsTable = (state, actions, items) => {
@@ -67,9 +79,9 @@ const ItemsTable = (state, actions, items) => {
   ])
 }
 
-Router(Logger()(app))({
+Router({})(Logger({})(app))({
   init(state, actions) {
-    actions.tables(ls.tables())
+    db.tables().then(tables => actions.tables(tables))
   },
   state: {
     tables: []
@@ -78,10 +90,11 @@ Router(Logger()(app))({
     tables: (state, actions, tables) => ({ tables }),
     table: {
       get: (state, actions, name) => {
-        return {
-          [name]: ls.table(name).get()
-        }
-      }
+        db.table(name).get().then(items => {
+          actions.set({ [name]: items })
+        })
+      },
+      set: (state, actions, table) => table
     }
   },
   view: {
@@ -90,6 +103,3 @@ Router(Logger()(app))({
     "*": Layout(Page404)
   }
 }, document.querySelector("#root"))
-
-
-

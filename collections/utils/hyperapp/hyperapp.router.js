@@ -1,11 +1,14 @@
-function Router(app) {
-  return (props, root) => {
-    let actions = app(enhance(props), root)
-    addEventListener("hashchange", () => {
+const Router = options => {
+  options = options || {}
+  return app => {
+    return (props, root) => {
+      let actions = app(enhance(props), root)
+      addEventListener("hashchange", () => {
+        actions.router.set()
+      })
       actions.router.set()
-    })
-    actions.router.set()
-    return actions
+      return actions
+    }
   }
   function enhance(props) {
     let routes = []
