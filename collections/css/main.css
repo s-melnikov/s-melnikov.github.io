@@ -16,3 +16,7 @@ body {
 .panel {
   background: #fff;
 }
+.col-260px {
+  width: 260px;
+  flex: none;
+}

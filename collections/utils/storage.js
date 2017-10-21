@@ -1,18 +1,49 @@
-const db = (() => {
+const db = db_name => {
 
+  db_name = btoa(db_name)
   const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  let db_data;
 
-  const tables = () => {
-    return new Promise((resolve, reject) => {
-      let names = []
-      Object.keys(localStorage).map(name => {
-        if (name.indexOf("Table") === 0) {
-          names.push(name.slice(5))
-        }
-      })
-      resolve(names)
-    })
+  const uniqid = () => {
+    let now = Date.now(), chars = [], i = 8, id
+    while (i--) {
+      chars[i] = CHARS.charAt(now % 64)
+      now = Math.floor(now / 64)
+    }
+    id = chars.join("")
+    while (i++ < 8) {
+      id += CHARS.charAt(Math.floor(Math.random() * 64))
+    }
+    return id
   }
+
+  if (!localStorage[db_name]) {
+    localStorage[db_name] = "{}"
+  }
+  db_data = JSON.parse(localStorage[db_name])
+
+  return {
+    table(t_name) {
+      if (!db_data[t_name]) {
+        throw Error(`[DB ERROR] Table "${t_name}" not exists.`)
+      }
+      let table_data = db_data[t_name]
+      return {
+        get() {
+          return table_data
+        },
+        add(entry) {
+          let uid =
+        }
+      }
+    },
+    uniqid
+  }
+
+}
+
+
+const db = (() => {
 
   const getItems = name => {
     if (localStorage[name] == null) {
@@ -57,15 +88,6 @@ const db = (() => {
         }
         Object.assign(items[uid], item)
         save(items, name)
-      },
-      get(uid) {
-        return new Promise((resolve, reject) => {
-          if (uid) {
-            resolve(getItems(name)[uid])
-          } else {
-            resolve(getItems(name))
-          }
-        })
       },
       del(uid) {
         let items = getItems(name)

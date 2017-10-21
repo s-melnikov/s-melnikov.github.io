@@ -51,10 +51,10 @@ const PageTable = (state, actions) => div({
 )
 
 const Panel = opts => div({ class: "panel"}, [
-  div({ class: "panel-header" }, div({ class: "panel-title" }, opts.title)),
-  div({ class: "panel-nav "}, opts.nav),
-  div({ class: "panel-body" }, opts.body),
-  div({ class: "panel-footer" }, opts.footer)
+  opts.title && div({ class: "panel-header" }, div({ class: "panel-title" }, opts.title)),
+  opts.nav && div({ class: "panel-nav "}, opts.nav),
+  opts.body && div({ class: "panel-body" }, opts.body),
+  opts.footer && div({ class: "panel-footer" }, opts.footer)
 ])
 
 const ItemsTable = (state, actions, items) => {
