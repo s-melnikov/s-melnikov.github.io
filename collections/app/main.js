@@ -1,5 +1,6 @@
 const { h, app } = hyperapp
 const { header, section, div, h1, h2, h3, h4, h5, p, ul, li, table, th, tr, td, tbody, thead, a } = html
+const db = Database("test")
 
 const Layout = child => {
   return (state, actions) => {
@@ -81,7 +82,7 @@ const ItemsTable = (state, actions, items) => {
 
 Router({})(Logger({})(app))({
   init(state, actions) {
-    db.tables().then(tables => actions.tables(tables))
+    actions.tables(db.tables())
   },
   state: {
     tables: []
@@ -90,9 +91,7 @@ Router({})(Logger({})(app))({
     tables: (state, actions, tables) => ({ tables }),
     table: {
       get: (state, actions, name) => {
-        db.table(name).get().then(items => {
-          actions.set({ [name]: items })
-        })
+        actions.set({ [name]: db.table(name).get() })
       },
       set: (state, actions, table) => table
     }

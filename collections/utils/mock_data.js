@@ -1,22 +1,18 @@
 if (location.search.indexOf("install") != -1) {
-  fetch("mocks/Users.json").then(resp => resp.json()).then(data => {
-    let table = db.table("Users")
-    table.drop()
-    data.map(item => { table.add(item) })
-  })
-  fetch("mocks/Cars.json").then(resp => resp.json()).then(data => {
-    let table = db.table("Cars")
-    table.drop()
-    data.map(item => { table.add(item) })
-  })
-  fetch("mocks/Apps.json").then(resp => resp.json()).then(data => {
-    let table = db.table("Apps")
-    table.drop()
-    data.map(item => { table.add(item) })
-  })
-  fetch("mocks/Companies.json").then(resp => resp.json()).then(data => {
-    let table = db.table("Companies")
-    table.drop()
-    data.map(item => { table.add(item) })
+
+  let db = Database("test"),
+    tables = ["Users", "Cars", "Apps", "Companies"],
+    i = 0
+
+  tables.map(name => {
+    fetch("mocks/Users.json").then(resp => resp.json()).then(data => {
+      let table = db.exists(name) ? db.table(name) : db.create(name)
+      table.truncate()
+      data.map(item => { table.add(item) })
+      i++
+      if (i == tables.length) {
+        location.replace(location.href.split("?")[0])
+      }
+    })
   })
 }
