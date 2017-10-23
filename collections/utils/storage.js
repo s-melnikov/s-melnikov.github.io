@@ -1,7 +1,7 @@
 const Database = db_name => {
 
   db_name = btoa(db_name)
-  const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  const CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
   let db_data;
 
   const uniqid = () => {
@@ -11,7 +11,8 @@ const Database = db_name => {
       now = Math.floor(now / 64)
     }
     id = chars.join("")
-    while (i++ < 8) {
+    i = 8
+    while (i--) {
       id += CHARS.charAt(Math.floor(Math.random() * 64))
     }
     return id
@@ -45,29 +46,28 @@ const Database = db_name => {
       if (!db_data[t_name]) {
         throw Error(`[DB ERROR] Table "${t_name}" not exists.`)
       }
-      let table_data = db_data[t_name]
       return {
         get() {
-          return table_data
+          return db_data[t_name]
         },
         add(entry) {
           let uid = uniqid()
-          table_data[uid] = entry
+          db_data[t_name][uid] = entry
           sync()
           return uid
         },
         put(uid, entry) {
-          if (table_data[uid] == null) {
+          if (db_data[t_name][uid] == null) {
             throw Error(`[DB ERROR] Entry with uid "${uid}" not exists.`)
           }
           if (entry == null) {
             throw Error(`[DB ERROR] Entry should not be empty.`)
           }
-          table_data[uid] = entry
+          db_data[t_name][uid] = entry
           sync()
         },
         del(uid) {
-          delete table_data[uid]
+          delete db_data[t_name][uid]
         },
         truncate() {
           db_data[t_name] = {}

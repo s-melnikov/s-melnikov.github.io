@@ -1,83 +1,83 @@
 const { h, app } = hyperapp
-const { header, section, div, h1, h2, h3, h4, h5, p, ul, li, table, th, tr, td, tbody, thead, a } = html
 const db = Database("test")
 
 const Layout = child => {
   return (state, actions) => {
-    return div({ class: "container" }, [
+    return h("div", { class: "container" },
       Header(state, actions),
-      div({ class: "columns" }, [
-        div({ class: "column col-2" }, [
+      h("div", { class: "columns" },
+        h("div", { class: "column col-2" },
           Panel({
             title: "Tables",
-            body: ul({ class: "nav" }, [
-              state.tables.map(name => li({ class: "nav-item" },
-                a({ href: "#/table/" + name }, name)
+            body: h("ul", { class: "nav" },
+              state.tables.map(name => h("li", { class: "nav-item" },
+                h("a", { href: "#/table/" + name }, name)
               ))
-            ])
+            ),
+            footer: true
           })
-        ]),
-        div({ class: "column col-10" }, [
+        ),
+        h("div", { class: "column col-10" },
           child(state, actions)
-        ])
-      ])
-    ])
+        )
+      )
+    )
   }
 }
 
-const Header = (state, actions) => header({ class: "navbar"}, [
-  section({ class: "navbar-section" }, [
-    a({ href: "#", class: "navbar-brand mr-2" }, "Collections")
-  ]),
-  section({ class: "navbar-section" })
-])
+const Header = (state, actions) => h("header", { class: "navbar"},
+  h("section", { class: "navbar-section" },
+    h("a", { href: "#", class: "navbar-brand mr-2" }, "Collections")
+  ),
+  h("section", { class: "navbar-section" })
+)
 
-const Page404 = (state, actions) => div({ class: "page", key: "page-404" }, [
-  h3("404")
-])
+const Page404 = (state, actions) => h("div", { class: "page", key: "page-404" },
+  h("h3", {}, "404")
+)
 
-const PageIndex = (state, actions) => div({ class: "page", key: "page-index" }, [
-  h3("Index Page")
-])
+const PageIndex = (state, actions) => h("div", { class: "page", key: "page-index" },
+  h("h3", {}, "Index Page")
+)
 
-const PageTable = (state, actions) => div({
+const PageTable = (state, actions) => h("div", {
     class: "page",
     key: "page-table-" + state.router.params.table,
     oncreate: () => actions.table.get(state.router.params.table)
   },
   Panel({
-    title: h5("Table \"" + state.router.params.table + "\""),
+    title: h("h5", {}, "Table \"" + state.router.params.table + "\""),
     body: ItemsTable(state, actions, state.table[state.router.params.table])
   })
 )
 
-const Panel = opts => div({ class: "panel"}, [
-  opts.title && div({ class: "panel-header" }, div({ class: "panel-title" }, opts.title)),
-  opts.nav && div({ class: "panel-nav "}, opts.nav),
-  opts.body && div({ class: "panel-body" }, opts.body),
-  opts.footer && div({ class: "panel-footer" }, opts.footer)
-])
+const Panel = opts => h("div", { class: "panel"},
+  h("div", { class: "panel-header" },
+    h("div", { class: "panel-title" }, opts.title)
+  ),
+  h("div", { class: "panel-nav "}, opts.nav),
+  h("div", { class: "panel-body" }, opts.body),
+  h("div", { class: "panel-footer" }, opts.footer)
+)
 
 const ItemsTable = (state, actions, items) => {
+  let uids, cols
   if (!items) {
-    return p("Nothing")
+    return h("p", {}, "Nothing")
   }
-  let uids = Object.keys(items)
-  let cols = Object.keys(items[uids[0]])
-  return table({ class: "table table-striped table-hover" }, [
-    thead(
-      cols.map( col => th(null, col) )
-    ),
-    tbody(
-      uids.map(
-        uid => tr(null,
-          cols.map(
-            col => td({ title: items[uid][col] }, items[uid][col])
-          )
-        )
-      )
+  uids = Object.keys(items)
+  if (!uids.length) {
+    return h("p", {}, "Nothing")
+  }
+  cols = Object.keys(items[uids[0]])
+  return h("table", { class: "table table-striped table-hover" },
+    h("thead", {}, cols.map(col => h("th", {}, col))),
+    h("tbody", {},
+      uids.map(uid => h("tr", {},
+        cols.map(col => h("td", { title: items[uid][col] }, items[uid][col]))
+      ))
     )
-  ])
+  )
 }
 
 Router({})(Logger({})(app))({
