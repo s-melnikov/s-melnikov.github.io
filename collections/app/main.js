@@ -10,8 +10,8 @@ const Layout = child => {
           Panel({
             title: "Tables",
             body: h("ul", { class: "nav" },
-              state.tables.map(name => h("li", { class: "nav-item" },
-                h("a", { href: "#/table/" + name }, name)
+              Object.keys(state.tables).map(uid => h("li", { class: "nav-item" },
+                h("a", { href: "#/table/" + state.tables[uid].slug }, state.tables[uid].title)
               ))
             ),
             footer: true
@@ -82,10 +82,10 @@ const ItemsTable = (state, actions, items) => {
 
 Router({})(Logger({})(app))({
   init(state, actions) {
-    actions.tables(db.tables())
+    actions.tables(db.table("schema").get())
   },
   state: {
-    tables: []
+    tables: null
   },
   actions: {
     tables: (state, actions, tables) => ({ tables }),

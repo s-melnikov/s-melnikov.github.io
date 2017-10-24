@@ -21,7 +21,7 @@ const Router = options => {
           params = {}, match
         for (let i = 0; (i < routes.length); i++) {
           if (match = routes[i].rgx.exec(pathname)) {
-            routes[i].keys.map((key, i) => params[key] = match[i + 1])
+            routes[i].keys.map((key, i) => params[key] = match[i + 1].toLowerCase())
             props.view = routes[i].view
             return { params, pathname }
           }
@@ -34,7 +34,7 @@ const Router = options => {
       routes.push({
         rgx: RegExp(path === "*" ? ".*" : "^" +
           path.replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
-            keys.push(key)
+            keys.push(key.toLowerCase())
             return "([-\\.%\\w\\(\\)]+)"
           }) + "/?$"),
         view: props.view[path],

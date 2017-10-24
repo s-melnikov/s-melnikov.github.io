@@ -1,0 +1,102 @@
+[
+  {
+    "title": "Users",
+    "slug": "users",
+    "fields": [
+      {
+        "title": "First name",
+        "slug": "first_name"
+      },
+      {
+        "title": "Last name",
+        "slug": "last_name"
+      },
+      {
+        "title": "Email",
+        "slug": "email"
+      },
+      {
+        "title": "Gender",
+        "slug": "gender"
+      },
+      {
+        "title": "Ip address",
+        "slug": "ip_address"
+      }
+    ]
+  },
+  {
+    "title": "Cars",
+    "slug": "cars",
+    "fields": [
+      {
+        "title": "Model",
+        "slug": "model"
+      },
+      {
+        "title": "Maker",
+        "slug": "maker"
+      },
+      {
+        "title": "Year",
+        "slug": "year"
+      }
+    ]
+  },
+  {
+    "title": "Apps",
+    "slug": "apps",
+    "fields": [
+      {
+        "title": "Name",
+        "slug": "name"
+      },
+      {
+        "title": "Version",
+        "slug": "version"
+      },
+      {
+        "title": "Bundle",
+        "slug": "bundle"
+      },
+      {
+        "title": "Email",
+        "slug": "email"
+      },
+      {
+        "title": "Url",
+        "slug": "url"
+      }
+    ]
+  },
+  {
+    "title": "Companies",
+    "slug": "companies",
+    "fields": [
+      {
+        "title": "Name",
+        "slug": "name"
+      },
+      {
+        "title": "Industry",
+        "slug": "industry"
+      },
+      {
+        "title": "Country",
+        "slug": "country"
+      },
+      {
+        "title": "City",
+        "slug": "city"
+      },
+      {
+        "title": "Phone",
+        "slug": "phone"
+      },
+      {
+        "title": "Address",
+        "slug": "address"
+      }
+    ]
+  }
+]
