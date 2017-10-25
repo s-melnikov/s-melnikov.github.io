@@ -3,7 +3,7 @@
   position: relative;
 }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #444;
   padding: 50px 0;
@@ -32,7 +32,6 @@ h1, h2, h3, h4, h5 {
 header {
   border-bottom: 1px solid #f60;
   position: fixed;
-  z-index: 1;
   height: 50px;
   top: 0;
   left: 0;
@@ -53,7 +52,7 @@ header a:hover {
   color: #000;
   text-decoration: underline;
 }
-#app {
+#root {
   padding: 0 15px;
 }
 .items-list {
@@ -104,9 +103,9 @@ header a:hover {
 .item.loader {
   height: 50px;
 }
-.item.loader span,
-.item.loader span::before,
-.item.loader span::after {
+.loader span,
+.loader span::before,
+.loader span::after {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -115,20 +114,21 @@ header a:hover {
   border-radius: 4px;
   margin: -4px 0 0 -4px;
   background-color: rgba(255, 102, 0, 1);
-  animation: blink .6s infinite linear alternate;
+  animation: blink .4s infinite alternate;
+  animation-delay: .1s;
 }
-.item.loader span::before,
-.item.loader span::after {
+.loader span::before,
+.loader span::after {
   top: 4px;
   content: "";
 }
-.item.loader span::before {
-  animation-delay: .2s;
-  left: 18px;
+.loader span::before {
+  animation-delay: .0s;
+  left: -12px;
 }
-.item.loader span::after {
-  animation-delay: .4s;
-  left: 32px;
+.loader span::after {
+  animation-delay: .2s;
+  left: 20px;
 }
 .user-id {
   font-size: 2.2em;
@@ -145,6 +145,18 @@ table td {
   display: inline-block;
   padding: 3px 0;
   margin-right: 10px;
+}
+.overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+}
+.overlay .loader {
+  width: 100%;
+  height: 100%;
 }
 @keyframes blink {
   to {
