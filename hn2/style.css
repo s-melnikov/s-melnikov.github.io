@@ -155,7 +155,7 @@ table td {
     background-color: rgba(255, 102, 0, .2);
   }
 }
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .items-list {
     padding: 15px 0;
   }
