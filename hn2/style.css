@@ -13,9 +13,7 @@ body {
 }
 .container {
   position: relative;
-  max-width: 800px;
   padding: 0 15px;
-  margin: auto;
   overflow: auto;
   white-space: nowrap;
 }
@@ -52,16 +50,16 @@ header a:hover {
   color: #000;
   text-decoration: underline;
 }
-#root {
-  padding: 0 15px;
-}
 .items-list {
-  max-width: 800px;
-  margin: 15px auto;
+  padding: 15px;
+  max-width: 640px;
 }
 .item {
   background-color: #fff;
   padding: 10px 15px;
+}
+.item.seen {
+  background: #f2f3f5;
 }
 .item:after {
   content: "";
@@ -79,12 +77,6 @@ header a:hover {
 }
 .item .title a:hover {
   color: #247;
-}
-.item .title a:visited {
-  color: #777;
-}
-.item .title a:visited:hover {
-  color: #555;
 }
 .item .title .host,
 .item .info {
@@ -163,8 +155,8 @@ table td {
     background-color: rgba(255, 102, 0, .2);
   }
 }
-@media (max-width: 800px) {
-  header {
-    text-align: center;
+@media (max-width: 480px) {
+  .items-list {
+    padding: 15px 0;
   }
 }
