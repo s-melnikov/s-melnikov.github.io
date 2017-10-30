@@ -61,20 +61,22 @@ const Panel = opts => h("div", { class: "panel"},
 )
 
 const ItemsTable = (state, actions, items) => {
-  let uids, cols
+  let schema = db.table("schema").get()[state.router.params.table],
+    fields = schema.fields.filter(item => item.display),
+    uids, cols
   if (!items) {
     return h("p", {}, "Nothing")
   }
+  console.log(fields)
   uids = Object.keys(items)
   if (!uids.length) {
     return h("p", {}, "Nothing")
   }
-  cols = Object.keys(items[uids[0]])
   return h("table", { class: "table table-striped table-hover" },
-    h("thead", {}, cols.map(col => h("th", {}, col))),
+    h("thead", {}, fields.map(item => h("th", {}, item.title))),
     h("tbody", {},
       uids.map(uid => h("tr", {},
-        cols.map(col => h("td", { title: items[uid][col] }, items[uid][col]))
+        fields.map(item => h("td", { title: items[uid][item.slug] }, items[uid][item.slug]))
       ))
     )
   )

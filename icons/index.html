@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    body {
+      max-width: 1024px;
+      padding: 15px;
+      margin: 0 auto;
+    }
+    .icon {
+      width: 48px;
+      margin: .5em;
+    }
+    .size, .color {
+      display: inline-block;
+      width: 64px;
+      text-align: center;
+    }
+    input[type=range] {
+      width: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <select id="size">
+        <option value="12">12px</option>
+        <option value="16">16px</option>
+        <option value="24">24px</option>
+        <option value="32">32px</option>
+        <option value="48" selected>48px</option>
+        <option value="64">64px</option>
+        <option value="96">96px</option>
+        <option value="128">128px</option>
+      </select>
+      <input type="color" id="color">
+    </div>
+    <!--
+    <img src="icons/activity.svg" class="icon"/>
+    <img src="icons/airplay.svg" class="icon"/>
+    <img src="icons/alert-circle.svg" class="icon"/>
+    <img src="icons/alert-octagon.svg" class="icon"/>
+    <img src="icons/alert-triangle.svg" class="icon"/>
+    <img src="icons/align-center.svg" class="icon"/>
+    <img src="icons/align-justify.svg" class="icon"/>
+    <img src="icons/align-left.svg" class="icon"/>
+    <img src="icons/align-right.svg" class="icon"/>
+    <img src="icons/anchor.svg" class="icon"/>
+    <img src="icons/aperture.svg" class="icon"/>
+    <img src="icons/arrow-down-left.svg" class="icon"/>
+    <img src="icons/arrow-down-right.svg" class="icon"/>
+    <img src="icons/arrow-down.svg" class="icon"/>
+    <img src="icons/arrow-left.svg" class="icon"/>
+    <img src="icons/arrow-right.svg" class="icon"/>
+    <img src="icons/arrow-up-left.svg" class="icon"/>
+    <img src="icons/arrow-up-right.svg" class="icon"/>
+    <img src="icons/arrow-up.svg" class="icon"/>
+    <img src="icons/at-sign.svg" class="icon"/>
+    <img src="icons/award.svg" class="icon"/>
+    <img src="icons/bar-chart-2.svg" class="icon"/>
+    <img src="icons/bar-chart.svg" class="icon"/>
+    <img src="icons/battery-charging.svg" class="icon"/>
+    <img src="icons/battery.svg" class="icon"/>
+    <img src="icons/bell-off.svg" class="icon"/>
+    <img src="icons/bell.svg" class="icon"/>
+    <img src="icons/bluetooth.svg" class="icon"/>
+    <img src="icons/bold.svg" class="icon"/>
+    <img src="icons/book.svg" class="icon"/>
+    <img src="icons/bookmark.svg" class="icon"/>
+    <img src="icons/box.svg" class="icon"/>
+    <img src="icons/briefcase.svg" class="icon"/>
+    <img src="icons/calendar.svg" class="icon"/>
+    <img src="icons/camera-off.svg" class="icon"/>
+    <img src="icons/camera.svg" class="icon"/>
+    <img src="icons/cast.svg" class="icon"/>
+    <img src="icons/check-circle.svg" class="icon"/>
+    <img src="icons/check-square.svg" class="icon"/>
+    <img src="icons/check.svg" class="icon"/>
+    <img src="icons/chevron-down.svg" class="icon"/>
+    <img src="icons/chevron-left.svg" class="icon"/>
+    <img src="icons/chevron-right.svg" class="icon"/>
+    <img src="icons/chevron-up.svg" class="icon"/>
+    <img src="icons/chevrons-down.svg" class="icon"/>
+    <img src="icons/chevrons-left.svg" class="icon"/>
+    <img src="icons/chevrons-right.svg" class="icon"/>
+    <img src="icons/chevrons-up.svg" class="icon"/>
+    <img src="icons/chrome.svg" class="icon"/>
+    <img src="icons/circle.svg" class="icon"/>
+    <img src="icons/clipboard.svg" class="icon"/>
+    <img src="icons/clock.svg" class="icon"/>
+    <img src="icons/cloud-drizzle.svg" class="icon"/>
+    <img src="icons/cloud-lightning.svg" class="icon"/>
+    <img src="icons/cloud-off.svg" class="icon"/>
+    <img src="icons/cloud-rain.svg" class="icon"/>
+    <img src="icons/cloud-snow.svg" class="icon"/>
+    <img src="icons/cloud.svg" class="icon"/>
+    <img src="icons/codepen.svg" class="icon"/>
+    <img src="icons/command.svg" class="icon"/>
+    <img src="icons/compass.svg" class="icon"/>
+    <img src="icons/copy.svg" class="icon"/>
+    <img src="icons/corner-down-left.svg" class="icon"/>
+    <img src="icons/corner-down-right.svg" class="icon"/>
+    <img src="icons/corner-left-down.svg" class="icon"/>
+    <img src="icons/corner-left-up.svg" class="icon"/>
+    <img src="icons/corner-right-down.svg" class="icon"/>
+    <img src="icons/corner-right-up.svg" class="icon"/>
+    <img src="icons/corner-up-left.svg" class="icon"/>
+    <img src="icons/corner-up-right.svg" class="icon"/>
+    <img src="icons/cpu.svg" class="icon"/>
+    <img src="icons/credit-card.svg" class="icon"/>
+    <img src="icons/crop.svg" class="icon"/>
+    <img src="icons/crosshair.svg" class="icon"/>
+    <img src="icons/delete.svg" class="icon"/>
+    <img src="icons/disc.svg" class="icon"/>
+    <img src="icons/download-cloud.svg" class="icon"/>
+    <img src="icons/download.svg" class="icon"/>
+    <img src="icons/droplet.svg" class="icon"/>
+    <img src="icons/edit-2.svg" class="icon"/>
+    <img src="icons/edit-3.svg" class="icon"/>
+    <img src="icons/edit.svg" class="icon"/>
+    <img src="icons/external-link.svg" class="icon"/>
+    <img src="icons/eye-off.svg" class="icon"/>
+    <img src="icons/eye.svg" class="icon"/>
+    <img src="icons/facebook.svg" class="icon"/>
+    <img src="icons/fast-forward.svg" class="icon"/>
+    <img src="icons/feather.svg" class="icon"/>
+    <img src="icons/file-minus.svg" class="icon"/>
+    <img src="icons/file-plus.svg" class="icon"/>
+    <img src="icons/file-text.svg" class="icon"/>
+    <img src="icons/file.svg" class="icon"/>
+    <img src="icons/film.svg" class="icon"/>
+    <img src="icons/filter.svg" class="icon"/>
+    <img src="icons/flag.svg" class="icon"/>
+    <img src="icons/folder.svg" class="icon"/>
+    <img src="icons/github.svg" class="icon"/>
+    <img src="icons/gitlab.svg" class="icon"/>
+    <img src="icons/globe.svg" class="icon"/>
+    <img src="icons/grid.svg" class="icon"/>
+    <img src="icons/hash.svg" class="icon"/>
+    <img src="icons/headphones.svg" class="icon"/>
+    <img src="icons/heart.svg" class="icon"/>
+    <img src="icons/help-circle.svg" class="icon"/>
+    <img src="icons/home.svg" class="icon"/>
+    <img src="icons/image.svg" class="icon"/>
+    <img src="icons/inbox.svg" class="icon"/>
+    <img src="icons/info.svg" class="icon"/>
+    <img src="icons/instagram.svg" class="icon"/>
+    <img src="icons/italic.svg" class="icon"/>
+    <img src="icons/layers.svg" class="icon"/>
+    <img src="icons/layout.svg" class="icon"/>
+    <img src="icons/life-buoy.svg" class="icon"/>
+    <img src="icons/link-2.svg" class="icon"/>
+    <img src="icons/link.svg" class="icon"/>
+    <img src="icons/list.svg" class="icon"/>
+    <img src="icons/loader.svg" class="icon"/>
+    <img src="icons/lock.svg" class="icon"/>
+    <img src="icons/log-in.svg" class="icon"/>
+    <img src="icons/log-out.svg" class="icon"/>
+    <img src="icons/mail.svg" class="icon"/>
+    <img src="icons/map-pin.svg" class="icon"/>
+    <img src="icons/map.svg" class="icon"/>
+    <img src="icons/maximize-2.svg" class="icon"/>
+    <img src="icons/maximize.svg" class="icon"/>
+    <img src="icons/menu.svg" class="icon"/>
+    <img src="icons/message-circle.svg" class="icon"/>
+    <img src="icons/message-square.svg" class="icon"/>
+    <img src="icons/mic-off.svg" class="icon"/>
+    <img src="icons/mic.svg" class="icon"/>
+    <img src="icons/minimize-2.svg" class="icon"/>
+    <img src="icons/minimize.svg" class="icon"/>
+    <img src="icons/minus-circle.svg" class="icon"/>
+    <img src="icons/minus-square.svg" class="icon"/>
+    <img src="icons/minus.svg" class="icon"/>
+    <img src="icons/monitor.svg" class="icon"/>
+    <img src="icons/moon.svg" class="icon"/>
+    <img src="icons/more-horizontal.svg" class="icon"/>
+    <img src="icons/more-vertical.svg" class="icon"/>
+    <img src="icons/move.svg" class="icon"/>
+    <img src="icons/music.svg" class="icon"/>
+    <img src="icons/navigation-2.svg" class="icon"/>
+    <img src="icons/navigation.svg" class="icon"/>
+    <img src="icons/octagon.svg" class="icon"/>
+    <img src="icons/package.svg" class="icon"/>
+    <img src="icons/paperclip.svg" class="icon"/>
+    <img src="icons/pause-circle.svg" class="icon"/>
+    <img src="icons/pause.svg" class="icon"/>
+    <img src="icons/percent.svg" class="icon"/>
+    <img src="icons/phone-call.svg" class="icon"/>
+    <img src="icons/phone-forwarded.svg" class="icon"/>
+    <img src="icons/phone-incoming.svg" class="icon"/>
+    <img src="icons/phone-missed.svg" class="icon"/>
+    <img src="icons/phone-off.svg" class="icon"/>
+    <img src="icons/phone-outgoing.svg" class="icon"/>
+    <img src="icons/phone.svg" class="icon"/>
+    <img src="icons/pie-chart.svg" class="icon"/>
+    <img src="icons/play-circle.svg" class="icon"/>
+    <img src="icons/play.svg" class="icon"/>
+    <img src="icons/plus-circle.svg" class="icon"/>
+    <img src="icons/plus-square.svg" class="icon"/>
+    <img src="icons/plus.svg" class="icon"/>
+    <img src="icons/pocket.svg" class="icon"/>
+    <img src="icons/power.svg" class="icon"/>
+    <img src="icons/printer.svg" class="icon"/>
+    <img src="icons/radio.svg" class="icon"/>
+    <img src="icons/refresh-ccw.svg" class="icon"/>
+    <img src="icons/refresh-cw.svg" class="icon"/>
+    <img src="icons/repeat.svg" class="icon"/>
+    <img src="icons/rewind.svg" class="icon"/>
+    <img src="icons/rotate-ccw.svg" class="icon"/>
+    <img src="icons/rotate-cw.svg" class="icon"/>
+    <img src="icons/save.svg" class="icon"/>
+    <img src="icons/scissors.svg" class="icon"/>
+    <img src="icons/search.svg" class="icon"/>
+    <img src="icons/server.svg" class="icon"/>
+    <img src="icons/settings.svg" class="icon"/>
+    <img src="icons/share-2.svg" class="icon"/>
+    <img src="icons/share.svg" class="icon"/>
+    <img src="icons/shield.svg" class="icon"/>
+    <img src="icons/shopping-cart.svg" class="icon"/>
+    <img src="icons/shuffle.svg" class="icon"/>
+    <img src="icons/sidebar.svg" class="icon"/>
+    <img src="icons/skip-back.svg" class="icon"/>
+    <img src="icons/skip-forward.svg" class="icon"/>
+    <img src="icons/slack.svg" class="icon"/>
+    <img src="icons/slash.svg" class="icon"/>
+    <img src="icons/sliders.svg" class="icon"/>
+    <img src="icons/smartphone.svg" class="icon"/>
+    <img src="icons/speaker.svg" class="icon"/>
+    <img src="icons/square.svg" class="icon"/>
+    <img src="icons/star.svg" class="icon"/>
+    <img src="icons/stop-circle.svg" class="icon"/>
+    <img src="icons/sun.svg" class="icon"/>
+    <img src="icons/sunrise.svg" class="icon"/>
+    <img src="icons/sunset.svg" class="icon"/>
+    <img src="icons/tablet.svg" class="icon"/>
+    <img src="icons/tag.svg" class="icon"/>
+    <img src="icons/target.svg" class="icon"/>
+    <img src="icons/thermometer.svg" class="icon"/>
+    <img src="icons/thumbs-down.svg" class="icon"/>
+    <img src="icons/thumbs-up.svg" class="icon"/>
+    <img src="icons/toggle-left.svg" class="icon"/>
+    <img src="icons/toggle-right.svg" class="icon"/>
+    <img src="icons/trash-2.svg" class="icon"/>
+    <img src="icons/trash.svg" class="icon"/>
+    <img src="icons/trending-down.svg" class="icon"/>
+    <img src="icons/trending-up.svg" class="icon"/>
+    <img src="icons/triangle.svg" class="icon"/>
+    <img src="icons/tv.svg" class="icon"/>
+    <img src="icons/twitter.svg" class="icon"/>
+    <img src="icons/type.svg" class="icon"/>
+    <img src="icons/umbrella.svg" class="icon"/>
+    <img src="icons/underline.svg" class="icon"/>
+    <img src="icons/unlock.svg" class="icon"/>
+    <img src="icons/upload-cloud.svg" class="icon"/>
+    <img src="icons/upload.svg" class="icon"/>
+    <img src="icons/user-check.svg" class="icon"/>
+    <img src="icons/user-minus.svg" class="icon"/>
+    <img src="icons/user-plus.svg" class="icon"/>
+    <img src="icons/user-x.svg" class="icon"/>
+    <img src="icons/user.svg" class="icon"/>
+    <img src="icons/users.svg" class="icon"/>
+    <img src="icons/video-off.svg" class="icon"/>
+    <img src="icons/video.svg" class="icon"/>
+    <img src="icons/voicemail.svg" class="icon"/>
+    <img src="icons/volume-1.svg" class="icon"/>
+    <img src="icons/volume-2.svg" class="icon"/>
+    <img src="icons/volume-x.svg" class="icon"/>
+    <img src="icons/volume.svg" class="icon"/>
+    <img src="icons/watch.svg" class="icon"/>
+    <img src="icons/wifi-off.svg" class="icon"/>
+    <img src="icons/wifi.svg" class="icon"/>
+    <img src="icons/wind.svg" class="icon"/>
+    <img src="icons/x-circle.svg" class="icon"/>
+    <img src="icons/x-square.svg" class="icon"/>
+    <img src="icons/x.svg" class="icon"/>
+    <img src="icons/zap.svg" class="icon"/>
+    <img src="icons/zoom-in.svg" class="icon"/>
+    <img src="icons/zoom-out.svg" class="icon"/>
+    -->
+  </div>
+  <script>
+    document.querySelector("#size").addEventListener("input", function(e) {
+      let img = document.querySelectorAll("img")
+      for (let i = 0, ln = img.length; i < ln; i++) {
+        img[i].style.width = e.target.value + "px"
+      }
+    })
+    document.querySelector("#color").addEventListener("input", function(e) {
+      let img = document.querySelectorAll("img")
+      for (let i = 0, ln = img.length; i < ln; i++) {
+        img[i].style.fill = e.target.value
+      }
+    })
+
+  </script>
+</body>
+</html>

@@ -5,23 +5,28 @@
     "fields": [
       {
         "title": "First name",
-        "slug": "first_name"
+        "slug": "first_name",
+        "display": true
       },
       {
         "title": "Last name",
-        "slug": "last_name"
+        "slug": "last_name",
+        "display": true
       },
       {
         "title": "Email",
-        "slug": "email"
+        "slug": "email",
+        "display": true
       },
       {
         "title": "Gender",
-        "slug": "gender"
+        "slug": "gender",
+        "display": true
       },
       {
         "title": "Ip address",
-        "slug": "ip_address"
+        "slug": "ip_address",
+        "display": false
       }
     ]
   },
@@ -31,15 +36,18 @@
     "fields": [
       {
         "title": "Model",
-        "slug": "model"
+        "slug": "model",
+        "display": true
       },
       {
         "title": "Maker",
-        "slug": "maker"
+        "slug": "maker",
+        "display": true
       },
       {
         "title": "Year",
-        "slug": "year"
+        "slug": "year",
+        "display": false
       }
     ]
   },
@@ -49,23 +57,28 @@
     "fields": [
       {
         "title": "Name",
-        "slug": "name"
+        "slug": "name",
+        "display": true
       },
       {
         "title": "Version",
-        "slug": "version"
+        "slug": "version",
+        "display": false
       },
       {
         "title": "Bundle",
-        "slug": "bundle"
+        "slug": "bundle",
+        "display": false
       },
       {
         "title": "Email",
-        "slug": "email"
+        "slug": "email",
+        "display": true
       },
       {
         "title": "Url",
-        "slug": "url"
+        "slug": "url",
+        "display": true
       }
     ]
   },
@@ -75,27 +88,33 @@
     "fields": [
       {
         "title": "Name",
-        "slug": "name"
+        "slug": "name",
+        "display": true
       },
       {
         "title": "Industry",
-        "slug": "industry"
+        "slug": "industry",
+        "display": true
       },
       {
         "title": "Country",
-        "slug": "country"
+        "slug": "country",
+        "display": false
       },
       {
         "title": "City",
-        "slug": "city"
+        "slug": "city",
+        "display": false
       },
       {
         "title": "Phone",
-        "slug": "phone"
+        "slug": "phone",
+        "display": true
       },
       {
         "title": "Address",
-        "slug": "address"
+        "slug": "address",
+        "display": false
       }
     ]
   }

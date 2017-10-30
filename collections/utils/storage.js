@@ -51,7 +51,8 @@ const Database = db_name => {
           return db_data[t_name]
         },
         add(entry) {
-          let uid = uniqid()
+          let uid = entry.uid || uniqid()
+          if (entry.uid) delete entry.uid
           db_data[t_name][uid] = entry
           sync()
           return uid
