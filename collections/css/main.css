@@ -20,3 +20,9 @@ body {
   width: 260px;
   flex: none;
 }
+.table-items a {
+  color: inherit;
+}
+.table-items a:hover {
+  text-decoration: none;
+}

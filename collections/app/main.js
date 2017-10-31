@@ -42,12 +42,34 @@ const PageIndex = (state, actions) => h("div", { class: "page", key: "page-index
 
 const PageTable = (state, actions) => h("div", {
     class: "page",
-    key: "page-table-" + state.router.params.table,
+    key: `page-table-${state.router.params.table}`,
     oncreate: () => actions.table.get(state.router.params.table)
   },
   Panel({
-    title: h("h5", {}, "Table \"" + state.router.params.table + "\""),
+    title: [
+      h("h5", {}, `Table "${state.router.params.table}"`),
+      h("div", { class: "text-right" },
+        h("a", {
+          class: "btn btn-sm",
+          href: `#/table/${state.router.params.table}/item/0`
+        }, "New entry")
+      )
+    ],
     body: ItemsTable(state, actions, state.table[state.router.params.table])
+  })
+)
+
+const PageItem = (state, actions) => h("div", {
+    class: "page",
+    key: `page-item-${state.router.params.item}`,
+    oncreate: () => { /*actions.table.get(state.router.params.table)*/ }
+  },
+  Panel({
+    title: [
+      h("h5", {}, `Table "${state.router.params.table}", item "${state.router.params.item}"`),
+      h("div", { class: "text-right" })
+    ],
+    body: ""
   })
 )
 
@@ -72,11 +94,15 @@ const ItemsTable = (state, actions, items) => {
   if (!uids.length) {
     return h("p", {}, "Nothing")
   }
-  return h("table", { class: "table table-striped table-hover" },
+  return h("table", { class: "table table-striped table-hover table-items" },
     h("thead", {}, fields.map(item => h("th", {}, item.title))),
     h("tbody", {},
       uids.map(uid => h("tr", {},
-        fields.map(item => h("td", { title: items[uid][item.slug] }, items[uid][item.slug]))
+        fields.map((item, i) => h("td", {}, h("a", {
+            title: items[uid][item.slug],
+            href: `#/table/${state.router.params.table}/item/${uid}`
+          }, items[uid][item.slug])
+        ))
       ))
     )
   )
@@ -101,6 +127,7 @@ Router({})(Logger({})(app))({
   view: {
     "/": Layout(PageIndex),
     "/table/:table": Layout(PageTable),
+    "/table/:table/item/:item": Layout(PageItem),
     "*": Layout(Page404)
   }
 }, document.querySelector("#root"))
