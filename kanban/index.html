@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    *,*::bafore, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font: 15px/1.2 "Segoe UI", "Open Sans", sans-serif;
+      color: #444;
+    }
+    .boards {
+      overflow: auto;
+    }
+    .board {
+      width: 280px;
+      float: left;
+      background: #f5f5f5;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 5px;
+    }
+    .board .header {
+      padding: 10px 15px;
+      color: #ffffff;
+      text-align: center;
+    }
+    .board .body {
+      padding: 10px 7px 0;
+    }
+    .board .item {
+      background-color: #fff;
+      border-radius: 3px;
+      padding: 10px;
+      font-size: 14px;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05), -1px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .board .item:not(:first-child) {
+      margin-top: 7px;
+    }
+    .board .footer {
+      padding: 10px 15px;
+      color: #777777;
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      border: 1px solid #168cc3;
+      border-radius: 3px;
+      padding: 7px 12px;
+      color: #168cc3;
+      font-size: 14px;
+      cursor: pointer;
+      background: none;
+    }
+    .btn:hover {
+      background-color: rgba(255, 255, 255, .5);
+    }
+    .btn-link {
+      border: none;
+    }
+    .btn-link:hover {
+      background-color: transparent;
+      color: #38b6f1;
+    }
+    .bg-turquoise {
+      background-color: #1abc9c;
+    }
+    .bg-emerald {
+      background-color: #2ecc71;
+    }
+    .bg-peter-river {
+      background-color: #3498db;
+    }
+    .bg-amethyst {
+      background-color: #9b59b6;
+    }
+    .bg-wet-asphalt {
+      background-color: #34495e;
+    }
+    .bg-green-sea {
+      background-color: #16a085;
+    }
+    .bg-nephritis {
+      background-color: #27ae60;
+    }
+    .bg-belize-hole {
+      background-color: #2980b9;
+    }
+    .bg-wisteria {
+      background-color: #8e44ad;
+    }
+    .bg-midnight-blue {
+      background-color: #2c3e50;
+    }
+    .bg-sun-flower {
+      background-color: #f1c40f;
+    }
+    .bg-carrot {
+      background-color: #e67e22;
+    }
+    .bg-alizarin {
+      background-color: #e74c3c;
+    }
+    .bg-clouds {
+      background-color: #ecf0f1;
+    }
+    .bg-concrete {
+      background-color: #95a5a6;
+    }
+    .bg-orange {
+      background-color: #f39c12;
+    }
+    .bg-pumpkin {
+      background-color: #d35400;
+    }
+    .bg-pomegranate {
+      background-color: #c0392b;
+    }
+    .bg-silver {
+      background-color: #bdc3c7;
+    }
+    .bg-asbestos {
+      background-color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+  <div class="boards">
+
+    <div class="board">
+      <div class="header bg-peter-river">
+        <span>To Do</span>
+      </div>
+      <div class="body">
+        <div class="item">Lorem ipsum dolor sit amet.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+      </div>
+      <div class="footer">
+        <span class="btn btn-link">Add new card</span>
+      </div>
+    </div>
+
+    <div class="board">
+      <div class="header bg-carrot">
+        <span>Doing</span>
+      </div>
+      <div class="body">
+        <div class="item">Lorem ipsum dolor sit amet.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+      </div>
+      <div class="footer">
+        <span class="btn btn-link">Add new card</span>
+      </div>
+    </div>
+
+    <div class="board">
+      <div class="header bg-emerald">
+        <span>Done</span>
+      </div>
+      <div class="body">
+        <div class="item">Lorem ipsum dolor sit amet.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+      </div>
+      <div class="footer">
+        <span class="btn btn-link">Add new card</span>
+      </div>
+    </div>
+
+    <div class="board">
+      <div class="header bg-amethyst">
+        <span>Test</span>
+      </div>
+      <div class="body">
+        <div class="item">Lorem ipsum dolor sit amet.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
+        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+      </div>
+      <div class="footer">
+        <span class="btn btn-link">Add new card</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyAxcFvCH2cMuk0-bHIf6CUE_snseUUPRAM",
+      authDomain: "kanban-1c4b8.firebaseapp.com",
+      databaseURL: "https://kanban-1c4b8.firebaseio.com",
+      projectId: "kanban-1c4b8",
+      storageBucket: "kanban-1c4b8.appspot.com",
+      messagingSenderId: "991213731891"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <script>
+    /*var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+      var token = result.credential.accessToken;
+      var user = result.user;
+      console.log({ token, user })
+    }).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      var email = error.email;
+      var credential = error.credential;
+      console.log({ errorCode, errorMessage, email, credential })
+    });*/
+  </script>
+</body>
+</html>
