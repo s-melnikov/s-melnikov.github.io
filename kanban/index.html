@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Document</title>
   <style>
-    *,*::bafore, *::after {
+    *, *::before, *::after {
       box-sizing: border-box;
     }
     body {
@@ -13,14 +13,20 @@
     }
     .boards {
       overflow: auto;
+      white-space: nowrap;
+      font-size: 0;
+      text-align: center;
     }
     .board {
-      width: 280px;
-      float: left;
+      width: 300px;
       background: #f5f5f5;
       border-radius: 4px;
       overflow: hidden;
       margin: 5px;
+      display: inline-block;
+      white-space: normal;
+      font-size: initial;
+      text-align: left;
     }
     .board .header {
       padding: 10px 15px;
@@ -56,7 +62,7 @@
       background: none;
     }
     .btn:hover {
-      background-color: rgba(255, 255, 255, .5);
+      background-color: rgba(0, 0, 0, .1);
     }
     .btn-link {
       border: none;
@@ -125,94 +131,261 @@
     .bg-asbestos {
       background-color: #7f8c8d;
     }
+    .modal {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    .modal .content {
+      position: relative;
+      top: 50%;
+      width: 420px;
+      margin: -100px auto 0;
+      background-color: #fff;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+    .modal .header {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .modal .body {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .modal .footer {
+      padding: 10px 15px;
+      text-align: right;
+    }
+    .modal .footer .btn {
+      margin-left: 10px;
+    }
+    textarea {
+      display: block;
+      border: 1px solid #eee;
+      border-radius: 3px;
+      font-family: inherit;
+      color: inherit;
+      width: 100%;
+      height: 160px;
+      margin: 0;
+      padding: 10px;
+    }
+    .types input[type=radio] {
+      display: none;
+    }
+    .types .type {
+      display: inline-block;
+      padding: 3px;
+      margin-right: 5px;
+      margin-top: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+    .types .type .label {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: -2px;
+      transform: scale(.5);
+    }
+    .types .type .title {
+      color: #999;
+    }
+    .types input[type=radio]:checked ~ .label {
+      transform: scale(1);
+    }
+    .types input[type=radio]:checked ~ .title {
+      color: #222;
+    }
   </style>
 </head>
 <body>
-  <div class="boards">
+  <div id="root"></div>
 
-    <div class="board">
-      <div class="header bg-peter-river">
-        <span>To Do</span>
-      </div>
-      <div class="body">
-        <div class="item">Lorem ipsum dolor sit amet.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-      </div>
-      <div class="footer">
-        <span class="btn btn-link">Add new card</span>
-      </div>
-    </div>
-
-    <div class="board">
-      <div class="header bg-carrot">
-        <span>Doing</span>
-      </div>
-      <div class="body">
-        <div class="item">Lorem ipsum dolor sit amet.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-      </div>
-      <div class="footer">
-        <span class="btn btn-link">Add new card</span>
-      </div>
-    </div>
-
-    <div class="board">
-      <div class="header bg-emerald">
-        <span>Done</span>
-      </div>
-      <div class="body">
-        <div class="item">Lorem ipsum dolor sit amet.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-      </div>
-      <div class="footer">
-        <span class="btn btn-link">Add new card</span>
-      </div>
-    </div>
-
-    <div class="board">
-      <div class="header bg-amethyst">
-        <span>Test</span>
-      </div>
-      <div class="body">
-        <div class="item">Lorem ipsum dolor sit amet.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, voluptatibus.</div>
-        <div class="item">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-      </div>
-      <div class="footer">
-        <span class="btn btn-link">Add new card</span>
-      </div>
-    </div>
-
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+  <script src="https://unpkg.com/hyperapp@0.15.1/dist/hyperapp.js"></script>
   <script>
-    var config = {
+
+    const uniqid = (length => {
+      const CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz",
+        CHARS_LENGTH = CHARS.length
+      return () => {
+        let chars = []
+        while (length--) {
+          chars.push(CHARS[Math.floor(Math.random() * CHARS_LENGTH)])
+        }
+        return chars.join("")
+      }
+    })(16)
+
+    if (location.hash.length < 16) {
+      location.hash = uniqid()
+      location.reload()
+    }
+
+    firebase.initializeApp({
       apiKey: "AIzaSyAxcFvCH2cMuk0-bHIf6CUE_snseUUPRAM",
       authDomain: "kanban-1c4b8.firebaseapp.com",
       databaseURL: "https://kanban-1c4b8.firebaseio.com",
       projectId: "kanban-1c4b8",
       storageBucket: "kanban-1c4b8.appspot.com",
       messagingSenderId: "991213731891"
-    };
-    firebase.initializeApp(config);
-  </script>
-  <script>
-    /*var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).then(function(result) {
-      var token = result.credential.accessToken;
-      var user = result.user;
-      console.log({ token, user })
-    }).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      var email = error.email;
-      var credential = error.credential;
-      console.log({ errorCode, errorMessage, email, credential })
-    });*/
+    })
+
+    let { h, app } = hyperapp,
+      database = firebase.database(),
+      uid = location.hash.slice(1),
+      ref = database.ref(uid),
+      boards = ref.child("boards"),
+      items = ref.child("items"),
+      types = ref.child("types"),
+      root = document.querySelector("#root")
+
+    const install = () => {
+      boards.push({ id: 1, title: "To Do", color: "peter-river" })
+      boards.push({ id: 2, title: "Doing", color: "carrot" })
+      boards.push({ id: 3, title: "Done", color: "emerald" })
+      types.push({ id: 1, title: "User Story", color: "green-sea" })
+      types.push({ id: 2, title: "Defect", color: "orange" })
+      types.push({ id: 3, title: "Task", color: "belize-hole" })
+      types.push({ id: 4, title: "Feature", color: "pomegranate" })
+    }
+
+    let init = (state, actions) => {
+      ref.on("value", snapshot => {
+        let data = snapshot.val()
+        if (data == null) {
+          install()
+        } else {
+          actions.data(data)
+        }
+      })
+    }
+
+    let state = {
+      boards: [],
+      items: [],
+      types: [],
+      modals: {
+        items: {
+          edit: false
+        }
+      }
+    }
+
+    let actions = {
+      data(state, actions, data) {
+        console.log(data)
+        return {
+          boards: data.boards ? Object.keys(data.boards).map(uid => {
+            data.boards[uid].uid = uid
+            return data.boards[uid]
+          }) : [],
+          items: data.items ?  Object.keys(data.items).map(uid => {
+            data.items[uid].uid = uid
+            return data.items[uid]
+          }) : [],
+          types: data.types ? Object.keys(data.types).map(uid => {
+            data.types[uid].uid = uid
+            return data.types[uid]
+          }) : []
+        }
+      },
+      modals: {
+        items: {
+          edit: (s, a, isOpen) => ({ edit: isOpen })
+        }
+      }
+    }
+
+    let view = (state, actions) => {
+      return h("div", { class: "container" },
+
+        h("div", { class: "boards" },
+          state.boards.map(board => {
+            return h("div", { class: "board" },
+              h("div", { class: "header bg-" + board.color },
+                h("span", null, board.title)
+              ),
+              h("div", { class: "body" },
+                state.items
+                  .filter(item => item.board == board.id)
+                  .map(item => {
+                    return h("div", { class: "item" }, item.text)
+                  })
+              ),
+              h("div", { class: "footer" },
+                h("span", {
+                  class: "btn btn-link",
+                  onclick: () => actions.modals.items.edit({
+                    board_id: board.id
+                  })
+                }, "Add new card")
+              )
+            )
+          })
+        ),
+
+        state.modals.items.edit && h("div", { class: "modal" },
+          h("form", {
+            class: "content",
+            onsubmit: event => {
+              event.preventDefault()
+              let text = event.target.elements.text.value.trim()
+              if (text) {
+                console.log({
+                  text: text,
+                  id: state.modals.items.edit.board_id,
+                  time: Date.now()
+                })
+                // items.push()
+                event.target.reset()
+                actions.modals.items.edit(false)
+              }
+            },
+            onreset: event => actions.modals.items.edit(false)
+          },
+            h("div", { class: "header" }, "Modal title"),
+            h("div", { class: "body" },
+              h("textarea", { name: "text" }),
+              h("div", { class: "types" },
+                state.types.map((type, i) => {
+                  return h("label", { class: "type" },
+                    h("input", {
+                      type: "radio",
+                      name: "type",
+                      value: type.id,
+                      checked: !i
+                    }),
+                    h("span", { class: "label bg-" + type.color }),
+                    h("span", { class: "title" }, type.title)
+                  )
+                })
+              )
+            ),
+            h("div", { class: "footer" },
+              h("button", {
+                class: "btn",
+                type: "reset"
+              }, "Close"),
+              h("button", { class: "btn" }, "Submit"),
+            )
+          )
+        )
+
+      )
+    }
+
+    app({ state, actions, init, view }, root)
+
   </script>
 </body>
 </html>
