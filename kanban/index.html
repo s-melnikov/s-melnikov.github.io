@@ -27,6 +27,7 @@
       white-space: normal;
       font-size: initial;
       text-align: left;
+      vertical-align: top;
     }
     .board .header {
       padding: 10px 15px;
@@ -283,7 +284,6 @@
 
     let actions = {
       data(state, actions, data) {
-        console.log(data)
         return {
           boards: data.boards ? Object.keys(data.boards).map(uid => {
             data.boards[uid].uid = uid
@@ -307,8 +307,9 @@
     }
 
     let view = (state, actions) => {
-      return h("div", { class: "container" },
 
+      console.log(state)
+      return h("div", { class: "container" },
         h("div", { class: "boards" },
           state.boards.map(board => {
             return h("div", { class: "board" },
@@ -341,12 +342,12 @@
               event.preventDefault()
               let text = event.target.elements.text.value.trim()
               if (text) {
-                console.log({
+                items.push({
                   text: text,
-                  id: state.modals.items.edit.board_id,
-                  time: Date.now()
+                  board: state.modals.items.edit.board_id,
+                  type: parseInt(event.target.elements.type.value),
+                  time: Date.now(),
                 })
-                // items.push()
                 event.target.reset()
                 actions.modals.items.edit(false)
               }
