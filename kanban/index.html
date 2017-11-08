@@ -6,71 +6,11 @@
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
+      position: relative;
     }
     body {
       font: 15px/1.2 "Segoe UI", "Open Sans", sans-serif;
       color: #444;
-    }
-    .boards {
-      overflow: auto;
-      white-space: nowrap;
-      font-size: 0;
-      text-align: center;
-    }
-    .board {
-      width: 300px;
-      background: #f5f5f5;
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 5px;
-      display: inline-block;
-      white-space: normal;
-      font-size: initial;
-      text-align: left;
-      vertical-align: top;
-    }
-    .board .header {
-      padding: 10px 15px;
-      color: #ffffff;
-      text-align: center;
-    }
-    .board .body {
-      padding: 10px 7px 0;
-    }
-    .board .item {
-      background-color: #fff;
-      border-radius: 3px;
-      padding: 10px;
-      font-size: 14px;
-      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05), -1px 1px 2px rgba(0, 0, 0, 0.05);
-    }
-    .board .item:not(:first-child) {
-      margin-top: 7px;
-    }
-    .board .footer {
-      padding: 10px 15px;
-      color: #777777;
-      text-align: center;
-    }
-    .btn {
-      display: inline-block;
-      border: 1px solid #168cc3;
-      border-radius: 3px;
-      padding: 7px 12px;
-      color: #168cc3;
-      font-size: 14px;
-      cursor: pointer;
-      background: none;
-    }
-    .btn:hover {
-      background-color: rgba(0, 0, 0, .1);
-    }
-    .btn-link {
-      border: none;
-    }
-    .btn-link:hover {
-      background-color: transparent;
-      color: #38b6f1;
     }
     .bg-turquoise {
       background-color: #1abc9c;
@@ -132,6 +72,69 @@
     .bg-asbestos {
       background-color: #7f8c8d;
     }
+    .boards {
+      overflow: auto;
+      white-space: nowrap;
+      font-size: 0;
+      text-align: center;
+    }
+    .boards .board {
+      width: 320px;
+      background: #f5f5f5;
+      overflow: hidden;
+      margin: 5px;
+      display: inline-block;
+      white-space: normal;
+      font-size: initial;
+      text-align: left;
+      vertical-align: top;
+    }
+    .boards .board .header {
+      padding: 10px 15px;
+      color: #ffffff;
+      text-align: center;
+    }
+    .boards .board .body {
+      padding: 10px 7px 0;
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+    }
+    .boards .board .item {
+      background-color: #fff;
+      padding: 10px 10px 0;
+      font-size: 14px;
+      border: 1px solid #eee;
+    }
+    .boards .board .item:not(:first-child) {
+      margin-top: 7px;
+    }
+    .boards .board > .footer {
+      padding: 10px 15px;
+      color: #777777;
+      text-align: center;
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+    .btn {
+      display: inline-block;
+      border: 1px solid #168cc3;
+      padding: 7px 12px;
+      color: #168cc3;
+      font-size: 14px;
+      cursor: pointer;
+      background: none;
+    }
+    .btn:hover {
+      background-color: rgba(0, 0, 0, .1);
+    }
+    .btn-link {
+      border: none;
+    }
+    .btn-link:hover {
+      background-color: transparent;
+      color: #38b6f1;
+    }
     .modal {
       position: fixed;
       left: 0;
@@ -146,7 +149,6 @@
       width: 420px;
       margin: -100px auto 0;
       background-color: #fff;
-      border-radius: 4px;
       border: 1px solid #eee;
     }
     .modal .header {
@@ -168,7 +170,6 @@
     textarea {
       display: block;
       border: 1px solid #eee;
-      border-radius: 3px;
       font-family: inherit;
       color: inherit;
       width: 100%;
@@ -184,7 +185,6 @@
       padding: 3px;
       margin-right: 5px;
       margin-top: 10px;
-      border-radius: 4px;
       cursor: pointer;
       position: relative;
     }
@@ -205,6 +205,52 @@
     }
     .types input[type=radio]:checked ~ .title {
       color: #222;
+    }
+    .item > .footer {
+      color: #777;
+      font-size: 10px;
+      text-align: right;
+      padding: 5px 0 3px;
+    }
+    .item .footer span {
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    .item .footer span:hover {
+      text-decoration: underline;
+    }
+    .item .label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+    }
+    .item .footer .time {
+      font-style: italic;
+      float: left;
+      margin-left: 0;
+      cursor: default;
+    }
+    .item .footer .time:hover {
+      text-decoration: none;
+    }
+    .boards-list .board {
+      display: block;
+      margin: 5px 0;
+    }
+    .boards-list .board .title {
+      display: block;
+      padding: 10px 15px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .modal-move-item .content {
+      width: 360px;
     }
   </style>
 </head>
@@ -233,12 +279,7 @@
     }
 
     firebase.initializeApp({
-      apiKey: "AIzaSyAxcFvCH2cMuk0-bHIf6CUE_snseUUPRAM",
-      authDomain: "kanban-1c4b8.firebaseapp.com",
-      databaseURL: "https://kanban-1c4b8.firebaseio.com",
-      projectId: "kanban-1c4b8",
-      storageBucket: "kanban-1c4b8.appspot.com",
-      messagingSenderId: "991213731891"
+      databaseURL: "https://kanban-1c4b8.firebaseio.com"
     })
 
     let { h, app } = hyperapp,
@@ -248,25 +289,22 @@
       boards = ref.child("boards"),
       items = ref.child("items"),
       types = ref.child("types"),
-      root = document.querySelector("#root")
-
-    const install = () => {
-      boards.push({ id: 1, title: "To Do", color: "peter-river" })
-      boards.push({ id: 2, title: "Doing", color: "carrot" })
-      boards.push({ id: 3, title: "Done", color: "emerald" })
-      types.push({ id: 1, title: "User Story", color: "green-sea" })
-      types.push({ id: 2, title: "Defect", color: "orange" })
-      types.push({ id: 3, title: "Task", color: "belize-hole" })
-      types.push({ id: 4, title: "Feature", color: "pomegranate" })
-    }
+      root = document.querySelector("#root"),
+      lastItemId = 0
 
     let init = (state, actions) => {
       ref.on("value", snapshot => {
         let data = snapshot.val()
         if (data == null) {
-          install()
+          boards.push({ id: 1, title: "To Do", color: "peter-river" })
+          boards.push({ id: 2, title: "Doing", color: "carrot" })
+          boards.push({ id: 3, title: "Done", color: "emerald" })
+          types.push({ id: 1, title: "User Story", color: "green-sea" })
+          types.push({ id: 2, title: "Defect", color: "orange" })
+          types.push({ id: 3, title: "Task", color: "belize-hole" })
+          types.push({ id: 4, title: "Feature", color: "pomegranate" })
         } else {
-          actions.data(data)
+          actions.setData(data)
         }
       })
     }
@@ -275,16 +313,14 @@
       boards: [],
       items: [],
       types: [],
-      modals: {
-        items: {
-          edit: false
-        }
-      }
+      itemEditModal: null,
+      itemMoveModal: null,
+      itemDeleteModal: null
     }
 
     let actions = {
-      data(state, actions, data) {
-        return {
+      setData(state, actions, data) {
+        let newState = {
           boards: data.boards ? Object.keys(data.boards).map(uid => {
             data.boards[uid].uid = uid
             return data.boards[uid]
@@ -298,17 +334,24 @@
             return data.types[uid]
           }) : []
         }
+        newState.colors = newState.types.reduce((a, b) => {
+          a[b.id] = b.color
+          return a
+        }, {})
+        return newState
       },
-      modals: {
-        items: {
-          edit: (s, a, isOpen) => ({ edit: isOpen })
-        }
+      itemEditModal(state, actions, data) {
+        return { itemEditModal: data }
+      },
+      itemMoveModal(state, actions, data) {
+        return { itemMoveModal: data }
+      },
+      itemDeleteModal(state, actions, data) {
+        return { itemDeleteModal: data }
       }
     }
 
     let view = (state, actions) => {
-
-      console.log(state)
       return h("div", { class: "container" },
         h("div", { class: "boards" },
           state.boards.map(board => {
@@ -320,13 +363,28 @@
                 state.items
                   .filter(item => item.board == board.id)
                   .map(item => {
-                    return h("div", { class: "item" }, item.text)
+                    return h("div", { class: "item" },
+                      h("div", { class: "text" }, item.text),
+                      h("div", { class: "label bg-" + state.colors[item.type] }),
+                      h("div", { class: "footer" },
+                        h("span", { class: "time" }, new Date(item.time).toDateString()),
+                        h("span", {
+                          onclick: () => actions.itemEditModal(item)
+                        }, "edit"),
+                        h("span", {
+                          onclick: () => actions.itemMoveModal(item)
+                        }, "move"),
+                        h("span", {
+                          onclick: () => actions.itemDeleteModal(item)
+                        }, "delete")
+                      )
+                    )
                   })
               ),
               h("div", { class: "footer" },
                 h("span", {
                   class: "btn btn-link",
-                  onclick: () => actions.modals.items.edit({
+                  onclick: () => actions.itemEditModal({
                     board_id: board.id
                   })
                 }, "Add new card")
@@ -335,28 +393,40 @@
           })
         ),
 
-        state.modals.items.edit && h("div", { class: "modal" },
+        state.itemEditModal && h("div", { class: "modal" },
           h("form", {
             class: "content",
             onsubmit: event => {
               event.preventDefault()
               let text = event.target.elements.text.value.trim()
               if (text) {
-                items.push({
-                  text: text,
-                  board: state.modals.items.edit.board_id,
-                  type: parseInt(event.target.elements.type.value),
-                  time: Date.now(),
-                })
+                if (state.itemEditModal.uid) {
+                  items.child(state.itemEditModal.uid).set({
+                    text,
+                    type: parseInt(event.target.elements.type.value),
+                    board: state.itemEditModal.board,
+                    id: state.itemEditModal.id
+                  })
+                } else {
+                  items.push({
+                    id: ++lastItemId,
+                    text: text,
+                    board: state.itemEditModal.board_id,
+                    type: parseInt(event.target.elements.type.value),
+                    time: Date.now()
+                  })
+                }
                 event.target.reset()
-                actions.modals.items.edit(false)
+                actions.itemEditModal(null)
               }
             },
-            onreset: event => actions.modals.items.edit(false)
+            onreset: event => actions.itemEditModal(null)
           },
-            h("div", { class: "header" }, "Modal title"),
+            h("div", { class: "header" }, state.itemEditModal.id ?
+                "Edit item #ID" + state.itemEditModal.id : "Create new item"
+            ),
             h("div", { class: "body" },
-              h("textarea", { name: "text" }),
+              h("textarea", { name: "text" }, state.itemEditModal.text || ""),
               h("div", { class: "types" },
                 state.types.map((type, i) => {
                   return h("label", { class: "type" },
@@ -364,7 +434,8 @@
                       type: "radio",
                       name: "type",
                       value: type.id,
-                      checked: !i
+                      checked: state.itemEditModal.type ?
+                        state.itemEditModal.type == type.id : !i
                     }),
                     h("span", { class: "label bg-" + type.color }),
                     h("span", { class: "title" }, type.title)
@@ -378,6 +449,60 @@
                 type: "reset"
               }, "Close"),
               h("button", { class: "btn" }, "Submit"),
+            )
+          )
+        ),
+
+        state.itemMoveModal && h("div", { class: "modal" },
+          h("div", { class: "content" },
+            h("div", { class: "header" }, "Move item #ID" + state.itemMoveModal.id),
+            h("div", { class: "body" },
+              h("div", { class: "boards-list" },
+                state.boards.map(board => {
+                  if (state.itemMoveModal.board == board.id) return null
+                  return h("label", { class: "board" },
+                    h("span", {
+                      class: "title bg-" + board.color,
+                      onclick: () => {
+                        items.child(state.itemMoveModal.uid).set({
+                          text: state.itemMoveModal.text,
+                          type: state.itemMoveModal.type,
+                          board: board.id,
+                          id: state.itemMoveModal.id
+                        })
+                        actions.itemMoveModal(null)
+                      },
+                    }, board.title)
+                  )
+                })
+              )
+            ),
+            h("div", { class: "footer" },
+              h("button", {
+                class: "btn",
+                onclick: () => actions.itemMoveModal(null)
+              }, "Close")
+            )
+          )
+        ),
+
+        state.itemDeleteModal && h("div", { class: "modal" },
+          h("div", { class: "content" },
+            h("div", { class: "header" }, "Delete item #ID" + state.itemDeleteModal.id),
+            h("div", { class: "body" },
+              "Are you sure to delete item #ID" + state.itemDeleteModal.id + "?"),
+            h("div", { class: "footer" },
+              h("button", {
+                class: "btn",
+                onclick: () => actions.itemDeleteModal(null)
+              }, "No"),
+              h("button", {
+                class: "btn",
+                onclick: () => {
+                  items.child(state.itemDeleteModal.uid).remove()
+                  actions.itemDeleteModal(null)
+                }
+              }, "Yes")
             )
           )
         )
