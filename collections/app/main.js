@@ -89,7 +89,6 @@ const ItemsTable = (state, actions, items) => {
   if (!items) {
     return h("p", {}, "Nothing")
   }
-  console.log(fields)
   uids = Object.keys(items)
   if (!uids.length) {
     return h("p", {}, "Nothing")
