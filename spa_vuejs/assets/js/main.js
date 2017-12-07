@@ -5,6 +5,11 @@ var app = new Vue({
   data: {
     user: null
   },
-  methods: {}
+  created: function() {
+
+  },
+  methods: {
+
+  }
 })
 

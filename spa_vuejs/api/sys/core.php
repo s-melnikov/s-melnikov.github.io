@@ -151,44 +151,25 @@ function session($name, $value = null) {
 }
 
 # read in raw request body
-function input($load = false, $pipe = 'php://input') {
+function request_body() {
 
-  static $cache = null;
+  static $content = null;
 
-  # if called before, just return previous data
-  if ($cache) {
-    return $cache;
-  }
+  if ($content)
+    return $content;
 
-  # do a best guess
-  $content_type = (
-    isset($_SERVER['HTTP_CONTENT_TYPE']) ?
+  $content_type = isset($_SERVER['HTTP_CONTENT_TYPE']) ?
     $_SERVER['HTTP_CONTENT_TYPE'] :
-    $_SERVER['CONTENT_TYPE']
-  );
+    $_SERVER['CONTENT_TYPE'];
 
-  # try to load everything
-  if ($load) {
+  $content = file_get_contents('php://input');
+  $content_type = preg_split('/ ?; ?/', $content_type);
+  if ($content_type[0] == 'application/json')
+    $content = json_decode($content, true);
+  else if ($content_type[0] == 'application/x-www-form-urlencoded')
+    parse_str($content, $content);
 
-    $content = file_get_contents($pipe);
-    $content_type = preg_split('/ ?; ?/', $content_type);
-
-    # type-content tuple
-    return [$content_type, $content];
-  }
-
-  # create a temp file with the data
-  $path = tempnam(sys_get_temp_dir(), 'disp-');
-  $temp = fopen($path, 'w');
-  $data = fopen($pipe, 'r');
-
-  stream_copy_to_stream($data, $temp);
-
-  fclose($temp);
-  fclose($data);
-
-  # type-path tuple
-  return [$content_type, $path];
+  return $content;
 }
 
 # prints out no-cache headers

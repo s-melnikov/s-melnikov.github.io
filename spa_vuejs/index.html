@@ -45,7 +45,15 @@
       </div>
     </div>
 
-    <div class="sidebar" v-if="user">
+    <c-sidebar v-if="user"></c-sidebar>
+
+    <c-signin v-if="!user"></c-signin>
+
+  </div>
+
+  <script type="text/x-template" id="c-sidebar">
+    {{console.log(items)}}
+    <div class="sidebar">
       <ul class="nav">
         <li class="nav-item">
           <a href="#collections">Collections</a>
@@ -61,12 +69,9 @@
         </li>
       </ul>
     </div>
+  </script>
 
-    <c-page-signin v-if="!user"></c-page-signin>
-
-  </div>
-
-  <script type="text/x-template" id="c-page-signin">
+  <script type="text/x-template" id="c-signin">
     <div class="auth-form">
       <h3 class="text-center">Sign in to System</h3>
       <div class="card">
@@ -90,9 +95,7 @@
   <script src="https://unpkg.com/vue@2.5.9/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js"></script>
   <script src="assets/js/utils.js"></script>
-
-  <script src="assets/js/components/signin.js"></script>
-
+  <script src="assets/js/components.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

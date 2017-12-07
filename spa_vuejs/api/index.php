@@ -23,7 +23,27 @@ map(['GET'], '/', function() {
 });
 
 map(['POST'], '/auth', function() {
-  return json(['post auth']);
+  $response = [];
+  $request = request_body();
+  return json($request);
+  if (!isset($request['email']) || !isset($request['password'])) {
+    $response['error'] = 'EMPTY_DATA';
+  } else {
+    $user = DB::table('.users')->find_one(['email' => $request['email']]);
+    if (!$user) {
+      $response['error'] = 'USER_NOT_EXISTS';
+    } else {
+      if ($user['hash'] !== hash('sha256', $user['uid'] . $request['password'])) {
+        $response['error'] = 'USER_NOT_EXISTS';
+      } else {
+        // session('user', $user['uid']);
+        $response['status'] = 'USER_AUTHORISED';
+        unset($user['hash']);
+        $response['user'] = $user;
+      }
+    }
+  }
+  return json($response);
 });
 
 map(['GET'], '/<collection>', function($params) {
@@ -32,7 +52,6 @@ map(['GET'], '/<collection>', function($params) {
     return json(['error' => 'COLLECTION_NOT_EXISTS']);
   }
   $table = JDB::table($table_name);
-
   return json([ 'result' => $table->find() ]);
 });
 
