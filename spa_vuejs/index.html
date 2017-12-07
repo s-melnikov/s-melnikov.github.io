@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css@0.5.0/dist/spectre.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <title>VueJS Example</title>
+</head>
+<body>
+
+  <div id="root" v-cloak>
+    <div class="main-header" v-if="user">
+      <div class="container">
+        <div class="navbar">
+          <div class="navbar-section">
+            <a href="#" class="navbar-brand">Dashboard</a>
+          </div>
+          <div class="navbar-section">
+            <div class="dropdown dropdown-right">
+              <div href="#" class="dropdown-toggle c-hand" tabindex="0">
+                <figure class="avatar avatar" v-data-initial="user.first_name[0] + user.last_name[0]"></figure>
+                <i class="icon icon-caret"></i>
+              </div>
+              <ul class="menu">
+                <li class="menu-item">
+                  <div class="tile tile-centered">
+                    <div class="tile-icon">
+                      <figure class="avatar avatar" v-data-initial="user.first_name[0] + user.last_name[0]"></figure>
+                    </div>
+                    <div class="tile-content">{{user.first_name}} {{user.last_name}}</div>
+                  </div>
+                </li>
+                <li class="divider"></li>
+                <li class="menu-item">
+                  <a href="#profile">Profile</a>
+                </li>
+                <li class="menu-item">
+                  <a href="#logout">Logout</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar" v-if="user">
+      <ul class="nav">
+        <li class="nav-item">
+          <a href="#collections">Collections</a>
+        </li>
+        <li class="nav-item">
+          <a href="#content">Content</a>
+        </li>
+        <li class="nav-item">
+          <a href="#settings">Settings</a>
+        </li>
+        <li class="nav-item">
+          <a href="#logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+
+    <c-page-signin v-if="!user"></c-page-signin>
+
+  </div>
+
+  <script type="text/x-template" id="c-page-signin">
+    <div class="auth-form">
+      <h3 class="text-center">Sign in to System</h3>
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group" :class="{ 'has-error': 0 }">
+            <label class="form-label">Email address</label>
+            <input class="form-input" type="email" ref="email" v-model="email">
+          </div>
+          <div class="form-group" :class="{ 'has-error': 0 }">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" ref="password" v-model="password">
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-block" :class="{ loading: processing }" v-on:click="signIn">Sign in</button>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script src="https://unpkg.com/vue@2.5.9/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js"></script>
+  <script src="assets/js/utils.js"></script>
+
+  <script src="assets/js/components/signin.js"></script>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

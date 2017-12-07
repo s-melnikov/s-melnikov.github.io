@@ -1,0 +1,119 @@
+body {
+  background: #fbfbfb;
+  padding: 70px 0 50px;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+}
+[v-cloak] {
+  display: none;
+}
+.auth-form {
+  width: 260px;
+  margin: 100px auto 0;
+}
+.auth-form h3 {
+  text-align: center;
+}
+#alerts {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 560px;
+  z-index: 999;
+}
+.container {
+  display: block;
+  padding: 0 15px;
+}
+.main-header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding-top: 10px;
+  height: 60px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+}
+.navbar .navbar-brand {
+  font-size: 17px;
+  font-weight: 400;
+  padding: 10px 25px;
+  text-transform: uppercase;
+  outline: none;
+}
+.navbar .navbar-brand:focus {
+  box-shadow: none;
+}
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
+}
+.sidebar .nav {
+  padding: 10px 10px 10px 20px;
+}
+.sidebar .nav-item a {
+  display: block;
+  padding: 15px 10px;
+  color: #94a2bf;
+}
+.sidebar .nav-item a:hover {
+  color: #777;
+}
+.sidebar .nav-item a:focus {
+  box-shadow: none;
+  color: #333;
+}
+router.container.auth {
+  display: block;
+  padding-left: 275px;
+}
+.muted {
+  color: #ccc;
+}
+a.card:hover {
+  text-decoration: none;
+  border-color: #dee3f1;
+}
+.field-types label [type=radio] {
+  display: none;
+}
+.modal-add-collection .modal-container {
+  width: 420px;
+}
+.modal-add-field .modal-container {
+  width: 360px;
+}
+.panel {
+  background: #fff;
+}
+.page-header::before,
+.page-header::after {
+  clear: both;
+  display: table;
+  content: "";
+}
+.page-header h1,
+.page-header h2,
+.page-header h3 {
+  float: left;
+}
+.page-header .btn {
+  float: right;
+  margin: 3px 0 0 10px;
+}
+.table th {
+  border-bottom-width: .05rem;
+}
+.mt-3 {
+  margin-top: .8rem;
+}
+.modal-delete-collection .modal-container {
+  width: 360px;
+}
