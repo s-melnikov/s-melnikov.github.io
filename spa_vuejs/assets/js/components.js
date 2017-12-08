@@ -7,8 +7,8 @@ Vue.component('c-signin', {
   template: "#c-signin",
   data: function() {
     return {
-      email: "",
-      password: "",
+      email: "fsimmins0@google.ru",
+      password: "Flory",
       processing: false
     }
   },
@@ -19,8 +19,12 @@ Vue.component('c-signin', {
       $http
         .post("auth", { email: self.email, password: self.password })
         .then(function(response) {
-          self.processing = false
-          console.log(response)
+          if (response.error) {
+            self.processing = false
+            self.error = response.error
+          } else {
+            console.log(response)
+          }
         })
     }
   }

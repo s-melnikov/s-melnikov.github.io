@@ -9,8 +9,9 @@ require SYS . 'core.php';
 require SYS . 'jsondb.php';
 require SYS . 'jwt.php';
 
-config('url', str_replace(DS, '/', str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
+config('secret', 'd02e614988d6169b555fe517176a80e271b2691307eebf6a90848a54768a2c36');
 
+config('url', str_replace(DS, '/', str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', ROOT)));
 config('router', 'index.php');
 
 map(404, function ($code) {
@@ -25,21 +26,25 @@ map(['GET'], '/', function() {
 map(['POST'], '/auth', function() {
   $response = [];
   $request = request_body();
-  return json($request);
   if (!isset($request['email']) || !isset($request['password'])) {
     $response['error'] = 'EMPTY_DATA';
   } else {
-    $user = DB::table('.users')->find_one(['email' => $request['email']]);
+    $user = JDB::table('users')->find_one(['email' => $request['email']]);
     if (!$user) {
       $response['error'] = 'USER_NOT_EXISTS';
     } else {
-      if ($user['hash'] !== hash('sha256', $user['uid'] . $request['password'])) {
+      if ($user['hash'] !== hash('sha256', $user['salt'] . $request['password'])) {
         $response['error'] = 'USER_NOT_EXISTS';
       } else {
-        // session('user', $user['uid']);
+        $payload = json_encode([
+          'first_name' => $user['first_name'],
+          'last_name' => $user['last_name'],
+          'status' => $user['status'],
+          'uid' => $user['uid'],
+          'expired' => time() + (24 * 60 * 60)
+        ]);
+        $response['token'] = JWT::encode($payload, config('secret'));
         $response['status'] = 'USER_AUTHORISED';
-        unset($user['hash']);
-        $response['user'] = $user;
       }
     }
   }
