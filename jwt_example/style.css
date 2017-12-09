@@ -1,0 +1,62 @@
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  background: rgba(248, 249, 250, .65);
+  color: rgb(80, 89, 108);
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: .8rem;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #ffffff;
+  padding: 10px 15px;
+  border-radius: 3px;
+}
+
+input {
+  display: block;
+  width: 100%;
+  border: 1px solid #dddddd;
+  padding: 5px 8px;
+  font: inherit;
+  color: inherit;
+  height: 30px;
+  line-height: 1;
+}
+
+button {
+  display: inline-block;
+  color: inherit;
+  font: inherit;
+  border: 1px solid #dddddd;
+  padding: 8px 12px;
+  text-align: center;
+  background: #f0f0f0;
+  cursor: pointer;
+  line-height: 1;
+  height: 30px;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #ffffff;
+}
+
+button:active {
+  background: #eeeeee;
+}
+
+#sign_in {
+  width: 240px;
+  margin: 100px auto;
+  text-align: center;
+}
+
+#sign_in input {
+  margin-bottom: 10px;
+}
