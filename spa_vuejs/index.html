@@ -76,11 +76,11 @@
       <h3 class="text-center">Sign in to System</h3>
       <div class="card">
         <div class="card-body">
-          <div class="form-group" :class="{ 'has-error': 0 }">
+          <div class="form-group" :class="{ 'has-error': error }">
             <label class="form-label">Email address</label>
             <input class="form-input" type="email" ref="email" v-model="email">
           </div>
-          <div class="form-group" :class="{ 'has-error': 0 }">
+          <div class="form-group" :class="{ 'has-error': error }">
             <label class="form-label">Password</label>
             <input class="form-input" type="password" ref="password" v-model="password">
           </div>
@@ -88,6 +88,9 @@
         <div class="card-footer">
           <button class="btn btn-block" :class="{ loading: processing }" v-on:click="signIn">Sign in</button>
         </div>
+      </div>
+      <div class="toast toast-error" v-if="error">
+        <button class="btn btn-clear float-right"></button>{{error}}
       </div>
     </div>
   </script>
