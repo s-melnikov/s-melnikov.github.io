@@ -4,19 +4,149 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Title</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css@0.4.2/dist/spectre.min.css">
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+    #sign_in {
+      width: 240px;
+      margin: 100px auto;
+    }
+    #items_table {
+      display: none;
+      max-width: 720px;
+      padding: 15px;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
-  <div id="sign_in" class="card">
-    <form id="sign_in_form">
-      <p>You are not authorized</p>
-      <p>Please, sign in</p>
-      <input type="email" name="email" placeholder="Your email" value="test@example.com">
-      <input type="password" name="password" placeholder="Your password" value="password">
-      <button>Send</button>
-    </form>
+
+  <div id="app" v-cloak>
+
+    <div id="sign_in" v-if="!user">
+      <form id="sign_in_form">
+        <p class="text-center">You are not authorized<br>Please, sign in</p>
+        <div class="form-group">
+          <label class="form-label" for="input_email">Your email</label>
+          <input class="form-input" type="email" v-model="email" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="input_password">Your password</label>
+          <input class="form-input" type="password" v-model="password" required>
+        </div>
+        <div class="text-center">
+          <button class="btn" v-on:click.prevent="signInFormSubmit">Send</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="items_table" v-if="user">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Genre</th>
+            <th>Release date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{name}</td>
+            <td>{genre}</td>
+            <td>{date}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
-  <script src="utils.js"></script>
-  <script src="app.js"></script>
+
+  <script src="https://unpkg.com/vue@2.5.9/dist/vue.min.js"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        user: null,
+        email: "test@example.com",
+        password: "secretpassword",
+        token: localStorage.token
+      },
+      created: function() {
+        var self = this
+        if (self.token) {
+          self.user = JSON.parse(atob(token.split(".")[1]))
+          getItems(function(items) {
+            self.items = items
+          })
+        }
+      },
+      methods: {
+        signInFormSubmit: function() {
+          var self = this
+          request("server.php", {
+            method: "POST",
+            body: {
+              email: self.email,
+              password: self.password
+            }
+          }, function(error, response) {
+            if (error) {
+              console.log("Auth error:", error)
+            } else {
+              localStorage.token = response.token
+              self.token = response.token
+              getItems(function(items) {
+                self.items = items
+              })
+            }
+          })
+        }
+      }
+    })
+
+    function getItems(cb) {
+      request("server.php", {
+        method: "GET",
+        token: localStorage.token
+      }, function(eror, response) {
+        if (error) {
+          if (error.text == "TOKEN_INVALID") {
+            lokalStorage.token = ""
+          }
+          console.log(error)
+        } else {
+          renderItems(response.items)
+        }
+      })
+    }
+
+    function request(path, params, callback) {
+      var xhr = new XMLHttpRequest()
+      xhr.open(params.method, path, true)
+      // xhr.setRequestHeader("Authorization", "Bearer 123123")
+      xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 400) {
+          try {
+            var data = JSON.parse(xhr.responseText)
+          } catch (e) {
+            return callback({ type: "JSON_PARSE_ERROR", e: e }, null)
+          }
+          if (data.error) {
+            callback(data.error, null)
+          } else {
+            callback(null, data)
+          }
+        } else {
+          callback({ type: "REQUEST_SERVER_ERROR", status: xhr.status }, null)
+        }
+      }
+      xhr.onerror = function(e) {
+        callback({ type: "REQUEST_CONNECTION_ERROR", e: e }, null)
+      }
+      xhr.send(params.body ? JSON.stringify(params.body) : null)
+    }
+  </script>
 </body>
 </html>
