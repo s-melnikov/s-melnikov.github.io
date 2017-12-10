@@ -69,14 +69,14 @@
       el: "#app",
       data: {
         user: null,
-        email: "test@example.com",
-        password: "secretpassword",
+        email: "test@test.com",
+        password: "123",
         token: localStorage.token
       },
       created: function() {
         var self = this
         if (self.token) {
-          self.user = JSON.parse(atob(token.split(".")[1]))
+          self.user = JSON.parse(atob(self.token.split(".")[1]))
           getItems(function(items) {
             self.items = items
           })
