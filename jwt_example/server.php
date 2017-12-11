@@ -1,32 +1,47 @@
 <?php
 
-define("JWT_SECRET", "Lorem ipsum dolor sit amet!");
+define('JWT_SECRET', 'Lorem ipsum dolor sit amet!');
 
-if ($token = getallheaders()["Authorization"]) {
-
+if ($token = getallheaders()['Authorization']) {
+  list($token) = sscanf($token, 'Bearer %s');
+  if (jwt_decode($token, JWT_SECRET, true)) {
+    return json([
+      'items' => [
+        ['name' => 'The Shawshank Redemption', 'genre' => ['Crime', 'Drama'], 'release' => '14 October 1994'],
+        ['name' => 'The Godfather', 'genre' => ['Crime', 'Drama'], 'release' => '24 March 1972'],
+        ['name' => 'Schindler\'s List', 'genre' => ['Biography', 'Drama', 'History'], 'release' => '4 February 1994'],
+        ['name' => 'Se7en', 'genre' => ['Crime', 'Drama', 'Mystery'], 'release' => '22 September 1995']
+      ]
+    ]);
+  }
+  return json(['error' => 'TOKEN_INVALID']);
 } else {
-  if ($request_body = file_get_contents("php://input")) {
-    if ($request_body = json_decode($request_body)) {
-      if (isset($request_body["email"]) && isset($request_body["password"])) {
-        if ($request_body["email"] === "test@test.com" &&
-          $request_body["password"] === "123") {
+  if ($request_body = file_get_contents('php://input')) {
+    if ($request_body = json_decode($request_body, true)) {
+      if (isset($request_body['email']) && isset($request_body['password'])) {
+        if ($request_body['email'] === 'test@test.com' &&
+          $request_body['password'] === '123') {
           $user = [
             'first_name' => 'John',
             'last_name' => 'Doe'
-          ]
-          json([ 'token' => jwt_encode($user, JWT_SECRET) ]);
+          ];
+          return json([ 'token' => jwt_encode($user, JWT_SECRET) ]);
         }
+        return json(['error' => 'USER_NOT_EXISTS']);
       }
     }
+    return json(['error' => 'INVALID_REQUEST_BODY']);
   }
 }
+
+return json(['error' => 'EMPTY_REQUEST']);
 
 function json($data) {
   header('Content-type: application/json');
   print json_encode($data);
 }
 
-function decode($jwt, $key = null, $verify = false) {
+function jwt_decode($jwt, $key = null, $verify = false) {
   $partials = explode('.', $jwt);
   if (count($partials) != 3) {
     return false;

@@ -14,7 +14,6 @@
       margin: 100px auto;
     }
     #items_table {
-      display: none;
       max-width: 720px;
       padding: 15px;
       margin: 0 auto;
@@ -22,7 +21,6 @@
   </style>
 </head>
 <body>
-
   <div id="app" v-cloak>
 
     <div id="sign_in" v-if="!user">
@@ -43,6 +41,14 @@
     </div>
 
     <div id="items_table" v-if="user">
+      <header class="navbar">
+        <section class="navbar-section">You autorized as: {{user.first_name}} {{user.last_name}}</section>
+        <section class="navbar-center"></section>
+        <section class="navbar-section">
+          <span class="btn btn-link" v-on:click="signOut">Sign out</span>
+        </section>
+      </header>
+
       <table class="table table-striped">
         <thead>
           <tr>
@@ -52,10 +58,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{name}</td>
-            <td>{genre}</td>
-            <td>{date}</td>
+          <tr v-for="item in items">
+            <td>{{item.name}}</td>
+            <td>{{item.genre.join(', ')}}</td>
+            <td>{{item.release}}</td>
           </tr>
         </tbody>
       </table>
@@ -71,15 +77,14 @@
         user: null,
         email: "test@test.com",
         password: "123",
-        token: localStorage.token
+        token: localStorage.token,
+        items: null
       },
       created: function() {
         var self = this
         if (self.token) {
           self.user = JSON.parse(atob(self.token.split(".")[1]))
-          getItems(function(items) {
-            self.items = items
-          })
+          self.getItems()
         }
       },
       methods: {
@@ -97,35 +102,44 @@
             } else {
               localStorage.token = response.token
               self.token = response.token
-              getItems(function(items) {
-                self.items = items
-              })
+              self.user = JSON.parse(atob(self.token.split(".")[1]))
+              self.getItems()
+            }
+          })
+        },
+        signOut: function() {
+          this.token = null
+          this.user = null
+          this.items = null
+          localStorage.removeItem("token")
+        },
+        getItems: function() {
+          var self = this
+          request("server.php", {
+            method: "GET",
+            token: self.token
+          }, function(error, response) {
+            if (error) {
+              if (error == "TOKEN_INVALID") {
+                localStorage.removeItem("token")
+                self.token = null
+                self.user = null
+              }
+              console.log(error)
+            } else {
+              self.items = response.items
             }
           })
         }
       }
     })
 
-    function getItems(cb) {
-      request("server.php", {
-        method: "GET",
-        token: localStorage.token
-      }, function(eror, response) {
-        if (error) {
-          if (error.text == "TOKEN_INVALID") {
-            lokalStorage.token = ""
-          }
-          console.log(error)
-        } else {
-          renderItems(response.items)
-        }
-      })
-    }
-
     function request(path, params, callback) {
       var xhr = new XMLHttpRequest()
       xhr.open(params.method, path, true)
-      // xhr.setRequestHeader("Authorization", "Bearer 123123")
+      if (params.token) {
+        xhr.setRequestHeader("Authorization", "Bearer " + params.token)
+      }
       xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 400) {
           try {
