@@ -1,28 +1,23 @@
 body {
-  padding: 15px;
   background: #f9f9f9;
 }
+[m-mask] {
+  display: none;
+}
 .navbar {
-  padding: .8rem;
-  border: .05rem solid #e7e9ed;
-  background: #fff;
-  margin-bottom: .8rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 5px;
 }
-.table td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 85%;
+.sidebar {
+  top: 47px;
+  position: absolute;
+  width: 200px;
+  background: rgb(255, 255, 255);
+  padding: 10px 15px;
+  bottom: 0;
+  border-right: 1px solid rgb(240, 240, 240);
 }
-.panel {
-  background: #fff;
-}
-.col-260px {
-  width: 260px;
-  flex: none;
-}
-.table-items a {
-  color: inherit;
-}
-.table-items a:hover {
-  text-decoration: none;
+.main-container {
+  margin-left: 200px;
 }

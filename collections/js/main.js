@@ -62,7 +62,9 @@ const PageTable = (state, actions) => h("div", {
 const PageItem = (state, actions) => h("div", {
     class: "page",
     key: `page-item-${state.router.params.item}`,
-    oncreate: () => { /*actions.table.get(state.router.params.table)*/ }
+    oncreate: () => {
+      /*actions.table.get(state.router.params.table)*/
+    }
   },
   Panel({
     title: [
