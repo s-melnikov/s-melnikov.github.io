@@ -1,61 +1,98 @@
+class Storage {
+  constructor(storage_name) {
+    this.storage_name = storage_name
+    this.getData()
+  }
+  getData() {
+    try {
+      this.data = JSON.parse(localStorage[this.storage_name])
+    } catch(e) {
+      this.data = {}
+    }
+  }
+  setData() {
+    try {
+      localStorage[this.storage_name] = JSON.stringify(this.data)
+    } catch(e) {}
+  }
+  table(table_name) {
+    return new StorageTable(table_name, this)
+  }
+}
+
+class StorageTable {
+  constructor(table_name, storage) {
+    this.table_name = table_name
+    this.storage = storage
+    if (!storage.data[table_name]) {
+      storage.data[table_name] = []
+    }
+    this.data = storage.data[table_name]
+    this.where = {}
+  }
+  push(item) {
+    item.uid = StorageTable.uniqid()
+    this.data.push(item)
+    this.storage.setData()
+  }
+  where(obj) {
+    for (key in obj) {
+      this.where[key] = obj[key]
+    }
+    return this
+  }
+  find() {
+    let result = []
+    this.data.forEach(item => {
+      for (key in this.where) {
+        if (item[key] !== this.where[key]) return;
+      }
+      result.push(item)
+    })
+    return new List(result)
+  }
+}
+
+class List {
+  constructor(items) {
+    this.items = items.map(item => new Item(item))
+  }
+  toArray() {
+    return this.items.map(item => item.data)
+  }
+}
+
+class Item {
+  constructor(data) {
+    this.data = data
+  }
+}
+
+StorageTable.CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+StorageTable.uniqid = () => {
+  let now = Date.now(), chars = [], i = 8, id
+  while (i--)
+    chars[i] = StorageTable.CHARS.charAt(now % 64), now = Math.floor(now / 64)
+  id = chars.join("")
+  i = 8
+  while (i--)
+    id += StorageTable.CHARS.charAt(Math.floor(Math.random() * 64))
+  return id
+}
+
+var storage = new Storage("foo")
+var table = storage.table("users")
+var users = table.find().toArray()
+
+console.log(users)
+
+/*
 function createStorage(storage_name) {
-  const CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
-
-  function uniqid() {
-    let now = Date.now(), chars = [], i = 8, id
-    while (i--)
-      chars[i] = CHARS.charAt(now % 64), now = Math.floor(now / 64)
-    id = chars.join("")
-    i = 8
-    while (i--)
-      id += CHARS.charAt(Math.floor(Math.random() * 64))
-    return id
-  }
-
-  function get_ls() {
-    try {
-      return JSON.parse(localStorage[storage_name])
-    } catch(e) {
-      return {}
-    }
-  }
-
-  function set_ls() {
-    try {
-      localStorage[storage_name] = JSON.stringify(storage)
-      return true
-    } catch(e) {
-      return false
-    }
-  }
-
-  var storage = get_ls() || {}
   return {
     table(name) {
-      var table = (storage[name] = storage[name] || [])
-      var where = []
       return {
-        where(params) {
-          for (key in params) {
-            where[key] = params[key]
-          }
-          return this
-        },
-        find() {
-          let result = []
-          table.forEach(function(item) {
-            for (key in where) {
-              if (item[key] !== where[key]) return;
-            }
-            result.push(item)
-          })
-          return result
-        },
-        push(item) {
-          item.uid = uniqid()
-          table.push(item)
-          set_ls()
-        },
+        ,
+        ,
         drop() {
           delete storage[name]
           set_ls()
@@ -149,3 +186,4 @@ const Database = db_name => {
     uniqid
   }
 }
+*/
