@@ -1,189 +1,132 @@
-class Storage {
-  constructor(storage_name) {
-    this.storage_name = storage_name
-    this.getData()
-  }
-  getData() {
-    try {
-      this.data = JSON.parse(localStorage[this.storage_name])
-    } catch(e) {
-      this.data = {}
-    }
-  }
-  setData() {
-    try {
-      localStorage[this.storage_name] = JSON.stringify(this.data)
-    } catch(e) {}
-  }
-  table(table_name) {
-    return new StorageTable(table_name, this)
-  }
-}
+const Storage = (() => {
 
-class StorageTable {
-  constructor(table_name, storage) {
-    this.table_name = table_name
-    this.storage = storage
-    if (!storage.data[table_name]) {
-      storage.data[table_name] = []
+  class Storage {
+    constructor(storage_name) {
+      this.storage_name = storage_name
+      this.getData()
     }
-    this.data = storage.data[table_name]
-    this.where = {}
-  }
-  push(item) {
-    item.uid = StorageTable.uniqid()
-    this.data.push(item)
-    this.storage.setData()
-  }
-  where(obj) {
-    for (key in obj) {
-      this.where[key] = obj[key]
-    }
-    return this
-  }
-  find() {
-    let result = []
-    this.data.forEach(item => {
-      for (key in this.where) {
-        if (item[key] !== this.where[key]) return;
+    getData() {
+      try {
+        this.data = JSON.parse(localStorage[this.storage_name])
+      } catch(e) {
+        this.data = {}
       }
-      result.push(item)
-    })
-    return new List(result)
+    }
+    setData() {
+      try {
+        localStorage[this.storage_name] = JSON.stringify(this.data)
+      } catch(e) {}
+    }
+    table(table_name) {
+      return new Table(table_name, this)
+    }
+    drop() {
+      localStorage.removeItem(this.storage_name)
+    }
   }
-}
 
-class List {
-  constructor(items) {
-    this.items = items.map(item => new Item(item))
-  }
-  toArray() {
-    return this.items.map(item => item.data)
-  }
-}
-
-class Item {
-  constructor(data) {
-    this.data = data
-  }
-}
-
-StorageTable.CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
-StorageTable.uniqid = () => {
-  let now = Date.now(), chars = [], i = 8, id
-  while (i--)
-    chars[i] = StorageTable.CHARS.charAt(now % 64), now = Math.floor(now / 64)
-  id = chars.join("")
-  i = 8
-  while (i--)
-    id += StorageTable.CHARS.charAt(Math.floor(Math.random() * 64))
-  return id
-}
-
-var storage = new Storage("foo")
-var table = storage.table("users")
-var users = table.find().toArray()
-
-console.log(users)
-
-/*
-function createStorage(storage_name) {
-  return {
-    table(name) {
-      return {
-        ,
-        ,
-        drop() {
-          delete storage[name]
-          set_ls()
+  class Table {
+    constructor(table_name, storage) {
+      this.table_name = table_name
+      this.storage = storage
+      if (!storage.data[table_name]) {
+        storage.data[table_name] = []
+      }
+      this.data = storage.data[table_name]
+      this.conditions = { where: {} }
+    }
+    push(item) {
+      return new Promise((resolve, reject) => {
+        item.uid = Table.uniqid()
+        this.data.push(item)
+        this.storage.setData()
+        resolve(new Item(item, this))
+      })
+    }
+    where(obj) {
+      for (let key in obj) {
+        this.conditions.where[key] = obj[key]
+      }
+      return this
+    }
+    find() {
+      return new Promise((resolve, reject) => {
+        let result = []
+        this.data.forEach(item => {
+          for (let key in this.conditions.where) {
+            if (item[key] !== this.conditions.where[key]) return;
+          }
+          result.push(item)
+        })
+        this.conditions = { where: {} }
+        resolve(new Collection(result, this))
+      })
+    }
+    findOne() {
+      return this.find().then(result => new Promise((resolve, reject) => {
+        resolve(result.items[0] || null)
+      }))
+    }
+    deleteItems(items) {
+      for (let index = 0; index < this.data.length;) {
+        if (items.indexOf(this.data[index]) !== -1) {
+          this.data.splice(index, 1)
+        } else {
+          index++
         }
       }
+      this.storage.setData()
+    }
+    truncate() {
+      this.data = []
+      this.storage.setData()
     }
   }
-}
 
-var table = createStorage("test").table("foo").where({ first_name: "John", last_name: "Lorem" }).find()
-console.log(table)
-
-
-const Database = db_name => {
-
-  db_name = btoa(db_name)
-
-  let db_data;
-
-  const uniqid = () => {
-    let now = Date.now(), chars = [], i = 8, id
-    while (i--) {
-      chars[i] = CHARS.charAt(now % 64)
-      now = Math.floor(now / 64)
+  class Collection {
+    constructor(items, table) {
+      this.items = items.map(item => new Item(item, table))
+      this.table = table
     }
+    toArray() {
+      return this.items.map(item => item.data)
+    }
+    delete() {
+      this.table.deleteItems(
+        this.items.map(item => item.data)
+      )
+    }
+  }
+
+  class Item {
+    constructor(data, table) {
+      this.data = data
+      this.table = table
+    }
+    update(data) {
+      for (let key in data) {
+        this.data[key] = data[key]
+      }
+      this.table.storage.setData()
+    }
+    delete() {
+      this.table.deleteItems([this.data])
+      this.data = null
+    }
+  }
+
+  Table.CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+  Table.uniqid = () => {
+    let now = Date.now(), chars = [], i = 8, id
+    while (i--)
+      chars[i] = Table.CHARS.charAt(now % 64), now = Math.floor(now / 64)
     id = chars.join("")
     i = 8
-    while (i--) {
-      id += CHARS.charAt(Math.floor(Math.random() * 64))
-    }
+    while (i--)
+      id += Table.CHARS.charAt(Math.floor(Math.random() * 64))
     return id
   }
 
-  const sync = () => {
-    localStorage[db_name] = JSON.stringify(db_data)
-  }
+  return Storage
 
-  if (!localStorage[db_name]) {
-    localStorage[db_name] = "{}"
-  }
-  db_data = JSON.parse(localStorage[db_name])
-
-  return {
-    exists(t_name) {
-      return !!db_data[t_name]
-    },
-    create(t_name) {
-      if (db_data[t_name]) {
-        throw Error(`[DB ERROR] Table "${t_name}" already exists.`)
-      }
-      db_data[t_name] = {}
-      sync()
-      return this.table(t_name)
-    },
-    tables() {
-      return Object.keys(db_data).filter(name => name[0] != ".")
-    },
-    table(t_name) {
-      if (!db_data[t_name]) {
-        throw Error(`[DB ERROR] Table "${t_name}" not exists.`)
-      }
-      return {
-        get() {
-          return db_data[t_name]
-        },
-        add(entry) {
-          let uid = entry.uid || uniqid()
-          if (entry.uid) delete entry.uid
-          db_data[t_name][uid] = entry
-          sync()
-          return uid
-        },
-        put(uid, entry) {
-          if (db_data[t_name][uid] == null) {
-            throw Error(`[DB ERROR] Entry with uid "${uid}" not exists.`)
-          }
-          if (entry == null) {
-            throw Error(`[DB ERROR] Entry should not be empty.`)
-          }
-          db_data[t_name][uid] = entry
-          sync()
-        },
-        del(uid) {
-          delete db_data[t_name][uid]
-        },
-        truncate() {
-          db_data[t_name] = {}
-        }
-      }
-    },
-    uniqid
-  }
-}
-*/
+})()

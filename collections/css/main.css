@@ -1,5 +1,6 @@
 body {
   background: #f9f9f9;
+  margin: 0;
 }
 [m-mask] {
   display: none;
@@ -20,4 +21,7 @@ body {
 }
 .main-container {
   margin-left: 200px;
+}
+.text-right {
+  text-align: right;
 }
