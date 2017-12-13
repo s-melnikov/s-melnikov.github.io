@@ -1,9 +1,8 @@
 *, *::before, *::after {
   box-sizing: inherit;
 }
-app, router-view {
+[m-mask] {
   display: block;
-  width: 100%;
 }
 body {
   background: #f9f9f9;
@@ -45,6 +44,7 @@ body {
 }
 .sidebar .nav-item {
   width: 100%;
+  display: block;
 }
 .main-container {
   margin-left: 200px;

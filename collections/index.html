@@ -8,11 +8,8 @@
 </head>
 <body>
 
-  <app></app>
-
-  <script type="text/x-template" id="app-template">
-
-    <div if="{authorised}">
+  <div id="root" m-mask>
+    <div m-if="authorised">
 
       <header class="navbar">
         <div class="row">
@@ -26,7 +23,7 @@
       </header>
       <div class="sidebar">
         <div class="nav left">
-          <a class="nav-item" each="{tables}" href="#!/table/{slug}">{title}</a>
+          <router-link class="nav-item" m-for="table in tables" to="/table/{{table.slug}}">{{table.title}}</router-link>
         </div>
       </div>
       <div class="container main-container">
@@ -35,18 +32,51 @@
 
     </div>
 
-    <div if="{!authorised}">
+    <div m-if="!authorised">
       Sign In
     </div>
+  </div>
 
-  </script>
-
-  <script src="https://unpkg.com/riot@3.7.4/riot.min.js"></script>
+  <script src="https://unpkg.com/moonjs@0.11.0/dist/moon.js"></script>
+  <script src="https://unpkg.com/moon-router@0.1.3/dist/moon-router.min.js"></script>
   <script src="js/utils/storage.js"></script>
   <script src="js/utils/helpers.js"></script>
-  <script src="js/main.js"></script>
+  <!-- <script src="js/main.js"></script> -->
   <script src="js/utils/install.js"></script>
-  <script>riot.mount("*")</script>
+  <script>
+    Moon.use(MoonRouter)
+
+    let storage = new Storage("my_app")
+
+    let router = new MoonRouter({
+      default: "/",
+      map: {
+        "/": "Index",
+        "/table/:slug": "DynamicView"
+      }
+    })
+
+    Moon.component("Index", {
+      template: `<div>Index</div>`
+    })
+
+    let app = new Moon({
+      router,
+      el: "#root",
+      hooks: {
+        init: function() {
+          storage.table("tables").find().then(result => {
+            this.set("tables", result.toArray())
+          })
+        }
+      },
+      data: {
+        authorised: true,
+        tables: null
+      }
+    })
+
+  </script>
 </body>
 </html>
 
