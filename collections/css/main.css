@@ -1,6 +1,18 @@
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+app, router-view {
+  display: block;
+  width: 100%;
+}
 body {
   background: #f9f9f9;
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.nav-item {
+  text-decoration: none;
 }
 [m-mask] {
   display: none;
@@ -8,16 +20,31 @@ body {
 .navbar {
   background-color: #ffffff;
   border-bottom: 1px solid #f0f0f0;
-  padding: 5px;
+}
+.navbar .logo {
+  display: flex;
+  background-color: #56a7ce;
+  width: 200px;
+  height: 50px;
+}
+.navbar .logo a {
+  color: #eee;
+  padding-top: 1.2rem;
+}
+.navbar .logo a:hover {
+  color: #fff;
 }
 .sidebar {
-  top: 47px;
+  top: 50px;
   position: absolute;
   width: 200px;
   background: rgb(255, 255, 255);
   padding: 10px 15px;
   bottom: 0;
   border-right: 1px solid rgb(240, 240, 240);
+}
+.sidebar .nav-item {
+  width: 100%;
 }
 .main-container {
   margin-left: 200px;

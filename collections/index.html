@@ -12,12 +12,12 @@
 
   <script type="text/x-template" id="app-template">
 
-    <div id="app" if="{authorised}">
+    <div if="{authorised}">
 
       <header class="navbar">
         <div class="row">
-          <div class="col">
-            <a href="#" class="nav-item">Home</a>
+          <div class="logo">
+            <a href="#" class="nav-item">Dashboard</a>
           </div>
           <div class="col text-right">
             <a href="#" class="nav-item">Sign out</a>
@@ -35,7 +35,7 @@
 
     </div>
 
-    <div id="signin" if="{!authorised}">
+    <div if="{!authorised}">
       Sign In
     </div>
 
@@ -45,6 +45,7 @@
   <script src="js/utils/storage.js"></script>
   <script src="js/utils/helpers.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/utils/install.js"></script>
   <script>riot.mount("*")</script>
 </body>
 </html>
