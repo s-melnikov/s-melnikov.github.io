@@ -3,80 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
-  <link rel="stylesheet" href="https://unpkg.com/wingcss@1.0.0-beta/dist/wing.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css@0.5.0/dist/spectre.min.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-
-  <div id="root" m-mask>
-    <div m-if="authorised">
-
-      <header class="navbar">
-        <div class="row">
-          <div class="logo">
-            <a href="#" class="nav-item">Dashboard</a>
-          </div>
-          <div class="col text-right">
-            <a href="#!/signout" class="nav-item">Sign out</a>
-          </div>
-        </div>
-      </header>
-      <div class="sidebar">
-        <div class="nav left">
-          <router-link class="nav-item" m-for="table in tables" to="/table/{{table.slug}}">{{table.title}}</router-link>
-        </div>
-      </div>
-      <div class="container main-container">
-        <router-view></router-view>
-      </div>
-
-    </div>
-
-    <div m-if="!authorised">
-      Sign In
-    </div>
-  </div>
-
-  <script src="https://unpkg.com/moonjs@0.11.0/dist/moon.js"></script>
-  <script src="https://unpkg.com/moon-router@0.1.3/dist/moon-router.min.js"></script>
+  <div id="root"></div>
+  <script src="https://unpkg.com/preact@8.2.7/dist/preact.min.js"></script>
+  <script src="https://unpkg.com/preact-router@2.6.0/dist/preact-router.js"></script>
   <script src="js/utils/storage.js"></script>
   <script src="js/utils/helpers.js"></script>
-  <!-- <script src="js/main.js"></script> -->
+  <script src="js/main.js"></script>
   <script src="js/utils/install.js"></script>
-  <script>
-    Moon.use(MoonRouter)
-
-    let storage = new Storage("my_app")
-
-    let router = new MoonRouter({
-      default: "/",
-      map: {
-        "/": "Index",
-        "/table/:slug": "DynamicView"
-      }
-    })
-
-    Moon.component("Index", {
-      template: `<div>Index</div>`
-    })
-
-    let app = new Moon({
-      router,
-      el: "#root",
-      hooks: {
-        init: function() {
-          storage.table("tables").find().then(result => {
-            this.set("tables", result.toArray())
-          })
-        }
-      },
-      data: {
-        authorised: true,
-        tables: null
-      }
-    })
-
-  </script>
 </body>
 </html>
 

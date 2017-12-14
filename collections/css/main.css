@@ -1,54 +1,37 @@
-*, *::before, *::after {
-  box-sizing: inherit;
-}
 [m-mask] {
   display: block;
 }
 body {
   background: #f9f9f9;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.nav-item {
-  text-decoration: none;
-}
-[m-mask] {
-  display: none;
 }
 .navbar {
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  padding-right: 0.3rem;
 }
-.navbar .logo {
-  display: flex;
-  background-color: #56a7ce;
-  width: 200px;
-  height: 50px;
+.navbar .logo .btn-link {
+  width: 10rem;
+  height: 2.5rem;
+  padding-top: 0.65rem;
+  background: #00adff;
+  color: #ffffff;
+  border-radius: 0;
 }
-.navbar .logo a {
-  color: #eee;
-  padding-top: 1.2rem;
-}
-.navbar .logo a:hover {
-  color: #fff;
+.navbar .logo .btn-link:focus {
+  box-shadow: none;
 }
 .sidebar {
-  top: 50px;
   position: absolute;
-  width: 200px;
-  background: #fff;
-  padding: 10px 15px;
+  left: 0;
   bottom: 0;
-  border-right: 1px solid #eee;
-}
-.sidebar .nav-item {
-  width: 100%;
-  display: block;
+  top: 2.5rem;
+  border-right: 1px solid #eeeeee;
+  width: 10rem;
+  background: #ffffff;
+  padding: 0.5rem;
 }
 .main-container {
-  margin-left: 200px;
-}
-.text-right {
-  text-align: right;
+  padding-left: 10.5rem;
+  padding-top: 1rem;
+  padding-right: 0.5rem;
 }
