@@ -1,37 +1,13 @@
-[m-mask] {
-  display: block;
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+html {
+  font-size: 14px;
 }
 body {
-  background: #f9f9f9;
-}
-.navbar {
-  background: #ffffff;
-  border-bottom: 1px solid #eeeeee;
-  padding-right: 0.3rem;
-}
-.navbar .logo .btn-link {
-  width: 10rem;
-  height: 2.5rem;
-  padding-top: 0.65rem;
-  background: #00adff;
-  color: #ffffff;
-  border-radius: 0;
-}
-.navbar .logo .btn-link:focus {
-  box-shadow: none;
-}
-.sidebar {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  top: 2.5rem;
-  border-right: 1px solid #eeeeee;
-  width: 10rem;
-  background: #ffffff;
-  padding: 0.5rem;
-}
-.main-container {
-  padding-left: 10.5rem;
-  padding-top: 1rem;
-  padding-right: 0.5rem;
+  padding: 15px;
+  margin: 0;
+  line-height: 1.4;
+  font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
+  color: #444;
 }
