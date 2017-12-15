@@ -103,6 +103,9 @@ const Storage = (() => {
       this.data = data
       this.table = table
     }
+    toArray() {
+      return this.data
+    }
     update(data) {
       for (let key in data) {
         this.data[key] = data[key]

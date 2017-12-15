@@ -1,13 +1,88 @@
 *, *::before, *::after {
   box-sizing: border-box;
+  position: relative;
+}
+html, body, #root, .container {
+  height: 100%;
 }
 html {
   font-size: 14px;
 }
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+a:hover {
+  color: #3498db;
+}
+h1, h2, h3 {
+  font-weight: 400;
+}
+h4, h5 {
+  font-weight: 500;
+}
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.8rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 1.2rem;
+}
+h5 {
+  font-size: 0.9rem;
+}
 body {
-  padding: 15px;
   margin: 0;
+  padding: 0;
   line-height: 1.4;
   font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
-  color: #444;
+  color: #34495e;
+}
+header {
+  position: absolute;
+  top: 0;
+  left: 15rem;
+  right: 0;
+  padding: 0.8rem 1.2rem;
+  height: 3rem;
+  border-bottom: 1px solid #ecf0f1;
+  text-align: right;
+}
+aside {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  padding: 0.5rem 1.5rem;
+  width: 15rem;
+  border-right: 1px solid #ecf0f1;
+}
+main {
+  padding: 3rem 2rem 3rem 17rem;
+}
+menu {
+  padding: 0;
+  margin: 0.5rem 0;
+}
+menu a {
+  display: block;
+  padding: 0.5rem 0;
+}
+table {
+  border-collapse: collapse;
+}
+th {
+  padding: 0.5rem;
+  font-weight: 500;
+  text-align: left;
+  border-bottom: 2px solid #ecf0f1;
+}
+td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ecf0f1;
 }
