@@ -17,9 +17,21 @@ let Router = (props, children) => {
 
 let Route = (props) => {
   return ({ state, actions }) => {
-    console.log({ state, actions })
-    console.log(props)
+    Route.match(state.route, props.path)
+    return state.route === props.path.slice(1) ? props.component({ state, actions }) : null
   }
+}
+
+Route.match = (route, path) => {
+  let params = {}, keys = []
+  let regex = RegExp(path === "*" ? ".*" :
+    "^" + path.replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
+      keys.push(key.toLowerCase())
+      return "([-\\.%\\w\\(\\)]+)"
+    }) + "/?$")
+  console.log(path, regex)
+  let match = regex.exec(path)
+  console.log(match, keys)
 }
 
 let Layout = ({ state, actions }) => h("main", null, "Layout",
@@ -37,7 +49,7 @@ let Layout = ({ state, actions }) => h("main", null, "Layout",
   h("p", null,
     h(Router, { state, actions },
       h(Route, { path: "/", component: Home }),
-      h(Route, { path: "/blog/", component: Blog }),
+      h(Route, { path: "/blog", component: Blog }),
       h(Route, { path: "/post/:id", component: Post }),
     )
   )
