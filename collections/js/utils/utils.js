@@ -25,7 +25,7 @@ function Logger(app) {
   }
 }
 
-const Router = options => {
+const Router1 = options => {
   return app => {
     return (props, root) => {
       let actions = app(enhance(props), root)

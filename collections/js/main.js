@@ -11,11 +11,43 @@ let model = {
   }
 }
 
-let layout = ({ state, actions }) => h("main", null, "Layout", h("p", null, state.route))
-let blog = ({ state, actions }) => h("main", null, "Blog")
-let post = ({ state, actions }) => h("main", null, "Post")
+let Router = (props, children) => {
+  return children.map(route => route(props))
+}
 
-let { actions } = app(model, layout, document.body)
+let Route = (props) => {
+  return ({ state, actions }) => {
+    console.log({ state, actions })
+    console.log(props)
+  }
+}
+
+let Layout = ({ state, actions }) => h("main", null, "Layout",
+  h("p", null,
+    h("a", { href: "#" }, "Home"),
+    " ",
+    h("a", { href: "#!/blog" }, "Blog"),
+    " ",
+    h("a", { href: "#!/post/1" }, "Post 1"),
+    " ",
+    h("a", { href: "#!/post/2" }, "Post 2"),
+    " ",
+    h("a", { href: "#!/post/3" }, "Post 3"),
+  ),
+  h("p", null,
+    h(Router, { state, actions },
+      h(Route, { path: "/", component: Home }),
+      h(Route, { path: "/blog/", component: Blog }),
+      h(Route, { path: "/post/:id", component: Post }),
+    )
+  )
+)
+
+let Home = ({ state, actions }) => h("main", null, "Home")
+let Blog = ({ state, actions }) => h("main", null, "Blog")
+let Post = ({ state, actions }) => h("main", null, "Post")
+
+let { actions } = app(model, Layout, document.body)
 addEventListener("hashchange", () => {
   actions.router()
 })
