@@ -25,50 +25,41 @@ function Logger(app) {
   }
 }
 
-const Router1 = options => {
-  return app => {
-    return (props, root) => {
-      let actions = app(enhance(props), root)
-      addEventListener("hashchange", () => {
-        actions.router.set()
-      })
-      actions.router.set()
-      return actions
-    }
-  }
-  function enhance(props) {
-    let routes = []
-    if (!props.state) props.state = {}
-    if (!props.actions) props.actions = {}
-    props.state.router = {}
-    props.actions.router = {
-      set() {
-        let pathname = location.hash.slice(1) || "/",
-          params = {}, match
-        for (let i = 0; (i < routes.length); i++) {
-          if (match = routes[i].rgx.exec(pathname)) {
-            routes[i].keys.map((key, i) => params[key] = match[i + 1].toLowerCase())
-            props.view = routes[i].view
-            return { params, pathname }
-          }
-        }
-      },
-      go() {}
-    }
-    if (props.view.length) {
-      Object.keys(props.view).map(path => {
-        let keys = []
-        routes.push({
-          rgx: RegExp(path === "*" ? ".*" : "^" +
-            path.replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
-              keys.push(key.toLowerCase())
-              return "([-\\.%\\w\\(\\)]+)"
-            }) + "/?$"),
-          view: props.view[path],
-          keys
-        })
-      })
-    }
-    return props
+let Router = (props, children) => {
+  return children.map(route => route(props))
+}
+
+let Route = (props) => {
+  return ({ state, actions }) => {
+    let params = Route.match(state.route, props.path)
+    return params ? props.component({ state, actions, params }) : null
   }
 }
+
+Route.match = (route, path) => {
+  let params = {},
+    keys = [],
+    regex = RegExp(path === "*" ? ".*" :
+      "^" + path.slice(1).replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
+        keys.push(key.toLowerCase())
+        return "([-\\.%\\w\\(\\)]+)"
+      }) + "$"),
+    match = regex.exec(route)
+  if (match) {
+    keys.map((key, i) => params[key] = match[i + 1].toLowerCase())
+    return params
+  }
+  return null
+}
+
+let Link = (props, children) => {
+  let hash = "#!" + props.to
+  if (hash === location.hash) {
+    props.class = (props.class ? props.class + " " : "") + Link.activeClass
+  }
+  props.href = hash
+  delete props.to
+  return h("a", props, children)
+}
+
+Link.activeClass = "active"

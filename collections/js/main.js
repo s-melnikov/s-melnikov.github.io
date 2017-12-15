@@ -11,40 +11,17 @@ let model = {
   }
 }
 
-let Router = (props, children) => {
-  return children.map(route => route(props))
-}
-
-let Route = (props) => {
-  return ({ state, actions }) => {
-    Route.match(state.route, props.path)
-    return state.route === props.path.slice(1) ? props.component({ state, actions }) : null
-  }
-}
-
-Route.match = (route, path) => {
-  let params = {}, keys = []
-  let regex = RegExp(path === "*" ? ".*" :
-    "^" + path.replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
-      keys.push(key.toLowerCase())
-      return "([-\\.%\\w\\(\\)]+)"
-    }) + "/?$")
-  console.log(path, regex)
-  let match = regex.exec(path)
-  console.log(match, keys)
-}
-
 let Layout = ({ state, actions }) => h("main", null, "Layout",
   h("p", null,
-    h("a", { href: "#" }, "Home"),
+    h(Link, { to: "/" }, "Home"),
     " ",
-    h("a", { href: "#!/blog" }, "Blog"),
+    h(Link, { to: "/blog" }, "Blog"),
     " ",
-    h("a", { href: "#!/post/1" }, "Post 1"),
+    h(Link, { to: "/post/1" }, "Post 1"),
     " ",
-    h("a", { href: "#!/post/2" }, "Post 2"),
+    h(Link, { to: "/post/2" }, "Post 2"),
     " ",
-    h("a", { href: "#!/post/3" }, "Post 3"),
+    h(Link, { to: "/post/3" }, "Post 3"),
   ),
   h("p", null,
     h(Router, { state, actions },
@@ -57,7 +34,7 @@ let Layout = ({ state, actions }) => h("main", null, "Layout",
 
 let Home = ({ state, actions }) => h("main", null, "Home")
 let Blog = ({ state, actions }) => h("main", null, "Blog")
-let Post = ({ state, actions }) => h("main", null, "Post")
+let Post = ({ state, actions, params }) => h("main", null, "Post " + params.id)
 
 let { actions } = app(model, Layout, document.body)
 addEventListener("hashchange", () => {

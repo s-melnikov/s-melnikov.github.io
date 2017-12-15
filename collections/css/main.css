@@ -73,6 +73,9 @@ menu a {
   display: block;
   padding: 0.5rem 0;
 }
+a.active {
+  color: #444444;
+}
 table {
   border-collapse: collapse;
 }
