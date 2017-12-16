@@ -89,3 +89,19 @@ td {
   padding: 0.5rem;
   border-bottom: 1px solid #ecf0f1;
 }
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+.col {
+  flex: 1;
+  max-width: 100%;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+.card {
+  border: 1px solid #ecf0f1;
+  padding: 0.8rem 1rem;
+}

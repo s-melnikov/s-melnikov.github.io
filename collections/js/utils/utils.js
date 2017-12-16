@@ -16,10 +16,10 @@ function Logger(app) {
       }, {})
     }
     function log(prevState, action, nextState) {
-      console.groupCollapsed("%c action", "color: gray; font-weight: lighter;", action.name)
-      console.log("%c prev state", "color: #9E9E9E; font-weight: bold;", prevState)
-      console.log("%c data", "color: #03A9F4; font-weight: bold;", action.data)
-      console.log("%c next state", "color: #4CAF50; font-weight: bold;", nextState)
+      console.groupCollapsed("%c action", "color: gray", action.name)
+      console.log("%c prev state", "color:#9E9E9E", prevState)
+      console.log("%c data", "color: #03A9F4", action.data)
+      console.log("%c next state", "color:#4CAF50", nextState)
       console.groupEnd()
     }
   }
@@ -40,7 +40,7 @@ Route.match = (route, path) => {
   let params = {},
     keys = [],
     regex = RegExp(path === "*" ? ".*" :
-      "^" + path.slice(1).replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
+      "^" + path.replace(/\//g, "\\/").replace(/:([\w]+)/g, function(_, key) {
         keys.push(key.toLowerCase())
         return "([-\\.%\\w\\(\\)]+)"
       }) + "$"),
@@ -63,3 +63,6 @@ let Link = (props, children) => {
 }
 
 Link.activeClass = "active"
+
+let log = location.search.indexOf("debug") != -1 ?
+  console.log.bind(console, "%c %s", "color:#00adff") : () => {}
