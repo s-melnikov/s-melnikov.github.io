@@ -55,7 +55,8 @@ let Main = ({ state, actions }) => {
     h("main", null,
       h(Router, { state, actions },
         h(Route, { path: "/", component: Home }),
-        h(Route, { path: "/table/:slug", component: Table })
+        h(Route, { path: "/table/:slug", component: Table }),
+        h(Route, { path: "/table/:slug/schema/:item?", component: Schema })
       )
     ),
     h("header", null,
@@ -111,12 +112,33 @@ let Table = ({ state, actions, params }) => {
         state.items.map(item =>
           h("tr", null,
             state.table.fields.map(field =>
-              field.display ? h("td", null, item[field.slug]) : null
+              field.display ?
+                h("td", null,
+                  Link(
+                    { to: "/table/" + params.slug + "/schema/" + field.slug },
+                    item[field.slug]
+                  )
+                ) : null
             )
           )
         )
       )
     ) : null
+  )
+}
+
+let Schema = ({ state, actions, params }) => {
+  log("Table", "view()")
+  console.log(params, state)
+  return h("div", {
+      key: params.slug,
+      oncreate: () => {
+        if (!state.table || state.table.slug !== params.slug) {
+          actions.getTable(params.slug)
+        }
+      }
+    },
+    h("h3", null, `Tabel "${params.slug}" schema`),
   )
 }
 
