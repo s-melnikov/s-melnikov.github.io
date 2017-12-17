@@ -2,98 +2,98 @@ const Storage = (() => {
 
   class Storage {
     constructor(storage_name) {
-      this.storage_name = storage_name
+      this.$storage_name = storage_name
       this.getData()
     }
     getData() {
       try {
-        this.data = JSON.parse(localStorage[this.storage_name])
+        this.$data = JSON.parse(localStorage[this.$storage_name])
       } catch(e) {
-        this.data = {}
+        this.$data = {}
       }
     }
     setData() {
       try {
-        localStorage[this.storage_name] = JSON.stringify(this.data)
+        localStorage[this.$storage_name] = JSON.stringify(this.$data)
       } catch(e) {}
     }
     table(table_name) {
       return new Table(table_name, this)
     }
     drop() {
-      localStorage.removeItem(this.storage_name)
+      localStorage.removeItem(this.$storage_name)
     }
   }
 
   class Table {
     constructor(table_name, storage) {
-      this.table_name = table_name
-      this.storage = storage
-      if (!storage.data[table_name]) {
-        storage.data[table_name] = []
+      this.$table_name = table_name
+      this.$storage = storage
+      if (!storage.$data[table_name]) {
+        storage.$data[table_name] = []
       }
-      this.data = storage.data[table_name]
-      this.conditions = { where: {} }
+      this.$data = storage.$data[table_name]
+      this.$conditions = { where: {} }
     }
     push(item) {
       return new Promise((resolve, reject) => {
         item.uid = Table.uniqid()
-        this.data.push(item)
-        this.storage.setData()
+        this.$data.push(item)
+        this.$storage.setData()
         resolve(new Item(item, this))
       })
     }
     where(obj) {
       for (let key in obj) {
-        this.conditions.where[key] = obj[key]
+        this.$conditions.where[key] = obj[key]
       }
       return this
     }
     find() {
       return new Promise((resolve, reject) => {
         let result = []
-        this.data.forEach(item => {
-          for (let key in this.conditions.where) {
-            if (item[key] !== this.conditions.where[key]) return;
+        this.$data.forEach(item => {
+          for (let key in this.$conditions.where) {
+            if (item[key] !== this.$conditions.where[key]) return;
           }
           result.push(item)
         })
-        this.conditions = { where: {} }
+        this.$conditions = { where: {} }
         resolve(new Collection(result, this))
       })
     }
     findOne() {
       return this.find().then(result => new Promise((resolve, reject) => {
-        resolve(result.items[0] || null)
+        resolve(result.$items[0] || null)
       }))
     }
     deleteItems(items) {
-      for (let index = 0; index < this.data.length;) {
-        if (items.indexOf(this.data[index]) !== -1) {
-          this.data.splice(index, 1)
+      for (let index = 0; index < this.$data.length;) {
+        if (items.indexOf(this.$data[index]) !== -1) {
+          this.$data.splice(index, 1)
         } else {
           index++
         }
       }
-      this.storage.setData()
+      this.$storage.setData()
     }
     truncate() {
-      this.data = []
-      this.storage.setData()
+      this.$data = []
+      this.$storage.setData()
     }
   }
 
   class Collection {
     constructor(items, table) {
-      this.items = items.map(item => new Item(item, table))
-      this.table = table
+      this.$items = items.map(item => new Item(item, table))
+      this.$table = table
     }
     data() {
-      return this.items.map(item => item.data)
+      return this.$items.map(item => item.$data)
     }
     delete() {
-      this.table.deleteItems(
-        this.items.map(item => item.data)
+      this.$table.deleteItems(
+        this.$items.map(item => item.$data)
       )
     }
   }
@@ -101,7 +101,7 @@ const Storage = (() => {
   class Item {
     constructor($data, table) {
       this.$data = $data
-      this.table = table
+      this.$table = table
     }
     data() {
       return this.$data
@@ -110,10 +110,10 @@ const Storage = (() => {
       for (let key in $data) {
         this.$data[key] = $data[key]
       }
-      this.table.storage.setData()
+      this.$table.$storage.setData()
     }
     delete() {
-      this.table.deleteItems([this.$data])
+      this.$table.deleteItems([this.$data])
       this.$data = null
     }
   }

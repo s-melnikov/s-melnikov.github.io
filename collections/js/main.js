@@ -15,22 +15,23 @@ let model = {
       storage.table("tables").find().then(result => {
         actions.setTables(result.data())
       })
-      return { tables: [] }
+      return { tables: null }
     },
     setTables: tables => ({ tables }),
     getTable: slug => (state, actions) => {
-      torage.table("tables").where({ slug: slug }).findOne().then(result => {
+      storage.table("tables").where({ slug: slug }).findOne().then(result => {
         actions.setTable(result.data())
       })
       return { table: null }
     },
-    setTable: ({ table, items }) => ({ table, items }),
+    setTable: table => ({ table }),
     getTableItems: slug => (satte, actions) => {
       storage.table(slug).find().then(result =>
         actions.setTableItems(result.data())
       )
+      return { items: null }
     },
-    setTableItems: items => () => ({ items })
+    setTableItems: items => ({ items })
   }
 }
 
@@ -96,8 +97,11 @@ let Home = ({ state, actions }) => {
 let Table = ({ state, actions, params }) => {
   log("Table", "view()")
   return h("div", {
-      key: params.slug,
-      oncreate: () => actions.getTable(params.slug)
+      key: "table-" + params.slug,
+      oncreate: () => {
+        actions.getTable(params.slug)
+        actions.getTableItems(params.slug)
+      }
     },
     h("h3", null, `Tabel "${params.slug}"`),
     state.table ? h("table", null,
@@ -109,7 +113,7 @@ let Table = ({ state, actions, params }) => {
         )
       ),
       h("tbody", null,
-        state.items.map(item =>
+        state.items ? state.items.map(item =>
           h("tr", null,
             state.table.fields.map(field =>
               field.display ?
@@ -121,7 +125,7 @@ let Table = ({ state, actions, params }) => {
                 ) : null
             )
           )
-        )
+        ) : null
       )
     ) : null
   )
@@ -129,9 +133,8 @@ let Table = ({ state, actions, params }) => {
 
 let Schema = ({ state, actions, params }) => {
   log("Table", "view()")
-  console.log(params, state)
   return h("div", {
-      key: params.slug,
+      key: "table-" + params.slug + "-items",
       oncreate: () => {
         if (!state.table || state.table.slug !== params.slug) {
           actions.getTable(params.slug)
@@ -139,6 +142,12 @@ let Schema = ({ state, actions, params }) => {
       }
     },
     h("h3", null, `Tabel "${params.slug}" schema`),
+    h("div", null, state.table ? state.table.fields.map(field =>
+        h("div", { class: "card mb-1"},
+          h("div", null, `${field.title} {${field.slug}}`)
+        )
+      ) : null
+    )
   )
 }
 
