@@ -88,7 +88,7 @@ const Storage = (() => {
       this.items = items.map(item => new Item(item, table))
       this.table = table
     }
-    toArray() {
+    data() {
       return this.items.map(item => item.data)
     }
     delete() {
@@ -99,22 +99,22 @@ const Storage = (() => {
   }
 
   class Item {
-    constructor(data, table) {
-      this.data = data
+    constructor($data, table) {
+      this.$data = $data
       this.table = table
     }
-    toArray() {
-      return this.data
+    data() {
+      return this.$data
     }
-    update(data) {
-      for (let key in data) {
-        this.data[key] = data[key]
+    update($data) {
+      for (let key in $data) {
+        this.$data[key] = $data[key]
       }
       this.table.storage.setData()
     }
     delete() {
-      this.table.deleteItems([this.data])
-      this.data = null
+      this.table.deleteItems([this.$data])
+      this.$data = null
     }
   }
 

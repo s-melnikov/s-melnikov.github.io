@@ -13,24 +13,24 @@ let model = {
     setRoute: route => ({ route: route }),
     getTables: () => {
       storage.table("tables").find().then(result => {
-        actions.setTables(result.toArray())
+        actions.setTables(result.data())
       })
       return { tables: [] }
     },
     setTables: tables => ({ tables }),
     getTable: slug => (state, actions) => {
-      Promise.all([
-        storage.table(slug).find(),
-        storage.table("tables").where({ slug: slug }).findOne()
-      ]).then(function([ itemsReult, tableResult ]) {
-        actions.setTable({
-          table: tableResult.toArray(),
-          items: itemsReult.toArray()
-        })
+      torage.table("tables").where({ slug: slug }).findOne().then(result => {
+        actions.setTable(result.data())
       })
-      return { table: null, items: null }
+      return { table: null }
     },
-    setTable: ({ table, items }) => ({ table, items })
+    setTable: ({ table, items }) => ({ table, items }),
+    getTableItems: slug => (satte, actions) => {
+      storage.table(slug).find().then(result =>
+        actions.setTableItems(result.data())
+      )
+    },
+    setTableItems: items => () => ({ items })
   }
 }
 
