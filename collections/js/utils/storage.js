@@ -23,6 +23,14 @@ const Storage = (() => {
     drop() {
       localStorage.removeItem(this.$storage_name)
     }
+    auth() {
+      if (window.sha256) {
+      } else {
+        fetch('https://unpkg.com/js-sha256@0.9.0/build/sha256.min.js')
+          .then(resp => resp.text())
+          .then(text => (new Function(text))())
+      }
+    }
   }
 
   class Table {
