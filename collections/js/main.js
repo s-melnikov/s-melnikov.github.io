@@ -132,7 +132,7 @@ let Table = ({ state, actions, params }) => {
 }
 
 let Schema = ({ state, actions, params }) => {
-  log("Table", "view()")
+  log("Table", "view()", state.table)
   return h("div", {
       key: "table-" + params.slug + "-items",
       oncreate: () => {
@@ -141,14 +141,46 @@ let Schema = ({ state, actions, params }) => {
         }
       }
     },
-    h("h3", null, `Tabel "${params.slug}" schema`),
-    h("div", null, state.table ? state.table.fields.map(field =>
-        h("div", { class: "card mb-1"},
-          h("div", null, `${field.title} {${field.slug}}`)
-        )
-      ) : null
-    )
+    state.table ? [
+      h("h3", null, 'Table "' + state.table.title + '"'),
+      h("div", { class: "row" },
+        h("div", { class: "col" },
+          state.table.fields.map(field =>
+            h("div", { class: "card mb-1"},
+              h("div", { class: "row" },
+                h("div", { class: "col" },
+                  h("label", null, "Title",
+                    h(FormControl.text, { value: field.title })
+                  )
+                ),
+                h("div", { class: "col" },
+                  h("label", null, "Slug",
+                    h(FormControl.text, { value: field.slug })
+                  )
+                )
+              ),
+              h("div", { class: "row" },
+                h("div", { class: "col" },
+                  h("label", { class: "checkbox" }, "Display",
+                    h(FormControl.text, { type: "checkbox", checked: field.display })
+                  )
+                ),
+                h("div", { class: "col" }),
+                h("div", { class: "col" })
+              )
+            )
+          )
+        ),
+        h("div", { class: "col" })
+      )
+    ] : null
   )
+}
+
+let FormControl = {
+  text: props => {
+    return h("input", props)
+  }
 }
 
 let { actions } = Logger(app)(model, Layout, document.body)

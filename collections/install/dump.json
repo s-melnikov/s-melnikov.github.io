@@ -262,99 +262,46 @@
     {"first_name":"Belita","last_name":"Peschka","email":"bpeschka2q@tinyurl.com","gender":"Female","ip_address":"235.103.62.140"},
     {"first_name":"Carola","last_name":"Pleat","email":"cpleat2r@illinois.edu","gender":"Female","ip_address":"154.99.246.97"}
   ],
-  "tables": [{
-      "title": "Users",
-      "slug": "users",
-      "fields": [{
-          "title": "First name",
-          "slug": "first_name",
-          "display": true
-        },{
-          "title": "Last name",
-          "slug": "last_name",
-          "display": true
-        },{
-          "title": "Email",
-          "slug": "email",
-          "display": true
-        },{
-          "title": "Gender",
-          "slug": "gender",
-          "display": true
-        },{
-          "title": "Ip address",
-          "slug": "ip_address",
-          "display": false
-        }]
+  "tables":[{
+      "title":"Users",
+      "slug":"users",
+      "fields":[
+        {"type":"text","title":"First name","slug":"first_name","display":true},
+        {"type":"text","title":"Last name","slug":"last_name","display":true},
+        {"type":"text","title":"Email","slug":"email","display":true},
+        {"type":"text","title":"Gender","slug":"gender","display":true},
+        {"type":"text","title":"Ip address","slug":"ip_address","display":false}
+      ]
     },{
-      "title": "Cars",
-      "slug": "cars",
-      "fields": [{
-          "title": "Model",
-          "slug": "model",
-          "display": true
-        },{
-          "title": "Maker",
-          "slug": "maker",
-          "display": true
-        },{
-          "title": "Year",
-          "slug": "year",
-          "display": false
-        }]
+      "title":"Cars",
+      "slug":"cars",
+      "fields":[
+        {"type":"text","title": "Model","slug":"model","display":true},
+        {"type":"text","title":"Maker","slug":"maker","display":true},
+        {"type":"text","title":"Year","slug":"year","display":false}
+      ]
     },{
-      "title": "Apps",
-      "slug": "apps",
-      "fields": [{
-          "title": "Name",
-          "slug": "name",
-          "display": true
-        },{
-          "title": "Version",
-          "slug": "version",
-          "display": false
-        },{
-          "title": "Bundle",
-          "slug": "bundle",
-          "display": false
-        },{
-          "title": "Email",
-          "slug": "email",
-          "display": true
-        },{
-          "title": "Url",
-          "slug": "url",
-          "display": true
-        }]
+      "title":"Apps",
+      "slug":"apps",
+      "fields":[
+        {"type":"text","title":"Name","slug":"name","display":true},
+        {"type":"text","title":"Version","slug":"version","display":false},
+        {"type":"text","title":"Bundle","slug":"bundle","display":false},
+        {"type":"text","title":"Email","slug":"email","display":true},
+        {"type":"text","title":"Url","slug":"url","display":true}
+      ]
     },
     {
-      "title": "Companies",
-      "slug": "companies",
-      "fields": [{
-          "title": "Name",
-          "slug": "name",
-          "display": true
-        },{
-          "title": "Industry",
-          "slug": "industry",
-          "display": true
-        },{
-          "title": "Country",
-          "slug": "country",
-          "display": false
-        },{
-          "title": "City",
-          "slug": "city",
-          "display": false
-        },{
-          "title": "Phone",
-          "slug": "phone",
-          "display": true
-        },{
-          "title": "Address",
-          "slug": "address",
-          "display": false
-        }]
+      "title":"Companies",
+      "slug":"companies",
+      "fields":[
+        {"type":"text","title":"Name","slug":"name","display":true},
+        {"type":"text","title":"Industry","slug":"industry","display":true},
+        {"type":"text","title":"Country","slug":"country","display":false},
+        {"type":"text","title":"City","slug":"city","display":false},
+        {"type":"text","title":"Phone","slug":"phone","display":true},
+        {"type":"text","title":"Address","slug":"address","display":false}
+      ]
     }
   ]
 }
