@@ -144,3 +144,65 @@ input[type=checkbox] {
 .mb-2 {
   margin-bottom: 1rem;
 }
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 1;
+}
+.modal-body {
+  width: 480px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+}
+.modal-header {
+  padding: 1rem 1rem 0;
+  position: relative;
+  height: 3rem;
+  font-size: 16px;
+}
+.modal-title {
+
+}
+.modal-close {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  cursor: pointer;
+  width: 2rem;
+  text-align: center;
+}
+.modal-content {
+  padding: 1rem;
+}
+.modal-footer {
+  padding: 1rem;
+  text-align: right;
+}
+.modal-footer button {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+.layout, .container {
+  height: 100%;
+}
+button {
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  color: inherit;
+  background: #ffffff;
+  cursor: pointer;
+}
+button.red {
+  border-color: #ff0000;
+  color: #ff0000;
+}

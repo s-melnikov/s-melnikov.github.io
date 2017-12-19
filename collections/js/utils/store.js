@@ -1,53 +1,45 @@
-const Storage = (() => {
+define("utils/store", null, () => {
 
-  class Storage {
-    constructor(storage_name) {
-      this.$storage_name = storage_name
+  class Store {
+    constructor(store_name) {
+      this.$store_name = store_name
       this.getData()
     }
     getData() {
       try {
-        this.$data = JSON.parse(localStorage[this.$storage_name])
+        this.$data = JSON.parse(localStorage[this.$store_name])
       } catch(e) {
         this.$data = {}
       }
     }
     setData() {
       try {
-        localStorage[this.$storage_name] = JSON.stringify(this.$data)
+        localStorage[this.$store_name] = JSON.stringify(this.$data)
       } catch(e) {}
     }
     table(table_name) {
       return new Table(table_name, this)
     }
     drop() {
-      localStorage.removeItem(this.$storage_name)
-    }
-    auth() {
-      if (window.sha256) {
-      } else {
-        fetch('https://unpkg.com/js-sha256@0.9.0/build/sha256.min.js')
-          .then(resp => resp.text())
-          .then(text => (new Function(text))())
-      }
+      localStorage.removeItem(this.$store_name)
     }
   }
 
   class Table {
-    constructor(table_name, storage) {
+    constructor(table_name, store) {
       this.$table_name = table_name
-      this.$storage = storage
-      if (!storage.$data[table_name]) {
-        storage.$data[table_name] = []
+      this.$store = store
+      if (!store.$data[table_name]) {
+        store.$data[table_name] = []
       }
-      this.$data = storage.$data[table_name]
+      this.$data = store.$data[table_name]
       this.$conditions = { where: {} }
     }
     push(item) {
       return new Promise((resolve, reject) => {
         item.uid = Table.uniqid()
         this.$data.push(item)
-        this.$storage.setData()
+        this.$store.setData()
         resolve(new Item(item, this))
       })
     }
@@ -83,11 +75,11 @@ const Storage = (() => {
           index++
         }
       }
-      this.$storage.setData()
+      this.$store.setData()
     }
     truncate() {
       this.$data = []
-      this.$storage.setData()
+      this.$store.setData()
     }
   }
 
@@ -118,7 +110,7 @@ const Storage = (() => {
       for (let key in $data) {
         this.$data[key] = $data[key]
       }
-      this.$table.$storage.setData()
+      this.$table.$store.setData()
     }
     delete() {
       this.$table.deleteItems([this.$data])
@@ -138,6 +130,5 @@ const Storage = (() => {
     return id
   }
 
-  return Storage
-
-})()
+  return Store
+})

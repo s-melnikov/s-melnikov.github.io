@@ -266,41 +266,41 @@
       "title":"Users",
       "slug":"users",
       "fields":[
-        {"type":"text","title":"First name","slug":"first_name","display":true},
-        {"type":"text","title":"Last name","slug":"last_name","display":true},
-        {"type":"text","title":"Email","slug":"email","display":true},
-        {"type":"text","title":"Gender","slug":"gender","display":true},
-        {"type":"text","title":"Ip address","slug":"ip_address","display":false}
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"First name","slug":"first_name","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Last name","slug":"last_name","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Email","slug":"email","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Gender","slug":"gender","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Ip address","slug":"ip_address","display":false}
       ]
     },{
       "title":"Cars",
       "slug":"cars",
       "fields":[
-        {"type":"text","title": "Model","slug":"model","display":true},
-        {"type":"text","title":"Maker","slug":"maker","display":true},
-        {"type":"text","title":"Year","slug":"year","display":false}
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Model","slug":"model","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Maker","slug":"maker","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Year","slug":"year","display":false}
       ]
     },{
       "title":"Apps",
       "slug":"apps",
       "fields":[
-        {"type":"text","title":"Name","slug":"name","display":true},
-        {"type":"text","title":"Version","slug":"version","display":false},
-        {"type":"text","title":"Bundle","slug":"bundle","display":false},
-        {"type":"text","title":"Email","slug":"email","display":true},
-        {"type":"text","title":"Url","slug":"url","display":true}
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Name","slug":"name","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Version","slug":"version","display":false},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Bundle","slug":"bundle","display":false},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Email","slug":"email","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Url","slug":"url","display":true}
       ]
     },
     {
       "title":"Companies",
       "slug":"companies",
       "fields":[
-        {"type":"text","title":"Name","slug":"name","display":true},
-        {"type":"text","title":"Industry","slug":"industry","display":true},
-        {"type":"text","title":"Country","slug":"country","display":false},
-        {"type":"text","title":"City","slug":"city","display":false},
-        {"type":"text","title":"Phone","slug":"phone","display":true},
-        {"type":"text","title":"Address","slug":"address","display":false}
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Name","slug":"name","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Industry","slug":"industry","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Country","slug":"country","display":false},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"City","slug":"city","display":false},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Phone","slug":"phone","display":true},
+        {"type":"text","info":"Lorem ipsum","required":true,"label":"Address","slug":"address","display":false}
       ]
     }
   ]
