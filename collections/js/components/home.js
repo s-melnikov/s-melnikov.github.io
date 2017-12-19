@@ -6,18 +6,23 @@ define("components/home", [
   let Home = ({ state, actions }) => {
     return h("div", null,
       h("h3", null, "Home"),
-      h("h4", null, "Choose a table"),
-      h("div", { class: "row"},
-        state.tables ? state.tables.map(table =>
-          h("div", { class: "col" },
-            h("div", { class: "card" },
-              Link({ to: "/table/" + table.slug }, table.title)
+      state.tables && state.tables.length ? [
+        h("p", null, "Collections"),
+        h("div", { class: "row"}, state.tables.map(table =>
+            h("div", { class: "col" },
+              h("div", { class: "card" },
+                Link({ to: "/table/" + table.slug }, table.title)
+              )
             )
           )
-        ) : null
+        )
+      ] :
+      h("p", null,
+        "No collections found. Install demo data? ",
+        h("a", { href: "?install"}, "Install")
       )
     )
   }
   return Home
-  
+
 })
