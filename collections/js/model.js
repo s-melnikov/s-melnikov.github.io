@@ -11,7 +11,7 @@ define("model", ["utils/store"], Store => {
 
   let actions = {
     setRoute: route => ({ route: route }),
-    getTables: () => {
+    getTables: () => (state, actions) => {
       storage.table("tables").find().then(result => {
         actions.setTables(result.data())
       })

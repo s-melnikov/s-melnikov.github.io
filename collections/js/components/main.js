@@ -2,8 +2,9 @@ define("components/main", [
   "hyperapp",
   "components/router",
   "components/home",
-  "components/table"
-], ({ h }, { Router, Route, Link }, Home, Table) => {
+  "components/table",
+  "components/fields"
+], ({ h }, { Router, Route, Link }, Home, Table, Fields) => {
 
   let Main = ({ state, actions }) => {
     return h("div", {

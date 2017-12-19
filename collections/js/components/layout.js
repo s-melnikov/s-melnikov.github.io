@@ -14,15 +14,5 @@ define("components/layout", [
     return h("div", { class: "sign-in" }, "Sign In")
   }
 
-  let FieldForm = params => {
-    return h(Modal, {
-      title: "Edit field",
-      content: h("div", null, "Lorem ipsum dolor sit amet!"),
-      footer: [h("button", null, "Send"), h("button", { class: "red" }, "Cancel")]
-    })
-  }
-
-  let FormInput = props => h("input", props)
-
   return Layout
 })

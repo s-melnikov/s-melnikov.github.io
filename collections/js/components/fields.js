@@ -1,7 +1,8 @@
 define("components/fields", [
   "hyperapp",
-  "components/router"
-], ({ h }, { Link }) => {
+  "components/router",
+  "components/edit_field_form"
+], ({ h }, { Link }, EditFieldForm) => {
 
   let Fields = ({ state, actions, params }) => {
     return h("div", {
@@ -33,7 +34,7 @@ define("components/fields", [
           h("div", { class: "col" })
         )
       ] : null,
-      params.field ? h(FieldForm, { table: params.slug, field: params.field }) : null
+      params.field ? h(EditFieldForm, { table: params.slug, field: params.field }) : null
     )
   }
 
