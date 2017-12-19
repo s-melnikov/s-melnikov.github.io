@@ -1,4 +1,7 @@
-define("components/table", ["hyperapp"], ({ h }) => {
+define("components/table", [
+  "hyperapp",
+  "components/router"
+], ({ h }, { Link }) => {
 
   let Table = ({ state, actions, params }) => {
     return h("div", {

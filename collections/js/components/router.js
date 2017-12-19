@@ -1,4 +1,5 @@
 define("components/router", ["hyperapp"], ({ h }) => {
+
   let Router = (props, children) => {
     return children.map(route => route(props))
   }
@@ -18,7 +19,7 @@ define("components/router", ["hyperapp"], ({ h }) => {
           keys.push(key.toLowerCase())
           return "([-\\.%\\w\\(\\)]+)"
         }) + "$"),
-      match = regex.exec(route)
+      match = regex.exec(route || "/")
     if (match) {
       keys.map((key, i) => params[key] = (match[i + 1] || "").toLowerCase())
       return params
@@ -43,4 +44,5 @@ define("components/router", ["hyperapp"], ({ h }) => {
     Route,
     Link
   }
+  
 })

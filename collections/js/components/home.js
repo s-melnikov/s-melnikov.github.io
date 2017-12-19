@@ -1,4 +1,7 @@
-define("components/home", ["hyperapp"], ({ h }) => {
+define("components/home", [
+  "hyperapp",
+  "components/router"
+], ({ h }, { Link }) => {
 
   let Home = ({ state, actions }) => {
     return h("div", null,
@@ -15,7 +18,6 @@ define("components/home", ["hyperapp"], ({ h }) => {
       )
     )
   }
-
   return Home
-
+  
 })
