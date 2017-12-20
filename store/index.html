@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script src="store.js"></script>
+    <script src="test_runner.js"></script>
+    <script>
+
+      let store, collection
+
+      test('Create store', done => {
+        store = new Store('foo')
+        assert(store instanceof Store)
+        done()
+      })
+
+      test('Drop store', done => {
+        store.drop()
+        assert(localStorage.foo === undefined)
+        done()
+      })
+
+      test('Get collection', done => {
+        store = new Store('foo')
+        collection = store.collection('bar')
+        assert(collection instanceof Store.Collection)
+        done()
+      })
+
+      test('Push entries', done => {
+        collection.push({ id: 1, text: "Task #1", completed: false })
+        collection.push({ id: 2, text: "Task #2", completed: false })
+        collection.push({ id: 3, text: "Task #3", completed: true })
+        collection.push({ id: 4, text: "Task #4", completed: false })
+        collection.push({ id: 5, text: "Task #5", completed: true })
+        assert(collection.$entries.length === 5)
+        done()
+      })
+
+      test('Find entries', done => {
+        collection.find().then(result => {
+          assert(result instanceof Store.Result)
+          assert(result.data().length === 5)
+          done()
+        })
+      })
+
+      test('Find one entry', done => {
+        collection.findOne().then(entry => {
+          assert(entry instanceof Store.Entry)
+          assert(entry.data().id === 1)
+          done()
+        })
+      })
+
+      test('Find entries with condition #1', done => {
+        collection.where({ completed: true }).find().then(result => {
+          assert(result.data().length === 2)
+          done()
+        })
+      })
+
+      test('Find entries with condition #2', done => {
+        collection.where({ completed: false }).find().then(result => {
+          assert(result.data().length === 3)
+          done()
+        })
+      })
+
+      test('Find entries with condition #3', done => {
+        collection.where({ completed: false, id: 1 }).find().then(result => {
+          assert(result.data().length === 1)
+          done()
+        })
+      })
+
+      test('Find entries with condition #4', done => {
+        collection.where({ completed: true, id: 1 }).find().then(result => {
+          assert(result.data().length === 0)
+          done()
+        })
+      })
+
+      test('Find one entry with condition', done => {
+        collection.where({ completed: false, id: 1 }).findOne().then(entry => {
+          assert(entry.data().id === 1 && entry.data().completed === false)
+          done()
+        })
+      })
+
+      test('Delete entry', done => {
+        collection.findOne().then(entry => {
+          entry.delete()
+          assert(collection.$entries.length === 4)
+          done()
+        })
+      })
+
+      test('Delete entries', done => {
+        collection.where({ completed: true}).find().then(result => {
+          result.delete()
+          assert(collection.$entries.length === 2)
+          done()
+        })
+      })
+
+      test('Truncate collection', done => {
+        collection.truncate()
+        assert(collection.$entries.length === 0)
+        done()
+      })
+
+      run()
+    </script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-define("utils/store", null, () => {
+!function(exports) {
 
   class Store {
     constructor(store_name) {
@@ -133,6 +133,5 @@ define("utils/store", null, () => {
   Store.Collection = Collection
   Store.Result = Result
   Store.Entry = Entry
-  
-  return Store
-})
+  exports.Store = Store
+}(this)

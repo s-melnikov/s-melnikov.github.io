@@ -1,9 +1,9 @@
-define("components/table", [
+define("components/page.collection.entries", [
   "hyperapp",
   "components/router"
 ], ({ h }, { Link }) => {
 
-  let Table = ({ state, actions, params }) => {
+  let PageCollectionEntries = ({ state, actions, params }) => {
     return h("div", {
         key: "table-" + params.slug,
         oncreate: () => {
@@ -39,6 +39,5 @@ define("components/table", [
     )
   }
 
-  return Table
-
+  return PageCollectionEntries
 })

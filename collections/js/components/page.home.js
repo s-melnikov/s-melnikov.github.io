@@ -1,9 +1,9 @@
-define("components/home", [
+define("components/page.home", [
   "hyperapp",
   "components/router"
 ], ({ h }, { Link }) => {
 
-  let Home = ({ state, actions }) => {
+  let PageHome = ({ state, actions }) => {
     return h("div", null,
       h("h3", null, "Home"),
       state.tables && state.tables.length ? [
@@ -11,7 +11,7 @@ define("components/home", [
         h("div", { class: "row"}, state.tables.map(table =>
             h("div", { class: "col" },
               h("div", { class: "card" },
-                Link({ to: "/table/" + table.slug }, table.title)
+                Link({ to: "/collection/" + table.slug + "/entries"}, table.title)
               )
             )
           )
@@ -23,6 +23,6 @@ define("components/home", [
       )
     )
   }
-  return Home
 
+  return PageHome
 })

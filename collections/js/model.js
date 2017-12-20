@@ -1,17 +1,17 @@
 define("model", ["utils/store"], Store => {
-  let storage = new Store("my_app")
+  let store = new Store("my_app")
 
   let state = {
     route: location.hash.slice(2),
     user: { first_name: "Jonh", last_name: "Doe" },
-    tables: null,
-    table: null,
-    items: null
+    collections: [],
+    collection: [],
+    entries: []
   }
 
   let actions = {
     setRoute: route => ({ route: route }),
-    getTables: () => (state, actions) => {
+    getCollections: () => (state, actions) => {
       storage.table("tables").find().then(result => {
         actions.setTables(result.data())
       })

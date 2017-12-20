@@ -1,10 +1,9 @@
-define("components/fields", [
+define("components/page.collection", [
   "hyperapp",
   "components/router",
   "components/edit_field_form"
 ], ({ h }, { Link }, EditFieldForm) => {
-
-  let Fields = ({ state, actions, params }) => {
+  let PageCollection = ({ state, actions, params }) => {
     return h("div", {
         key: "table-" + params.slug + "-items",
         oncreate: () => {
@@ -38,6 +37,5 @@ define("components/fields", [
     )
   }
 
-  return Fields
-
+  return PageCollection
 })
