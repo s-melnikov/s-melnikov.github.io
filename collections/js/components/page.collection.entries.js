@@ -5,37 +5,37 @@ define("components/page.collection.entries", [
 
   let PageCollectionEntries = ({ state, actions, params }) => {
     return h("div", {
-        key: "table-" + params.slug,
+        key: "collection-" + params.slug + "-entries",
         oncreate: () => {
-          actions.getTable(params.slug)
-          actions.getTableItems(params.slug)
+          actions.getCollection(params.slug)
+          actions.getCollectionEntries(params.slug)
         }
       },
-      h("h3", null, `Tabel "${params.slug}"`),
-      state.table ? h("table", null,
-        h("thead", null,
-          h("tr", null,
-            state.table.fields.map(field =>
-              field.display ? h("th", null, field.title) : null
-            )
-          )
+      state.collection ? [
+        h("h3", null,
+          "Collection " + state.collection.title + " ",
+          h("small", null, Link({ to: "/collection/" + params.slug },
+            h("button", { class: "link" }, "Edit")
+          ))
         ),
-        h("tbody", null,
-          state.items ? state.items.map(item =>
-            h("tr", null,
-              state.table.fields.map(field =>
-                field.display ?
-                  h("td", null,
-                    Link(
-                      { to: "/table/" + params.slug + "/fields" },
-                      item[field.slug]
-                    )
-                  ) : null
+        h("table", null,
+          h("thead", null,
+            h("tr", null, state.collection.fields.map(field =>
+              field.display ? h("th", null, field.title) : null
+            ))
+          ),
+          h("tbody", null,
+            state.entries ? state.entries.map(entry => h("tr", null,
+              state.collection.fields.map(field =>
+                field.display ? h("td", null, Link(
+                  { to: "/collection/" + params.slug + "/entry/" + entry.uid },
+                  entry[field.slug]
+                )) : null
               )
-            )
-          ) : null
+            )) : h("p", null, "Loading collection entries...")
+          )
         )
-      ) : null
+      ] : h("p", null, "Loading collection...")
     )
   }
 

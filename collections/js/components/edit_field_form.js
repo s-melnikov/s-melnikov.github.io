@@ -4,6 +4,11 @@ define("components/edit_field_form", [
 ], ({ h }, Modal) => {
 
   let EditFieldForm = params => {
+
+    console.log(params)
+
+    return h("div", null, "Lorem ipsum dolor")
+
     return h(Modal, {
       title: "Edit field",
       content: h("div", null, "Lorem ipsum dolor sit amet!"),

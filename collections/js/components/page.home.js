@@ -6,12 +6,12 @@ define("components/page.home", [
   let PageHome = ({ state, actions }) => {
     return h("div", null,
       h("h3", null, "Home"),
-      state.tables && state.tables.length ? [
+      state.collections ? [
         h("p", null, "Collections"),
-        h("div", { class: "row"}, state.tables.map(table =>
+        h("div", { class: "row"}, state.collections.map(collection =>
             h("div", { class: "col" },
               h("div", { class: "card" },
-                Link({ to: "/collection/" + table.slug + "/entries"}, table.title)
+                Link({ to: "/collection/" + collection.slug + "/entries"}, collection.title)
               )
             )
           )

@@ -1,5 +1,7 @@
 define("utils/store", null, () => {
 
+  let delay = cb => setTimeout(cb, Math.random() * 500)
+
   class Store {
     constructor(store_name) {
       this.$store_name = store_name
@@ -40,7 +42,7 @@ define("utils/store", null, () => {
         entry.uid = uniqid()
         this.$entries.push(entry)
         this.$store.setData()
-        resolve(new Entry(entry, this))
+        delay(() => resolve(new Entry(entry, this)))
       })
     }
     where(obj) {
@@ -59,12 +61,12 @@ define("utils/store", null, () => {
           result.push(entry)
         })
         this.$conditions = { where: {} }
-        resolve(new Result(result, this))
+        delay(() => resolve(new Result(result, this)))
       })
     }
     findOne() {
       return this.find().then(result => new Promise((resolve, reject) => {
-        resolve(result.$entries[0] || null)
+        delay(() => resolve(result.$entries[0] || null))
       }))
     }
     deleteEntries(entries) {
@@ -133,6 +135,6 @@ define("utils/store", null, () => {
   Store.Collection = Collection
   Store.Result = Result
   Store.Entry = Entry
-  
+
   return Store
 })

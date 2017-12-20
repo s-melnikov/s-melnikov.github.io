@@ -3,25 +3,31 @@ define("components/page.collection", [
   "components/router",
   "components/edit_field_form"
 ], ({ h }, { Link }, EditFieldForm) => {
+
   let PageCollection = ({ state, actions, params }) => {
     return h("div", {
         key: "table-" + params.slug + "-items",
         oncreate: () => {
-          if (!state.table || state.table.slug !== params.slug) {
-            actions.getTable(params.slug)
+          if (!state.collection || state.collection.slug !== params.slug) {
+            actions.getCollection(params.slug)
           }
         }
       },
-      state.table ? [
-        h("h3", null, 'Table "' + state.table.title + '"'),
+      state.collection ? [
+        h("h3", null,
+          "Collection " + state.collection.title + " ",
+          h("small", null, Link({ to: "/collection/" + params.slug + "/entries"},
+            h("button", { class: "link" }, "Return")
+          ))
+        ),
         h("div", { class: "row" },
           h("div", { class: "col" },
-            state.table.fields.map(field =>
+            state.collection.fields.map(field =>
               h("div", { class: "card mb-1"},
                 h("div", { class: "row" },
                   h("div", { class: "col" },
                     Link(
-                      { to: "/table/" + params.slug + "/fields/" + field.slug },
+                      { to: "/collection/" + params.slug + "/field/" + field.slug },
                       field.slug
                     )
                   ),
@@ -30,10 +36,14 @@ define("components/page.collection", [
               )
             )
           ),
+          h("div", { class: "col" },
+            params.field ?
+              h(EditFieldForm, { state, actions, field: params.field })
+              : null
+          ),
           h("div", { class: "col" })
         )
       ] : null,
-      params.field ? h(EditFieldForm, { table: params.slug, field: params.field }) : null
     )
   }
 

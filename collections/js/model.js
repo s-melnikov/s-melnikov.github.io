@@ -4,37 +4,36 @@ define("model", ["utils/store"], Store => {
   let state = {
     route: location.hash.slice(2),
     user: { first_name: "Jonh", last_name: "Doe" },
-    collections: [],
-    collection: [],
-    entries: []
+    collections: null,
+    collection: null,
+    entries: null
   }
 
   let actions = {
     setRoute: route => ({ route: route }),
     getCollections: () => (state, actions) => {
-      storage.table("tables").find().then(result => {
-        actions.setTables(result.data())
+      store.collection("collections").find().then(result => {
+        let collections = result ? result.data() : null
+        actions.setCollections(collections && collections.length ? collections : null)
       })
-      return { tables: null }
+      return { collections: null }
     },
-    setTables: tables => ({ tables }),
-    getTable: slug => (state, actions) => {
-      storage.table("tables").where({ slug: slug }).findOne().then(result => {
-        actions.setTable(result.data())
+    setCollections: collections => ({ collections }),
+    getCollection: slug => (state, actions) => {
+      store.collection("collections").where({ slug: slug }).findOne().then(result => {
+        actions.setCollection(result && result.data())
       })
-      return { table: null }
+      return { collection: null }
     },
-    setTable: table => ({ table }),
-    getTableItems: slug => (satte, actions) => {
-      storage.table(slug).find().then(result =>
-        actions.setTableItems(result.data())
+    setCollection: collection => ({ collection }),
+    getCollectionEntries: slug => (state, actions) => {
+      store.collection(slug).find().then(result =>
+        actions.setCollectionEntries(result.data())
       )
-      return { items: null }
+      return { entries: null }
     },
-    setTableItems: items => ({ items })
+    setCollectionEntries: entries => ({ entries })
   }
 
-  return {
-    state, actions
-  }
+  return { state, actions }
 })

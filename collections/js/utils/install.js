@@ -3,9 +3,9 @@ define("utils/install", ["utils/store"], Store => {
   fetch("install/dump.json").then(resp => resp.json()).then(data => {
     let storage = new Store("my_app")
     Object.keys(data).forEach(table_name => {
-      let table = storage.table(table_name)
+      let collection = storage.collection(table_name)
       data[table_name].forEach(item => {
-        table.push(item)
+        collection.push(item)
       })
     })
     location.href = location.href.split("?")[0]

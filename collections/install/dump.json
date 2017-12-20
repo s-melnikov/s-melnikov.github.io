@@ -262,7 +262,7 @@
     {"first_name":"Belita","last_name":"Peschka","email":"bpeschka2q@tinyurl.com","gender":"Female","ip_address":"235.103.62.140"},
     {"first_name":"Carola","last_name":"Pleat","email":"cpleat2r@illinois.edu","gender":"Female","ip_address":"154.99.246.97"}
   ],
-  "tables":[{
+  "collections":[{
       "title":"Users",
       "slug":"users",
       "fields":[

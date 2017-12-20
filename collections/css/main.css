@@ -36,6 +36,9 @@ h4 {
 h5 {
   font-size: 0.9rem;
 }
+small {
+  font-size: 90%;
+}
 body {
   margin: 0;
   padding: 0;
@@ -127,11 +130,14 @@ input[type=checkbox] {
   margin-left: -0.5rem;
   margin-right: -0.5rem;
 }
-.col {
+.col, .col-2 {
   flex: 1;
   max-width: 100%;
   padding-left: .5rem;
   padding-right: .5rem;
+}
+.col-2 {
+  flex: 2;
 }
 .card {
   border: 1px solid #eeeeee;
@@ -205,4 +211,7 @@ button {
 button.red {
   border-color: #ff0000;
   color: #ff0000;
+}
+button.link {
+  border: none;
 }
