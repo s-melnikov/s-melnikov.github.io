@@ -1,0 +1,247 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  position: relative;
+}
+body {
+  font: 15px/1.2 "Segoe UI", "Open Sans", sans-serif;
+  color: #444;
+}
+.bg-turquoise {
+  background-color: #1abc9c;
+}
+.bg-emerald {
+  background-color: #2ecc71;
+}
+.bg-peter-river {
+  background-color: #3498db;
+}
+.bg-amethyst {
+  background-color: #9b59b6;
+}
+.bg-wet-asphalt {
+  background-color: #34495e;
+}
+.bg-green-sea {
+  background-color: #16a085;
+}
+.bg-nephritis {
+  background-color: #27ae60;
+}
+.bg-belize-hole {
+  background-color: #2980b9;
+}
+.bg-wisteria {
+  background-color: #8e44ad;
+}
+.bg-midnight-blue {
+  background-color: #2c3e50;
+}
+.bg-sun-flower {
+  background-color: #f1c40f;
+}
+.bg-carrot {
+  background-color: #e67e22;
+}
+.bg-alizarin {
+  background-color: #e74c3c;
+}
+.bg-clouds {
+  background-color: #ecf0f1;
+}
+.bg-concrete {
+  background-color: #95a5a6;
+}
+.bg-orange {
+  background-color: #f39c12;
+}
+.bg-pumpkin {
+  background-color: #d35400;
+}
+.bg-pomegranate {
+  background-color: #c0392b;
+}
+.bg-silver {
+  background-color: #bdc3c7;
+}
+.bg-asbestos {
+  background-color: #7f8c8d;
+}
+.boards {
+  overflow: auto;
+  white-space: nowrap;
+  font-size: 0;
+}
+.boards .board {
+  width: 24vw;
+  background: #f5f5f5;
+  overflow: hidden;
+  margin: 5px;
+  display: inline-block;
+  white-space: normal;
+  font-size: initial;
+  text-align: left;
+  vertical-align: top;
+}
+.boards .board .header {
+  padding: 10px 15px;
+  color: #ffffff;
+  text-align: center;
+}
+.boards .board .body {
+  padding: 10px 7px 0;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+.boards .board .item {
+  background-color: #fff;
+  padding: 10px 10px 0;
+  font-size: 14px;
+  border: 1px solid #eee;
+}
+.boards .board .item:not(:first-child) {
+  margin-top: 7px;
+}
+.boards .board > .footer {
+  padding: 10px 15px;
+  color: #777777;
+  text-align: center;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+.btn {
+  display: inline-block;
+  border: 1px solid #168cc3;
+  padding: 7px 12px;
+  color: #168cc3;
+  font-size: 14px;
+  cursor: pointer;
+  background: none;
+}
+.btn:hover {
+  background-color: rgba(0, 0, 0, .1);
+}
+.btn-link {
+  border: none;
+}
+.btn-link:hover {
+  background-color: transparent;
+  color: #38b6f1;
+}
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.modal .content {
+  position: relative;
+  top: 50%;
+  width: 420px;
+  margin: -100px auto 0;
+  background-color: #fff;
+  border: 1px solid #eee;
+}
+.modal .header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+.modal .body {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+.modal .footer {
+  padding: 10px 15px;
+  text-align: right;
+}
+.modal .footer .btn {
+  margin-left: 10px;
+}
+textarea {
+  display: block;
+  border: 1px solid #eee;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
+  height: 160px;
+  margin: 0;
+  padding: 10px;
+}
+.types input[type=radio] {
+  display: none;
+}
+.types .type {
+  display: inline-block;
+  padding: 3px;
+  margin-right: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.types .type .label {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: -2px;
+  transform: scale(.5);
+}
+.types .type .title {
+  color: #999;
+}
+.types input[type=radio]:checked ~ .label {
+  transform: scale(1);
+}
+.types input[type=radio]:checked ~ .title {
+  color: #222;
+}
+.item > .footer {
+  color: #777;
+  font-size: 10px;
+  text-align: right;
+  padding: 5px 0 3px;
+}
+.item .footer span {
+  margin-left: 5px;
+  cursor: pointer;
+}
+.item .footer span:hover {
+  text-decoration: underline;
+}
+.item .label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+}
+.item .footer .time {
+  font-style: italic;
+  float: left;
+  margin-left: 0;
+  cursor: default;
+}
+.item .footer .time:hover {
+  text-decoration: none;
+}
+.boards-list .board {
+  display: block;
+  margin: 5px 0;
+}
+.boards-list .board .title {
+  display: block;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.modal-move-item .content {
+  width: 360px;
+}
