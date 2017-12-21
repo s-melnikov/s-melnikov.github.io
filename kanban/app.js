@@ -27,12 +27,22 @@ firebase.initializeApp({
   databaseURL: "https://kanban-1c4b8.firebaseio.com"
 })
 
+marked.setOptions({
+  gfm: true,
+  tables: true,
+  breaks: true,
+  pedantic: true,
+  sanitize: true,
+  smartLists: true,
+  smartypants: true
+});
+
 let { h, app } = hyperapp,
   database = firebase.database(),
   ref = database.ref(boardId),
-  boards = ref.child("boards"),
-  tasks = ref.child("tasks"),
-  types = ref.child("types"),
+  boardsRef = ref.child("boards"),
+  tasksRef = ref.child("tasks"),
+  typesRef = ref.child("types"),
   lastTaskId = 0
 
 let state = {
@@ -66,6 +76,23 @@ let actions = {
       return a
     }, {})
     return newState
+  },
+  saveTask: task => ({ tasks }) => {
+    if (task.uid) {
+      tasksRef.child(task.uid).set(task)
+      tasks = tasks.map(item => {
+        if (item.uid === task.uid) {
+          return task
+        }
+        return item
+      })
+    } else {
+      task.id = ++lastTaskId
+      task.time = Date.now()
+      delete task.uid
+      tasksRef.push(task)
+    }
+    return { tasks }
   },
   editTask: taskToEdit => ({ taskToEdit }),
   showTask: taskToShow => ({ taskToShow }),
@@ -116,31 +143,45 @@ function Modal(params) {
   )
 }
 
+function TaskShowModal(state, actions) {
+  return Modal({
+    class: " modal-show",
+    header: h("div", null,
+    h("button", { class: "btn red" }, "delete"),
+    h("button", {
+        class: "btn",
+        onclick: () => actions.editTask(state.taskToShow)
+      }, "edit"),
+      "Task #ID " + state.taskToShow.id
+    ),
+    body: [
+      h("h2", { class: "title" }, state.taskToShow.title),
+      h("div", { class: "text", innerHTML: marked(state.taskToShow.text) })
+    ],
+    footer: [
+      h("button", {
+        class: "btn",
+        onclick: () => actions.showTask(null)
+      }, "Close")
+    ]
+  })
+}
+
 function TaskEditModal(state, actions) {
   return h("form",  {
       onsubmit: event => {
         event.preventDefault()
-        let title = event.target.elements.title.value.trim()
-        let text = event.target.elements.text.value.trim()
+        let task = {}
+        let elements = event.target.elements
+        let title = elements.title.value.trim()
+        let text = elements.text.value.trim()
         if (text && title) {
-          if (state.taskToEdit.uid) {
-            tasks.child(state.taskToEdit.uid).set({
-              text,
-              title,
-              type: parseInt(event.target.elements.type.value),
-              board: state.taskToEdit.board,
-              id: state.taskToEdit.id
-            })
-          } else {
-            tasks.push({
-              id: ++lastTaskId,
-              text,
-              title,
-              board: state.taskToEdit.board_id,
-              type: parseInt(event.target.elements.type.value),
-              time: Date.now()
-            })
-          }
+          task.title = title
+          task.text = text
+          task.type = parseInt(elements.type.value)
+          task.board = state.taskToEdit.board
+          task.uid = state.taskToEdit.uid
+          actions.saveTask(task)
           event.target.reset()
           actions.editTask(null)
         }
@@ -179,27 +220,6 @@ function TaskEditModal(state, actions) {
       ]
     })
   )
-}
-
-function TaskShowModal(state, actions) {
-  return Modal({
-    class: " modal-show",
-    header: h("div", null,
-    h("button", { class: "btn red" }, "delete"),
-    h("button", { class: "btn" }, "edit"),
-      "Task #ID " + state.taskToShow.id
-    ),
-    body: [
-      h("div", { class: "title" }, state.taskToShow.title),
-      h("div", { class: "text" }, state.taskToShow.text)
-    ],
-    footer: [
-      h("button", {
-        class: "btn",
-        onclick: () => actions.showTask(null)
-      }, "Close")
-    ]
-  })
 }
 
 function TaskMoveModal(task, state, actions) {
@@ -265,8 +285,8 @@ function Layout(state, actions) {
     h("div", { class: "boards" },
       state.boards.map(board => Board(board, state, actions))
     ),
-    state.taskToEdit && TaskEditModal(state, actions),
     state.taskToShow && TaskShowModal(state, actions),
+    state.taskToEdit && TaskEditModal(state, actions),
     state.taskToMove && TaskMoveModal(state, actions),
     state.taskToDelete && TaskDeleteModal(state, actions)
   )
@@ -285,6 +305,7 @@ ref.on("value", snapshot => {
     types.push({ id: 3, title: "Task", color: "belize-hole" })
     types.push({ id: 4, title: "Feature", color: "pomegranate" })
   } else {
+    console.log(data.tasks)
     main.setData(data)
   }
 })
