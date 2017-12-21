@@ -10,6 +10,7 @@ body {
   font: 300 14px/1.4 Roboto, Tahoma, sans-serif;
   color: #666;
   box-sizing: border-box;
+  background: #f5f5f5;
 }
 a {
   text-decoration: none;
@@ -18,16 +19,14 @@ a:hover {
   text-decoration: underline;
 }
 .container {
-  max-width: 720px;
+  max-width: 960px;
   padding: 20px 20px 20px 150px;
-}
-.todo:first-child {
-  border-top: 1px solid #eee;
 }
 .todo {
   position: relative;
   padding: 15px 35px;
-  border-bottom: 1px solid #eee;
+  background: #fff;
+  margin-bottom: 5px;
 }
 .todo::after {
   display: table;

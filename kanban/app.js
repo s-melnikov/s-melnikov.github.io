@@ -26,25 +26,7 @@ let { h, app } = hyperapp,
   boards = ref.child("boards"),
   items = ref.child("items"),
   types = ref.child("types"),
-  root = document.querySelector("#root"),
   lastItemId = 0
-
-let init = (state, actions) => {
-  ref.on("value", snapshot => {
-    let data = snapshot.val()
-    if (data == null) {
-      boards.push({ id: 1, title: "To Do", color: "peter-river" })
-      boards.push({ id: 2, title: "Doing", color: "carrot" })
-      boards.push({ id: 3, title: "Done", color: "emerald" })
-      types.push({ id: 1, title: "User Story", color: "green-sea" })
-      types.push({ id: 2, title: "Defect", color: "orange" })
-      types.push({ id: 3, title: "Task", color: "belize-hole" })
-      types.push({ id: 4, title: "Feature", color: "pomegranate" })
-    } else {
-      actions.setData(data)
-    }
-  })
-}
 
 let state = {
   boards: [],
@@ -56,7 +38,7 @@ let state = {
 }
 
 let actions = {
-  setData(state, actions, data) {
+  setData: data => (state, actions) => {
     let newState = {
       boards: data.boards ? Object.keys(data.boards).map(uid => {
         data.boards[uid].uid = uid
@@ -77,13 +59,13 @@ let actions = {
     }, {})
     return newState
   },
-  itemEditModal(state, actions, data) {
+  itemEditModal: data => {
     return { itemEditModal: data }
   },
-  itemMoveModal(state, actions, data) {
+  itemMoveModal: data => {
     return { itemMoveModal: data }
   },
-  itemDeleteModal(state, actions, data) {
+  itemDeleteModal: data => {
     return { itemDeleteModal: data }
   }
 }
@@ -101,7 +83,7 @@ let view = (state, actions) => {
               .filter(item => item.board == board.id)
               .map(item => {
                 return h("div", { class: "item" },
-                  h("div", { class: "text" }, item.text),
+                  h("div", { class: "text" }, item.title),
                   h("div", { class: "label bg-" + state.colors[item.type] }),
                   h("div", { class: "footer" },
                     h("span", { class: "time" }, new Date(item.time).toDateString()),
@@ -124,22 +106,24 @@ let view = (state, actions) => {
               onclick: () => actions.itemEditModal({
                 board_id: board.id
               })
-            }, "Add new card")
+            }, "new task")
           )
         )
       })
     ),
 
-    state.itemEditModal && h("div", { class: "modal" },
+    state.itemEditModal && h("div", { class: "modal modal-edit" },
       h("form", {
         class: "content",
         onsubmit: event => {
           event.preventDefault()
+          let title = event.target.elements.title.value.trim()
           let text = event.target.elements.text.value.trim()
-          if (text) {
+          if (text && title) {
             if (state.itemEditModal.uid) {
               items.child(state.itemEditModal.uid).set({
                 text,
+                title,
                 type: parseInt(event.target.elements.type.value),
                 board: state.itemEditModal.board,
                 id: state.itemEditModal.id
@@ -147,7 +131,8 @@ let view = (state, actions) => {
             } else {
               items.push({
                 id: ++lastItemId,
-                text: text,
+                text,
+                title,
                 board: state.itemEditModal.board_id,
                 type: parseInt(event.target.elements.type.value),
                 time: Date.now()
@@ -163,7 +148,8 @@ let view = (state, actions) => {
             "Edit item #ID" + state.itemEditModal.id : "Create new item"
         ),
         h("div", { class: "body" },
-          h("textarea", { name: "text" }, state.itemEditModal.text || ""),
+          h("input", { name: "title", placeholder: "Title..." }, state.itemEditModal.title || ""),
+          h("textarea", { name: "text", placeholder: "Content..." }, state.itemEditModal.text || ""),
           h("div", { class: "types" },
             state.types.map((type, i) => {
               return h("label", { class: "type" },
@@ -247,4 +233,21 @@ let view = (state, actions) => {
   )
 }
 
-app({ state, actions, init, view }, root)
+let main = app(state, actions, view, document.body)
+
+ref.on("value", snapshot => {
+    let data = snapshot.val()
+    if (data == null) {
+      boards.push({ id: 1, title: "To Do", color: "peter-river" })
+      boards.push({ id: 2, title: "Doing", color: "carrot" })
+      boards.push({ id: 3, title: "Done", color: "emerald" })
+      boards.push({ id: 4, title: "Deffered", color: "asbestos" })
+      types.push({ id: 1, title: "User Story", color: "green-sea" })
+      types.push({ id: 2, title: "Defect", color: "orange" })
+      types.push({ id: 3, title: "Task", color: "belize-hole" })
+      types.push({ id: 4, title: "Feature", color: "pomegranate" })
+    } else {
+      console.log(data)
+      main.setData(data)
+    }
+  })
