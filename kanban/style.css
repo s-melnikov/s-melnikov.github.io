@@ -92,17 +92,17 @@ body {
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
 }
-.boards .board .item {
+.boards .board .task {
   background-color: #fff;
   padding: 10px 10px 0;
   font-size: 14px;
   border: 1px solid #eee;
+  cursor: pointer;
 }
-.boards .board .item:not(:first-child) {
+.boards .board .task:not(:first-child) {
   margin-top: 7px;
 }
 .boards .board > .footer {
-  padding: 10px 15px;
   color: #777777;
   text-align: center;
   border-left: 1px solid #eee;
@@ -128,13 +128,17 @@ body {
   background-color: transparent;
   color: #38b6f1;
 }
+.btn.red {
+  border-color: #b00;
+  color: #b00;
+}
 .modal {
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .modal .content {
   position: relative;
@@ -146,6 +150,9 @@ body {
 }
 .modal-edit .content {
   width: 560px;
+}
+.modal-show .content {
+  width: 640px;
 }
 .modal .header {
   padding: 15px;
@@ -163,12 +170,14 @@ body {
 .modal .footer .btn {
   margin-left: 10px;
 }
+input, textarea {
+  padding: 6px 0;
+  border: none;
+  border-bottom: 1px dotted #bbb;
+}
 input {
   display: block;
   width: 100%;
-  border: none;
-  border-left: 2px solid #999;
-  padding: 6px 12px;
   margin-bottom: 10px;
   font-family: inherit;
   color: inherit;
@@ -176,18 +185,13 @@ input {
 }
 textarea {
   display: block;
-  border: none;
-  border-left: 2px solid #999;
   font-family: inherit;
   color: inherit;
   width: 100%;
   height: 120px;
   margin: 0;
-  padding: 6px 12px;
   outline: 0;
-}
-input:focus, textarea:focus {
-  box-shadow: 0 0 0 1px #eee;
+  resize: vertical;
 }
 .types input[type=radio] {
   display: none;
@@ -218,33 +222,33 @@ input:focus, textarea:focus {
 .types input[type=radio]:checked ~ .title {
   color: #222;
 }
-.item > .footer {
+.task > .footer {
   color: #777;
   font-size: 10px;
   text-align: right;
-  padding: 5px 0 3px;
+  padding: 0 0 3px;
+  margin-top: -4px;
 }
-.item .footer span {
+.task .footer span {
   margin-left: 5px;
   cursor: pointer;
 }
-.item .footer span:hover {
+.task .footer span:hover {
   text-decoration: underline;
 }
-.item .label {
+.task .label {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: 3px;
 }
-.item .footer .time {
+.task .footer .time {
   font-style: italic;
-  float: left;
   margin-left: 0;
   cursor: default;
 }
-.item .footer .time:hover {
+.task .footer .time:hover {
   text-decoration: none;
 }
 .boards-list .board {
@@ -261,6 +265,11 @@ input:focus, textarea:focus {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.modal-move-item .content {
+.modal-move-task .content {
   width: 360px;
+}
+.modal-show .header .btn {
+  float: right;
+  margin-left: 15px;
+  margin-top: -7px;
 }
