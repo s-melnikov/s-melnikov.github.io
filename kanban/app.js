@@ -43,12 +43,15 @@ let { h, app } = hyperapp,
   boardsRef = ref.child("boards"),
   tasksRef = ref.child("tasks"),
   typesRef = ref.child("types"),
+  lastBoardId = 0,
+  lastTypeId = 0,
   lastTaskId = 0
 
 let state = {
   boards: [],
   tasks: [],
   types: [],
+  typesMap: {},
   taskToEdit: null,
   taskToShow: null,
   taskToMove: null,
@@ -71,13 +74,13 @@ let actions = {
         return data.types[uid]
       }) : []
     }
-    newState.colors = newState.types.reduce((a, b) => {
-      a[b.id] = b.color
-      return a
+    newState.typesMap = newState.types.reduce((result, value) => {
+      result[value.id] = value
+      return result
     }, {})
     return newState
   },
-  saveTask: task => ({ tasks }) => {
+  saveTask: task => ({ tasks, taskToShow }) => {
     if (task.uid) {
       tasksRef.child(task.uid).set(task)
       tasks = tasks.map(item => {
@@ -86,11 +89,15 @@ let actions = {
         }
         return item
       })
+      if (taskToShow) {
+        return { taskToShow: task, tasks }
+      }
     } else {
       task.id = ++lastTaskId
       task.time = Date.now()
       delete task.uid
-      tasksRef.push(task)
+      task.uid = tasksRef.push(task).key
+      tasks.push(task)
     }
     return { tasks }
   },
@@ -106,7 +113,10 @@ function Task(task, state, actions) {
       onclick: () => actions.showTask(task)
     },
     h("div", { class: "text" }, task.title),
-    h("div", { class: "label bg-" + state.colors[task.type] }),
+    h("div", {
+      class: "label bg-" + state.typesMap[task.type].color,
+      "data-tooltip": state.typesMap[task.type].title
+    }),
     h("div", { class: "footer" },
       h("span", { class: "time" }, new Date(task.time).toDateString())
     )
@@ -126,7 +136,7 @@ function Board(board, state, actions) {
     h("div", { class: "footer" },
       h("span", {
         class: "btn btn-link",
-        onclick: () => actions.editTask({ board_id: board.id })
+        onclick: () => actions.editTask({ board: board.id })
       }, "new task")
     )
   )
@@ -136,9 +146,9 @@ function Modal(params) {
   return h("div",
     { class: "modal" + (params.class || "") },
     h("div", { class: "content" },
-      h("div", { class: "header" }, params.header || null),
-      h("div", { class: "body" }, params.body || null),
-      h("div", { class: "footer" }, params.footer || null)
+      params.header && h("div", { class: "header" }, params.header),
+      h("div", { class: "body" }, params.body),
+      params.footer && h("div", { class: "footer" }, params.footer)
     )
   )
 }
@@ -147,22 +157,30 @@ function TaskShowModal(state, actions) {
   return Modal({
     class: " modal-show",
     header: h("div", null,
-    h("button", { class: "btn red" }, "delete"),
-    h("button", {
-        class: "btn",
-        onclick: () => actions.editTask(state.taskToShow)
-      }, "edit"),
-      "Task #ID " + state.taskToShow.id
-    ),
+      h("div", { class: "label bg-" + state.typesMap[state.taskToShow.type].color },
+        state.typesMap[state.taskToShow.type].title
+      ),
+      h("button", {
+        class: "btn btn-link",
+        onclick: () => actions.showTask(null)
+      }, "Close"),
+      h("button", {
+        class: "btn btn-link red",
+        onclick: () => actions.deleteTask(state.taskToShow)
+      }, "Delete"),
+      h("button", {
+        class: "btn btn-link",
+        onclick: () => actions.moveTask(state.taskToShow)
+      }, "Move"),
+      h("button", {
+          class: "btn btn-link",
+          onclick: () => actions.editTask(state.taskToShow)
+        }, "Edit"),
+        "Task #ID " + state.taskToShow.id
+      ),
     body: [
       h("h2", { class: "title" }, state.taskToShow.title),
       h("div", { class: "text", innerHTML: marked(state.taskToShow.text) })
-    ],
-    footer: [
-      h("button", {
-        class: "btn",
-        onclick: () => actions.showTask(null)
-      }, "Close")
     ]
   })
 }
@@ -181,6 +199,8 @@ function TaskEditModal(state, actions) {
           task.type = parseInt(elements.type.value)
           task.board = state.taskToEdit.board
           task.uid = state.taskToEdit.uid
+          task.time = state.taskToEdit.time
+          task.id = state.taskToEdit.id
           actions.saveTask(task)
           event.target.reset()
           actions.editTask(null)
@@ -190,8 +210,15 @@ function TaskEditModal(state, actions) {
     },
     Modal({
       class: " modal-edit",
-      header: state.taskToEdit.id ?
-        "Edit task #ID" + state.taskToEdit.id : "Create new task",
+      header: [
+        h("button", { class: "btn btn-link" }, "Submit"),
+        h("button", {
+          class: "btn btn-link red",
+          type: "reset"
+        }, "Close"),
+        state.taskToEdit.id ?
+          "Edit task #ID" + state.taskToEdit.id : "Create new task"
+      ],
       body: [
         h("input", { name: "title", placeholder: "Title...", value: state.taskToEdit.title || "" }),
         h("textarea", { name: "text", placeholder: "Content..." }, state.taskToEdit.text || ""),
@@ -210,19 +237,12 @@ function TaskEditModal(state, actions) {
             )
           })
         )
-      ],
-      footer: [
-        h("button", {
-          class: "btn",
-          type: "reset"
-        }, "Close"),
-        h("button", { class: "btn" }, "Submit")
       ]
     })
   )
 }
 
-function TaskMoveModal(task, state, actions) {
+function TaskMoveModal(state, actions) {
   return h("div", { class: "modal" },
     h("div", { class: "content" },
       h("div", { class: "header" }, "Move task #ID" + state.taskToMove.id),
@@ -234,13 +254,9 @@ function TaskMoveModal(task, state, actions) {
               h("span", {
                 class: "title bg-" + board.color,
                 onclick: () => {
-                  tasks.child(state.taskToMove.uid).set({
-                    text: state.taskToMove.text,
-                    type: state.taskToMove.type,
-                    board: board.id,
-                    id: state.taskToMove.id
-                  })
-                  actions.taskToMove(null)
+                  state.taskToMove.board = board.id
+                  tasksRef.child(state.taskToMove.uid).set(state.taskToMove)
+                  actions.moveTask(null)
                 },
               }, board.title)
             )
@@ -257,12 +273,12 @@ function TaskMoveModal(task, state, actions) {
   )
 }
 
-function TaskDeleteModal(task, state, actions) {
+function TaskDeleteModal(state, actions) {
   return h("div", { class: "modal" },
     h("div", { class: "content" },
-      h("div", { class: "header" }, "Delete task #ID" + state.taskToDelete.id),
+      h("div", { class: "header" }, "Delete task"),
       h("div", { class: "body" },
-        "Are you sure to delete task #ID" + state.taskToDelete.id + "?"),
+        "Are you sure to delete task?"),
       h("div", { class: "footer" },
         h("button", {
           class: "btn",
@@ -271,8 +287,9 @@ function TaskDeleteModal(task, state, actions) {
         h("button", {
           class: "btn",
           onclick: () => {
-            tasks.child(state.taskToDelete.uid).remove()
+            tasksRef.child(state.taskToDelete.uid).remove()
             actions.deleteTask(null)
+            actions.showTask(null)
           }
         }, "Yes")
       )
@@ -297,15 +314,18 @@ let main = app(state, actions, Layout, document.body)
 ref.on("value", snapshot => {
   let data = snapshot.val()
   if (data == null) {
-    boards.push({ id: 1, title: "To Do", color: "peter-river" })
-    boards.push({ id: 2, title: "Doing", color: "carrot" })
-    boards.push({ id: 3, title: "Done", color: "emerald" })
-    types.push({ id: 1, title: "User Story", color: "green-sea" })
-    types.push({ id: 2, title: "Defect", color: "orange" })
-    types.push({ id: 3, title: "Task", color: "belize-hole" })
-    types.push({ id: 4, title: "Feature", color: "pomegranate" })
+    fetch("mock.json").then(resp => resp.json()).then(({ boards, types, tasks }) => {
+      boards.map(board => boardsRef.push(board))
+      types.map(type => typesRef.push(type))
+      tasks.map(task => {
+        task.time = Date.now()
+        tasksRef.push(task)
+      })
+      lastBoardId = boards[boards.length - 1]
+      lastTypeId = types[types.length - 1]
+      lastTaskId = tasks[tasks.length - 1]
+    })
   } else {
-    console.log(data.tasks)
     main.setData(data)
   }
 })
