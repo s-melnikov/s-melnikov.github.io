@@ -153,6 +153,8 @@ hr {
 }
 .boards {
   font-size: 0;
+  white-space: nowrap;
+  overflow: auto;
 }
 .boards .board {
   width: 360px;
@@ -163,6 +165,7 @@ hr {
   font-size: initial;
   text-align: left;
   vertical-align: top;
+  white-space: normal;
 }
 .boards .board .header {
   padding: 10px 15px;
