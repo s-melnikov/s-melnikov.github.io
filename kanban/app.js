@@ -10,17 +10,17 @@ const uniqid = (length => {
   }
 })(16)
 
-let boardId = null, hash
+let dashBoardId = null, hash
 if (hash = location.hash.slice(1)) {
-  boardId = hash
-  localStorage.hash = boardId
+  dashBoardId = hash
+  localStorage.hash = dashBoardId
 } else if (localStorage.hash) {
-  boardId = localStorage.hash
-  location.hash = boardId
+  dashBoardId = localStorage.hash
+  location.hash = dashBoardId
 } else {
-  boardId = uniqid()
-  localStorage.hash = boardId
-  location.hash = boardId
+  dashBoardId = uniqid()
+  localStorage.hash = dashBoardId
+  location.hash = dashBoardId
 }
 
 firebase.initializeApp({
@@ -39,7 +39,7 @@ marked.setOptions({
 
 let { h, app } = hyperapp,
   database = firebase.database(),
-  ref = database.ref(boardId),
+  ref = database.ref("dashboards/" + dashBoardId),
   boardsRef = ref.child("boards"),
   tasksRef = ref.child("tasks"),
   typesRef = ref.child("types"),
