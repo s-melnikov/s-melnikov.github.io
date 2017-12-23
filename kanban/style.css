@@ -413,7 +413,7 @@ textarea {
   visibility: visible;
   transition: transform .2s, visibility .2s, opacity .2s;
 }
-@media (max-width: 420px) {
+@media (orientation: portrait) {
   .boards .board {
     width: 100%;
     display: block;
