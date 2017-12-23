@@ -5,6 +5,8 @@
 body {
   font: 15px/1.4 "Segoe UI", "Open Sans", sans-serif;
   color: #444;
+  margin: 0;
+  padding: 0;
 }
 h1, h2, h3, h4, h5 {
   font-weight: 300;
@@ -146,9 +148,10 @@ hr {
 .bg-asbestos {
   background-color: #7f8c8d;
 }
+.container {
+  padding: 10px;
+}
 .boards {
-  overflow: auto;
-  white-space: nowrap;
   font-size: 0;
 }
 .boards .board {
@@ -217,7 +220,7 @@ hr {
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
   overflow-y: scroll;
 }
 .modal .content {
@@ -228,6 +231,7 @@ hr {
   background-color: #fff;
   border: 1px solid #eee;
   margin-bottom: 50px;
+  max-width: 100%;
 }
 .modal-edit .content {
   width: 720px;
@@ -327,11 +331,15 @@ textarea {
 }
 .task .label {
   position: absolute;
-  right: 1px;
-  top: 1px;
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
+  right: 2px;
+  top: 2px;
+  border-radius: 7px;
+  padding: 1px 5px 2px;
+  display: inline-block;
+  font-size: 10px;
+  color: #fff;
+  line-height: 1;
+  text-transform: lowercase;
 }
 .task .footer .time {
   font-style: italic;
@@ -361,6 +369,7 @@ textarea {
 .modal .header .btn {
   float: right;
   margin-top: -5px;
+  left: 5px;
 }
 .modal-show .body {
   min-height: 200px;
@@ -400,4 +409,21 @@ textarea {
   opacity: 1;
   visibility: visible;
   transition: transform .2s, visibility .2s, opacity .2s;
+}
+@media (max-width: 420px) {
+  .boards .board {
+    width: 100%;
+    display: block;
+    margin: 0 0 15px;
+  }
+  [data-tooltip]::after {
+    content: none;
+  }
+  .modal {
+    padding: 10px;
+  }
+  .modal .content {
+    top: 0;
+    margin: 0;
+  }
 }

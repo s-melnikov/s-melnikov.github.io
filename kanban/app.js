@@ -113,10 +113,8 @@ function Task(task, state, actions) {
       onclick: () => actions.showTask(task)
     },
     h("div", { class: "text" }, task.title),
-    h("div", {
-      class: "label bg-" + state.typesMap[task.type].color,
-      "data-tooltip": state.typesMap[task.type].title
-    }),
+    h("div", { class: "label bg-" + state.typesMap[task.type].color },
+      state.typesMap[task.type].title),
     h("div", { class: "footer" },
       h("span", { class: "time" }, new Date(task.time).toDateString())
     )
