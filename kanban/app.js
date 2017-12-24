@@ -24,8 +24,20 @@ if (hash = location.hash.slice(1)) {
 }
 
 firebase.initializeApp({
-  databaseURL: "https://kanban-1c4b8.firebaseio.com"
+    apiKey: "AIzaSyAxcFvCH2cMuk0-bHIf6CUE_snseUUPRAM",
+    databaseURL: "https://kanban-1c4b8.firebaseio.com"
 })
+
+firebase.auth().signInAnonymously();
+
+// firebase.auth().onAuthStateChanged(function(user) {
+//   if (user) {
+//     let { displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData } = user
+//     console.log({ displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData })
+//   } else {
+//     console.log("No user")
+//   }
+// })
 
 marked.setOptions({
   gfm: true,
