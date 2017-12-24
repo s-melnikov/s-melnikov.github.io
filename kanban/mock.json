@@ -1,8 +1,8 @@
 {
   "boards":[
-    {"id":1,"title":"To Do","color":"peter-river"},
-    {"id":2,"title":"Doing","color":"emerald"},
-    {"id":3,"title":"Done","color":"asbestos"}
+    {"id":1,"title":"To Do","color":"carrot"},
+    {"id":2,"title":"Doing","color":"peter-river"},
+    {"id":3,"title":"Done","color":"silver"}
   ],
   "types":[
     {"id":1,"title":"User Story","color":"green-sea"},
