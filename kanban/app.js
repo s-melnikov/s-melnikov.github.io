@@ -30,14 +30,9 @@ firebase.initializeApp({
 
 firebase.auth().signInAnonymously();
 
-// firebase.auth().onAuthStateChanged(function(user) {
-//   if (user) {
-//     let { displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData } = user
-//     console.log({ displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData })
-//   } else {
-//     console.log("No user")
-//   }
-// })
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {} else {}
+})
 
 marked.setOptions({
   gfm: true,
