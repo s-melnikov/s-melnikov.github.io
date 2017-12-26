@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Blockchain</title>
+    <link rel="stylesheet" href="/css/master.css">
+  </head>
+  <body>
+    <script src="../hash/sha256.js"></script>
+    <script src="https://unpkg.com/hyperapp@0.18.0/dist/hyperapp.js"></script>
+    <script>     
+
+      let { h, app } = hyperapp
+      var state = {
+        blockchain: blockchain
+      }
+      var actions = {
+        onsubmit: function(event) {
+          event.preventDefault()
+          return function(state, actions) {
+            if (event.target.elements[0].value) {
+              actions.addBlock(event.target.elements[0].value)
+              event.target.elements[0].value = ""
+            }
+          }
+        },
+        addBlock: function(text) {
+          return function(state, actions) {
+            addBlock(generateNextBlock(text))
+            return {
+              blockchain: blockchain
+            }
+          }
+        }
+      }
+      function Layout(state, actions) {
+        return h("div", { class: "container"},
+          h("p", null, "Blockchain"),
+          state.blockchain.map(function(block) {
+            return h("div", { class: "block" },
+              h("div", { class: "block-meta" },
+                h("span", null, "Index: " + block.index),
+                h("span", null, "Timestamp: " + new Date(block.timestamp).toLocaleString())
+              ),
+              h("div", { class: "block-data" }, "Data: " + block.data),
+              h("div", { class: "block-previous-hash" }, "Prev: " + block.previousHash),
+              h("div", { class: "block-hash" }, "Next: " + block.hash)
+            )
+          }),
+          h("div", { class: "block" },
+            h("form", { onsubmit: actions.onsubmit },
+              h("textarea"),
+              h("button", null, "Add block")
+            )
+          )
+        )
+      }
+
+      app(state, actions, Layout, document.body)
+    </script>
+  </body>
+</html>

@@ -42,20 +42,16 @@
     <textarea id="textarea" autofocus></textarea>
     <p>SHA-256</p>
     <div id="out1"></div>
-    <p>SHA-224</p>
-    <div id="out2"></div>
   </div>
   <script src="sha256.js"></script>
   <script>
     let out1 = document.querySelector("#out1")
-    let out2 = document.querySelector("#out2")
     let textarea = document.querySelector("#textarea")
     function changeHandler() {
       out1.textContent = sha256(textarea.value)
-      out2.textContent = sha224(textarea.value)
     }
     textarea.addEventListener("input", changeHandler)
-    changeHandler()
+    changeHandler()    
   </script>
 </body>
 </html>

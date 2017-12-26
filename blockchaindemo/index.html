@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Blockchain</title>
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <script src="sha256.js"></script>
+    <script src="blockchain.js"></script>
+    <script src="https://unpkg.com/hyperapp@0.18.0/dist/hyperapp.js"></script>
+    <script>
+      let { app, h } = hyperapp
+      let blockchain = new Blockchain()
+
+      blockchain.mine("Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
+      blockchain.mine("Excepteur sint occaecat cupidatat non proident.")
+      blockchain.mine("Duis aute irure dolor in reprehenderit in voluptate velit.")
+
+      let blockView = (block, state, actions) => {
+        return h("div", {
+            class: "block"
+          },
+          h("div", { class: "block-data"},
+            h("input", {
+              type: "text",
+              oninput: event =>
+                actions.blockOnInput(block, event.target.value),
+              value: block.data,
+              placeholder: "Block data"
+            })
+          ),
+          h("div", { class: "block-hashes" },
+            h("div", { class: "label" }, "previous hash"),
+            h("div", { class: "block-hash-previous" }, block.previousHash),
+            h("div", { class: "label" }, "hash"),
+            h("div", { class: "block-hash" }, block.hash),
+          ),
+          h("div", { class: "block-meta" },
+            h("span", { class: "block-nonce" }, block.nonce),
+            h("span", { class: "block-timestamp" },
+              new Date(block.timestamp).toLocaleString()),
+            h("span", { class: "block-title" },
+              block.index > 0 ? "Block #" + block.index : "Genesis block")
+          )
+        )
+      }
+
+      let layoutView = (state, actions) => {
+        return h("div", { class: "container" },
+          h("h1", null, "Blockchain"),
+          h("div", { class: "blocks" },
+            state.blocks.map(block => blockView(block, state, actions)),
+            h("div", { class: "block"},
+              h("form", { onsubmit: actions.addBlockFormSubmit },
+                h("input", { type: "text", placeholder: "Enter data" }),
+                h("button", null, "Add new block"),
+              )
+            )
+          )
+        )
+      }
+      let state = {
+        blocks: blockchain.get()
+      }
+      let actions = {
+        addBlockFormSubmit: event => state => {
+          event.preventDefault()
+        }
+      }
+      app(state, actions, layoutView, document.body)
+    </script>
+  </body>
+</html>
