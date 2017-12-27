@@ -73,6 +73,16 @@ class Blockchain {
     return new Block(nextIndex, previousHash, timestamp, data, nextHash,
       nonce)
   }
+  
+  recalculateBlockHash({ index, previousHash, timestamp, data }) {
+    let nonce = 0
+    let hash = this.calculateHash(index, previousHash, timestamp, data, nonce)
+    while (!this.isValidHashDifficulty(hash)) {
+      nonce = nonce + 1
+      hash = this.calculateHash(index, previousHash, timestamp, data, nonce)
+    }
+    return { index, previousHash, timestamp, data, hash, nonce }
+  }
 
   addBlock(newBlock) {
     if (this.isValidNextBlock(newBlock, this.latestBlock)) {
