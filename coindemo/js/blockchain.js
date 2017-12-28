@@ -1,15 +1,45 @@
 class Blockchain {
+  
   constructor() {
-    this.blockchain = [Block.genesis];
     this.difficulty = 3;
+    this.blockchain = [this.getGenesisBlock()];
+  }
+  
+  getGenesisBlock() {
+    let index = 0
+    let hash = "0"
+    let timestamp = Date.now()
+    let data = []
+    let merkle = this.getMerkleRoot(data)
+    let nonce = this.getNonce(index, hash, timestamp, merkle)
+    return {
+      index,
+      hash,
+      timestamp,
+      data,
+      merkle,
+      nonce
+    }
+  }
+  
+  getMerkleRoot(data) {
+    if (!data.length) return sha256("")
+  }
+  
+  getNonce(index, hash, timestamp, merkle) {
+    let nonce = 0
+    while(
+      !this.isValidHashDifficulty(
+        this.calculateHash(index, hash, timestamp, merkle, nonce)
+      )
+    ) {
+      nonce++
+    }
+    return nonce
   }
 
-  get() {
-    return this.blockchain;
-  }
-
-  get latestBlock() {
-    return this.blockchain[this.blockchain.length - 1];
+  calculateHash(index, hash, timestamp, merkle, nonce) {
+    return sha256(index + hash + timestamp + merkle + nonce)
   }
 
   isValidHashDifficulty(hash) {
@@ -19,6 +49,17 @@ class Blockchain {
       }
     }
     return i >= this.difficulty;
+  }
+  
+  
+  
+
+  getChain() {
+    return this.blockchain;
+  }
+
+  latestBlock() {
+    return this.blockchain[this.blockchain.length - 1];
   }
 
   calculateHashForBlock(block) {
@@ -32,13 +73,6 @@ class Blockchain {
     );
   }
 
-  calculateHash(index, previousHash, timestamp, data, nonce) {
-    return crypto
-      .createHash("sha256")
-      .update(index + previousHash + timestamp + data + nonce)
-      .digest("hex");
-  }
-
   mine(data) {
     const newBlock = this.generateNextBlock(data);
     try {
@@ -49,9 +83,10 @@ class Blockchain {
   }
 
   generateNextBlock(data) {
-    const nextIndex = this.latestBlock.index + 1;
-    const previousHash = this.latestBlock.hash;
+    const index = this.latestBlock().index + 1;
+    const hash = this.latestBlock.hash;
     let timestamp = new Date().getTime();
+    let nonce = getNonce()
     let nonce = 0;
     let nextHash = this.calculateHash(
       nextIndex,
