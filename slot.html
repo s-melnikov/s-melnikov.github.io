@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<script>
+const REELS_COUNT = 3
+const ROWS_COUNT = 3
+const SYMBOLS_COUNT = [
+  6, // x apple
+  5, // x grape
+  4, // x lemon
+  4, // x cherry
+  3, // x banana
+  3, // x watermelon
+  2, // x orange
+  1  // x BAR
+]
+const LINES = [
+  [1, 1, 1],
+  [0, 0, 0],
+  [2, 2, 2],
+  [0, 1, 2],
+  [2, 1, 0],
+  // [0, 1, 0],
+  // [2, 1, 2],
+  // [1, 0, 1],
+  // [1, 2, 1],
+  // [0, 1, 1],
+  // [2, 1, 1],
+  // [1, 0, 0],
+  // [1, 2, 2],
+  // [1, 1, 0],
+  // [1, 1, 2]
+]
+const WIN_COMB = [
+  [0, 1, 10],
+  [0, 3, 10],
+  [0, 5, 10],
+  [0, 5, 25],
+  [0, 15, 25],
+  [0, 25, 50],
+  [2, 25, 50],
+  [5, 50, 100]
+]
+let bet = 1
+let money = 1000
+let playing_lines_count = 15
+let reel_sybols = []
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min
+}
+
+function shuffleArray(a) {
+  let i = a.length, j, x
+  for (; i; i--) {
+    j = Math.floor(Math.random() * i)
+    x = a[i - 1]
+    a[i - 1] = a[j]
+    a[j] = x
+  }
+}
+
+function getRandomSymbols() {
+  let result = []
+  let shift
+  let reel
+  for (let i = 0; i < REELS_COUNT; i++) {
+    shift = randomInt(0, reel_sybols.length - 1)
+    reel = reel_sybols.slice(shift, shift + ROWS_COUNT)
+    if (reel.length < ROWS_COUNT) {
+      reel = reel.concat(reel_sybols.slice(0, ROWS_COUNT - reel.length))
+    }
+    result[i] = reel
+  }
+  return result
+}
+
+function checkWinLines(symbols) {
+  let result = []
+  let lines = []
+  let playing_lines = LINES.slice(0, playing_lines_count)
+  for (let line = 0; line < playing_lines.length; line++) {
+    lines[line] = []
+    for (let reel = 0; reel < playing_lines[line].length; reel++) {
+      lines[line].push(symbols[reel][playing_lines[line][reel]])
+    }
+  }
+  for (line = 0; line < lines.length; line++) {
+    let first_symbol = lines[line][0]
+    let i, comb
+    for (i = 1; i < lines[line].length && lines[line][i] === first_symbol; i++) {}
+    if (WIN_COMB[first_symbol][i - 1]) {
+      result.push({
+        symbol: first_symbol,
+        count: i,
+        line: playing_lines[line],
+        factor: WIN_COMB[first_symbol][i - 1]
+      })
+    }
+  }
+  return result
+}
+
+function display(symbols) {
+  let symbols_names = ["apple", "grape", "lemon", "cherr", "banan", "water", "orang", " BAR "]
+  console.clear()
+  console.log("Money: " + money + "; Bet: " + bet + "; Playing lines count: " + playing_lines_count)
+  console.log(symbols)
+  let str = "┌───────────────────────┐\n"
+  for (let row = 0; row < ROWS_COUNT; row++ ) {
+    str += "│"
+    for (let reel = 0; reel < REELS_COUNT; reel++) {
+      str += "  " + symbols_names[symbols[reel][row]]
+    }
+    str += "  │\n"
+  }
+  console.log(str + "└───────────────────────┘")
+}
+
+function spin() {
+  let symbols = getRandomSymbols()
+  let winLines = checkWinLines(symbols)
+
+  if (money < bet * playing_lines_count) {
+    return console.warn("Не хватает денег на совершение ставки. \n" +
+      "(money: " + money + ", bet: " + bet * playing_lines_count + ")")
+  }
+  money -= bet * playing_lines_count
+
+  display()
+}
+
+function init() {
+  for (let i = 0; i < SYMBOLS_COUNT.length; i++) {
+    for (let n = 0; n < SYMBOLS_COUNT[i]; n++) {
+      reel_sybols.push(i)
+    }
+  }
+  shuffleArray(reel_sybols)
+  let symbols = getRandomSymbols()
+  display(symbols)
+}
+
+init()
+// spin()
+</script>
+</body>
+</html>

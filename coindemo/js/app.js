@@ -63,16 +63,19 @@ function Layout(state, actions) {
           h("div", null, "Total: " + money(0)),
           h("label", null, 
             h("span", null, "Funds"),
-            h("select", {}, 
-              state.current.inputs.map(input => 
-                h("option", { value: input.id }, money(input.value))
-              ) 
-            )
+            h("select", {}, state.current.inputs.map(input => 
+              h("option", { value: input.id }, money(input.value))
+            ))
           ),
           h("div", null, "Total: " + money(0))
         )
       ),
-      h("div", { class: "col-5" })
+      h("div", { class: "col-1" },
+        h("div", { class: "card card-mining" },
+          h("label", null,) 
+        )
+      ),
+      h("div", { class: "col-4" })
     )    
   )
 }
