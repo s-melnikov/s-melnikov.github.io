@@ -104,12 +104,12 @@ function checkWinLines(symbols) {
   return result
 }
 
-function display(symbols) {
+function display(symbols, win, winLines) {
   let symbols_names = ["apple", "grape", "lemon", "cherr", "banan", "water", "orang", " BAR "]
   console.clear()
-  console.log("Money: " + money + "; Bet: " + bet + "; Playing lines count: " + playing_lines_count)
-  console.log(symbols)
-  let str = "┌───────────────────────┐\n"
+  let str = "Money: " + money + " | Bet: $" + bet + " x " +
+    playing_lines_count + " lines\n"
+  str += "┌───────────────────────┐\n"
   for (let row = 0; row < ROWS_COUNT; row++ ) {
     str += "│"
     for (let reel = 0; reel < REELS_COUNT; reel++) {
@@ -117,20 +117,38 @@ function display(symbols) {
     }
     str += "  │\n"
   }
-  console.log(str + "└───────────────────────┘")
+  str += "└───────────────────────┘\n"
+  if (win !== undefined) {
+    str += "Win: $" + win + "\n"
+    if (winLines.length) {
+      str += "Lines: \n"
+      str += winLines.map(function(data) {
+        return "  symbol: " + symbols_names[data.symbol] +
+          ", count: " + data.count + ", factor: " + data.factor +
+          ", line: " + data.line.join(".")
+      }).join("\n")
+    }
+  }
+  console.log(str)
 }
 
 function spin() {
   let symbols = getRandomSymbols()
   let winLines = checkWinLines(symbols)
-
+  let win = 0
   if (money < bet * playing_lines_count) {
+    if (intervalId) stop()
     return console.warn("Не хватает денег на совершение ставки. \n" +
       "(money: " + money + ", bet: " + bet * playing_lines_count + ")")
   }
   money -= bet * playing_lines_count
-
-  display()
+  if (winLines.length) {
+    for (let i = 0; i < winLines.length; i++) {
+      win += bet * winLines[i].factor
+    }
+  }
+  money += win
+  display(symbols, win, winLines)
 }
 
 function init() {
@@ -145,7 +163,20 @@ function init() {
 }
 
 init()
-// spin()
+
+let intervalId
+
+function auto(delay) {
+  intervalId = setInterval(function() {
+    spin()
+  }, delay)
+}
+function stop() {
+  clearTimeout(intervalId)
+}
+
+auto(1000)
+
 </script>
 </body>
 </html>
