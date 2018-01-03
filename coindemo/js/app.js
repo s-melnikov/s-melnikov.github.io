@@ -19,63 +19,70 @@ recipients.map(recipient => {
   recipient.inputs = []
 })
 
-var state = {
+let state = {
   recipients,
   current: recipients[0]
-}     
+}
 
-var actions = {}   
+let actions = {}
 
 app(state, actions, Layout, document.body)
 
-function Layout(state, actions) {
-  return h("div", { class: "container" },           
+function WalletCard(state, actions) {
+  return h("div", { class: "card card-wallet"},
+    h("div", { class: "title" }, "Wallet"),
+    h("div", { class: "name" }, "User name: " + state.current.name),
+    h("div", { class: "balance" }, "Balance: " + money(0)),
+    h("div", { class: "transaction" },
+      h("label", null,
+        h("span", null, "Recipient"),
+        h("input", { type: "text", list: "recipients-list" }),
+        h("datalist", { id: "recipients-list" },
+          state.recipients.map(item =>
+            item !== state.current ? h("option", { value: item.name }) : null)
+        )
+      )
+    ),
     h("div", { class: "row" },
+      h("div", { class: "col-3" },
+        h("label", null,
+          h("span", null, "Amount"),
+          h("input", { type: "text" })
+        )
+      ),
       h("div", { class: "col" },
-        h("div", { class: "card card-wallet"},
-          h("div", { class: "title" }, "Wallet"),
-          h("div", { class: "name" }, "User name: " + state.current.name),
-          h("div", { class: "balance" }, "Balance: " + money(0)),
-          h("div", { class: "transaction" },
-            h("label", null, 
-              h("span", null, "Recipient"),
-              h("input", { type: "text", list: "recipients-list" }),
-              h("datalist", { id: "recipients-list" },
-                state.recipients.map(item => 
-                  item !== state.current ? h("option", { value: item.name }) : null)
-              )
-            )
-          ),
-          h("div", { class: "row" },
-            h("div", { class: "col-3" },
-              h("label", null,
-                h("span", null, "Amount"),
-                h("input", { type: "text" })
-              )                
-            ),
-            h("div", { class: "col" },
-              h("label", null, 
-                h("span", null, "Fee"),
-                h("input", { type: "text" })
-              ) 
-            )
-          ),
-          h("div", null, "Total: " + money(0)),
-          h("label", null, 
-            h("span", null, "Funds"),
-            h("select", {}, state.current.inputs.map(input => 
-              h("option", { value: input.id }, money(input.value))
-            ))
-          ),
-          h("div", null, "Total: " + money(0))
+        h("label", null,
+          h("span", null, "Fee"),
+          h("input", { type: "text" })
         )
-      ),
-      h("div", { class: "col-1" },
-        h("div", { class: "card card-mining" },
-          h("label", null,) 
-        )
-      ),
-      h("div", { class: "col-4" })
-    )    
+      )
+    ),
+    h("div", null, "Total: " + money(0)),
+    h("label", null,
+      h("span", null, "Funds"),
+      h("select", null, state.current.inputs.map(input =>
+        h("option", { value: input.id }, money(input.value))
+      ))
+    ),
+    h("div", null, "Total: " + money(0))
+  )
+}
+
+function MiningCard(state, actions) {
+  return h("div", { class: "card card-mining" },
+    h("label", null,
+      h("span", null, "Mining reward: $100")
+    ),
+    h("button", { class: "block mt-2" }, "Mine new block")
+  )
+}
+
+function Layout(state, actions) {
+  return h("div", { class: "container" },
+    h("div", { class: "row" },
+      h("div", { class: "col" }, WalletCard(state, actions)),
+      h("div", { class: "col" }, MiningCard(state, actions)),
+      h("div", { class: "col-3" })
+    )
   )
 }

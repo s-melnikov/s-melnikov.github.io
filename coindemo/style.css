@@ -31,6 +31,34 @@ input:focus,
 select:focus {
   outline: 0;
 }
+button {
+  display: inline-block;
+  border: none;
+  border-radius: 3px;
+  background: #00adff;
+  color: #fff;
+  font: inherit;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+button:hover {
+  background: #11bbff;  
+}
+.block {
+  display: block;
+}
+.mt-1 {
+  margin-top: 5px;
+}
+.mt-2 {
+  margin-top: 10px;
+}
+.mb-1 {
+  margin-bottom: 5px;
+}
+.mb-2 {
+  margin-bottom: 10px;
+}
 .container {
   width: 90rem;
   padding: 0 1rem;
@@ -47,7 +75,7 @@ select:focus {
   margin-left: -0.5rem;
   margin-right: -0.5rem;
 }
-.col, 
+.col,
 .col-2,
 .col-3,
 .col-4,
@@ -57,17 +85,17 @@ select:focus {
   padding-left: .5rem;
   padding-right: .5rem;
 }
-.col-2 { 
-  flex: 2 
+.col-2 {
+  flex: 2
 }
-.col-3 { 
-  flex: 3 
+.col-3 {
+  flex: 3
 }
-.col-4 { 
-  flex: 4 
+.col-4 {
+  flex: 4
 }
-.col-5 { 
-  flex: 5 
+.col-5 {
+  flex: 5
 }
 .card-wallet .title {
   text-align: center;

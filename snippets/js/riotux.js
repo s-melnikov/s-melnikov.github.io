@@ -1,49 +1,40 @@
-var riotux = {
-
-  _store: {
-    state: {},
-
-    actions: {},
-
-    components: []
-  },
-
-  subscribe: function(component, handler) {
-    riotux._store.components.push({
+class Riotux {
+  constructor(initialState = {}) {
+    this.state = initialState
+    this.actions = {}
+    this.components = []
+  }
+  subscribe(component, handler) {
+    this.components.push({
       component: component,
       handler: handler
     })
-  },
-
-  unsubscribe: function(component) {
-    riotux._store.components.forEach(function(el, index) {
-      if (el.component === component) {
-        riotux._store.components.splice(index, 1)
+  }
+  unsubscribe(component) {
+    this.components.forEach((item, index) => {
+      if (item.component === component) {
+        this.components.splice(index, 1)
       }
     })
-  },
-
+  }
   dispatch: function(action, data) {
-    var
-      args = [].slice.call(arguments, 1),
-      value = riotux._store.actions[action](riotux._store.state, data),
+    let value = this.actions[action](this.state, data),
       state = { action: action, value: value }
-    riotux._store.components.forEach(function(el, i) {
-      if (el.component !== undefined && typeof el.handler === "function") {
-        el.handler(state)
+    this.components.forEach(item => {
+      if (item.component !== undefined && typeof item.handler === "function") {
+        item.handler(state)
       }
     })
-  },
-
-  setState: function(data) {
-    return Object.assign(riotux._store.state, data)
-  },
-
-  getState: function(stateName) {
-    return riotux._store.state[stateName]
-  },
-
-  setActions: function(data) {
-    return Object.assign(riotux._store.actions, data)
+  }
+  setState(state) {
+    return Object.assign(this.state, state)
+  }
+  getState(name) {
+    return this.state[name]
+  }
+  setActions(action) {
+    return Object.assign(this.actions, action)
   }
 }
+
+let riotux = new Riotux({})

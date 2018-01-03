@@ -1,10 +1,10 @@
 class Blockchain {
-  
+
   constructor() {
     this.difficulty = 3;
     this.blockchain = [this.getGenesisBlock()];
   }
-  
+
   getGenesisBlock() {
     let index = 0
     let hash = "0"
@@ -21,11 +21,11 @@ class Blockchain {
       nonce
     }
   }
-  
+
   getMerkleRoot(data) {
     if (!data.length) return sha256("")
   }
-  
+
   getNonce(index, hash, timestamp, merkle) {
     let nonce = 0
     while(
@@ -45,14 +45,13 @@ class Blockchain {
   isValidHashDifficulty(hash) {
     for (var i = 0; i < hash.length; i++) {
       if (hash[i] !== "0") {
-        break;
+        break
       }
     }
-    return i >= this.difficulty;
+    return i >= this.difficulty
   }
-  
-  
-  
+
+
 
   getChain() {
     return this.blockchain;

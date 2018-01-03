@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slot</title>
+</head>
+<body>
+  Bet:
+  <button onclick="setBet(-1)">-</button>
+  <button onclick="setBet(1)">+</button>
+  Lines:
+  <button onclick="setLines(-1)">-</button>
+  <button onclick="setLines(1)">+</button>
+  Auto:
+  <button onclick="auto(1000)">play</button>
+  <button onclick="stop()">stop</button>
+  <button onclick="spin()">SPIN</button>
+  <pre id="outlet"></pre>
+  <script>
+    class Slot {
+      constructor(params) {
+        this.params = params
+        this.playing_lines_count = this.params.LINES.length
+        this.reel_sybols = []
+        this.displayedSymbols = null
+        for (let symbol = 0; symbol < this.params.SYMBOLS_COUNT.length; symbol++) {
+          for (let i = 0; i < this.params.SYMBOLS_COUNT[symbol]; i++) {
+            this.reel_sybols.push(symbol)
+          }
+        }
+        this.shuffleArray(this.reel_sybols)
+        this.getRandomSymbols()
+        this.display()
+      }
+
+      randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min
+      }
+
+      shuffleArray(a) {
+        let i = a.length, j, x
+        for (; i; i--) {
+          j = Math.floor(Math.random() * i)
+          x = a[i - 1]
+          a[i - 1] = a[j]
+          a[j] = x
+        }
+      }
+
+      getRandomSymbols() {
+        let shift
+        let reel
+        this.displayedSymbols = []
+        for (let i = 0; i < this.params.REELS_COUNT; i++) {
+          shift = this.randomInt(0, this.reel_sybols.length - 1)
+          reel = this.reel_sybols.slice(shift, shift + this.params.ROWS_COUNT)
+          if (reel.length < this.params.ROWS_COUNT) {
+            reel = reel.concat(this.reel_sybols.slice(0, this.params.ROWS_COUNT - reel.length))
+          }
+          this.displayedSymbols[i] = reel
+        }
+      }
+
+      checkWinLines(symbols) {
+        let result = []
+        let lines = []
+        let playing_lines = LINES.slice(0, playing_lines_count)
+        for (let line = 0; line < playing_lines.length; line++) {
+          lines[line] = []
+          for (let reel = 0; reel < playing_lines[line].length; reel++) {
+            lines[line].push(symbols[reel][playing_lines[line][reel]])
+          }
+        }
+        for (line = 0; line < lines.length; line++) {
+          let first_symbol = lines[line][0]
+          let i, comb
+          for (i = 1; i < lines[line].length && lines[line][i] === first_symbol; i++) {}
+          if (WIN_COMB[first_symbol][i - 1]) {
+            result.push({
+              symbol: first_symbol,
+              count: i,
+              line: playing_lines[line],
+              factor: WIN_COMB[first_symbol][i - 1]
+            })
+          }
+        }
+        return result
+      }
+
+      display() {
+        let str = "Money: $" + this.params.money + " | Bet: $" + this.params.bet + " x " +
+          this.params.playing_lines_count + " lines\n"
+        str += "┌──" + Array(this.params.REELS_COUNT).join("────────") + "───┐\n"
+        for (let row = 0; row < this.params.ROWS_COUNT; row++ ) {
+          str += "│"
+          for (let reel = 0; reel < this.params.REELS_COUNT; reel++) {
+            str += "  " + this.params.SYMBOLS_NAME[this.displayedSymbols[reel][row]]
+          }
+          str += "  │\n"
+        }
+        str += "└──" + Array(this.params.REELS_COUNT).join("────────") + "───┘\n"
+        if (this.win !== undefined) {
+          str += "Win: $" + win + "\n"
+          if (winLines.length) {
+            str += "Lines: \n"
+            str += winLines.map(function(data) {
+              let s = "factor: " + data.factor +
+                ", line: \n"
+                for (let row = 0; row < ROWS_COUNT; row++ ) {
+                  s+= "   "
+                  for (let reel = 0; reel < REELS_COUNT; reel++) {
+                    s += data.line[reel] === row ? " " +
+                    (reel >= data.count ? "xxxxx" : symbols_names[data.symbol])
+                    : " -----"
+                  }
+                  s += "\n"
+                }
+              return s
+            }).join("\n")
+          }
+        }
+        outlet.textContent = str
+      }
+
+      spin() {
+        let symbols = getRandomSymbols()
+        let winLines = checkWinLines(symbols)
+        let win = 0
+        if (money < bet * playing_lines_count) {
+          if (intervalId) stop()
+          return console.warn("Не хватает денег на совершение ставки. \n" +
+            "(money: " + money + ", bet: " + bet * playing_lines_count + ")")
+        }
+        money -= bet * playing_lines_count
+        if (winLines.length) {
+          for (let i = 0; i < winLines.length; i++) {
+            win += bet * winLines[i].factor
+          }
+        }
+        money += win
+        displayedSymbols = symbols
+        display(win, winLines)
+      }
+
+      setBet(i) {
+        bet += i
+        if (bet < 1) {
+          bet = 1
+        }
+        display()
+      }
+
+      setLines(i) {
+        playing_lines_count += i
+        if (playing_lines_count < 1) {
+          playing_lines_count = LINES.length
+        } else if (playing_lines_count > LINES.length) {
+          playing_lines_count = 1
+        }
+        display()
+      }
+    }
+
+    let params = {
+      REELS_COUNT: 5,
+      ROWS_COUNT: 3,
+      SYMBOLS_NAME: [
+        "apple",
+        "grape",
+        "lemon",
+        "cherr",
+        "banan",
+        "melon",
+        "orang",
+        "BARx1",
+        "BARx2",
+        "BARx3"
+      ],
+      SYMBOLS_COUNT: [10, 7, 7, 7, 5, 5, 5, 3, 2, 1],
+      LINES: [
+        [1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0],
+        [2, 2, 2, 2, 2],
+        [0, 1, 2, 1, 0],
+        [2, 1, 0, 1, 2],
+        [0, 1, 0, 1, 0],
+        [1, 0, 1, 0, 1],
+        [1, 2, 1, 2, 1],
+        [2, 1, 2, 1, 2],
+        [0, 0, 1, 0, 0],
+        [2, 2, 1, 2, 2],
+        [1, 1, 0, 1, 1],
+        [1, 1, 2, 1, 1],
+        [0, 0, 1, 2, 2],
+        [2, 2, 1, 0, 0],
+        [0, 1, 2, 2, 2],
+        [2, 2, 2, 1, 0],
+        [0, 0, 0, 1, 2],
+        [2, 1, 0, 0, 0],
+        [0, 1, 1, 1, 0],
+        [2, 1, 1, 1, 2]
+      ],
+      FACTORS: [
+        [0, 0, 5, 7, 10],
+        [0, 0, 5, 10, 15],
+        [0, 0, 5, 10, 15],
+        [0, 0, 10, 15, 25],
+        [0, 2, 15, 25, 50],
+        [0, 5, 10, 25, 50],
+        [0, 5, 15, 25, 50],
+        [2, 10, 15, 50, 100],
+        [5, 20, 30, 100, 200],
+        [10, 30, 50, 200, 1000]
+      ],
+      bet: 1,
+      money: 1000
+    }
+
+    let slot = new Slot(params)
+
+  </script>
+</body>
+</html>
