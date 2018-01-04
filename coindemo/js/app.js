@@ -22,9 +22,19 @@ recipients.map(recipient => {
 let state = {
   recipients,
   current: recipients[0]
+  pool: []
 }
 
-let actions = {}
+let actions = {
+  mine: event => (state, actions) => {
+    let transactions = state.pool
+    transactions.push({
+      from: "REWARD",
+      to: state.current.name,
+      amount: 25
+    })
+  }
+}
 
 app(state, actions, Layout, document.body)
 
@@ -73,7 +83,10 @@ function MiningCard(state, actions) {
     h("label", null,
       h("span", null, "Mining reward: $100")
     ),
-    h("button", { class: "block mt-2" }, "Mine new block")
+    h("button", {
+      class: "block mt-2",
+      onclick: actions.mine
+    }, "Mine new block")
   )
 }
 
