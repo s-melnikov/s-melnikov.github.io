@@ -1,3 +1,41 @@
+function database() {
+
+  const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+  let database_name = cookie("database_name")
+
+  if (!database_name) {
+    database_name = uniqid()
+    cookie("database_name", database_name)
+  }
+
+  function cookie(key, value) {
+    if (value) {
+      key += '=' + encodeURIComponent(value)
+      return document.cookie = key
+    }
+    return document.cookie.split("; ").reduce((result, value) => {
+      value = value.split("=")
+      result[value[0]] = decodeURIComponent(value[1])
+      return result
+    }, {})[key]
+  }
+
+  function uniqid() {
+    let now = Date.now(), length = CHARS.length, chars = [], i = 8, id
+    while (i--)
+      chars[i] = CHARS.charAt(now % length), now = Math.floor(now / CHARS.length)
+    id = chars.join("")
+    i = 8
+    while (i--)
+      id += CHARS.charAt(Math.floor(Math.random() * length))
+    return id
+  }
+
+  
+}
+
+
 !function(exports) {
 
   class Store {
