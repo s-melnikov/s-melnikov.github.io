@@ -1,157 +1,123 @@
-function database() {
-
-  const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-
-  let database_name = cookie("database_name")
-
-  if (!database_name) {
-    database_name = uniqid()
-    cookie("database_name", database_name)
-  }
-
-  function cookie(key, value) {
-    if (value) {
-      key += '=' + encodeURIComponent(value)
-      return document.cookie = key
-    }
-    return document.cookie.split("; ").reduce((result, value) => {
-      value = value.split("=")
-      result[value[0]] = decodeURIComponent(value[1])
-      return result
-    }, {})[key]
-  }
-
-  function uniqid() {
-    let now = Date.now(), length = CHARS.length, chars = [], i = 8, id
-    while (i--)
-      chars[i] = CHARS.charAt(now % length), now = Math.floor(now / CHARS.length)
-    id = chars.join("")
-    i = 8
-    while (i--)
-      id += CHARS.charAt(Math.floor(Math.random() * length))
-    return id
-  }
-
-  
-}
-
-
 !function(exports) {
 
-  class Store {
-    constructor(store_name) {
-      this.$store_name = store_name
-      this.getData()
+  class database {
+    constructor(name) {
+      this.$name = name
+      this.get()
     }
-    getData() {
+    get() {
       try {
-        this.$collections = JSON.parse(localStorage[this.$store_name])
+        this.$data = JSON.parse(localStorage[this.$name])
       } catch(e) {
-        this.$collections = {}
+        this.$data = {}
       }
     }
-    setData() {
+    set() {
       try {
-        localStorage[this.$store_name] = JSON.stringify(this.$collections)
+        localStorage[this.$name] = JSON.stringify(this.$data)
       } catch(e) {}
     }
     collection(name) {
-      return new Collection(name, this)
+      return new collection(name, this)
     }
     drop() {
-      localStorage.removeItem(this.$store_name)
+      localStorage.removeItem(this.$name)
     }
   }
 
-  class Collection {
-    constructor(name, store) {
+  class collection {
+    constructor(name, database) {
       this.$name = name
-      this.$store = store
-      if (!store.$collections[name]) {
-        store.$collections[name] = []
+      this.$database = database
+      if (!this.$database.$data[name]) {
+        this.$database.$data[name] = {}
       }
-      this.$entries = store.$collections[name]
-      this.$conditions = { where: {} }
+      this.$data = this.$database.$data[name]
     }
-    push(entry) {
-      return new Promise((resolve, reject) => {
-        entry.uid = uniqid()
-        this.$entries.push(entry)
-        this.$store.setData()
-        resolve(new Entry(entry, this))
+    pushMany(items, callback) {
+      let result = items.map(item => {
+        let key = uniqid()
+        this.$data[key] = item
+        return new entry(item, key, this)
       })
+      this.$database.set()
+      if (callback) callback(result)
+      return result
     }
-    where(obj) {
-      for (let key in obj) {
-        this.$conditions.where[key] = obj[key]
-      }
-      return this
+    push(entry, callback) {
+      return this.pushMany([entry], result => {
+        if (callback) callback(null, result[0])
+      })[0]
     }
-    find() {
+    find(where) {
       return new Promise((resolve, reject) => {
-        let result = []
-        this.$entries.forEach(entry => {
-          for (let key in this.$conditions.where) {
-            if (entry[key] !== this.$conditions.where[key]) return;
+        let entries = {}
+        loop: for (let key in this.$data) {
+          for (let prop in where) {
+            if (this.$data[key][prop] !== where[prop]) continue loop;
           }
-          result.push(entry)
-        })
-        this.$conditions = { where: {} }
-        resolve(new Result(result, this))
+          entries[key] = this.$data[key]
+        }
+        resolve(new snapshot(entries, this))
       })
     }
-    findOne() {
-      return this.find().then(result => new Promise((resolve, reject) => {
-        resolve(result.$entries[0] || null)
+    findOne(where) {
+      return this.find(where).then(result => new Promise((resolve, reject) => {
+        let firstKey = Object.keys(result.$data)[0]
+        resolve(firstKey ? result.$data[firstKey] : null)
       }))
     }
-    deleteEntries(entries) {
-      for (let index = 0; index < this.$entries.length;) {
-        if (entries.indexOf(this.$entries[index]) !== -1) {
-          this.$entries.splice(index, 1)
-        } else {
-          index++
-        }
+    delete(keys) {
+      if (keys) {
+        keys.map(key => delete this.$data[key])
+        this.$database.set()
+      } else {
+        this.truncate()
       }
-      this.$store.setData()
     }
     truncate() {
-      this.$entries = []
-      this.$store.setData()
+      delete this.$database.$data[this.$name]
+      this.$data = null
+      this.$database.set()
     }
   }
 
-  class Result {
+  class snapshot {
     constructor(entries, collection) {
-      this.$entries = entries.map(entry => new Entry(entry, collection))
+      this.$data = {}
+      for (let key in entries) {
+        this.$data[key] = new entry(entries[key], key, collection)
+      }
       this.$collection = collection
     }
     data() {
-      return this.$entries.map(entry => entry.$data)
+      return Object.keys(this.$data).map(key => {
+        return Object.assign(this.$data[key].$data, { $key: key })
+      })
     }
     delete() {
-      this.$collection.deleteEntries(
-        this.$entries.map(entry => entry.$data)
-      )
+      this.$collection.delete(Object.keys(this.$data))
+      this.$data = null
     }
   }
 
-  class Entry {
-    constructor($data, collection) {
-      this.$data = $data
+  class entry {
+    constructor(data, key, collection) {
+      this.$data = data
+      this.$key = key
       this.$collection = collection
     }
     data() {
-      return this.$data
+      return Object.assign(this.$data, { $key: this.$key })
     }
-    update($data) {
-      for (let key in $data) {
-        this.$data[key] = $data[key]
+    update(data) {
+      for (let key in data) {
+        this.$data[key] = data[key]
       }
       this.$collection.$store.setData()
     }
     delete() {
-      this.$collection.deleteEntries([this.$data])
+      this.$collection.delete([this.$key])
       this.$data = null
     }
   }
@@ -168,8 +134,5 @@ function database() {
     return id
   }
 
-  Store.Collection = Collection
-  Store.Result = Result
-  Store.Entry = Entry
-  exports.Store = Store
+  exports.database = name => new database(name)
 }(this)
