@@ -1,5 +1,5 @@
 require.vendors = {
-  "hyperapp": "https://unpkg.com/hyperapp@0.17.1/dist/hyperapp.js"
+  "hyperapp": "https://unpkg.com/hyperapp@1.0.1/dist/hyperapp.js"
 }
 
 if (location.search.indexOf("install") != -1) {
@@ -8,12 +8,21 @@ if (location.search.indexOf("install") != -1) {
   require([
     "hyperapp",
     "utils/logger",
-    "model",
+    "actions",
     "components/layout"
-  ], ({ h, app }, Logger, model, Layout) => {
-    let { actions } = Logger(app)(model, Layout, document.body)
+  ], ({ h, app }, Logger, actions, Layout) => {
+
+    let state = {
+      route: location.hash.slice(2),
+      user: { first_name: "Jonh", last_name: "Doe" },
+      collections: null,
+      collection: null,
+      entries: null
+    }
+
+    let main = Logger(app)(state, actions, Layout, document.body)
     addEventListener("hashchange", () => {
-      actions.setRoute(location.hash.slice(2))
+      main.actions.setRoute(location.hash.slice(2))
     })
   })
 

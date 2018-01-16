@@ -23,9 +23,9 @@ define("utils/logger", null, () => {
   }
 
   function Logger(app) {
-    return (model, view, container) => {
-      model.actions = enhance(model.actions)
-      return app(model, view, container)
+    return (state, actions, view, container) => {
+      actions = enhance(actions)
+      return app(state, actions, view, container)
     }
   }
 

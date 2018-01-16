@@ -17,11 +17,19 @@
         localStorage[this.$name] = JSON.stringify(this.$data)
       } catch(e) {}
     }
+    ref(reference, this) {
+
+    }
     collection(name) {
       return new collection(name, this)
     }
     drop() {
       localStorage.removeItem(this.$name)
+    }
+  }
+  class reference {
+    constructor(reference) {
+
     }
   }
 

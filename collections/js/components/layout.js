@@ -11,7 +11,7 @@ define("components/layout", [
   PageCollection,
   PageCollectionEntries) => {
 
-  let Layout = ({ state, actions }) => {
+  let Layout = (state, actions) => {
     return state.user ?
       h("div", {
           class: "container",

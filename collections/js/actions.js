@@ -1,13 +1,5 @@
-define("model", ["utils/store"], Store => {
+define("actions", ["utils/store"], Store => {
   let store = new Store("my_app")
-
-  let state = {
-    route: location.hash.slice(2),
-    user: { first_name: "Jonh", last_name: "Doe" },
-    collections: null,
-    collection: null,
-    entries: null
-  }
 
   let actions = {
     setRoute: route => ({ route: route }),
@@ -35,5 +27,5 @@ define("model", ["utils/store"], Store => {
     setCollectionEntries: entries => ({ entries })
   }
 
-  return { state, actions }
+  return actions
 })
