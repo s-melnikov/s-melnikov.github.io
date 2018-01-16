@@ -17,8 +17,8 @@
         localStorage[this.$name] = JSON.stringify(this.$data)
       } catch(e) {}
     }
-    ref(reference, this) {
-
+    ref(path) {
+      return new reference(path, this)
     }
     collection(name) {
       return new collection(name, this)
@@ -27,9 +27,11 @@
       localStorage.removeItem(this.$name)
     }
   }
-  class reference {
-    constructor(reference) {
 
+  class reference {
+    constructor(path, database) {
+      this.$path = reference.replace(/^\/|\/$/, "").split("/")
+      this.$database = database
     }
   }
 
