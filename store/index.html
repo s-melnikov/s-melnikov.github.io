@@ -9,137 +9,146 @@
     <script src="test_runner.js"></script>
     <script>
 
-      var db = database("mydatabase")
-      var tasks = db.ref("foo/bar/baz")
+      database("mydatabase").drop()
 
+      test("Create database", done => {
+        let db = database("mydatabase")
+        assert(db.$name === "mydatabase")
+        done()
+      })
 
-      // database("mydatabase").drop()
-      //
-      // test("Create database", done => {
-      //   let db = database("mydatabase")
-      //   assert(db.$name === "mydatabase")
-      //   done()
-      // })
-      //
-      // test("Get collection", done => {
-      //   let tasks = database("mydatabase").collection("tasks")
-      //   assert(tasks.$name === "tasks")
-      //   done()
-      // })
-      //
-      // test("Push entry", done => {
-      //   let newTask = database("mydatabase")
-      //     .collection("tasks")
-      //     .push({ id: 1, text: "Task #1", completed: false })
-      //   assert(newTask.$key.length === 16)
-      //   done()
-      // })
-      //
-      // test("Push entries", done => {
-      //   let newTasks = database("mydatabase")
-      //     .collection("tasks")
-      //     .pushMany([
-      //       { id: 2, text: "Task #2", completed: false },
-      //       { id: 3, text: "Task #3", completed: true },
-      //       { id: 4, text: "Task #4", completed: false },
-      //       { id: 5, text: "Task #5", completed: true }
-      //     ])
-      //   assert(newTasks.length === 4)
-      //   done()
-      // })
-      //
-      // test("Find entries", done => {
-      //   database("mydatabase").collection("tasks").find().then(snapshot => {
-      //     assert(snapshot.data().length === 5)
-      //     done()
-      //   })
-      // })
-      //
-      // test("Find one entry", done => {
-      //   database("mydatabase").collection("tasks").findOne().then(snapshot => {
-      //     assert(snapshot.$key.length === 16)
-      //     done()
-      //   })
-      // })
-      //
-      // test("Find entries with condition #1", done => {
-      //   database("mydatabase").collection("tasks").find({ completed: true })
-      //     .then(snapshot => {
-      //       assert(snapshot.data().length === 2)
-      //       done()
-      //     })
-      // })
-      //
-      // test("Find entries with condition #2", done => {
-      //   database("mydatabase").collection("tasks").find({ completed: false })
-      //     .then(snapshot => {
-      //       assert(snapshot.data().length === 3)
-      //       done()
-      //     })
-      // })
-      //
-      // test("Find entries with condition #3", done => {
-      //   database("mydatabase").collection("tasks").find({ completed: false, id: 1 })
-      //     .then(snapshot => {
-      //       assert(snapshot.data().length === 1)
-      //       done()
-      //     })
-      // })
-      //
-      // test("Find entries with condition #4", done => {
-      //   database("mydatabase").collection("tasks").find({ completed: true, id: 1 })
-      //     .then(snapshot => {
-      //       assert(snapshot.data().length === 0)
-      //       done()
-      //     })
-      // })
-      //
-      // test("Find one entry with condition", done => {
-      //   database("mydatabase").collection("tasks").findOne({ completed: false, id: 1 })
-      //     .then(snapshot => {
-      //       assert(snapshot.$key.length === 16)
-      //       done()
-      //     })
-      // })
-      //
-      // test("Delete entry", done => {
+      test("Get collection", done => {
+        let tasks = database("mydatabase").collection("tasks")
+        assert(tasks.$name === "tasks")
+        done()
+      })
+
+      test("Push entry", done => {
+        let newTask = database("mydatabase")
+          .collection("tasks")
+          .push({ id: 1, text: "Task #1", completed: false })
+        assert(newTask.$key.length === 16)
+        done()
+      })
+
+      test("Push entries", done => {
+        let newTasks = database("mydatabase")
+          .collection("tasks")
+          .pushMany([
+            { id: 2, text: "Task #2", completed: false },
+            { id: 3, text: "Task #3", completed: true },
+            { id: 4, text: "Task #4", completed: false },
+            { id: 5, text: "Task #5", completed: true }
+          ])
+        assert(newTasks.length === 4)
+        done()
+      })
+
+      test("Find entries", done => {
+        database("mydatabase").collection("tasks").find().then(snapshot => {
+          assert(snapshot.data().length === 5)
+          done()
+        })
+      })
+
+      test("Find one entry", done => {
+        database("mydatabase").collection("tasks").findOne().then(snapshot => {
+          assert(snapshot.$key.length === 16)
+          done()
+        })
+      })
+
+      test("Find entries with condition #1", done => {
+        database("mydatabase").collection("tasks").find({ completed: true })
+          .then(snapshot => {
+            assert(snapshot.data().length === 2)
+            done()
+          })
+      })
+
+      test("Find entries with condition #2", done => {
+        database("mydatabase").collection("tasks").find({ completed: false })
+          .then(snapshot => {
+            assert(snapshot.data().length === 3)
+            done()
+          })
+      })
+
+      test("Find entries with condition #3", done => {
+        database("mydatabase").collection("tasks").find({ completed: false, id: 1 })
+          .then(snapshot => {
+            assert(snapshot.data().length === 1)
+            done()
+          })
+      })
+
+      test("Find entries with condition #4", done => {
+        database("mydatabase").collection("tasks").find({ completed: true, id: 1 })
+          .then(snapshot => {
+            assert(snapshot.data().length === 0)
+            done()
+          })
+      })
+
+      test("Find one entry with condition", done => {
+        database("mydatabase").collection("tasks").findOne({ completed: false, id: 1 })
+          .then(snapshot => {
+            assert(snapshot.$key.length === 16)
+            done()
+          })
+      })
+
+      // test("Update entry", done => {
       //   let tasks = database("mydatabase").collection("tasks")
       //   tasks.findOne({ completed: false, id: 1 }).then(snapshot => {
-      //       snapshot.delete()
-      //       tasks.find().then(snapshot => {
-      //         assert(snapshot.data().length === 4)
-      //         done()
-      //       })
+      //       console.log(snapshot)
+      //       // snapshot.update({ completed: true })
+      //       // tasks.find().then(snapshot => {
+      //       //   assert(snapshot.data().length === 4)
+      //       //
+      //       // })
+      //       done()
       //     })
       // })
-      //
-      // test("Delete entries", done => {
-      //   let tasks = database("mydatabase").collection("tasks")
-      //   tasks.find({ completed: true}).then(snapshot => {
-      //       snapshot.delete()
-      //       tasks.find().then(snapshot => {
-      //         assert(snapshot.data().length === 2)
-      //         done()
-      //       })
-      //     })
-      // })
-      //
-      // test("Truncate collection", done => {
-      //   let tasks = database("mydatabase").collection("tasks")
-      //   tasks.truncate()
-      //   tasks.find().then(snapshot => {
-      //     assert(snapshot.data().length === 0)
-      //     done()
-      //   })
-      // })
-      //
-      // test("Drop database", done => {
-      //   database("mydatabase").drop()
-      //   assert(localStorage.mydatabase === undefined)
-      //   done()
-      // })
-      //
-      // run()
+
+      test("Delete entry", done => {
+        let tasks = database("mydatabase").collection("tasks")
+        tasks.findOne({ completed: false, id: 1 }).then(snapshot => {
+            snapshot.delete()
+            tasks.find().then(snapshot => {
+              assert(snapshot.data().length === 4)
+              done()
+            })
+          })
+      })
+
+      test("Delete entries", done => {
+        let tasks = database("mydatabase").collection("tasks")
+        tasks.find({ completed: true}).then(snapshot => {
+            snapshot.delete()
+            tasks.find().then(snapshot => {
+              assert(snapshot.data().length === 2)
+              done()
+            })
+          })
+      })
+
+      test("Truncate collection", done => {
+        let tasks = database("mydatabase").collection("tasks")
+        tasks.truncate()
+        tasks.find().then(snapshot => {
+          assert(snapshot.data().length === 0)
+          done()
+        })
+      })
+
+      test("Drop database", done => {
+        database("mydatabase").drop()
+        assert(localStorage.mydatabase === undefined)
+        done()
+      })
+
+      run()
     </script>
   </body>
 </html>

@@ -28,24 +28,15 @@
     }
   }
 
-  class reference {
-    constructor(path, database) {
-      path = path.replace(/^\/|\/$/, "").split("/")
+  class collection {
+    constructor(name, database) {
+      this.$name = name
       this.$database = database
-      this.$data = this.$database.$data
-      for (let key = path.shift(); key; key = path.shift()) {
-        if (this.$data[key] === undefined) {
-          this.$data[key] = {}
-        }
-        this.$data = this.$data[key]
+      if (!this.$database.$data[name]) {
+        this.$database.$data[name] = {}
       }
+      this.$data = this.$database.$data[name]
     }
-    push(entry, callback) {
-      return this.pushMany([entry], result => {
-        if (callback) callback(null, result[0])
-      })[0]
-    }
-
     pushMany(items, callback) {
       let result = items.map(item => {
         let key = uniqid()
@@ -56,9 +47,11 @@
       if (callback) callback(result)
       return result
     }
-  }
-
-  class collection {
+    push(entry, callback) {
+      return this.pushMany([entry], result => {
+        if (callback) callback(null, result[0])
+      })[0]
+    }
     find(where) {
       return new Promise((resolve, reject) => {
         let entries = {}
