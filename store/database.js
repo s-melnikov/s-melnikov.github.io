@@ -1,141 +1,164 @@
 !function(exports) {
 
-  class database {
+  let cache = {}
+
+  class Database {
     constructor(name) {
       this.$name = name
-      this.get()
+      if (!cache[this.$name]) {
+        this.get()
+      }
+      this.$collections = cache[this.$name]
     }
     get() {
       try {
-        this.$data = JSON.parse(localStorage[this.$name])
+        cache[this.$name] = JSON.parse(localStorage[this.$name])
       } catch(e) {
-        this.$data = {}
+        cache[this.$name] = {}
       }
     }
     set() {
       try {
-        localStorage[this.$name] = JSON.stringify(this.$data)
+        localStorage[this.$name] = JSON.stringify(cache[this.$name])
       } catch(e) {}
     }
-    ref(path) {
-      return new reference(path, this)
-    }
     collection(name) {
-      return new collection(name, this)
+      return new Collection(name, this)
     }
     drop() {
+      delete cache[this.$name]
       localStorage.removeItem(this.$name)
     }
   }
 
-  class collection {
+  class Collection {
     constructor(name, database) {
       this.$name = name
       this.$database = database
-      if (!this.$database.$data[name]) {
-        this.$database.$data[name] = {}
+      if (!this.$database.$collections[this.$name]) {
+        this.$database.$collections[this.$name] = []
       }
-      this.$data = this.$database.$data[name]
+      this.$entries = this.$database.$collections[this.$name]
     }
-    pushMany(items, callback) {
-      let result = items.map(item => {
-        let key = uniqid()
-        this.$data[key] = item
-        return new entry(item, key, this)
+    pushMany(entries, callback) {
+      let result = entries.map(entry => {
+        entry.$key = uniqid()
+        return new Entry(entry, this)
       })
-      this.$database.set()
-      if (callback) callback(result)
+      delay(() => {
+        entries.forEach(entry => {
+          this.$entries.push(entry)
+        })
+        this.$database.set()
+        if (callback) callback(result)
+      })
       return result
     }
     push(entry, callback) {
       return this.pushMany([entry], result => {
-        if (callback) callback(null, result[0])
+        if (callback) callback(result[0])
       })[0]
     }
     find(where) {
       return new Promise((resolve, reject) => {
-        let entries = {}
-        loop: for (let key in this.$data) {
-          for (let prop in where) {
-            if (this.$data[key][prop] !== where[prop]) continue loop;
-          }
-          entries[key] = this.$data[key]
+        let entries = []
+        if (typeof where === "string") {
+          where = { $key: where }
         }
-        resolve(new snapshot(entries, this))
+        this.$entries.forEach(entry => {
+          for (let prop in where) {
+            if (entry[prop] !== where[prop]) return;
+          }
+          entries.push(entry)
+        })
+        delay(() => {
+          resolve(new Result(entries, this))
+        })
       })
     }
-    findOne(where) {
-      return this.find(where).then(result => new Promise((resolve, reject) => {
-        let firstKey = Object.keys(result.$data)[0]
-        resolve(firstKey ? result.$data[firstKey] : null)
-      }))
-    }
-    delete(keys) {
-      if (keys) {
-        keys.map(key => delete this.$data[key])
-        this.$database.set()
-      } else {
-        this.truncate()
-      }
+    delete(entry) {
+      return new Promise((resolve, reject) => {
+        delay(() => {
+          for (let i = 0; i < this.$entries.length;) {
+            if (this.$entries[i] === entry) {
+              this.$entries.splice(i, 1)
+            } else {
+              i++
+            }
+          }
+          resolve()
+        })
+      })
     }
     truncate() {
-      delete this.$database.$data[this.$name]
-      this.$data = null
-      this.$database.set()
-    }
-  }
-
-  class snapshot {
-    constructor(entries, collection) {
-      this.$data = {}
-      for (let key in entries) {
-        this.$data[key] = new entry(entries[key], key, collection)
-      }
-      this.$collection = collection
-    }
-    data() {
-      return Object.keys(this.$data).map(key => {
-        return Object.assign(this.$data[key].$data, { $key: key })
+      return new Promise((resolve, reject) => {
+        delay(() => {
+          this.$database.$collections[this.$name] = this.$entries = []
+          this.$database.set()
+          resolve()
+        })
       })
     }
-    delete() {
-      this.$collection.delete(Object.keys(this.$data))
-      this.$data = null
+  }
+
+  class Result {
+    constructor(entries, collection) {
+      this.$entries = entries.map(entry => new Entry(entry, collection))
+      this.$collection = collection
+    }
+    first() {
+      return this.$entries[0]
+    }
+    data() {
+      return this.$entries.map(entry => entry.data())
+    }
+    each(cb) {
+      this.$entries.forEach(entry => cb(entry))
+      return this
     }
   }
 
-  class entry {
-    constructor(data, key, collection) {
+  class Entry {
+    constructor(data, collection) {
       this.$data = data
-      this.$key = key
+      this.$key = data.$key
       this.$collection = collection
     }
     data() {
-      return Object.assign(this.$data, { $key: this.$key })
+      return this.$data
     }
-    update(data) {
+    update(data, cb) {
       for (let key in data) {
         this.$data[key] = data[key]
       }
-      this.$collection.$store.setData()
+      delay(() => {
+        this.$collection.$database.set()
+        cb && cb(this)
+      })
+      return this
     }
     delete() {
-      this.$collection.delete([this.$key])
+      let promise = this.$collection.delete(this.data())
       this.$data = null
+      return promise
     }
   }
 
-  const CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
+  const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  const CHARS_LENGTH = CHARS.length
+
   let uniqid = () => {
     let now = Date.now(), chars = [], i = 8, id
     while (i--)
-      chars[i] = CHARS.charAt(now % 64), now = Math.floor(now / 64)
+      chars[i] = CHARS.charAt(now % CHARS_LENGTH), now = Math.floor(now / CHARS_LENGTH)
     id = chars.join("")
     i = 8
     while (i--)
-      id += CHARS.charAt(Math.floor(Math.random() * 64))
+      id += CHARS.charAt(Math.floor(Math.random() * CHARS_LENGTH))
     return id
   }
 
-  exports.database = name => new database(name)
+  let delay = cb => setTimeout(cb, 50 + Math.random() * 150)
+
+  exports.database = name => new Database(name)
 }(this)

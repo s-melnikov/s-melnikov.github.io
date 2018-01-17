@@ -1,4 +1,4 @@
-define("utils/install", ["utils/store"], Store => {
+define("utils/install", ["utils/database"], database => {
   new Store("my_app").drop()
   fetch("install/dump.json").then(resp => resp.json()).then(data => {
     let storage = new Store("my_app")

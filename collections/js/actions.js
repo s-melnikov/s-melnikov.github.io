@@ -1,4 +1,4 @@
-define("actions", ["utils/store"], Store => {
+define("actions", ["utils/database"], database => {
   let store = new Store("my_app")
 
   let actions = {
