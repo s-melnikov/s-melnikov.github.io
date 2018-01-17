@@ -1,4 +1,4 @@
-define("utils/install", ["utils/database"], database => {
+if (location.search.indexOf("install") != -1) {
   new Store("my_app").drop()
   fetch("install/dump.json").then(resp => resp.json()).then(data => {
     let storage = new Store("my_app")
@@ -10,4 +10,4 @@ define("utils/install", ["utils/database"], database => {
     })
     location.href = location.href.split("?")[0]
   })
-})
+}

@@ -1,4 +1,4 @@
-define("utils/logger", null, () => {
+!function(exports) {
 
   function log(prevState, action, nextState) {
     console.groupCollapsed("%c action", "color: gray", action.name)
@@ -29,5 +29,5 @@ define("utils/logger", null, () => {
     }
   }
 
-  return Logger
-})
+  exports.Logger = Logger
+} (this)

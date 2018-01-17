@@ -1,4 +1,4 @@
-define("components/router", ["hyperapp"], ({ h }) => {
+!function(exports) {
 
   let Router = (props, children) => {
     return children.map(route => route(props))
@@ -39,10 +39,10 @@ define("components/router", ["hyperapp"], ({ h }) => {
 
   Link.activeClass = "active"
 
-  return {
+  exports.hyperrouter = {
     Router,
     Route,
     Link
   }
-  
-})
+
+} (this)
