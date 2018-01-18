@@ -1,8 +1,7 @@
 const { app, h } = hyperapp
-const { Router, Route, Link } = router
 const db = database("my_app")
 
-let state = {
+const state = {
   route: location.hash.slice(2),
   user: { first_name: "Jonh", last_name: "Doe" },
   collections: null,
@@ -10,7 +9,7 @@ let state = {
   entries: null
 }
 
-let actions = {
+const actions = {
   setRoute: route => ({ route: route }),
   getCollections: () => (state, actions) => {
     db.collection("collections").find().then(result => {
@@ -37,7 +36,14 @@ let actions = {
   setCollectionEntries: entries => ({ entries })
 }
 
-let main = logger(app)(state, actions, Layout, document.body)
+const router = createRouter({
+  "/": Home,
+  "/collection/:slug": Collection,
+  "/collection/:slug/field/:field": Collection,
+  "/collection/:slug/entries": CollectionEntries
+})
+
+const main = logger(app)(state, actions, Layout, document.body)
 
 addEventListener("hashchange", () => {
   main.setRoute(location.hash.slice(2))
@@ -49,14 +55,7 @@ function Layout(state, actions) {
         class: "container",
         oncreate: () => actions.getCollections()
       },
-      h("main", null,
-        h(Router, { state, actions },
-          h(Route, { path: "/", component: PageHome }),
-          h(Route, { path: "/collection/:slug", component: PageCollection }),
-          h(Route, { path: "/collection/:slug/field/:field", component: PageCollection }),
-          h(Route, { path: "/collection/:slug/entries", component: PageCollectionEntries }),
-        )
-      ),
+      h("main", null, router(state, actions)),
       h("header", null,
         h("a", { href: "#" }, "Sign out")
       ),
@@ -75,7 +74,7 @@ function Layout(state, actions) {
     h("div", { class: "sign-in" }, "Sign In")
 }
 
-function PageHome({ state, actions }) {
+function Home({ state, actions }) {
   return h("div", null,
     h("h3", null, "Home"),
     state.collections ? [
@@ -96,7 +95,7 @@ function PageHome({ state, actions }) {
   )
 }
 
-function PageCollection({ state, actions, params }) {
+function Collection({ state, actions, params }) {
   return h("div", {
       key: "table-" + params.slug + "-items",
       oncreate: () => {
@@ -140,7 +139,7 @@ function PageCollection({ state, actions, params }) {
   )
 }
 
-function PageCollectionEntries({ state, actions, params }) {
+function CollectionEntries({ state, actions, params }) {
   return h("div", {
       key: "collection-" + params.slug + "-entries",
       oncreate: () => {
@@ -203,4 +202,14 @@ function EditFieldForm(params) {
     content: h("div", null, "Lorem ipsum dolor sit amet!"),
     footer: [h("button", null, "Send"), h("button", { class: "red" }, "Cancel")]
   })
+}
+
+function Link(props, children) {
+  let hash = "#!" + props.to
+  if (hash === location.hash) {
+    props.class = (props.class ? props.class + " " : "") + "active"
+  }
+  props.href = hash
+  delete props.to
+  return h("a", props, children)
 }
