@@ -1,5 +1,6 @@
 const { app, h } = hyperapp
-const { Router, Route, Link } = hyperrouter
+const { Router, Route, Link } = router
+const db = database("my_app")
 
 let state = {
   route: location.hash.slice(2),
@@ -12,33 +13,34 @@ let state = {
 let actions = {
   setRoute: route => ({ route: route }),
   getCollections: () => (state, actions) => {
-    store.collection("collections").find().then(result => {
-      let collections = result ? result.data() : null
-      actions.setCollections(collections && collections.length ? collections : null)
+    db.collection("collections").find().then(result => {
+      let collections = result.data()
+      actions.setCollections(collections.length ? collections : null)
     })
     return { collections: null }
   },
   setCollections: collections => ({ collections }),
   getCollection: slug => (state, actions) => {
-    store.collection("collections").where({ slug: slug }).findOne().then(result => {
-      actions.setCollection(result && result.data())
+    db.collection("collections").find({ slug: slug }).then(result => {
+      let first = result.first()
+      actions.setCollection(first && first.data())
     })
     return { collection: null }
   },
   setCollection: collection => ({ collection }),
   getCollectionEntries: slug => (state, actions) => {
-    store.collection(slug).find().then(result =>
+    db.collection(slug).find().then(result =>
       actions.setCollectionEntries(result.data())
     )
-    return { entries: null }
+    return { entries: [] }
   },
   setCollectionEntries: entries => ({ entries })
 }
 
-let main = Logger(app)(state, actions, Layout, document.body)
+let main = logger(app)(state, actions, Layout, document.body)
 
 addEventListener("hashchange", () => {
-  main.actions.setRoute(location.hash.slice(2))
+  main.setRoute(location.hash.slice(2))
 })
 
 function Layout(state, actions) {
@@ -105,10 +107,10 @@ function PageCollection({ state, actions, params }) {
     },
     state.collection ? [
       h("h3", null,
-        "Collection " + state.collection.title + " ",
-        h("small", null, Link({ to: "/collection/" + params.slug + "/entries"},
-          h("button", { class: "link" }, "Return")
-        ))
+        h("span", null, "Collection " + state.collection.title + " "),
+        Link({ to: "/collection/" + params.slug + "/entries"},
+          h("button", { class: "link" }, h("small", null, "Return"))
+        )
       ),
       h("div", { class: "row" },
         h("div", { class: "col" },
@@ -147,7 +149,7 @@ function PageCollectionEntries({ state, actions, params }) {
     },
     state.collection ? [
       h("h3", null,
-        "Collection " + state.collection.title + " ",
+        h("span", null, "Collection " + state.collection.title + " "),
         h("small", null, Link({ to: "/collection/" + params.slug },
           h("button", { class: "link" }, "Edit")
         ))

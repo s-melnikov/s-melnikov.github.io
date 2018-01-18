@@ -1,13 +1,12 @@
 if (location.search.indexOf("install") != -1) {
-  new Store("my_app").drop()
+  database("my_app").drop()
+  let i = 0, count = 0, cb = () => (++i == count) && (location.href = location.href.split("?")[0])
   fetch("install/dump.json").then(resp => resp.json()).then(data => {
-    let storage = new Store("my_app")
+    let db = database("my_app")
     Object.keys(data).forEach(table_name => {
-      let collection = storage.collection(table_name)
-      data[table_name].forEach(item => {
-        collection.push(item)
-      })
+      let collection = db.collection(table_name)
+      count++
+      collection.pushMany(data[table_name], cb)
     })
-    location.href = location.href.split("?")[0]
   })
 }

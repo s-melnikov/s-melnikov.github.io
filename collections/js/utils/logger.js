@@ -22,12 +22,12 @@
     }, {})
   }
 
-  function Logger(app) {
+  function logger(app) {
     return (state, actions, view, container) => {
       actions = enhance(actions)
       return app(state, actions, view, container)
     }
   }
 
-  exports.Logger = Logger
+  exports.logger = logger
 } (this)

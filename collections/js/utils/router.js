@@ -39,7 +39,7 @@
 
   Link.activeClass = "active"
 
-  exports.hyperrouter = {
+  exports.router = {
     Router,
     Route,
     Link
