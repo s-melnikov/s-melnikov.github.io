@@ -1,33 +1,28 @@
-!(exports => {
+function describe(text, func) {
   let tests = []
-  exports.test = (name, test) => {
-    tests.push({ name, test })
+  console.log(text)
+  func((name, test) => tests.push({ name, test }), (first, second, message) => {
+    if (first !== second) throw new Error(message)
+  })
+  let i = 0, toRun, next
+  let done = err => {
+    tests.slice(i).map(skippedTest => {
+      console.log('-', skippedTest.name)
+    })
+    console[err ? 'error' : 'log']('\nTests ' +
+      (err ? 'failed!\n' + err.stack : 'succeeded!'))
   }
-  exports.run = () => {
-    let i = 0, toRun, next
-    const done = err => {
-      tests.slice(i).map(skippedTest => {
-        console.log('-', skippedTest.name)
-      })
-      console[err ? 'error' : 'log']('\nTests ' +
-        (err ? 'failed!\n' + err.stack : 'succeeded!'))
+  (next = err => {
+    if (toRun) {
+      console[err ? 'error' : 'log'](err ? '✘' : '✔', toRun.name)
     }
-    (next = err => {
-      if (toRun) {
-        console[err ? 'error' : 'log'](err ? '✘' : '✔', toRun.name)
-      }
-      if (err || !(toRun = tests[i++])) {
-        return done(err)
-      }
-      try {
-        toRun.test.call(toRun.test, next)
-      } catch (err) {
-        next(err)
-      }
-    })()
-  }
-})(window)
-
-const assert = (condition, message) => {
-  if (!condition) throw new Error(message)
+    if (err || !(toRun = tests[i++])) {
+      return done(err)
+    }
+    try {
+      toRun.test.call(toRun.test, next)
+    } catch (err) {
+      next(err)
+    }
+  })()
 }

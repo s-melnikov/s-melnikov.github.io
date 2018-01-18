@@ -9,136 +9,140 @@
     <script src="test_runner.js"></script>
     <script>
 
-      database("mydatabase").drop()
+      let dbname = "mydatabase"
 
-      test("Create database", done => {
-        let db = database("mydatabase")
-        assert(db.$name === "mydatabase")
-        done()
-      })
+      database(dbname).drop()
 
-      test("Get collection", done => {
-        let tasks = database("mydatabase").collection("tasks")
-        assert(tasks.$name === "tasks")
-        done()
-      })
+      describe("Database test", (it, assert) => {
 
-      test("Push entry", done => {
-        let newTask = database("mydatabase")
-          .collection("tasks")
-          .push({ id: 1, text: "Task #1", completed: false }, result => {
-            assert(newTask.$key === result.$key)
-            done()
-          })
-      })
-
-      test("Push entries", done => {
-        let newTasks = database("mydatabase")
-          .collection("tasks")
-          .pushMany([
-            { id: 2, text: "Task #2", completed: false },
-            { id: 3, text: "Task #3", completed: true },
-            { id: 4, text: "Task #4", completed: false },
-            { id: 5, text: "Task #5", completed: true }
-          ], result => {
-            assert(newTasks.length === result.length)
-            done()
-          })
-      })
-
-      test("Find entries", done => {
-        database("mydatabase").collection("tasks").find().then(result => {
-          assert(result.data().length === 5)
+        it("can ceate database", done => {
+          let db = database(dbname)
+          assert(db.$name, dbname, "db.$name !== '${dbname}'")
           done()
         })
-      })
 
-      test("Find one entry", done => {
-        database("mydatabase").collection("tasks").find().then(result => {
-          assert(result.first().$key.length === 16)
+        it("can get collection", done => {
+          let tasks = database(dbname).collection("tasks")
+          assert(tasks.$name, "tasks")
           done()
         })
-      })
 
-      test("Find entries with condition #1", done => {
-        database("mydatabase").collection("tasks").find({ completed: true })
-          .then(result => {
-            assert(result.data().length === 2)
-            done()
-          })
-      })
-
-      test("Find entries with condition #2", done => {
-        database("mydatabase").collection("tasks").find({ completed: false })
-          .then(result => {
-            assert(result.data().length === 3)
-            done()
-          })
-      })
-
-      test("Find entries with condition #3", done => {
-        database("mydatabase").collection("tasks").find({ completed: false, id: 1 })
-          .then(result => {
-            assert(result.data().length === 1)
-            done()
-          })
-      })
-
-      test("Find entries with condition #4", done => {
-        database("mydatabase").collection("tasks").find({ completed: true, id: 1 })
-          .then(result => {
-            assert(result.data().length === 0)
-            done()
-          })
-      })
-
-      test("Find one entry with condition", done => {
-        database("mydatabase").collection("tasks").find({ completed: false, id: 1 })
-          .then(result => {
-            assert(result.first().$key.length === 16)
-            done()
-          })
-      })
-
-      test("Update entry", done => {
-        database("mydatabase").collection("tasks")
-          .find({ completed: false, id: 1 }).then(result => {
-            let updated = result.first().update({ completed: true }, entry => {
-              assert(updated.$key === entry.$key)
+        it("can push entry", done => {
+          let newTask = database(dbname)
+            .collection("tasks")
+            .push({ id: 1, text: "Task #1", completed: false }, result => {
+              assert(newTask.$key, result.$key)
               done()
             })
-          })
-      })
+        })
 
-      test("Delete entry", done => {
-        let collection = database("mydatabase").collection("tasks")
-        collection.find({ id: 1 }).then(result => {
-            result.first().delete().then(() => {
-              collection.find().then(result => {
-                assert(result.data().length === 4)
+        it("can push entries", done => {
+          let newTasks = database(dbname)
+            .collection("tasks")
+            .pushMany([
+              { id: 2, text: "Task #2", completed: false },
+              { id: 3, text: "Task #3", completed: true },
+              { id: 4, text: "Task #4", completed: false },
+              { id: 5, text: "Task #5", completed: true }
+            ], result => {
+              assert(newTasks.length, result.length)
+              done()
+            })
+        })
+
+        it("can find entries", done => {
+          database(dbname).collection("tasks").find().then(result => {
+            assert(result.data().length, 5)
+            done()
+          })
+        })
+
+        it("can find one entry", done => {
+          database(dbname).collection("tasks").find().then(result => {
+            assert(result.first().$key.length, 16)
+            done()
+          })
+        })
+
+        it("can find entries with condition #1", done => {
+          database(dbname).collection("tasks").find({ completed: true })
+            .then(result => {
+              assert(result.data().length, 2)
+              done()
+            })
+        })
+
+        it("can find entries with condition #2", done => {
+          database(dbname).collection("tasks").find({ completed: false })
+            .then(result => {
+              assert(result.data().length, 3)
+              done()
+            })
+        })
+
+        it("can find entries with condition #3", done => {
+          database(dbname).collection("tasks").find({ completed: false, id: 1 })
+            .then(result => {
+              assert(result.data().length, 1)
+              done()
+            })
+        })
+
+        it("can find entries with condition #4", done => {
+          database(dbname).collection("tasks").find({ completed: true, id: 1 })
+            .then(result => {
+              assert(result.data().length, 0)
+              done()
+            })
+        })
+
+        it("can find one entry with condition", done => {
+          database(dbname).collection("tasks").find({ completed: false, id: 1 })
+            .then(result => {
+              assert(result.first().$key.length, 16)
+              done()
+            })
+        })
+
+        it("can update entry", done => {
+          database(dbname).collection("tasks")
+            .find({ completed: false, id: 1 }).then(result => {
+              let updated = result.first().update({ completed: true }, entry => {
+                assert(updated.$key, entry.$key)
                 done()
               })
             })
-          })
-      })
+        })
 
-      test("Truncate collection", done => {
-        let collection = database("mydatabase").collection("tasks")
-        collection.truncate().then(() => {
-          collection.find().then(result => {
-            assert(result.data().length === 0)
-            done()
+        it("can delete entry", done => {
+          let collection = database(dbname).collection("tasks")
+          collection.find({ id: 1 }).then(result => {
+              result.first().delete().then(() => {
+                collection.find().then(result => {
+                  assert(result.data().length, 4)
+                  done()
+                })
+              })
+            })
+        })
+
+        it("can truncate collection", done => {
+          let collection = database(dbname).collection("tasks")
+          collection.truncate().then(() => {
+            collection.find().then(result => {
+              assert(result.data().length, 0)
+              done()
+            })
           })
         })
-      })
 
-      test("Drop database", done => {
-        database("mydatabase").drop()
-        assert(localStorage.mydatabase === undefined)
-        done()
-      })
+        it("can drop database", done => {
+          database(dbname).drop()
+          assert(localStorage.mydatabase, undefined)
+          done()
+        })
 
-      run()
+      })
     </script>
   </body>
 </html>

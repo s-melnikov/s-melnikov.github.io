@@ -120,10 +120,11 @@ function PageCollection({ state, actions, params }) {
                 h("div", { class: "col" },
                   Link(
                     { to: "/collection/" + params.slug + "/field/" + field.slug },
-                    field.slug
+                    field.label
                   )
                 ),
-                h("div", { class: "col" })
+                h("div", { class: "col" }, field.slug),
+                h("div", { class: "col" }, field.type)
               )
             )
           )
