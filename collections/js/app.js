@@ -140,8 +140,10 @@ function Collection({ state, actions, params }) {
 }
 
 function CollectionEntries({ state, actions, params }) {
+  let key = "collection-" + params.slug + "-entries"
   return h("div", {
-      key: "collection-" + params.slug + "-entries",
+      key,
+      class: key,
       oncreate: () => {
         actions.getCollection(params.slug)
         actions.getCollectionEntries(params.slug)
@@ -154,25 +156,16 @@ function CollectionEntries({ state, actions, params }) {
           h("button", { class: "link" }, "Edit")
         ))
       ),
-      // h("div", { class: "row" },
-      //   h("div", { class: "col" },
-      //     h("div", { class: "row" },
-      //       state.collection.fields.map(field =>
-      //         field.display ? h("div", { class: "col" }, field.title) : null
-      //       )
-      //     )
-      //   )
-      // ),
-      h("table", null,
-        h("thead", null,
-          h("tr", null, state.collection.fields.map(field =>
-            field.display ? h("th", null, field.title) : null
-          ))
-        ),
-        h("tbody", null,
-          state.entries ? state.entries.map(entry => h("tr", null,
+      h("div", { class: "row" },
+        h("div", { class: "col" },
+          h("div", { class: "row p-2" },
             state.collection.fields.map(field =>
-              field.display ? h("td", null, Link(
+              field.display ? h("div", { class: "col" }, field.label) : null
+            )
+          ),
+          state.entries ? state.entries.map(entry => h("div", { class: "card row mt-1" },
+            state.collection.fields.map(field =>
+              field.display ? h("div", { class: "col" }, Link(
                 { to: "/collection/" + params.slug + "/entry/" + entry.uid },
                 entry[field.slug]
               )) : null
