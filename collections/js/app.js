@@ -154,6 +154,15 @@ function CollectionEntries({ state, actions, params }) {
           h("button", { class: "link" }, "Edit")
         ))
       ),
+      // h("div", { class: "row" },
+      //   h("div", { class: "col" },
+      //     h("div", { class: "row" },
+      //       state.collection.fields.map(field =>
+      //         field.display ? h("div", { class: "col" }, field.title) : null
+      //       )
+      //     )
+      //   )
+      // ),
       h("table", null,
         h("thead", null,
           h("tr", null, state.collection.fields.map(field =>
