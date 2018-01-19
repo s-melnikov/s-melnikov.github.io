@@ -122,15 +122,14 @@ function Collection({ state, actions, params }) {
                     field.label
                   )
                 ),
-                h("div", { class: "col" }, field.slug),
-                h("div", { class: "col" }, field.type)
+                h("div", { class: "col" }, field.slug)
               )
             )
           )
         ),
         h("div", { class: "col" },
           params.field ?
-            h(EditFieldForm, { state, actions, field: params.field })
+            h(EditFieldForm, { state, actions, slug: params.field })
             : null
         ),
         h("div", { class: "col" })
@@ -193,17 +192,45 @@ function Modal(params) {
   )
 }
 
-function EditFieldForm(params) {
-
-  console.log(params)
-
-  return h("div", null, "Lorem ipsum dolor")
-
-  return h(Modal, {
-    title: "Edit field",
-    content: h("div", null, "Lorem ipsum dolor sit amet!"),
-    footer: [h("button", null, "Send"), h("button", { class: "red" }, "Cancel")]
-  })
+function EditFieldForm({ state, actions, slug }) {
+  let field = state.collection.fields.find(field => field.slug === slug)
+  console.log(field)
+  return h("div", null, "Edit field",
+    h("form", null,
+      h("label", null,
+        h("span", null, "Label"),
+        h("input", { type: "text", name: "label", value: field.label })
+      ),
+      h("label", null,
+        h("span", null, "Slug"),
+        h("input", { type: "text", name: "slug", value: field.slug })
+      ),
+      h("label", null,
+        h("span", null, "Type"),
+        h("select", { name: "type", value: field.type },
+          h("option", { value: "text" }, "Text"),
+          h("option", { value: "text_large" }, "Large text"),
+          h("option", { value: "list" }, "Options list"),
+          h("option", { value: "list" }, "Checkbox"),
+          h("option", { value: "list" }, "Collection")
+        )
+      ),
+      h("div", { class: "row mt-2" },
+        h("label", { class: "col" },
+          h("span", null, "Display"),
+          h("input", { name: "display", type: "checkbox", checked: field.display })
+        ),
+        h("label", { class: "col" },
+          h("span", null, "Required"),
+          h("input", { name: "required", type: "checkbox", checked: field.required })
+        )
+      ),
+      h("label", null,
+        h("span", null, "Description"),
+        h("textarea", { name: "info" }, field.info)
+      )
+    )
+  )
 }
 
 function Link(props, children) {

@@ -102,18 +102,20 @@ label {
   display: block;
   width: 100%;
   margin-top: 0.5rem;
+  font-size: 11px;
+  text-transform: uppercase;
 }
 label.checkbox {
   padding: 0.5rem 0;
 }
-input:not([type=checkbox]) {
+input:not([type=checkbox]), select, textarea {
   display: block;
   width: 100%;
   border: 1px solid #dcdcdc;
   padding: 0.5rem;
   border-radius: 2px;
   font-family: inherit;
-  font-size: inherit;
+  font-size: 1rem;
   color: #555555;
 }
 input[type=checkbox] {
@@ -147,7 +149,7 @@ input[type=checkbox] {
   padding: 0.5rem;
 }
 .p-2 {
-  padding: 1rem;  
+  padding: 1rem;
 }
 .mt-1 {
   margin-top: 0.5rem;
