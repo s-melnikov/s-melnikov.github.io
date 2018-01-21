@@ -33,7 +33,10 @@ const actions = {
     )
     return { entries: [] }
   },
-  setCollectionEntries: entries => ({ entries })
+  setCollectionEntries: entries => ({ entries }),
+  editFieldFormSubmit: (collection, field) => {
+
+  }
 }
 
 const router = createRouter({
@@ -194,9 +197,13 @@ function Modal(params) {
 
 function EditFieldForm({ state, actions, slug }) {
   let field = state.collection.fields.find(field => field.slug === slug)
-  console.log(field)
   return h("div", null, "Edit field",
-    h("form", null,
+    h("form", {
+        onsubmit() {
+          console.dir(this)
+          // state.editFieldFormSubmit()
+        }
+      },
       h("label", null,
         h("span", null, "Label"),
         h("input", { type: "text", name: "label", value: field.label })
@@ -228,6 +235,9 @@ function EditFieldForm({ state, actions, slug }) {
       h("label", null,
         h("span", null, "Description"),
         h("textarea", { name: "info" }, field.info)
+      ),
+      h("div", { class: "mt-2" },
+        h("button", null, "Submit")
       )
     )
   )
