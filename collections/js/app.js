@@ -58,11 +58,10 @@ function Layout(state, actions) {
         class: "container",
         oncreate: () => actions.getCollections()
       },
-      h("main", null, router(state, actions)),
-      h("header", null,
+      h("div", { class: "page-header" },
         h("a", { href: "#" }, "Sign out")
       ),
-      h("aside", null,
+      h("div", { class: "page-aside" },
         h("menu", null,
           h( "a", { href: "#" }, "Home")
         ),
@@ -72,7 +71,8 @@ function Layout(state, actions) {
             Link({ to: "/collection/" + collection.slug + "/entries" }, collection.title)
           )
         ) : null
-      )
+      ),
+      h("main", { class: "page-main" }, router(state, actions))
     ) :
     h("div", { class: "sign-in" }, "Sign In")
 }
