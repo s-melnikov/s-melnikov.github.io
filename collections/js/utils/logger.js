@@ -1,7 +1,12 @@
 !function(exports) {
-
+  let start = new Date()
   function log(prevState, action, nextState) {
+    let time = Date.now() - start,
+      min = Math.floor(time / 1000 / 60).toString().padStart(2, 0),
+      sec = Math.floor((time - min * 1000 * 60) / 1000).toString().padStart(2, 0),
+      msec = (time - min * 1000 * 60 - sec * 1000).toString().padStart(3, 0)
     console.groupCollapsed("%c action", "color: gray", action.name)
+    console.log("%c Time:", "color: yellow", min + ":" + sec + ":" + msec)
     console.log("%c prev state", "color:#9E9E9E", prevState)
     console.log("%c data", "color: #03A9F4", action.data)
     console.log("%c next state", "color:#4CAF50", nextState)

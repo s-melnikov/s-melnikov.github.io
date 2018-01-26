@@ -17,17 +17,15 @@ body {
   padding: 0;
   line-height: 1.4;
   font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
-  font-size: 0.7rem;
 }
-.page-header {
+.navbar {
   position: absolute;
   top: 0;
-  left: 10rem;
+  left: 12rem;
   right: 0;
-  padding: 0.5rem 1rem;
-  height: 2.1rem;
+  padding: 0 0.3rem;
   border-bottom: 1px solid #eeeeee;
-  text-align: right;
+  height: 2.5rem;
 }
 .page-aside {
   position: absolute;
@@ -35,15 +33,15 @@ body {
   top: 0;
   bottom: 0;
   padding: 1rem;
-  width: 10rem;
+  width: 12rem;
   border-right: 1px solid #eeeeee;
 }
 .page-main {
   padding: 1rem;
   overflow-y: scroll;
   position: absolute;
-  top: 2.1rem;
-  left: 10rem;
+  top: 2.5rem;
+  left: 12rem;
   right: 0;
   bottom: 0;
 }

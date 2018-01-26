@@ -58,26 +58,41 @@ function Layout(state, actions) {
         class: "container",
         oncreate: () => actions.getCollections()
       },
-      h("div", { class: "page-header" },
-        h("a", { href: "#" }, "Sign out")
-      ),
-      h("div", { class: "page-aside" },
-        h("menu", null,
-          h( "a", { href: "#" }, "Home")
-        ),
-        h("p", null, "Collections"),
-        state.collections ? h("menu", null,
-          state.collections.map(collection =>
-            Link({ to: "/collection/" + collection.slug + "/entries" }, collection.title)
-          )
-        ) : null
-      ),
+      Navbar(state, actions),
+      Aside(state, actions),
       h("main", { class: "page-main" }, router(state, actions))
     ) :
     h("div", { class: "sign-in" }, "Sign In")
 }
 
-function Home({ state, actions }) {
+function Navbar(state, actions) {
+  return h("header", { class: "navbar" },
+    h("section", { class: "navbar-section" }),
+    h("section", { class: "navbar-section" },
+      h("a", { href: "#", class: "btn btn-link" }, "Sign-out")
+    )
+  )
+}
+
+function Aside(state, actions) {
+  return h("div", { class: "page-aside" },
+    h("ul", { class: "nav" },
+      h("li", { class: "nav-item" },
+        h("a", { href: "#" }, "Collections"),
+        state.collections ? h("ul", { class: "nav" },
+          state.collections.map(collection =>
+            h("li", { class: "nav-item" },
+              Link({ to: "/collection/" + collection.slug + "/entries" },
+                collection.title)
+            )
+          )
+        ) : null
+      )
+    )
+  )
+}
+
+function Home(state, actions) {
   return h("div", null,
     h("h3", null, "Home"),
     state.collections ? [
