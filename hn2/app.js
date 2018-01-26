@@ -5,8 +5,7 @@ const ttl = 1000 * 60 * 15
 const types = ["top", "new", "best", "show", "ask", "job"]
 let db = firebase.database().ref("/v0")
 let cached = {}
-let subscription;
-
+let subscription
 const parser = document.createElement("a")
 const capitalize = str => str[0].toUpperCase() + str.slice(1)
 const domain = url => (parser.href = url) && parser.hostname
@@ -43,8 +42,6 @@ const fetchItems = (ids, callback) => {
     }
   ids.map(id => fetchItem(id, handler))
 }
-
-
 const MainView = (state, actions) => h("div", {},
   ItemsListView(state, actions),
   h("header", {},
@@ -58,7 +55,6 @@ const MainView = (state, actions) => h("div", {},
   ),
   state.loader && h("div", { class: "overlay" }, h("div", { class: "loader" }, h("span")))
 )
-
 const ItemsListView = (state, actions) => {
   return h("div", {
       class: "items-list",
@@ -87,16 +83,13 @@ const ItemsListView = (state, actions) => {
     state.items.map(item => ItemView(state, actions, item))
   )
 }
-
 const ItemView = (state, actions, item) => {
   let view = null
   switch (state.route[0]) {
     case "user":
       break
-
     case "item":
       break
-
     default:
       view = h("div", { "class": "inner" },
         h("div", { "class": "title" },
@@ -122,13 +115,11 @@ const ItemView = (state, actions, item) => {
         )
       )
   }
-
   return h("div", {
     class: "item item-" + state.route[0] + " id-" + item.id + (state.seen.indexOf(item.id) > -1 ? " seen" : ""),
     onclick: () => { actions.seen(item.id) }
   }, view)
 }
-
 app({
   init: (state, actions) => {
     addEventListener("hashchange", actions.route)

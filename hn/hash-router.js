@@ -29,16 +29,13 @@ function Router(options) {
     ]
   }
 }
-
 function match(routes, path) {
   var match, params = {}
   for (var route in routes) {
     var keys = []
-
     if (route === "*") {
       continue
     }
-
     (path.slice(2) || '/').replace(new RegExp("^" + route
       .replace(/\//g, "\\/")
       .replace(/:([A-Za-z0-9_]+)/g, function (_, key) {
@@ -54,7 +51,6 @@ function match(routes, path) {
       break
     }
   }
-
   return {
     match: match || "*",
     params: params

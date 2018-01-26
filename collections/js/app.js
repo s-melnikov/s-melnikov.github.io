@@ -197,16 +197,26 @@ function Modal(params) {
 
 function EditFieldForm({ state, actions, slug }) {
   let field = state.collection.fields.find(field => field.slug === slug)
+  let oninput = event => console.log(submitBtn)
+  let submitBtn
   return h("div", null, "Edit field",
     h("form", {
-        onsubmit() {
-          console.dir(this)
+        onsubmit(event) {
+          event.preventDefault()
+          let update = {}
+          for (let key in field) {
+            if (event.target.elements[key]) {
+              console.log(value in event.target.elements[key])
+            }
+            // if (field[key]) {}
+          }
+          // event.target.elements
           // state.editFieldFormSubmit()
         }
       },
       h("label", null,
         h("span", null, "Label"),
-        h("input", { type: "text", name: "label", value: field.label })
+        h("input", { type: "text", name: "label", value: field.label, oninput })
       ),
       h("label", null,
         h("span", null, "Slug"),

@@ -228,3 +228,7 @@ button.red {
 button.link {
   border: none;
 }
+[disabled] {
+  cursor: default;
+  opacity: 0.5;
+}

@@ -6,16 +6,13 @@
     constructor(name) {
       this.$name = name
       if (!cache[this.$name]) {
-        this.get()
+        try {
+          cache[this.$name] = JSON.parse(localStorage[this.$name])
+        } catch(e) {
+          cache[this.$name] = {}
+        }
       }
       this.$collections = cache[this.$name]
-    }
-    get() {
-      try {
-        cache[this.$name] = JSON.parse(localStorage[this.$name])
-      } catch(e) {
-        cache[this.$name] = {}
-      }
     }
     set() {
       try {
@@ -161,5 +158,9 @@
   let delay = cb => setTimeout(cb, 50 + Math.random() * 150)
 
   exports.database = name => new Database(name)
-
-} (this)
+  exports.database.Database = Database
+  exports.database.Collection = Collection
+  exports.database.Result = Result
+  exports.database.Entry = Entry
+  exports.database.uniqid = uniqid
+}(this)
