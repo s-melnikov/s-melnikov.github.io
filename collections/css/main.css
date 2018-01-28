@@ -18,6 +18,9 @@ body {
   line-height: 1.4;
   font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
 }
+a:focus {
+  box-shadow: 0 0 0 1px rgba(87,85,217,.2);
+}
 .navbar {
   position: absolute;
   top: 0;
@@ -36,6 +39,12 @@ body {
   width: 12rem;
   border-right: 1px solid #eeeeee;
 }
+.page-aside .nav-item a {
+  display: block;
+}
+.page-aside .nav-item a:focus {
+  box-shadow: none;  
+}
 .page-main {
   padding: 1rem;
   overflow-y: scroll;
@@ -44,151 +53,4 @@ body {
   left: 12rem;
   right: 0;
   bottom: 0;
-}
-table {
-  border-collapse: collapse;
-}
-th {
-  padding: 0.5rem;
-  font-weight: 500;
-  text-align: left;
-  border-bottom: 2px solid #eeeeee;
-}
-td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #eeeeee;
-}
-label {
-  display: block;
-  width: 100%;
-  margin-top: 0.5rem;
-  font-size: 11px;
-  text-transform: uppercase;
-}
-label.checkbox {
-  padding: 0.5rem 0;
-}
-input:not([type=checkbox]), select, textarea {
-  display: block;
-  width: 100%;
-  border: 1px solid #dcdcdc;
-  padding: 0.5rem;
-  border-radius: 2px;
-  font-family: inherit;
-  font-size: 1rem;
-  color: #555555;
-}
-input[type=checkbox] {
-  border: 1px solid #dddddd;
-  width: 1.2rem;
-  height: 1.2rem;
-  cursor: pointer;
-  vertical-align: middle;
-  margin: 0 1rem;
-}
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
-}
-.col, .col-2 {
-  flex: 1;
-  max-width: 100%;
-  padding-left: .5rem;
-  padding-right: .5rem;
-}
-.col-2 {
-  flex: 2;
-}
-.card {
-  border: 1px solid #eeeeee;
-  padding: 0.8rem 1rem;
-}
-.p-1 {
-  padding: 0.5rem;
-}
-.p-2 {
-  padding: 1rem;
-}
-.mt-1 {
-  margin-top: 0.5rem;
-}
-.mt-2 {
-  margin-top: 1rem;
-}
-.mb-1 {
-  margin-bottom: 0.5rem;
-}
-.mb-2 {
-  margin-bottom: 1rem;
-}
-.modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(255, 255, 255, 0.75);
-  z-index: 1;
-}
-.modal-body {
-  width: 480px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  border: 1px solid #dddddd;
-  border-radius: 2px;
-}
-.modal-header {
-  padding: 1rem 1rem 0;
-  position: relative;
-  height: 3rem;
-  font-size: 16px;
-}
-.modal-title {
-
-}
-.modal-close {
-  position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
-  cursor: pointer;
-  width: 2rem;
-  text-align: center;
-}
-.modal-content {
-  padding: 1rem;
-}
-.modal-footer {
-  padding: 1rem;
-  text-align: right;
-}
-.modal-footer button {
-  margin-right: 0;
-  margin-left: 1rem;
-}
-.layout, .container {
-  height: 100%;
-}
-button {
-  padding: 0.5rem 1rem;
-  font-family: inherit;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  color: inherit;
-  background: #ffffff;
-  cursor: pointer;
-}
-button.red {
-  border-color: #ff0000;
-  color: #ff0000;
-}
-button.link {
-  border: none;
-}
-[disabled] {
-  cursor: default;
-  opacity: 0.5;
 }

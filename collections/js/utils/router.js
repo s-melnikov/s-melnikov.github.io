@@ -14,7 +14,7 @@ const createRouter = routes => {
       let match, params = {}
       if (match = regex.exec(route)) {
         keys.map((key, i) => params[key] = (match[i + 1] || "").toLowerCase())
-        return component({ state, actions, params})
+        return component(state, actions, params)
       }
       return null
     })

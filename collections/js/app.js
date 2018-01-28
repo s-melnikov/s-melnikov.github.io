@@ -40,7 +40,8 @@ const actions = {
 }
 
 const router = createRouter({
-  "/": Home,
+  "/": Collections,
+  "/collections": Collections,
   "/collection/:slug": Collection,
   "/collection/:slug/field/:field": Collection,
   "/collection/:slug/entries": CollectionEntries
@@ -78,7 +79,10 @@ function Aside(state, actions) {
   return h("div", { class: "page-aside" },
     h("ul", { class: "nav" },
       h("li", { class: "nav-item" },
-        h("a", { href: "#" }, "Collections"),
+        h("a", { href: "#" }, "Home")
+      ),
+      h("li", { class: "nav-item" },
+        h("a", { href: "#!/collections" }, "Collections"),
         state.collections ? h("ul", { class: "nav" },
           state.collections.map(collection =>
             h("li", { class: "nav-item" },
@@ -92,9 +96,9 @@ function Aside(state, actions) {
   )
 }
 
-function Home(state, actions) {
+function Collections(state, actions) {
   return h("div", null,
-    h("h3", null, "Home"),
+    h("h3", null, "Collections"),
     state.collections ? [
       h("p", null, "Collections"),
       h("div", { class: "row"}, state.collections.map(collection =>
@@ -106,14 +110,21 @@ function Home(state, actions) {
         )
       )
     ] :
-    h("p", null,
-      "No collections found. Install demo data? ",
-      h("a", { href: "?install"}, "Install")
+    h("div", { class: "empty" },
+      h("div", { class: "empty-icon" },
+        h("i", { class: "icon icon-people" })
+      ),
+      h("p", { class: "empty-title h5" }, "You have no collections"),
+      h("p", { class: "empty-subtitle" },
+        "Click the button to install demo data."),
+      h("div", { class: "empty-action" },
+        h("a", { href: "?install", class: "btn btn-primary" }, "Install")
+      )
     )
   )
 }
 
-function Collection({ state, actions, params }) {
+function Collection(state, actions, params) {
   return h("div", {
       key: "table-" + params.slug + "-items",
       oncreate: () => {
@@ -156,7 +167,7 @@ function Collection({ state, actions, params }) {
   )
 }
 
-function CollectionEntries({ state, actions, params }) {
+function CollectionEntries(state, actions, params) {
   let key = "collection-" + params.slug + "-entries"
   return h("div", {
       key,
@@ -210,7 +221,7 @@ function Modal(params) {
   )
 }
 
-function EditFieldForm({ state, actions, slug }) {
+function EditFieldForm(state, actions, slug) {
   let field = state.collection.fields.find(field => field.slug === slug)
   let oninput = event => console.log(submitBtn)
   let submitBtn
