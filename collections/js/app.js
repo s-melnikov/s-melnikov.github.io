@@ -1,5 +1,6 @@
 const { app, h } = hyperapp
 const db = database("my_app")
+const route = path => location.hash = "#!/" + path
 
 const state = {
   route: location.hash.slice(2),
@@ -101,11 +102,10 @@ function Collections(state, actions) {
     h("h3", null, "Collections"),
     state.collections ? [
       h("p", null, "Collections"),
-      h("div", { class: "row"}, state.collections.map(collection =>
-          h("div", { class: "col" },
-            h("div", { class: "card" },
-              Link({ to: "/collection/" + collection.slug + "/entries"}, collection.title)
-            )
+      state.collections.map(collection =>
+        h("div", { class: "card", onclick: () => { route("test") } },
+          h("div", { class: "card-body" },
+            Link({ to: "/collection/" + collection.slug + "/entries"}, collection.title)
           )
         )
       )
