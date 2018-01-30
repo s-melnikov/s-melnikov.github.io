@@ -103,7 +103,7 @@ function Collections(state, actions) {
     state.collections ? [
       h("p", null, "Collections"),
       state.collections.map(collection =>
-        h("div", { class: "card", onclick: () => { route("test") } },
+        h("div", { class: "card mb-2", onclick: () => { route("test") } },
           h("div", { class: "card-body" },
             Link({ to: "/collection/" + collection.slug + "/entries"}, collection.title)
           )
