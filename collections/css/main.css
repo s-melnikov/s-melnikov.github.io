@@ -21,6 +21,12 @@ body {
 a:focus {
   box-shadow: 0 0 0 1px rgba(87,85,217,.2);
 }
+.p-3 {
+  padding: .6rem;
+}
+.p-4 {
+  padding: .8rem;
+}
 .navbar {
   position: absolute;
   top: 0;
@@ -43,7 +49,7 @@ a:focus {
   display: block;
 }
 .page-aside .nav-item a:focus {
-  box-shadow: none;  
+  box-shadow: none;
 }
 .page-main {
   padding: 1rem;
@@ -53,4 +59,10 @@ a:focus {
   left: 12rem;
   right: 0;
   bottom: 0;
+}
+.entries .entry + .entry {
+  border-top: 1px solid #eee;
+}
+.entries .entry:hover {
+  background: #f9f9f9;
 }

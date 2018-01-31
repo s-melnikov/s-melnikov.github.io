@@ -134,29 +134,28 @@ function Collection(state, actions, params) {
       }
     },
     state.collection ? [
-      h("h5", null,
-        h("span", null, "Collection " + state.collection.title + " "),
-        Link({ to: "/collection/" + params.slug + "/entries"},
-          h("button", { class: "link" }, h("small", null, "Return"))
-        )
-      ),
-      h("div", { class: "row" },
-        h("div", { class: "col" },
+      h("h5", null, "Collection " + state.collection.title),
+      Link({
+        to: "/collection/" + params.slug + "/entries",
+        class: "btn btn-link mb-2" },
+      "Return"),
+      h("div", { class: "columns" },
+        h("div", { class: "column entries" },
+          h("div", { class: "columns p-2" },
+            h("div", { class: "column" }, "Label"),
+            h("div", { class: "column" }, "Slug")
+          ),
           state.collection.fields.map(field =>
-            h("div", { class: "card mb-1"},
-              h("div", { class: "row" },
-                h("div", { class: "col" },
-                  Link(
-                    { to: "/collection/" + params.slug + "/field/" + field.slug },
-                    field.label
-                  )
-                ),
-                h("div", { class: "col" }, field.slug)
-              )
+            Link({
+                to: "/collection/" + params.slug + "/field/" + field.slug,
+                class: "entry columns p-2"
+              },
+              h("div", { class: "column" }, field.label),
+              h("div", { class: "column" }, field.slug)
             )
           )
         ),
-        h("div", { class: "col" },
+        h("div", { class: "column" },
           params.field ?
             h(EditFieldForm, { state, actions, slug: params.field })
             : null
@@ -168,7 +167,7 @@ function Collection(state, actions, params) {
 }
 
 function CollectionEntries(state, actions, params) {
-  let key = "collection-" + params.slug + "-entries"
+  let key = "collection-" + params.slug + "-entries entries"
   return h("div", {
       key,
       class: key,
@@ -182,25 +181,17 @@ function CollectionEntries(state, actions, params) {
         Link({ to: "/collection/" + params.slug},
           "Collection " + state.collection.title)
       ),
-      h("div", { class: "columns" },
-        h("div", { class: "column" },
-          h("div", { class: "columns" },
-            state.collection.fields.map(field =>
-              field.display ? h("div", { class: "column" }, field.label) : null
-            )
-          ),
-          state.entries ? state.entries.map(entry => h("div", { class: "card mt-1" },
-            h("div", { class: "columns card-body"},
-              state.collection.fields.map(field =>
-                field.display ? h("div", { class: "column" }, Link(
-                  { to: "/collection/" + params.slug + "/entry/" + entry.uid },
-                  entry[field.slug]
-                )) : null
-              )
-            )
-          )) : h("p", null, "Loading collection entries...")
+      h("div", { class: "columns p-3" },
+        state.collection.fields.map(field =>
+          field.display ? h("div", { class: "column" }, field.label) : null
         )
-      )
+      ),
+      state.entries ? state.entries.map(entry => Link({
+            to: "/collection/" + params.slug,
+            class: "columns entry p-3"
+          }, state.collection.fields.map(field => field.display ? h("div", { class: "column" }, entry[field.slug]) : null)
+        )
+      ) : h("p", null, "Loading collection entries...")
     ] : h("p", null, "Loading collection...")
   )
 }
@@ -221,7 +212,8 @@ function Modal(params) {
   )
 }
 
-function EditFieldForm(state, actions, slug) {
+function EditFieldForm({ state, actions, slug }) {
+  console.log(state, actions, slug)
   let field = state.collection.fields.find(field => field.slug === slug)
   let oninput = event => console.log(submitBtn)
   let submitBtn
@@ -279,12 +271,12 @@ function EditFieldForm(state, actions, slug) {
   )
 }
 
-function Link(props, children) {
+function Link(props, ...childrens) {
   let hash = "#!" + props.to
   if (hash === location.hash) {
     props.class = (props.class ? props.class + " " : "") + "active"
   }
   props.href = hash
   delete props.to
-  return h("a", props, children)
+  return h("a", props, childrens)
 }
