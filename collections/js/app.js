@@ -99,15 +99,15 @@ function Aside(state, actions) {
 
 function Collections(state, actions) {
   return h("div", null,
-    h("h3", null, "Collections"),
+    h("h5", null, "Collections"),
     state.collections ? [
-      h("p", null, "Collections"),
-      state.collections.map(collection =>
-        h("div", { class: "card mb-2", onclick: () => { route("test") } },
-          h("div", { class: "card-body" },
-            Link({ to: "/collection/" + collection.slug + "/entries"}, collection.title)
-          )
-        )
+      h("div", { class: "columns" },
+        state.collections.map(collection => h("div", { class: "column col-3" },
+          Link({
+            to: "/collection/" + collection.slug + "/entries",
+            class: "card mb-2"
+          }, h("div", { class: "card-body" }, collection.title))
+        ))
       )
     ] :
     h("div", { class: "empty" },
@@ -134,7 +134,7 @@ function Collection(state, actions, params) {
       }
     },
     state.collection ? [
-      h("h3", null,
+      h("h5", null,
         h("span", null, "Collection " + state.collection.title + " "),
         Link({ to: "/collection/" + params.slug + "/entries"},
           h("button", { class: "link" }, h("small", null, "Return"))
@@ -178,25 +178,25 @@ function CollectionEntries(state, actions, params) {
       }
     },
     state.collection ? [
-      h("h3", null,
-        h("span", null, "Collection " + state.collection.title + " "),
-        h("small", null, Link({ to: "/collection/" + params.slug },
-          h("button", { class: "link" }, "Edit")
-        ))
+      h("h5", null,
+        Link({ to: "/collection/" + params.slug},
+          "Collection " + state.collection.title)
       ),
-      h("div", { class: "row" },
-        h("div", { class: "col" },
-          h("div", { class: "row p-2" },
+      h("div", { class: "columns" },
+        h("div", { class: "column" },
+          h("div", { class: "columns" },
             state.collection.fields.map(field =>
-              field.display ? h("div", { class: "col" }, field.label) : null
+              field.display ? h("div", { class: "column" }, field.label) : null
             )
           ),
-          state.entries ? state.entries.map(entry => h("div", { class: "card row mt-1" },
-            state.collection.fields.map(field =>
-              field.display ? h("div", { class: "col" }, Link(
-                { to: "/collection/" + params.slug + "/entry/" + entry.uid },
-                entry[field.slug]
-              )) : null
+          state.entries ? state.entries.map(entry => h("div", { class: "card mt-1" },
+            h("div", { class: "columns card-body"},
+              state.collection.fields.map(field =>
+                field.display ? h("div", { class: "column" }, Link(
+                  { to: "/collection/" + params.slug + "/entry/" + entry.uid },
+                  entry[field.slug]
+                )) : null
+              )
             )
           )) : h("p", null, "Loading collection entries...")
         )
