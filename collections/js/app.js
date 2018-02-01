@@ -196,7 +196,7 @@ function CollectionEntries(state, actions, params) {
           h("span", null, state.collection.title)
         )
       ),
-      Link({ to: "/collection/" + params.slug, class: "btn btn-sm" }, "edit"),
+      Link({ to: "/collection/" + params.slug, class: "btn btn-link" }, "edit"),
       h("div", { class: "columns p-3" },
         state.collection.fields.map(field =>
           field.display ? h("div", { class: "column" }, field.label) : null
@@ -229,12 +229,13 @@ function Modal(params) {
 }
 
 function EditFieldForm({ state, actions, slug }) {
-  console.log(state, actions, slug)
   let field = state.collection.fields.find(field => field.slug === slug)
   let oninput = event => console.log(submitBtn)
   let submitBtn
-  return h("div", null, "Edit field",
+  return h("div", null,
+    h("div", { class: "p-2" }, field.label),
     h("form", {
+        class: "form-horizontal",
         onsubmit(event) {
           event.preventDefault()
           let update = {}
@@ -248,40 +249,58 @@ function EditFieldForm({ state, actions, slug }) {
           // state.editFieldFormSubmit()
         }
       },
-      h("label", null,
-        h("span", null, "Label"),
-        h("input", { type: "text", name: "label", value: field.label, oninput })
-      ),
-      h("label", null,
-        h("span", null, "Slug"),
-        h("input", { type: "text", name: "slug", value: field.slug })
-      ),
-      h("label", null,
-        h("span", null, "Type"),
-        h("select", { name: "type", value: field.type },
-          h("option", { value: "text" }, "Text"),
-          h("option", { value: "text_large" }, "Large text"),
-          h("option", { value: "list" }, "Options list"),
-          h("option", { value: "list" }, "Checkbox"),
-          h("option", { value: "list" }, "Collection")
+      h("label", { class: "form-group" },
+        h("div", { class: "col-3" }, "Label"),
+        h("div", { class: "col-9" },
+          h("input", { class: "form-input", type: "text", name: "label",
+            value: field.label, oninput })
         )
       ),
-      h("div", { class: "row mt-2" },
-        h("label", { class: "col" },
-          h("span", null, "Display"),
-          h("input", { name: "display", type: "checkbox", checked: field.display })
-        ),
-        h("label", { class: "col" },
-          h("span", null, "Required"),
-          h("input", { name: "required", type: "checkbox", checked: field.required })
+      h("label", { class: "form-group" },
+        h("div", { class: "col-3" }, "Slug"),
+        h("div", { class: "col-9" },
+          h("input", { class: "form-input", type: "text", name: "slug",
+            value: field.slug, oninput })
         )
       ),
-      h("label", null,
-        h("span", null, "Description"),
-        h("textarea", { name: "info" }, field.info)
+      h("label", { class: "form-group" },
+        h("div", { class: "col-3" }, "Type"),
+        h("div", { class: "col-9" },
+          h("select", { class: "form-select", name: "type", value: field.type },
+            h("option", { value: "text" }, "Text"),
+            h("option", { value: "text_large" }, "Large text"),
+            h("option", { value: "list" }, "Options list"),
+            h("option", { value: "list" }, "Checkbox"),
+            h("option", { value: "list" }, "Collection")
+          )
+        )
       ),
-      h("div", { class: "mt-2" },
-        h("button", null, "Submit")
+      h("div", { class: "form-group" },
+        h("div", { class: "col-9 col-ml-auto" },
+          h("label", { class: "form-switch" },
+            h("input", { type: "checkbox", name: "display", checked: field.display }),
+            h("i", { class: "form-icon" }),
+            h("span", null, "Display field in entries list")
+          )
+        )
+      ),
+      h("div", { class: "form-group" },
+        h("div", { class: "col-9 col-ml-auto" },
+          h("label", { class: "form-switch" },
+            h("input", { type: "checkbox", name: "required", checked: field.required }),
+            h("i", { class: "form-icon" }),
+            h("span", null, "Is field required")
+          )
+        )
+      ),
+      h("label", { class: "form-group" },
+        h("div", { class: "col-3" }, "Description"),
+        h("div", { class: "col-9" },
+          h("textarea", { class: "form-input", name: "info", oninput }, field.info)
+        )
+      ),
+      h("div", { class: "text-right mt-2" },
+        h("button", { class: "btn" }, "Submit")
       )
     )
   )
