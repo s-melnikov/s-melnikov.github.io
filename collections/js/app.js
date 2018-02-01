@@ -99,7 +99,11 @@ function Aside(state, actions) {
 
 function Collections(state, actions) {
   return h("div", null,
-    h("h5", null, "Collections"),
+    h("ul", { class: "breadcrumb" },
+      h("li", { class: "breadcrumb-item" },
+        h("span", null, "Collections")
+      )
+    ),
     state.collections ? [
       h("div", { class: "columns" },
         state.collections.map(collection => h("div", { class: "column col-3" },
@@ -134,11 +138,18 @@ function Collection(state, actions, params) {
       }
     },
     state.collection ? [
-      h("h5", null, "Collection " + state.collection.title),
-      Link({
-        to: "/collection/" + params.slug + "/entries",
-        class: "btn btn-link mb-2" },
-      "Return"),
+      h("ul", { class: "breadcrumb" },
+        h("li", { class: "breadcrumb-item" },
+          h("a", { href: "#!/collections" }, "Collections")
+        ),
+        h("li", { class: "breadcrumb-item" },
+          h("a", { href: "#!/collection/" + state.collection.slug + "/entries" },
+            state.collection.title)
+        ),
+        h("li", { class: "breadcrumb-item" },
+          h("span", null, "Editing")
+        )
+      ),
       h("div", { class: "columns" },
         h("div", { class: "column entries" },
           h("div", { class: "columns p-2" },
@@ -177,10 +188,15 @@ function CollectionEntries(state, actions, params) {
       }
     },
     state.collection ? [
-      h("h5", null,
-        Link({ to: "/collection/" + params.slug},
-          "Collection " + state.collection.title)
+      h("ul", { class: "breadcrumb" },
+        h("li", { class: "breadcrumb-item" },
+          h("a", { href: "#!/collections" }, "Collections")
+        ),
+        h("li", { class: "breadcrumb-item" },
+          h("span", null, state.collection.title)
+        )
       ),
+      Link({ to: "/collection/" + params.slug, class: "btn btn-sm" }, "edit"),
       h("div", { class: "columns p-3" },
         state.collection.fields.map(field =>
           field.display ? h("div", { class: "column" }, field.label) : null
