@@ -98,7 +98,7 @@ function Aside(state, actions) {
 }
 
 function Collections(state, actions) {
-  return h("div", null,
+  return h("div", { class: "page-content" },
     h("ul", { class: "breadcrumb" },
       h("li", { class: "breadcrumb-item" },
         h("span", null, "Collections")
@@ -130,6 +130,7 @@ function Collections(state, actions) {
 
 function Collection(state, actions, params) {
   return h("div", {
+      class: "page-content",
       key: "table-" + params.slug + "-items",
       oncreate: () => {
         if (!state.collection || state.collection.slug !== params.slug) {
@@ -178,10 +179,10 @@ function Collection(state, actions, params) {
 }
 
 function CollectionEntries(state, actions, params) {
-  let key = "collection-" + params.slug + "-entries entries"
+  let key = "collection-" + params.slug + "-entries"
   return h("div", {
       key,
-      class: key,
+      class: "page-content entries" + key,
       oncreate: () => {
         actions.getCollection(params.slug)
         actions.getCollectionEntries(params.slug)
@@ -232,7 +233,7 @@ function EditFieldForm({ state, actions, slug }) {
   let field = state.collection.fields.find(field => field.slug === slug)
   let oninput = event => console.log(submitBtn)
   let submitBtn
-  return h("div", null,
+  return h("div", { class: "edit-field-form" },
     h("div", { class: "p-2" }, field.label),
     h("form", {
         class: "form-horizontal",
