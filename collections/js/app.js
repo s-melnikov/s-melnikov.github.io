@@ -35,8 +35,8 @@ const actions = {
     return { entries: [] }
   },
   setCollectionEntries: entries => ({ entries }),
-  editFieldFormSubmit: (collection, field) => {
-
+  editFieldFormSubmit: update => state => {
+    console.log(update, state)
   }
 }
 
@@ -242,12 +242,21 @@ function EditFieldForm({ state, actions, slug }) {
           let update = {}
           for (let key in field) {
             if (event.target.elements[key]) {
-              console.log(value in event.target.elements[key])
+              switch (event.target.elements[key].type) {
+                case "checkbox":
+                  update[key] = event.target.elements[key].checked
+                  break;
+                case "radio":
+                  if (event.target.elements[key].checked) {
+                    update[key] = event.target.elements[key].value
+                  }
+                  break;
+                default:
+                  update[key] = event.target.elements[key].value
+              }
             }
-            // if (field[key]) {}
           }
-          // event.target.elements
-          // state.editFieldFormSubmit()
+          actions.editFieldFormSubmit(update)
         }
       },
       h("label", { class: "form-group" },
