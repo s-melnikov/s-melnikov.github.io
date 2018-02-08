@@ -35,8 +35,13 @@ const actions = {
     return { entries: [] }
   },
   setCollectionEntries: entries => ({ entries }),
-  editFieldFormSubmit: update => state => {
-    console.log(update, state)
+  editFieldFormSubmit: ({ index, update }) => (state, actions) => {
+    state.collection.fields[index] = update
+    db.collection("collections").find(state.collection.$key).then(result => {
+      let collection = result.first()
+      collection.update({ fields: state.collection.fields }, () => { /* TODO */})
+    })
+    return { collaction: state.collection }
   }
 }
 
@@ -167,6 +172,7 @@ function Collection(state, actions, params) {
             )
           )
         ),
+        h("div", { class: "divider-vert" }),
         h("div", { class: "column" },
           params.field ?
             h(EditFieldForm, { state, actions, slug: params.field })
@@ -231,15 +237,21 @@ function Modal(params) {
 
 function EditFieldForm({ state, actions, slug }) {
   let field = state.collection.fields.find(field => field.slug === slug)
-  let oninput = event => console.log(submitBtn)
-  let submitBtn
-  return h("div", { class: "edit-field-form" },
+  let index = state.collection.fields.indexOf(field)
+  let oninput = () => submitButton.disabled = false
+  let onupdate = el => submitButton = el
+  let submitButton
+  return h("div", {
+      key: "edit-field-" + slug,
+      class: "edit-field-form"
+    },
     h("div", { class: "p-2" }, field.label),
     h("form", {
         class: "form-horizontal",
         onsubmit(event) {
           event.preventDefault()
           let update = {}
+          submitButton.disabled = true
           for (let key in field) {
             if (event.target.elements[key]) {
               switch (event.target.elements[key].type) {
@@ -256,7 +268,7 @@ function EditFieldForm({ state, actions, slug }) {
               }
             }
           }
-          actions.editFieldFormSubmit(update)
+          actions.editFieldFormSubmit({ index, update })
         }
       },
       h("label", { class: "form-group" },
@@ -276,7 +288,8 @@ function EditFieldForm({ state, actions, slug }) {
       h("label", { class: "form-group" },
         h("div", { class: "col-3" }, "Type"),
         h("div", { class: "col-9" },
-          h("select", { class: "form-select", name: "type", value: field.type },
+          h("select", { class: "form-select", name: "type",
+            value: field.type, oninput },
             h("option", { value: "text" }, "Text"),
             h("option", { value: "text_large" }, "Large text"),
             h("option", { value: "list" }, "Options list"),
@@ -288,7 +301,8 @@ function EditFieldForm({ state, actions, slug }) {
       h("div", { class: "form-group" },
         h("div", { class: "col-9 col-ml-auto" },
           h("label", { class: "form-switch" },
-            h("input", { type: "checkbox", name: "display", checked: field.display }),
+            h("input", { type: "checkbox", name: "display",
+              checked: field.display, onchange: oninput }),
             h("i", { class: "form-icon" }),
             h("span", null, "Display field in entries list")
           )
@@ -297,7 +311,8 @@ function EditFieldForm({ state, actions, slug }) {
       h("div", { class: "form-group" },
         h("div", { class: "col-9 col-ml-auto" },
           h("label", { class: "form-switch" },
-            h("input", { type: "checkbox", name: "required", checked: field.required }),
+            h("input", { type: "checkbox", name: "required",
+              checked: field.required, onchange: oninput }),
             h("i", { class: "form-icon" }),
             h("span", null, "Is field required")
           )
@@ -306,11 +321,13 @@ function EditFieldForm({ state, actions, slug }) {
       h("label", { class: "form-group" },
         h("div", { class: "col-3" }, "Description"),
         h("div", { class: "col-9" },
-          h("textarea", { class: "form-input", name: "info", oninput }, field.info)
+          h("textarea", { class: "form-input", name: "info",
+            oninput }, field.info)
         )
       ),
       h("div", { class: "text-right mt-2" },
-        h("button", { class: "btn" }, "Submit")
+        h("button", { class: "btn", disabled: true,
+          oncreate: onupdate, onupdate }, "Submit")
       )
     )
   )
