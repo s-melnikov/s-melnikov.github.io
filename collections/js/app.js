@@ -49,7 +49,7 @@ const router = createRouter({
   "/": Collections,
   "/collections": Collections,
   "/collection/:slug": Collection,
-  "/collection/:slug/field/:field": Collection,
+  "/collection/:slug/field/:id": Collection,
   "/collection/:slug/entries": CollectionEntries
 })
 
@@ -164,7 +164,7 @@ function Collection(state, actions, params) {
           ),
           state.collection.fields.map(field =>
             Link({
-                to: "/collection/" + params.slug + "/field/" + field.slug,
+                to: "/collection/" + params.slug + "/field/" + field.id,
                 class: "entry columns p-2"
               },
               h("div", { class: "column" }, field.label),
@@ -174,8 +174,8 @@ function Collection(state, actions, params) {
         ),
         h("div", { class: "divider-vert" }),
         h("div", { class: "column" },
-          params.field ?
-            h(EditFieldForm, { state, actions, slug: params.field })
+          params.id ?
+            h(EditFieldForm, { state, actions, id: params.id })
             : null
         ),
         h("div", { class: "col" })
@@ -235,14 +235,14 @@ function Modal(params) {
   )
 }
 
-function EditFieldForm({ state, actions, slug }) {
-  let field = state.collection.fields.find(field => field.slug === slug)
+function EditFieldForm({ state, actions, id }) {
+  let field = state.collection.fields.find(field => field.id == id)
   let index = state.collection.fields.indexOf(field)
   let oninput = () => submitButton.disabled = false
   let onupdate = el => submitButton = el
   let submitButton
   return h("div", {
-      key: "edit-field-" + slug,
+      key: "edit-field-" + id,
       class: "edit-field-form"
     },
     h("div", { class: "p-2" }, field.label),
