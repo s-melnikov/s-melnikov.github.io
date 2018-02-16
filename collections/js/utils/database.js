@@ -1,5 +1,4 @@
-!function(exports) {
-
+define("database", () => {
   let cache = {}
 
   class Database {
@@ -157,10 +156,11 @@
 
   let delay = cb => setTimeout(cb, 50 + Math.random() * 150)
 
-  exports.database = name => new Database(name)
-  exports.database.Database = Database
-  exports.database.Collection = Collection
-  exports.database.Result = Result
-  exports.database.Entry = Entry
-  exports.database.uniqid = uniqid
-}(this)
+  let database = name => new Database(name)
+  database.Database = Database
+  database.Collection = Collection
+  database.Result = Result
+  database.Entry = Entry
+  database.uniqid = uniqid
+  return database
+})

@@ -1,4 +1,4 @@
-!function(exports) {
+define("logger", () => {
   let start = new Date()
   function log(prevState, action, nextState) {
     let time = Date.now() - start,
@@ -34,5 +34,5 @@
     }
   }
 
-  exports.logger = logger
-} (this)
+  return logger
+})

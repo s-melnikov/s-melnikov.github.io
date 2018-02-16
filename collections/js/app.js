@@ -1,76 +1,22 @@
-const { app, h } = hyperapp
-const db = database("my_app")
-const route = path => location.hash = "#!/" + path
+define("main", require => {
 
-const state = {
-  route: location.hash.slice(2),
-  user: { first_name: "Jonh", last_name: "Doe" },
-  collections: null,
-  collection: null,
-  entries: null
-}
+  const { app, h } = hyperapp;
+  const database = require("database");
+  const db = database("my_app");
+  const logger = require("logger");
+  const state = require("state");
+  const actions = require("actions");
+  const Layout = require("views.layout");
 
-const actions = {
-  setRoute: route => ({ route: route }),
-  getCollections: () => (state, actions) => {
-    db.collection("collections").find().then(result => {
-      let collections = result.data()
-      actions.setCollections(collections.length ? collections : null)
-    })
-    return { collections: null }
-  },
-  setCollections: collections => ({ collections }),
-  getCollection: slug => (state, actions) => {
-    db.collection("collections").find({ slug: slug }).then(result => {
-      let first = result.first()
-      actions.setCollection(first && first.data())
-    })
-    return { collection: null }
-  },
-  setCollection: collection => ({ collection }),
-  getCollectionEntries: slug => (state, actions) => {
-    db.collection(slug).find().then(result =>
-      actions.setCollectionEntries(result.data())
-    )
-    return { entries: [] }
-  },
-  setCollectionEntries: entries => ({ entries }),
-  editFieldFormSubmit: ({ index, update }) => (state, actions) => {
-    state.collection.fields[index] = update
-    db.collection("collections").find(state.collection.$key).then(result => {
-      let collection = result.first()
-      collection.update({ fields: state.collection.fields }, () => { /* TODO */})
-    })
-    return { collaction: state.collection }
-  }
-}
+  const main = logger(app)(state, actions, Layout, document.body);
 
-const router = createRouter({
-  "/": Collections,
-  "/collections": Collections,
-  "/collection/:slug": Collection,
-  "/collection/:slug/field/:id": Collection,
-  "/collection/:slug/entries": CollectionEntries
-})
+  window.addEventListener("hashchange", () => {
+    main.setRoute(location.hash.slice(2));
+  });
 
-const main = logger(app)(state, actions, Layout, document.body)
+});
 
-addEventListener("hashchange", () => {
-  main.setRoute(location.hash.slice(2))
-})
-
-function Layout(state, actions) {
-  return state.user ?
-    h("div", {
-        class: "container",
-        oncreate: () => actions.getCollections()
-      },
-      Navbar(state, actions),
-      Aside(state, actions),
-      h("main", { class: "page-main" }, router(state, actions))
-    ) :
-    h("div", { class: "sign-in" }, "Sign In")
-}
+require("main");
 
 function Navbar(state, actions) {
   return h("header", { class: "navbar" },
