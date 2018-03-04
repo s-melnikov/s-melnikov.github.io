@@ -1,8 +1,14 @@
-define("main", require => {
+const DB_NAME = "my_app";
 
-  const { app, h } = hyperapp;
+define("db", require => {
   const database = require("database");
-  const db = database("my_app");
+  const db = database(DB_NAME);
+  return db;
+})
+
+define("main", require => {
+  const { app, h } = hyperapp;
+  const db = require("db");
   const logger = require("logger");
   const state = require("state");
   const actions = require("actions");
@@ -13,7 +19,6 @@ define("main", require => {
   window.addEventListener("hashchange", () => {
     main.setRoute(location.hash.slice(2));
   });
-
 });
 
 require("main");

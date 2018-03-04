@@ -1,5 +1,5 @@
 define("views.navbar", () => {
-
+  const { h } = hyperapp;
   const Navbar = (state, actions) => {
     return h("header", { class: "navbar" },
       h("section", { class: "navbar-section" }),
@@ -10,5 +10,4 @@ define("views.navbar", () => {
   };
 
   return Navbar;
-
 });

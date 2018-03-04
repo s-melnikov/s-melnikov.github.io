@@ -1,5 +1,5 @@
 define("views.layout", () => {
-
+  const { h } = hyperapp;
   const Layout = (state, actions) => {
     return state.user ?
       h("div", {
@@ -14,5 +14,4 @@ define("views.layout", () => {
   };
 
   return Layout;
-
 });

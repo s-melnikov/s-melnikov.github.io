@@ -1,5 +1,4 @@
 define("createRouter", () => {
-
   const createRouter = routes => {
     routes = Object.keys(routes).map(path => {
       let keys = [],

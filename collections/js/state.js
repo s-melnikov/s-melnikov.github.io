@@ -8,5 +8,5 @@ define("state", () => {
     collections: null,
     collection: null,
     entries: null
-  }
+  }  
 });

@@ -1,5 +1,4 @@
 define("router", () => {
-
   const router = createRouter({
     "/": Collections,
     "/collections": Collections,

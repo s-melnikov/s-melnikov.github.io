@@ -1,6 +1,6 @@
 define("actions", () => {
 
-  const setRouter = route => ({ route });
+  const setRoute = route => ({ route });
 
   const getCollections = () => (state, actions) => {
     db.collection("collections").find().then(result => {
@@ -24,14 +24,14 @@ define("actions", () => {
 
   const getCollectionEntries = slug => (state, actions) => {
     db.collection(slug).find().then(result =>
-      actions.setCollectionEntries(result.data());
+      actions.setCollectionEntries(result.data())
     );
     return { entries: [] };
   };
 
-  const setCollectionEntries = entries => ({ entries }),
+  const setCollectionEntries = entries => ({ entries });
 
-  const editFieldFormSubmit: ({ index, update }) => (state, actions) => {
+  const editFieldFormSubmit = ({ index, update }) => (state, actions) => {
     state.collection.fields[index] = update;
     db.collection("collections").find(state.collection.$key).then(result => {
       let collection = result.first();
