@@ -1,5 +1,7 @@
 define("views.layout", () => {
   const { h } = hyperapp;
+  const Navbar = require("views.navbar");
+  const Aside = require("views.aside");
   const Layout = (state, actions) => {
     return state.user ?
       h("div", {
