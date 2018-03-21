@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Square to square collision detection</title>
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #111111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    canvas {
+      margin: 20px;
+      flex-shrink: 0;
+      background-color: #000;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-crisp-edges;
+    }
+  </style>
+</head>
+<body>
+<script>
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+const WIDTH = 256;
+const HEIGHT = 256;
+const keys = [];
+document.body.appendChild(canvas);
+
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+canvas.style.width = WIDTH * 2 + "px";
+ctx.font = '10px Consolas';
+
+document.addEventListener("keydown", event => keys[event.keyCode] = true);
+document.addEventListener("keyup", event => keys[event.keyCode] = false);
+
+class Box {
+
+  constructor(x, y, size, color = "red") {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.half = size * 0.5;
+    this.color = color;
+  }
+
+  collision(target) {
+    // Distance from the center of a box
+    let distX = Math.abs(this.x - target.x);
+    let distY = Math.abs(this.y - target.y);
+
+    // Gap between each boxes
+    let gapX = distX - this.half - target.half;
+    let gapY = distY - this.half - target.half;
+    //collision on the X or Y axis
+    if (gapX < 0 || gapY < 0) {
+      // prevent equality if square
+      if (gapX === gapY) {
+        gapY = -1;
+      }
+      // Check X Axis
+      if (gapX < 0 && gapX > gapY) {
+        if (this.x > target.x) {
+          this.x -= gapX;
+        } else {
+          this.x += gapX;
+        }
+      }
+      // Check Y Axis
+      if (gapY < 0 && gapY > gapX) {
+        if (this.y > target.y) {
+          this.y -= gapY;
+        } else {
+          this.y += gapY;
+        }
+      }
+    }
+  }
+
+  shifting() {
+    if (keys[37]) {
+      this.x -= 1;
+    }
+    if (keys[38]) {
+      this.y -= 1;
+    }
+    if (keys[39]) {
+      this.x += 1;
+    }
+    if (keys[40]) {
+      this.y += 1;
+    }
+  }
+
+  render() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x - this.half, this.y - this.half, this.size, this.size);
+  }
+}
+
+let borderTop = new Box(128, -123, 256, "CornflowerBlue");
+let borderLeft = new Box(-123, 128, 256, "CornflowerBlue");
+let borderBottom = new Box(128, 379, 256, "CornflowerBlue");
+let borderRight = new Box(379, 128, 256, "CornflowerBlue");
+
+let bigBox = new Box(WIDTH / 2, HEIGHT / 2, 32, "CornflowerBlue");
+let playerBox = new Box(WIDTH / 2, HEIGHT / 2, 10, "OrangeRed");
+
+let prev = performance.now();
+let loops = [];
+let fps = 0;
+
+function loop() {
+  ctx.fillStyle = "#333";
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  playerBox.shifting();
+  // collision
+  playerBox.collision(borderTop);
+  playerBox.collision(borderLeft);
+  playerBox.collision(borderBottom);
+  playerBox.collision(borderRight);
+  playerBox.collision(bigBox);
+  // render
+  borderTop.render();
+  borderLeft.render();
+  borderBottom.render();
+  borderRight.render();
+  bigBox.render();
+  playerBox.render();
+  let now = performance.now();
+  loops.push(now - prev);
+  if (loops.length > 9) {
+    fps = Math.round(1000 / (loops.reduce((prev, cur) => prev + cur, 0) / loops.length));
+    loops.length = 0;
+  }
+  ctx.fillStyle = "#fff";
+  ctx.fillText(fps + " fps", 10, 15);
+  prev = now;
+  requestAnimationFrame(loop);
+}
+
+loop();
+
+</script>
+</body>
+</html>

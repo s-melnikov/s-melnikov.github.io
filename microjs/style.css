@@ -7,153 +7,78 @@ body {
   font-size: 14px;
   color: #444;
   margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 a, .link {
-  text-decoration: underline;
+  text-decoration: none;
   color: inherit
 }
 a:hover, .link:hover {
   text-decoration: none;
 }
-.mb-15 {
-  display: inline-block;
-  margin-bottom: 15px;
+h1 {
+  margin: 10px 5px;
+  font-size: 25px;
+  font-weight: 400;
 }
-.header {
-  text-align: right;
+.result {
+  width: 620px;
+  margin: 10px 5px;
+  padding: 5px;
 }
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 15px;
+.remove {
+  font-weight: bold;
 }
 .item {
-  position: relative;
+  display: block;
+  width: 620px;
   padding: 5px 10px;
-  border-bottom: 1px solid #eee
+  vertical-align: top;
+  border: 1px solid #f5f5f5;
+  border-radius: 2px;
+  margin: 5px;
+}
+.title {
+  font-size: 16px;
 }
 .name {
-  color: #1467ad;
-  font-size: 18px;
+  color: #00ACC1;
 }
-.name a {
-  text-decoration: none;
+.size {
+  margin-left: 5px;
+  font-size: 80%;
 }
-.name a:hover {
-  opacity: .7;
-}
-.name a:visited {
-  color: #444
-}
-.desc {
+.description {
   font-size: 12px;
-  color: #444
 }
-.tags span {
+.tags {
   font-size: 12px;
-  display: inline-block;
-  cursor: pointer;
-  color: #f60;
-  margin-right: 5px;
+  color: #F44336;
 }
-.tags span:hover {
-  color: #666;
-}
-.tags span::before {
-  content: "#"
-}
-button,
-.button,
-input,
-textarea {
+.more {
+  display: block;
   border: 1px solid #eee;
+  border-radius: 2px;
+  padding: 5px 0;
+  text-align: center;
+  width: 620px;
+  margin: 5px;
+  cursor: pointer;
+}
+.more:hover {
+  background: #f5f5f5;
+}
+.search {
+  outline: 0;
+  display: block;
+  width: 620px;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  margin: 5px 5px 10px;
   font: inherit;
   color: inherit;
-  margin: 0 0 10px;
 }
-button,
-.button {
-  display: inline-block;
-  background: #f5f5f5;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-button:hover,
-button:hober {
-  background: #eee;
-}
-input,
-textarea {
-  background: #fff;
-  display: block;
-  width: 100%;
-  padding: 6px 12px;
-}
-.control {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  font-size: 12px;
-  color: #777;
-}
-.control a,
-.control span {
-  cursor: pointer;
-  text-decoration: underline;
-  margin-left: 5px;
-}
-.control a:hover,
-.control span:hover {
-  text-decoration: none;
-}
-.loader {
-  position: absolute;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  margin: 12px 0;
-  font-size: 0;
-  color: transparent;
-  border-radius: 100%;
-  background-color: rgba(61, 70, 77, 0.3) }
-.loader, .loader:after, .loader:before {
-  -webkit-animation: loaderFade 0.9s ease-in-out infinite;
-  animation: loaderFade 0.9s ease-in-out infinite
-}
-.loader:after, .loader:before {
-  content: "";
-  vertical-align: middle;
-  position: absolute;
-  left: 100%;
-  width: 6px;
-  height: 6px;
-  margin-left: 4px;
-  border-radius: 100%;
-  background-color: rgba(61, 70, 77, 0.3);
-  -webkit-animation-delay: 0.3s;
-  animation-delay: 0.3s
-}
-.loader:after {
-  left: 200%;
-  margin-left: 8px;
-  -webkit-animation-delay: 0.6s;
-  animation-delay: 0.6s
-}
-@keyframes loaderFade {
-  50% {
-    background-color: #3d464d;
-  }
-  0%, 100% {
-    background-color: rgba(61, 70, 77, 0.3)
-  }
-}
-#sign-in {
-  padding: 15px;
-  width: 240px;
-}
-#edit {
-  font-size: 13px;
-  padding: 15px;
-  max-width: 480px;
+.search:focus {
+  border-color: #999;
 }

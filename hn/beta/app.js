@@ -3,7 +3,7 @@ firebase.initializeApp({
 });
 const { h, app } = hyperapp;
 const State = {
-  route: [],
+  params: [],
   loader: true,
   items: [],
   seen: JSON.parse(localStorage.hyperapphn3 || "[]")
@@ -44,6 +44,8 @@ const init = (state, actions) => {
   actions.route()
 }
 const main = app(State, Actions, View, document.querySelector("#root"));
+/*
+
 
 function View(state, actions) {
   return h("div", {},
@@ -89,6 +91,7 @@ function ItemsListView(state, actions) {
     state.items.map(item => ItemView(state, actions, item))
   )
 }
+*/
 /*
 const now = Date.now()
 const pp = 30
