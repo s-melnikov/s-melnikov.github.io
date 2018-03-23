@@ -28,27 +28,6 @@ define("main", require => {
 require("main");*/
 
 /*
-function Aside(state, actions) {
-  return h("div", { class: "page-aside" },
-    h("ul", { class: "nav" },
-      h("li", { class: "nav-item" },
-        h("a", { href: "#" }, "Home")
-      ),
-      h("li", { class: "nav-item" },
-        h("a", { href: "#!/collections" }, "Collections"),
-        state.collections ? h("ul", { class: "nav" },
-          state.collections.map(collection =>
-            h("li", { class: "nav-item" },
-              Link({ to: "/collection/" + collection.slug + "/entries" },
-                collection.title)
-            )
-          )
-        ) : null
-      )
-    )
-  )
-}
-
 function Collections(state, actions) {
   return h("div", { class: "page-content" },
     h("ul", { class: "breadcrumb" },

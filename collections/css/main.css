@@ -21,44 +21,12 @@ body {
 a:focus {
   box-shadow: 0 0 0 1px rgba(87,85,217,.2);
 }
+
 .p-3 {
   padding: .6rem;
 }
 .p-4 {
   padding: .8rem;
-}
-.navbar {
-  position: absolute;
-  top: 0;
-  left: 12rem;
-  right: 0;
-  padding: 0 0.3rem;
-  border-bottom: 1px solid #eeeeee;
-  height: 2.5rem;
-}
-.page-aside {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  padding: 1rem;
-  width: 12rem;
-  border-right: 1px solid #eeeeee;
-}
-.page-aside .nav-item a {
-  display: block;
-}
-.page-aside .nav-item a:focus {
-  box-shadow: none;
-}
-.page-main {
-  padding: 0 1rem;
-  overflow-y: scroll;
-  position: absolute;
-  top: 2.5rem;
-  left: 12rem;
-  right: 0;
-  bottom: 0;
 }
 .entries .entry + .entry {
   border-top: 1px solid #eee;
