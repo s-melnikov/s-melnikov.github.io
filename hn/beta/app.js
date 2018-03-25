@@ -1,13 +1,53 @@
 firebase.initializeApp({
   databaseURL: "https://hacker-news.firebaseio.com/"
 });
-const { h, app } = hyperapp;
-const State = {
-  params: [],
-  loader: true,
-  items: [],
-  seen: JSON.parse(localStorage.hyperapphn3 || "[]")
+
+const { h, render, Component } = preact;
+const typeOfNews = ["top", "new", "best", "show", "ask", "job"]
+
+const capitalize = str => str[0].toUpperCase() + str.slice(1);
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state.route = [];
+  }
+  componentDidMount() {
+    const hashchange = () => {
+      this.setState({ 
+        route: location.hash.slice(2).split("/") 
+      });
+    }
+    addEventListener("hashchange", hashchange);
+    hashchange()    ;
+  }
+  render(props, state) {
+    return h("div", null,
+      h(Header),
+      false && Loader()
+    )
+  }
 };
+
+const Header = (props, state) => h("header", null,
+  h("div", { "class": "container" },
+    typeOfNews.map(type => h("a", {
+        href: "#/" + type,
+        "class": ""
+      }, capitalize(type))
+    )
+  )
+);
+
+const Loader = () => h("div", { class: "overlay" }, 
+  h("div", { class: "loader" }, 
+    h("span")
+  )
+);
+
+render(h(App), document.querySelector("#root"));
+
+/*
 const Actions = {
   route: () => ({
     route: (location.hash.slice(2) || "top").split("/")
@@ -39,30 +79,6 @@ const Actions = {
     return { seen }
   }
 };
-const init = (state, actions) => {
-  addEventListener("hashchange", actions.route)
-  actions.route()
-}
-const main = app(State, Actions, View, document.querySelector("#root"));
-/*
-
-
-function View(state, actions) {
-  return h("div", {},
-    ItemsView(state, actions),
-    h("header", {},
-      h("div", { "class": "container" },
-        types.map(type => h("a", {
-            href: "#/" + type,
-            "class": type == state.route[0] ? "active" : ""
-          }, capitalize(type))
-        )
-      )
-    ),
-    state.loader && h("div", { class: "overlay" }, h("div", { class: "loader" }, h("span")))
-  )
-}
-
 function ItemsListView(state, actions) {
   return h("div", {
       class: "items-list",
@@ -101,7 +117,6 @@ let db = firebase.database().ref("/v0")
 let cached = {}
 let subscription
 const parser = document.createElement("a")
-const capitalize = str => str[0].toUpperCase() + str.slice(1)
 const domain = url => (parser.href = url) && parser.hostname
 const fromNow = (time, between) => {
   between = Date.now() / 1000 - Number(time)
