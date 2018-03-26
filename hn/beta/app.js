@@ -2,42 +2,96 @@ firebase.initializeApp({
   databaseURL: "https://hacker-news.firebaseio.com/"
 });
 
-const { h, render, Component } = preact;
-const typeOfNews = ["top", "new", "best", "show", "ask", "job"]
+const { app, h } = hyperapp;
+const newsTypes = ["top", "new", "best", "show", "ask", "job"];
 
-const capitalize = str => str[0].toUpperCase() + str.slice(1);
+const State = {
+  loader: false
+};
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state.route = [];
-  }
-  componentDidMount() {
-    const hashchange = () => {
-      this.setState({ 
-        route: location.hash.slice(2).split("/") 
-      });
-    }
-    addEventListener("hashchange", hashchange);
-    hashchange()    ;
-  }
-  render(props, state) {
-    return h("div", null,
-      h(Header),
-      false && Loader()
-    )
+const Actions = {
+  setLoader: show => (state, actions) => {
+    console.log(state, actions)
   }
 };
 
-const Header = (props, state) => h("header", null,
-  h("div", { "class": "container" },
-    typeOfNews.map(type => h("a", {
-        href: "#/" + type,
-        "class": ""
-      }, capitalize(type))
-    )
+const Router = (app, routes) => {  
+  const createRouter = routes => {
+    routes = Object.keys(routes).map(path => {
+      let keys = [];
+      let regex = RegExp(path === "*" ? ".*" :
+          "^" + path.replace(/:([\w]+)/g, function(_, key) {
+            keys.push(key.toLowerCase());
+            return "([-\\.%\\w\\(\\)]+)";
+          }) + "$");
+      return { regex, keys, component: routes[path] };
+    })
+    return (state, actions) => {
+      return routes.map(({ regex, keys, component }) => {
+        let route = state.route || "/"
+        let match, params = {}
+        if (match = regex.exec(route)) {
+          keys.map((key, i) => params[key] = (match[i + 1] || "").toLowerCase())
+          return component(state, actions, params)
+        }
+        return null
+      })
+    }
+  }
+  const enhance = actions => {
+    actions.setRoute = route => ({ route });
+    return actions;
+  }
+  return (state, actions, view, container) => {
+    actions = enhance(actions);
+    router = createRouter(routes);
+    view = view(router);
+    return app(state, actions, view, container)
+  }
+};
+
+const Logger = app => {
+  let start = new Date();
+  const log = (prevState, action, nextState) => {
+    let time = Date.now() - start,
+      min = Math.floor(time / 1000 / 60).toString().padStart(2, 0),
+      sec = Math.floor((time - min * 1000 * 60) / 1000).toString().padStart(2, 0),
+      msec = (time - min * 1000 * 60 - sec * 1000).toString().padStart(3, 0);
+    console.groupCollapsed("%c action", "color: gray", action.name);
+    console.log("%c Time:", "color: yellow", min + ":" + sec + ":" + msec);
+    console.log("%c prev state", "color:#9E9E9E", prevState);
+    console.log("%c data", "color: #03A9F4", action.data);
+    console.log("%c next state", "color:#4CAF50", nextState);
+    console.groupEnd();
+  }
+  const enhance = (actions, prefix) => {
+    let namespace = prefix ? prefix + "." : ""
+    return Object.keys(actions || {}).reduce((otherActions, name) => {
+      let namedspacedName = namespace + name, action = actions[name]
+      otherActions[name] = typeof action === "function" ? data => (state, actions) => {
+        let result = action(data)
+        result = typeof result === "function" ? result(state, actions) : result
+        log(state,{ name: namedspacedName, data: data }, result)
+        return result
+      } : enhance(action, namedspacedName)
+      return otherActions
+    }, {});
+  }
+  return (state, actions, view, container) => {
+    actions = enhance(actions)
+    return app(state, actions, view, container)
+  }
+};
+
+const capitalize = str => str[0].toUpperCase() + str.slice(1);
+
+const ItemsList = (state, actions) => h("div", null, 
+  h("ul", null, 
+    [].map(item => h("li", null, item))
   )
 );
+
+const router = Router();
 
 const Loader = () => h("div", { class: "overlay" }, 
   h("div", { class: "loader" }, 
@@ -45,13 +99,30 @@ const Loader = () => h("div", { class: "overlay" },
   )
 );
 
-render(h(App), document.querySelector("#root"));
+const Header = (state, actions) => h("header", null,
+  h("div", { "class": "container" },
+    newsTypes.map(type => h("a", {
+        href: "#/" + type,
+        "class": ""
+      }, capitalize(type))
+    )
+  )
+);
+
+const View = (state, actions) => h("div", null,
+  router(state, actions),
+  h(Header),
+  false && Loader()
+);
+
+const routes = {
+  "/": ItemsList
+};
+
+const main = Router(Logger(app), routes)(State, Actions, View, document.querySelector("#root"));
 
 /*
-const Actions = {
-  route: () => ({
-    route: (location.hash.slice(2) || "top").split("/")
-  }),
+const Actions = {  
   loader: (state, actions, show) => ({ loader: show }),
   ids: (state, actions, ids) => {
     fetchItems(ids, actions.items)
