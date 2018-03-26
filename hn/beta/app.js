@@ -43,8 +43,8 @@ const Router = (app, routes) => {
     return actions;
   }
   return (state, actions, view, container) => {
+    let router = createRouter(routes);
     actions = enhance(actions);
-    router = createRouter(routes);
     view = view(router);
     return app(state, actions, view, container)
   }
