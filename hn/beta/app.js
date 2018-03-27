@@ -15,7 +15,7 @@ const Actions = {
   }
 };
 
-const Router = (app, routes) => {  
+const Router = (app, routes) => {
   const createRouter = routes => {
     routes = Object.keys(routes).map(path => {
       let keys = [];
@@ -85,16 +85,14 @@ const Logger = app => {
 
 const capitalize = str => str[0].toUpperCase() + str.slice(1);
 
-const ItemsList = (state, actions) => h("div", null, 
-  h("ul", null, 
+const ItemsList = (state, actions) => h("div", null,
+  h("ul", null,
     [].map(item => h("li", null, item))
   )
 );
 
-const router = Router();
-
-const Loader = () => h("div", { class: "overlay" }, 
-  h("div", { class: "loader" }, 
+const Loader = () => h("div", { class: "overlay" },
+  h("div", { class: "loader" },
     h("span")
   )
 );
@@ -109,7 +107,7 @@ const Header = (state, actions) => h("header", null,
   )
 );
 
-const View = (state, actions) => h("div", null,
+const View = router => (state, actions) => h("div", null,
   router(state, actions),
   h(Header),
   false && Loader()
@@ -122,7 +120,7 @@ const routes = {
 const main = Router(Logger(app), routes)(State, Actions, View, document.querySelector("#root"));
 
 /*
-const Actions = {  
+const Actions = {
   loader: (state, actions, show) => ({ loader: show }),
   ids: (state, actions, ids) => {
     fetchItems(ids, actions.items)
