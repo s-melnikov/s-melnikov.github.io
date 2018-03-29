@@ -1,3 +1,4 @@
+const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 let dashBoardId = location.hash.slice(1);
 
 if (dashBoardId) {
@@ -26,17 +27,17 @@ marked.setOptions({
   smartypants: true
 });
 
-let { h, app } = hyperapp;
-let db = firebase.database();
-let dashboardRef = database.ref("dashboards/" + dashBoardId);
-let boardsRef = dashboardRef.child("boards");
-let tasksRef = dashboardRef.child("tasks");
-let typesRef = dashboardRef.child("types");
+const { h, app } = hyperapp;
+const database = firebase.database();
+const dashboardRef = database.ref("dashboards/" + dashBoardId);
+const boardsRef = dashboardRef.child("boards");
+const tasksRef = dashboardRef.child("tasks");
+const typesRef = dashboardRef.child("types");
 let lastBoardId = 0;
 let lastTypeId = 0;
 let lastTaskId = 0;
 
-let state = {
+const state = {
   boards: [],
   tasks: [],
   types: [],
@@ -45,9 +46,9 @@ let state = {
   taskToShow: null,
   taskToMove: null,
   taskToDelete: null
-}
+};
 
-let actions = {
+const actions = {
   setData: data => {
     let newState = {
       boards: data.boards ? Object.keys(data.boards).map(uid => {
@@ -94,7 +95,28 @@ let actions = {
   showTask: taskToShow => ({ taskToShow }),
   moveTask: taskToMove => ({ taskToMove }),
   deleteTask: taskToDelete => ({ taskToDelete })
-}
+};
+
+const main = app(state, actions, Layout, document.querySelector("#root"));
+
+dashboardRef.on("value", snapshot => {
+  let data = snapshot.val();
+  if (data == null) {
+    fetch("mock.json").then(resp => resp.json()).then(({ boards, types, tasks }) => {
+      boards.map(board => boardsRef.push(board));
+      types.map(type => typesRef.push(type));
+      tasks.map(task => {
+        task.time = Date.now();
+        tasksRef.push(task);
+      });
+      lastBoardId = boards[boards.length - 1];
+      lastTypeId = types[types.length - 1];
+      lastTaskId = tasks[tasks.length - 1];
+    })
+  } else {
+    main.setData(data);
+  }
+});
 
 function Task(task, state, actions) {
   return h("div", {
@@ -296,28 +318,6 @@ function Layout(state, actions) {
   )
 }
 
-let main = app(state, actions, Layout, document.body)
-
-ref.on("value", snapshot => {
-  let data = snapshot.val()
-  if (data == null) {
-    fetch("mock.json").then(resp => resp.json()).then(({ boards, types, tasks }) => {
-      boards.map(board => boardsRef.push(board))
-      types.map(type => typesRef.push(type))
-      tasks.map(task => {
-        task.time = Date.now()
-        tasksRef.push(task)
-      })
-      lastBoardId = boards[boards.length - 1]
-      lastTypeId = types[types.length - 1]
-      lastTaskId = tasks[tasks.length - 1]
-    })
-  } else {
-    main.setData(data)
-  }
-})
-
-const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 function uniqid() {
   let length = 16;
   let chars = [];
