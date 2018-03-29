@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.5,user-scalable=no">
+
+    <title>The Pepper Prince</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet'>
+  </head>
+
+  <body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script defer src="main.js"></script>
+    <script defer src="conversation.js"></script>
+    <script defer src="inventory.js"></script>
+    <script defer src="world.js"></script>
+    <script>
+      var game;
+
+      String.prototype.replaceBetween = function(start, end, what) {
+        return this.substring(0, start) + what + this.substring(end);
+      };
+
+      window.onload = function() {
+        game = new Game();
+        game.init();
+      };
+
+      window.requestAnimFrame = function requestAnimFrame() {
+        return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          function(callback, element) {
+            window.setTimeout(callback, 1000 / 60);
+          };
+        }();
+    </script>
+    <!-- *Your milage may vary -->
+  </body>
+</html>

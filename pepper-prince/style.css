@@ -1,0 +1,111 @@
+body {
+  background:#000;
+  color:#fff;
+  cursor:default;
+  font-size:16px;
+  font-family:'Press Start 2P', monospace;
+  margin:0px auto;
+  width:800px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+a {
+  cursor:hand;
+  cursor:pointer;
+  margin:-6px;
+  padding:6px;
+  position:relative;
+  text-decoration:none;
+  z-index:1000;
+}
+a:active {
+  color:hsl(-40,100%,60%)!important;
+}
+sup {
+  color:#444;
+  font-size:50%;
+}
+#inventory {
+  display:block;
+  height:24px;
+}
+#content {
+  margin:16px 0;
+  text-align:center;
+  white-space:pre;
+}
+#conversation:before {
+  content: '';
+  height:576px;
+  display:inline-block;
+  vertical-align:middle;
+}
+#info {
+  background-color:#000;
+  position:absolute;
+  text-align:center;
+  width:800px;
+}
+#stats {
+  margin-top:-6px;
+}
+#stats a {
+  clear:left;
+  float:left;
+  margin:0 10px;
+}
+#stats div {
+  display:inline-block;
+  margin:6px 16px;
+}
+#stats #gold, #stats #pepper, #stats #chili {
+  clear:right;
+  float:right;
+}
+#stats #courage {
+  float:left;
+}
+#title {
+  background-color:#fff;
+  color:#000;
+  margin:0;
+  margin-bottom:18px;
+  text-align:center;
+  text-transform:uppercase;
+  width:800px;
+}
+#male {
+  background:url('male.png') center no-repeat;
+}
+#female {
+  background:url('female.png') center  no-repeat;
+}
+#transmale {
+  background:url('transmale.png') center  no-repeat;
+}
+#transfemale {
+  background:url('transfemale.png') center  no-repeat;
+}
+.blue {
+  color:hsl(-60,80%,66%);
+}
+.gender {
+  display:inline-block;
+  border:2px solid;
+  height:80px;
+  width:100%;
+}
+.green {
+  color:hsl(-90,100%,50%);
+}
+.hotpink {
+  color:hsl(-45,100%,50%);
+}
+.verse {
+  display:inline-block;
+  text-align:left;
+  vertical-align:middle;
+}
