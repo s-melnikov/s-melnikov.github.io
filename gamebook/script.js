@@ -1,4 +1,7 @@
-(function(global) {
+if (location.href.slice === "") {
+  
+}
+/*(function(global) {
 
   var emiter = mitt(),
     panel = dom('#panel')[0],
@@ -46,11 +49,12 @@
   function d6() { return rand(1, 6) }
 
   function anchorClickHandler() {
-    setTimeout(function() { scrollTo(0, 0) }, 200)
+    var href = this.getAttribute('href')
     currentPage.classList.remove('active')
-    currentPage = dom(this.getAttribute('href'))[0]
+    currentPage = dom(href)[0]
     currentPage.classList.add('active')
     emiter.emit(href)
+    scrollTo(0, 0)
   }
 
   function mitt(handlers) {
@@ -101,4 +105,4 @@
     updatePanel()
   })
 
-})(window)
+})(window)*/
