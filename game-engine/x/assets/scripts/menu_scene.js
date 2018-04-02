@@ -42,13 +42,13 @@ define("menu_scene", ["config"], (Config) => {
       if (this.game.checkKeyPress(Config.KEYS.ENTER)) {
         switch (this.menuIndex) {
           case 0:
-            this.game.setScene("game")
+            this.game.setScene("GameScene")
             break
           case 1:
-            this.game.setScene("intro")
+            this.game.setScene("IntroScene")
             break
           case 2:
-            this.game.setScene("exit")
+            this.game.setScene("ExitScene")
             break
         }
       }

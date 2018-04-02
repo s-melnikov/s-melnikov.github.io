@@ -17,7 +17,7 @@ define("game_scene", ["config"], Config => {
       if (this.game.keys[Config.KEYS.LEFT]) this.x--
       if (this.game.keys[Config.KEYS.RIGHT]) this.x++
       if (this.game.keys[Config.KEYS.R]) this.angle++
-      if (this.game.keys[Config.KEYS.ESC]) this.game.setScene("menu")
+      if (this.game.keys[Config.KEYS.ESC]) this.game.setScene("MenuScene")
     }
 
     render(delta, context, canvas) {

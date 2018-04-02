@@ -7,7 +7,7 @@ define("game", ["config"], (Config) => {
       this.scenes = scenes
       this.canvas = document.querySelector("canvas")
       this.context = this.canvas.getContext("2d")
-      this.setScene("intro")
+      this.setScene("IntroScene")
       this.initInput()
       this.start()
     }

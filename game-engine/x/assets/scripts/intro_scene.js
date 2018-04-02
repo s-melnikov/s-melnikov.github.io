@@ -9,7 +9,7 @@ define("intro_scene",
     constructor(game) {
       this.logoRevealTime = 4
       this.textTypingTime = 6
-      this.sceneDisplayTime = 10
+      this.sceneDisplayTime = 12
 
       this.elapsedTime = 0
       this.bigText = "Intro"
@@ -23,7 +23,7 @@ define("intro_scene",
       // switch to next scene (by timer or if user want to skip it)
       if (this.elapsedTime >= this.sceneDisplayTime ||
         this.game.checkKeyPress(Config.KEYS.ENTER)) {
-          this.game.setScene("menu");
+          this.game.setScene("MenuScene");
         }
     }
 
@@ -34,7 +34,7 @@ define("intro_scene",
 
       // draw big logo text
       context.globalAlpha = Math.min(1, this.elapsedTime / this.logoRevealTime)
-      context.font = "80px " + Config.MAIN_FONT
+      context.font = "80px " + Config.ALT_FONT
       context.fillStyle = "#fff"
       context.fillText(
         this.bigText,

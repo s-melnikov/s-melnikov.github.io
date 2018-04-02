@@ -2,11 +2,11 @@ require(["config", "game", "intro_scene", "menu_scene", "game_scene", "exit_scen
   (Config, Game, IntroScene, MenuScene, GameScene, ExitScene) => {
   "use strict"
 
-  // launch game
-  let game = new Game({
-    intro: IntroScene,
-    menu: MenuScene,
-    game: GameScene,
-    exit: ExitScene
+  new Game({
+    IntroScene,
+    MenuScene,
+    GameScene,
+    ExitScene
   })
+
 })

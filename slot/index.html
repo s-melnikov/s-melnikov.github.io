@@ -13,7 +13,7 @@
   Auto:
   <button onclick="auto(1000)">play</button>
   <button onclick="stop()">stop</button>
-  <button onclick="spin()">SPIN</button>
+  <button onclick="slot.spin()">SPIN</button>
   <pre id="outlet"></pre>
   <script>
     class Slot {
@@ -63,7 +63,7 @@
       checkWinLines(symbols) {
         let result = []
         let lines = []
-        let playing_lines = LINES.slice(0, playing_lines_count)
+        let playing_lines = this.params.LINES.slice(0, playing_lines_count)
         for (let line = 0; line < playing_lines.length; line++) {
           lines[line] = []
           for (let reel = 0; reel < playing_lines[line].length; reel++) {
@@ -122,8 +122,8 @@
       }
 
       spin() {
-        let symbols = getRandomSymbols()
-        let winLines = checkWinLines(symbols)
+        let symbols = this.getRandomSymbols()
+        let winLines = this.checkWinLines(symbols)
         let win = 0
         if (money < bet * playing_lines_count) {
           if (intervalId) stop()

@@ -1,0 +1,4 @@
+define("utils", [], () => {
+  "use strict"
+
+})
