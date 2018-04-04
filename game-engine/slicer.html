@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slicer</title>
+  <style>
+    html, body {
+      height: 100%;
+    }
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      background: #222;
+    }
+    canvas {
+      display: block;
+      border: 2px solid #444;
+      margin: 10px;
+    }
+    input {
+      display: block;
+      margin: 10px;
+      border: 2px solid #444;
+      padding: 0;
+      background: #999;
+      padding: 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <input type="file">
+  <canvas id="source"></canvas>
+  <canvas id="result"></canvas>
+  <script>
+    let sourceCanvas = document.querySelector("#source");
+    let sourceContext = sourceCanvas.getContext("2d");
+    let fileInput = document.body.querySelector("input");
+
+    let readAsDataURL = (file, callback) => {
+      let reader = new FileReader();
+      reader.onload = event => callback(event.target.result);
+      reader.readAsDataURL(file);
+    };
+
+    let loadImageFromURL = (dataURL, callback) => {
+      let image = new Image();
+      image.onload = event => callback(event.target);
+      image.src = dataURL;
+    }
+
+    let inputChangeHandler = event => {
+      let files = event.target.files;
+      if (files.length) {
+        let file = files[0];
+        readAsDataURL(file, dataURL => {
+          loadImageFromURL(dataURL, image => {
+            drawSource(image);
+          });
+        });
+      }
+    };
+
+    let drawSource = image => {
+      const CELL_SIZE = 16;
+      sourceCanvas.width = image.width;
+      sourceCanvas.height = image.height;
+      sourceCanvas.style.width = image.width / 2 + "px";
+      sourceCanvas.style.height = image.height / 2 + "px";
+      sourceContext.drawImage(image, 0, 0);
+      let result = {};
+      for (let x = 0; x < image.width; x += CELL_SIZE) {
+        for (let y = 0; y < image.height; y += CELL_SIZE) {
+          let imageData = sourceContext.getImageData(x, y, CELL_SIZE, CELL_SIZE);
+          let hash = [];
+          imageData.data.map((number, i) => {
+            if ((i + 1) % 4) {
+              hash.push(number.toString(36));
+            }
+          })
+          hash = hash.slice(0, 32).join("");
+          if (!result[hash]) {
+            result[hash] = imageData;
+          }
+        }
+      }
+      console.log(result);
+    };
+
+    fileInput.addEventListener("change", inputChangeHandler);
+  </script>
+</body>
+</html>
