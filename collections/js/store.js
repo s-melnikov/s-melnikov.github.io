@@ -30,7 +30,7 @@ let initialState = {
 
 let actions = {
   ADD_USER: ({ user }, { users }) => {
-    users.push(action.user);
+    users.push(user);
     return { users };
   }
 };
@@ -44,5 +44,3 @@ let myReducer = (state, action) => {
 }
 
 const store = createStore(myReducer, initialState);
-
-
