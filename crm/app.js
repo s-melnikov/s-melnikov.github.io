@@ -1,13 +1,15 @@
 let { h, app } = hyperapp;
+let db = database("hypercrm");
 
 let state = {};
 
 let actions = {};
 
 let routes = {
+  "*": NotFoundView,
   "/": IndexView,
-  "/second": SecondView,
-  "/third": ThirdView,
+  "/companies": CompaniesView,
+  "/employers": EmployersView
 };
 
 Router(app)(state, actions, routes, document.body);
@@ -29,7 +31,6 @@ function Router(app) {
       if (!path || path.type) {
         path = location.hash.slice(2) || "/";
       }
-      console.log(path)
       let match, params = {};
       preparedRoutes.map(({ regex, keys, view }) => {
         if (match = regex.exec(path)) {
@@ -47,41 +48,24 @@ function Router(app) {
 };
 
 function IndexView(state, actions) {
-  return h("div", null, "Index",
-    h("p", null, 
-      h("a", { href: "#" }, "index"),
-      h("br"),
-      h("a", { href: "#!/second" }, "second"),
-      h("br"),
-      h("a", { href: "#!/third" }, "tihrd"),
-    )
-  );
+  setTimeout(() => location.hash = "#!/companies", 0);
+  return null;
 }
 
-function SecondView(state, actions) {
-  return h("div", null, "Second",
-    h("p", null, 
-      h("a", { href: "#" }, "index"),
-      h("br"),
-      h("a", { href: "#!/second" }, "second"),
-      h("br"),
-      h("a", { href: "#!/third" }, "tihrd"),
-    )
-  );
+function CompaniesView(state, actions) {
+  return h("div", null, "Companies");
 }
 
-function ThirdView(state, actions) {
-  return h("div", null, "Third",
-    h("p", null, 
-      h("a", { href: "#" }, "index"),
-      h("br"),
-      h("a", { href: "#!/second" }, "second"),
-      h("br"),
-      h("a", { href: "#!/third" }, "tihrd"),
-    )
-  );
+function EmployersView(state, actions) {
+  return h("div", null, "Employers");
 }
 
-// if (localStorage.hypercrm) {
-//   fetch("")
-// }
+function NotFoundView(state, actions) {
+  return h("div", null, "404! Page not found");
+}
+
+if (!localStorage.hypercrm) {
+  fetch("dump.json").then(resp => resp.json()).then(data => {
+    Object.keys(data)
+  });
+}
