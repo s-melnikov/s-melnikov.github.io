@@ -8,7 +8,12 @@
 </head>
 <body>
   <script src="https://unpkg.com/hyperapp@1.2.5/dist/hyperapp.js"></script>
-  <script src="db.js"></script>
+  <script src="database.js"></script>
   <script src="app.js"></script>
+  <script>
+    let $db = database("test");
+    let users = $db.collection("users");
+    $db.dump();
+  </script>
 </body>
 </html>

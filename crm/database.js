@@ -25,6 +25,12 @@
       delete cache[this.$name];
       localStorage.removeItem(this.$name);
     }
+    dump() {
+      
+    }
+    restore() {
+      console.log(cache[this.$name]);
+    }
   }
 
   class Collection {
