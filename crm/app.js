@@ -198,20 +198,16 @@ function EmployeeView({ employee }, { getEntry }) {
   return h(Layout, null,
     h("div", { key: "emploee:" + key,
         oncreate: el => getEntry({ name: "employees", key }) },
-      employee ? h("dl", null,
-        h("dt", null, "First name"),
-        h("dd", null, employee.first_name),
-        h("dt", null, "Last name"),
-        h("dd", null, employee.last_name),
-        h("dt", null, "Email"),
-        h("dd", null, employee.email),
-        h("dt", null, "Country"),
-        h("dd", null, employee.country),
-        h("dt", null, "City"),
-        h("dd", null, employee.city),
-        h("dt", null, "Address"),
-        h("dd", null, employee.address)
-      ) : h(Loader)
+      employee ? List([
+        [ "First name", employee.first_name],
+        [ "Last name", employee.last_name],
+        [ "Phone", employee.phone],
+        [ "Email", employee.email],
+        [ "Country", employee.country],
+        [ "City", employee.city],
+        [ "Street", employee.street],
+        [ "Gender", employee.gender]
+      ]) : h(Loader)
     )
   );
 }
