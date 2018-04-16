@@ -26,10 +26,18 @@
       localStorage.removeItem(this.$name);
     }
     dump() {
-      
+      let a = document.createElement("a");
+      a.href = "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(cache[this.$name]));
+      a.download = "dump_" + this.$name + "_" + Date.now() + ".json";
+      a.click();
     }
-    restore() {
-      console.log(cache[this.$name]);
+    restore(data) {
+      Object.keys(data).forEach(collection => {
+        let ref = this.collection(collection);
+        ref.pushMany(data[collection]);
+      });
+      this.set();
     }
   }
 

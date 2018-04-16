@@ -6,7 +6,7 @@ html, body, #root, .container {
   height: 100%;
 }
 a {
-  color: #2980b9;
+  color: #00adff;
   text-decoration: none;
 }
 a:hover {
@@ -14,10 +14,71 @@ a:hover {
 }
 body {
   margin: 0;
-  padding: 0;
+  padding: 15px;
   line-height: 1.4;
+  font-size: 14px;
+  color: #444444;
   font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
 }
 a:focus {
   box-shadow: 0 0 0 1px rgba(87,85,217,.2);
+}
+.main {
+  max-width: 920px;
+}
+.main .content {
+  padding: 20px 0;
+}
+.title {
+  margin: 20px 5px 5px;
+  font-size: 17px;
+}
+.tabs {
+  border-bottom: 1px solid #eeeeee;
+}
+.tabs .tab {
+  border-bottom: 2px solid transparent;
+  display: inline-block;
+  padding: 5px 10px;
+  color: #777777;
+}
+.tabs .tab.active {
+  border-bottom-color: #eeeeee;
+  color: #000000;
+}
+table {
+  border-collapse: collapse;
+}
+table thead th {
+  color: #444;
+  padding: 10px;
+  text-align: left;
+}
+table td {
+  padding: 12px 10px;
+}
+tbody tr:first-child {
+  border-top: 2px solid #eeeeee;
+}
+tbody tr {
+  border-bottom: 1px solid #eeeeee;
+}
+dd {
+  margin: 20px 0;
+  padding: 0;
+}
+dl dt, dl dd {
+  display: block;
+  margin: 10px 0;
+}
+dl dt {
+  float: left;
+  width: 20%;
+  text-align: right;
+  padding-right: 20px;
+  color: #777777;
+}
+dl dd {
+  float: right;
+  width: 80%;
 }
