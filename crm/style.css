@@ -34,17 +34,51 @@ a:focus {
   font-size: 17px;
 }
 .tabs {
-  border-bottom: 1px solid #eeeeee;
 }
 .tabs .tab {
   border-bottom: 2px solid transparent;
   display: inline-block;
-  padding: 5px 10px;
+  padding: 10px;
   color: #777777;
 }
 .tabs .tab.active {
   border-bottom-color: #eeeeee;
   color: #000000;
+}
+.loader {
+  display: inline-block;
+  position: absolute;
+  margin: 100px;
+  width: 5px;
+  height: 5px;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.loader,
+.loader::after,
+.loader::before {
+  animation: loaderFade 0.9s ease-in-out infinite;
+}
+.loader::after, .loader::before {
+  position: absolute;
+  left: 100%;
+  width: 5px;
+  height: 5px;
+  margin-left: 5px;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+  animation-delay: 0.3s;
+  content: "";
+}
+.loader::before {
+  left: 200%;
+  margin-left: 10px;
+  animation-delay: 0.6s;
+}
+@keyframes loaderFade {
+  50% { background-color: rgba(0, 0, 0, 1) }
+  0%, 100% { background-color: rgba(0, 0, 0, 0.2) }
 }
 table {
   border-collapse: collapse;

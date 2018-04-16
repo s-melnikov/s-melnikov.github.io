@@ -1,5 +1,5 @@
 {
-  "employers": [
+  "employees": [
     { "id": 1, "first_name": "Blakelee", "last_name": "Weakley", "email": "bweakley0@ycombinator.com", "gender": "Female","country": "Canada", "city": "Senneterre", "street": "77419 Gerald Pass", "phone": "833-771-5114" },
     { "id": 2, "first_name": "Bink", "last_name": "Philott", "email": "bphilott1@hibu.com", "gender": "Male", "country": "China", "city": "Shahe", "street": "79 Banding Hill", "phone": "894-829-7627" },
     { "id": 3, "first_name": "Petr", "last_name": "Gerin", "email": "pgerin2@soup.io", "gender": "Male", "country": "Poland", "city": "Węgry", "street": "7541 Brickson Park Terrace", "phone": "486-482-9581" },

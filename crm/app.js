@@ -3,15 +3,15 @@ let db = database("hypercrm");
 
 let entryTypes = {
   companies: "company",
-  employers: "employer",
+  employees: "employee",
   tasks: "task"
 }
 
 let state = {
   companies: null,
   company: null,
-  employers: null,
-  employer: null,
+  employees: null,
+  employee: null,
   tasks: null,
   task: null
 };
@@ -20,14 +20,16 @@ let actions = {
   getEntries: name => (_, { setEntries }) => {
     db.refs[name].find().then(result => {
       setEntries({ name, data: result.data() });
-    })
+    });
+    return { [name]: null }
   },
   setEntries: ({ name, data }) => ({ [name]: data }),
   getEntry: ({ name, key }) => (_, { setEntry }) => {
     db.refs[name].find(key).then(result => {
       let data = result.data();
       setEntry({ name: entryTypes[name], data: data.length ? data[0] : null });
-    })
+    });
+    return { [entryTypes[name]]: null }
   },
   setEntry: ({ name, data }) => ({ [name]: data })
 };
@@ -37,12 +39,13 @@ let routes = {
   "/": IndexView,
   "/companies": CompaniesView,
   "/company/:key": CompanyView,
-  "/employers": EmployersView
+  "/employees": EmployeesView,
+  "/employee/:key": EmployeeView
 };
 
 db.refs = {
   companies: db.collection("companies"),
-  employers: db.collection("employers"),
+  employees: db.collection("employees"),
   tasks: db.collection("tasks"),
 }
 
@@ -81,6 +84,10 @@ function Router(app) {
   }
 }
 
+function Loader() {
+  return h("div", { class: "loader" });
+}
+
 function Link(props, ...childrens) {
   let hash = "#!" + props.to;
   if (hash === location.hash) {
@@ -96,7 +103,7 @@ function Layout(props, children) {
     h("div", { class: "header" },
       h("div", { class: "tabs" },
         h(Link, { class: "tab", to: "/companies" }, "Companies"),
-        h(Link, { class: "tab", to: "/employers" }, "Employers")
+        h(Link, { class: "tab", to: "/employees" }, "Employees")
       )
     ),
     h("div", { class: "content" }, children)
@@ -112,7 +119,7 @@ function CompaniesView({ companies }, { getEntries }) {
   return h(Layout, null,
     h("div", { key: "companies",
         oncreate: el => getEntries("companies") },
-      h("table", null,
+      companies ? h("table", null,
         h("thead", null,
           h("tr", null,
             h("th", null, "Name"),
@@ -121,15 +128,15 @@ function CompaniesView({ companies }, { getEntries }) {
           )
         ),
         h("tbody", null,
-          companies ? companies.map(company =>
+          companies.map(company =>
             h("tr", null,
               h("td", null, h(Link, { to: "/company/" + company.$key }, company.name)),
               h("td", null, company.industry),
               h("td", null, company.phone)
             )
-          ) : null
+          )
         )
-      )
+      ) : h(Loader)
     )
   );
 }
@@ -152,17 +159,59 @@ function CompanyView({ company }, { getEntry }) {
         h("dd", null, company.city),
         h("dt", null, "Address"),
         h("dd", null, company.address)
-      ) : null
+      ) : h(Loader)
     )
   );
 }
 
-function EmployersView(state, actions) {
-  return h(Layout, { class: "employers_view" },
-    h("div", {
-      key: "employers",
-      oncreate: el => actions.getEmployers
-    }, "Employers")
+function EmployeesView({ employees }, { getEntries }) {
+  return h(Layout, null,
+    h("div", { key: "employees",
+        oncreate: el => getEntries("employees") },
+      employees ? h("table", null,
+        h("thead", null,
+          h("tr", null,
+            h("th", null, "First name"),
+            h("th", null, "Last name"),
+            h("th", null, "Email"),
+            h("th", null, "Phone"),
+          )
+        ),
+        h("tbody", null,
+          employees.map(employee =>
+            h("tr", null,
+              h("td", null, h(Link, { to: "/employee/" + employee.$key }, employee.first_name)),
+              h("td", null, employee.last_name),
+              h("td", null, employee.email),
+              h("td", null, employee.phone),
+            )
+          )
+        )
+      ) : h(Loader)
+    )
+  );
+}
+
+function EmployeeView({ employee }, { getEntry }) {
+  let key = state.route.params.key;
+  return h(Layout, null,
+    h("div", { key: "emploee:" + key,
+        oncreate: el => getEntry({ name: "employees", key }) },
+      employee ? h("dl", null,
+        h("dt", null, "First name"),
+        h("dd", null, employee.first_name),
+        h("dt", null, "Last name"),
+        h("dd", null, employee.last_name),
+        h("dt", null, "Email"),
+        h("dd", null, employee.email),
+        h("dt", null, "Country"),
+        h("dd", null, employee.country),
+        h("dt", null, "City"),
+        h("dd", null, employee.city),
+        h("dt", null, "Address"),
+        h("dd", null, employee.address)
+      ) : h(Loader)
+    )
   );
 }
 
