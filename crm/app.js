@@ -98,6 +98,13 @@ function Link(props, ...childrens) {
   return h("a", props, childrens);
 }
 
+function List(list) {
+  return list.map(([ key, value ]) => h("dl", null, 
+    h("dt", null, key),
+    h("dd", null, value)
+  ));
+} 
+
 function Layout(props, children) {
   return h("div", { class: "main", ...props },
     h("div", { class: "header" },
@@ -146,20 +153,14 @@ function CompanyView({ company }, { getEntry }) {
   return h(Layout, null,
     h("div", { key: "company:" + key,
         oncreate: el => getEntry({ name: "companies", key }) },
-      company ? h("dl", null,
-        h("dt", null, "Name"),
-        h("dd", null, company.name),
-        h("dt", null, "Industry"),
-        h("dd", null, company.industry),
-        h("dt", null, "Phone"),
-        h("dd", null, company.phone),
-        h("dt", null, "Country"),
-        h("dd", null, company.country),
-        h("dt", null, "City"),
-        h("dd", null, company.city),
-        h("dt", null, "Address"),
-        h("dd", null, company.address)
-      ) : h(Loader)
+      company ? List([
+        [ "Name", company.name],
+        [ "Industry", company.industry],
+        [ "Phone", company.phone],
+        [ "Country", company.country],
+        [ "City", company.city],
+        [ "Address", company.address]
+      ]) : h(Loader)
     )
   );
 }
