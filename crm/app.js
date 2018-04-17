@@ -107,7 +107,7 @@ function Link(props, ...childrens) {
   return h("a", props, childrens);
 }
 
-function DescList(list) {
+function Descriptions({ list }) {
   return list.map(([ key, value ]) => h("dl", null,
     h("dt", null, key),
     h("dd", null, value)
@@ -118,42 +118,6 @@ function ItemsList({ items, iterator }) {
   if (!items) return Loader();
   if (!items.length) return h("span", null, "no items");
   return items.map(iterator);
-}
-
-function EmployeesList({ company }) {
-  return ({ employees }, { getEntries }) =>
-    h("div", {
-        key: "company:" + company + ":emploees",
-        oncreate: () => getEntries({
-          name: "employees",
-          where: { company }
-        })
-      },
-      h(ItemsList, {
-        items: employees,
-        iterator: emploee => h("p", null,
-          h(Link, { to: "/employees/" + emploee.$key },
-            emploee.first_name + " " + emploee.last_name
-          )
-        )
-      })
-    );
-}
-
-function TasksList({ company }) {
-  return ({ tasks }, { getEntries }) =>
-    h("div", {
-        key: "company:" + company + ":tasks",
-        oncreate: () => getEntries({
-          name: "tasks",
-          where: { company }
-        })
-      },
-      h(ItemsList, {
-        items: tasks,
-        iterator: task => h("p", null, task.content)
-      })
-    );
 }
 
 function Layout(props, children) {
@@ -207,24 +171,40 @@ function CompanyView(state, { getEntries, setEntries }) {
     h("div", {
         key: "companies:" + state.route.params.key,
         oncreate: el => {
-          setEntries({ name: "employees", entries: null });
-          setEntries({ name: "tasks", entries: null });
           getEntries({
             name: "companies",
             where: state.route.params.key
-          })
+          });
+          getEntries({
+            name: "employees",
+            where: { company: state.route.params.key }
+          });
+          getEntries({
+            name: "tasks",
+            where: { company: state.route.params.key }
+          });
         }
       },
-      company ? DescList([
-        [ "Name", company.name],
-        [ "Industry", company.industry],
-        [ "Phone", company.phone],
-        [ "Country", company.country],
-        [ "City", company.city],
-        [ "Address", company.address],
-        [ "Emploees", h(EmployeesList, { company: company.$key })],
-        [ "Tasks", h(TasksList, { company: company.$key })],
-      ]) : h(Loader)
+      company ? h(Descriptions, {
+        list: [
+          [ "Name", company.name],
+          [ "Industry", company.industry],
+          [ "Phone", company.phone],
+          [ "Country", company.country],
+          [ "City", company.city],
+          [ "Address", company.address],
+          [ "Emploees", h(ItemsList, { items: employees,
+              iterator: emploee => h("p", null,
+                h(Link, { to: "/employees/" + emploee.$key },
+                  emploee.first_name + " " + emploee.last_name
+                )
+              )
+            })],
+          [ "Tasks", h(ItemsList, { items: tasks,
+            iterator: task => h("p", null, task.content)
+            })],
+        ]
+      }) : h(Loader)
     )
   );
 }
@@ -244,7 +224,9 @@ function EmployeesView({ employees }, { getEntries }) {
         h("tbody", null,
           employees.map(employee =>
             h("tr", null,
-              h("td", null, h(Link, { to: "/employees/" + employee.$key }, employee.first_name + " " + employee.last_name)),
+              h("td", null, h(Link, { to: "/employees/" + employee.$key },
+                employee.first_name + " " + employee.last_name
+              )),
               h("td", null, employee.email),
               h("td", null, employee.phone),
             )
