@@ -33,10 +33,7 @@
       a.click();
     }
     restore(data) {
-      Object.keys(data).forEach(collection => {
-        let ref = this.collection(collection);
-        ref.pushMany(data[collection]);
-      });
+      cache[this.$name] = data;
       this.set();
     }
   }
@@ -166,7 +163,7 @@
     return id;
   }
 
-  let delay = cb => setTimeout(cb, 500 + Math.random() * 150);
+  let delay = cb => setTimeout(cb, Math.random() * 1000);
 
   let database = name => new Database(name);
   database.Database = Database;

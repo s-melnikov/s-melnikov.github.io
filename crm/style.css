@@ -47,8 +47,7 @@ a:focus {
 }
 .loader {
   display: inline-block;
-  position: absolute;
-  margin: 100px;
+  margin: 10px;
   width: 5px;
   height: 5px;
   border-radius: 100%;
@@ -101,23 +100,26 @@ dl::after {
   display: table;
   clear: both;
   content: "";
-}  
-dd {
-  margin: 10px 0;
-  padding: 0;
+}
+dl {
+  margin: 0;
+  padding: 10px 0;
 }
 dl dt, dl dd {
   display: block;
   margin: 0;
-  padding: 10px;
+  padding: 0 10px;
 }
 dl dt {
   float: left;
   width: 100px;
   text-align: right;
   color: #999999;
-  font-size: 14px;  
+  font-size: 14px;
 }
 dl dd {
   overflow: hidden;
+}
+dl dd p:first-child {
+  margin-top: 0;
 }

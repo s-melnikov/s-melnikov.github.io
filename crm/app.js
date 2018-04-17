@@ -1,46 +1,28 @@
 let { h, app } = hyperapp;
 let db = database("hypercrm");
-
-let entryTypes = {
-  companies: "company",
-  employees: "employee",
-  tasks: "task"
-}
-
 let state = {
   companies: null,
-  company: null,
   employees: null,
-  employee: null,
-  tasks: null,
-  task: null
+  tasks: null
 };
 
 let actions = {
-  getEntries: name => (_, { setEntries }) => {
-    db.refs[name].find().then(result => {
-      setEntries({ name, data: result.data() });
+  getEntries: ({ name, where }) => (_, { setEntries }) => {
+    db.refs[name].find(where).then(result => {
+      setEntries({ name, entries: result.data() });
     });
     return { [name]: null }
   },
-  setEntries: ({ name, data }) => ({ [name]: data }),
-  getEntry: ({ name, key }) => (_, { setEntry }) => {
-    db.refs[name].find(key).then(result => {
-      let data = result.data();
-      setEntry({ name: entryTypes[name], data: data.length ? data[0] : null });
-    });
-    return { [entryTypes[name]]: null }
-  },
-  setEntry: ({ name, data }) => ({ [name]: data })
+  setEntries: ({ name, entries }) => ({ [name]: entries })
 };
 
 let routes = {
   "*": NotFoundView,
   "/": IndexView,
   "/companies": CompaniesView,
-  "/company/:key": CompanyView,
+  "/companies/:key": CompanyView,
   "/employees": EmployeesView,
-  "/employee/:key": EmployeeView
+  "/employees/:key": EmployeeView
 };
 
 db.refs = {
@@ -49,7 +31,7 @@ db.refs = {
   tasks: db.collection("tasks"),
 }
 
-Router(app)(state, actions, routes, document.body);
+Router(Logger(app))(state, actions, routes, document.body);
 
 function Router(app) {
   return (state, actions, routes, container) => {
@@ -84,6 +66,33 @@ function Router(app) {
   }
 }
 
+function Logger(app) {
+  return (state, actions, view, container) => {
+    actions = enhance(actions);
+    return app(state, actions, view, container);
+  }
+  function log(prevState, action, nextState) {
+    console.groupCollapsed("%c action", "color: gray", action.name);
+    console.log("%c prev state", "color:#9E9E9E", prevState);
+    console.log("%c data", "color: #03A9F4", action.data);
+    console.log("%c next state", "color:#4CAF50", nextState);
+    console.groupEnd();
+  }
+  function enhance(actions, prefix) {
+    let namespace = prefix ? prefix + "." : ""
+    return Object.keys(actions || {}).reduce((otherActions, name) => {
+      let namedspacedName = namespace + name, action = actions[name];
+      otherActions[name] = typeof action === "function" ? data => (state, actions) => {
+        let result = action(data);
+        result = typeof result === "function" ? result(state, actions) : result;
+        log(state,{ name: namedspacedName, data: data }, result);
+        return result;
+      } : enhance(action, namedspacedName);
+      return otherActions;
+    }, {});
+  }
+}
+
 function Loader() {
   return h("div", { class: "loader" });
 }
@@ -98,12 +107,54 @@ function Link(props, ...childrens) {
   return h("a", props, childrens);
 }
 
-function List(list) {
-  return list.map(([ key, value ]) => h("dl", null, 
+function DescList(list) {
+  return list.map(([ key, value ]) => h("dl", null,
     h("dt", null, key),
     h("dd", null, value)
   ));
-} 
+}
+
+function ItemsList({ items, iterator }) {
+  if (!items) return Loader();
+  if (!items.length) return h("span", null, "no items");
+  return items.map(iterator);
+}
+
+function EmployeesList({ company }) {
+  return ({ employees }, { getEntries }) =>
+    h("div", {
+        key: "company:" + company + ":emploees",
+        oncreate: () => getEntries({
+          name: "employees",
+          where: { company }
+        })
+      },
+      h(ItemsList, {
+        items: employees,
+        iterator: emploee => h("p", null,
+          h(Link, { to: "/employees/" + emploee.$key },
+            emploee.first_name + " " + emploee.last_name
+          )
+        )
+      })
+    );
+}
+
+function TasksList({ company }) {
+  return ({ tasks }, { getEntries }) =>
+    h("div", {
+        key: "company:" + company + ":tasks",
+        oncreate: () => getEntries({
+          name: "tasks",
+          where: { company }
+        })
+      },
+      h(ItemsList, {
+        items: tasks,
+        iterator: task => h("p", null, task.content)
+      })
+    );
+}
 
 function Layout(props, children) {
   return h("div", { class: "main", ...props },
@@ -125,7 +176,8 @@ function IndexView(state, actions) {
 function CompaniesView({ companies }, { getEntries }) {
   return h(Layout, null,
     h("div", { key: "companies",
-        oncreate: el => getEntries("companies") },
+        oncreate: el => getEntries({ name: "companies" })
+      },
       companies ? h("table", null,
         h("thead", null,
           h("tr", null,
@@ -137,7 +189,7 @@ function CompaniesView({ companies }, { getEntries }) {
         h("tbody", null,
           companies.map(company =>
             h("tr", null,
-              h("td", null, h(Link, { to: "/company/" + company.$key }, company.name)),
+              h("td", null, h(Link, { to: "/companies/" + company.$key }, company.name)),
               h("td", null, company.industry),
               h("td", null, company.phone)
             )
@@ -148,18 +200,30 @@ function CompaniesView({ companies }, { getEntries }) {
   );
 }
 
-function CompanyView({ company }, { getEntry }) {
-  let key = state.route.params.key;
+function CompanyView(state, { getEntries, setEntries }) {
+  let { companies, employees, tasks } = state;
+  let company = companies ? companies[0] : null;
   return h(Layout, null,
-    h("div", { key: "company:" + key,
-        oncreate: el => getEntry({ name: "companies", key }) },
-      company ? List([
+    h("div", {
+        key: "companies:" + state.route.params.key,
+        oncreate: el => {
+          setEntries({ name: "employees", entries: null });
+          setEntries({ name: "tasks", entries: null });
+          getEntries({
+            name: "companies",
+            where: state.route.params.key
+          })
+        }
+      },
+      company ? DescList([
         [ "Name", company.name],
         [ "Industry", company.industry],
         [ "Phone", company.phone],
         [ "Country", company.country],
         [ "City", company.city],
-        [ "Address", company.address]
+        [ "Address", company.address],
+        [ "Emploees", h(EmployeesList, { company: company.$key })],
+        [ "Tasks", h(TasksList, { company: company.$key })],
       ]) : h(Loader)
     )
   );
@@ -172,8 +236,7 @@ function EmployeesView({ employees }, { getEntries }) {
       employees ? h("table", null,
         h("thead", null,
           h("tr", null,
-            h("th", null, "First name"),
-            h("th", null, "Last name"),
+            h("th", null, "Name"),
             h("th", null, "Email"),
             h("th", null, "Phone"),
           )
@@ -181,8 +244,7 @@ function EmployeesView({ employees }, { getEntries }) {
         h("tbody", null,
           employees.map(employee =>
             h("tr", null,
-              h("td", null, h(Link, { to: "/employee/" + employee.$key }, employee.first_name)),
-              h("td", null, employee.last_name),
+              h("td", null, h(Link, { to: "/employees/" + employee.$key }, employee.first_name + " " + employee.last_name)),
               h("td", null, employee.email),
               h("td", null, employee.phone),
             )
@@ -193,12 +255,11 @@ function EmployeesView({ employees }, { getEntries }) {
   );
 }
 
-function EmployeeView({ employee }, { getEntry }) {
-  let key = state.route.params.key;
+function EmployeeView({ employee, route }, { getEntry }) {
   return h(Layout, null,
-    h("div", { key: "emploee:" + key,
-        oncreate: el => getEntry({ name: "employees", key }) },
-      employee ? List([
+    h("div", { key: "emploee:" + route.params.key,
+        oncreate: el => getEntry("employees") },
+      employee ? DescList([
         [ "First name", employee.first_name],
         [ "Last name", employee.last_name],
         [ "Phone", employee.phone],
