@@ -21,6 +21,7 @@ let routes = {
   "/": IndexView,
   "/companies": CompaniesView,
   "/companies/:key": CompanyView,
+  "/companies/:key/:action": CompanyView,
   "/employees": EmployeesView,
   "/employees/:key": EmployeeView
 };
@@ -108,16 +109,28 @@ function Link(props, ...childrens) {
 }
 
 function Descriptions({ list }) {
-  return list.map(([ key, value ]) => h("dl", null,
-    h("dt", null, key),
-    h("dd", null, value)
+  return list.map(item => item && h("dl", null,
+    h("dt", null, item[0]),
+    h("dd", null, item[1])
   ));
 }
 
 function ItemsList({ items, iterator }) {
-  if (!items) return Loader();
+  if (!items) return h(Loader);
   if (!items.length) return h("span", null, "no items");
   return items.map(iterator);
+}
+
+function CompanyLinkView({ company: key }) {
+  return ({ companies }, { getEntries }) => {
+    let company = companies ? companies[0] : null;
+    return h("div", {
+      oncreate: () => getEntries({
+        name: "companies",
+        where: key
+      })
+    }, company ? h(Link, { to: "/companies/" + company.$key }, company.name) : null);
+  }
 }
 
 function Layout(props, children) {
@@ -140,14 +153,14 @@ function IndexView(state, actions) {
 function CompaniesView({ companies }, { getEntries }) {
   return h(Layout, null,
     h("div", { key: "companies",
-        oncreate: el => getEntries({ name: "companies" })
-      },
+        oncreate: el => getEntries({ name: "companies" }) },
       companies ? h("table", null,
         h("thead", null,
           h("tr", null,
             h("th", null, "Name"),
             h("th", null, "Industry"),
-            h("th", null, "Phone")
+            h("th", null, "Phone"),
+            h("th", null, "actions"),
           )
         ),
         h("tbody", null,
@@ -155,7 +168,12 @@ function CompaniesView({ companies }, { getEntries }) {
             h("tr", null,
               h("td", null, h(Link, { to: "/companies/" + company.$key }, company.name)),
               h("td", null, company.industry),
-              h("td", null, company.phone)
+              h("td", null, company.phone),
+              h("td", null,
+                h(Link, { to: "/companies/" + company.$key + "/edit" }, "edit"),
+                " ",
+                h(Link, { to: "/companies/" + company.$key + "/delete" }, "delete")
+              ),
             )
           )
         )
@@ -164,44 +182,80 @@ function CompaniesView({ companies }, { getEntries }) {
   );
 }
 
-function CompanyView(state, { getEntries, setEntries }) {
-  let { companies, employees, tasks } = state;
+function CompanyView(actions, actions) {
+  let { companies, employees, tasks, route } = state;
+  let { getEntries, setEntries } = actions;
   let company = companies ? companies[0] : null;
+  let { key, action } = route.params;
+  let isEdit = action == "edit";
   return h(Layout, null,
     h("div", {
-        key: "companies:" + state.route.params.key,
+        class: "item_view",
+        key: "companies:" + key,
         oncreate: el => {
           getEntries({
             name: "companies",
-            where: state.route.params.key
+            where: key
           });
           getEntries({
             name: "employees",
-            where: { company: state.route.params.key }
+            where: { company: key }
           });
           getEntries({
             name: "tasks",
-            where: { company: state.route.params.key }
+            where: { company: key }
           });
         }
       },
+
       company ? h(Descriptions, {
         list: [
-          [ "Name", company.name],
-          [ "Industry", company.industry],
-          [ "Phone", company.phone],
-          [ "Country", company.country],
-          [ "City", company.city],
-          [ "Address", company.address],
-          [ "Emploees", h(ItemsList, { items: employees,
+          [" ", isEdit ?
+            h(Link, {
+              to: "/companies/" + key,
+              onclick: event => db.refs.
+            }, "save") :
+            h(Link, { to: "/companies/" + key + "/edit"}, "edit")
+          ],
+          [ "Name",
+            isEdit ? h("input", {
+              value: company.name,
+              onchange: event => company.name = event.target.value
+            }) : company.name],
+          [ "Industry",
+            isEdit ? h("input", {
+              value: company.industry,
+              onchange: event => company.industry = event.target.value
+            }) : company.industry],
+          [ "Phone",
+            isEdit ? h("input", {
+              value: company.phone,
+              onchange: event => company.phone = event.target.value
+            }) : company.phone],
+          [ "Country",
+            isEdit ? h("input", {
+              value: company.country,
+              onchange: event => company.country = event.target.value
+            }) : company.country],
+          [ "City",
+            isEdit ? h("input", {
+              value: company.city,
+              onchange: event => company.city = event.target.value
+            }) : company.city],
+          [ "Address",
+            isEdit ? h("input", {
+              value: company.address,
+              onchange: event => company.address = event.target.value
+            }) : company.address],
+          isEdit || [ "Emploees", h(ItemsList, { items: employees,
               iterator: emploee => h("p", null,
                 h(Link, { to: "/employees/" + emploee.$key },
                   emploee.first_name + " " + emploee.last_name
                 )
               )
             })],
-          [ "Tasks", h(ItemsList, { items: tasks,
-            iterator: task => h("p", null, task.content)
+          isEdit || [ "Tasks", h(ItemsList, { items: tasks,
+              iterator: task => h("p", null, task.content)
             })],
         ]
       }) : h(Loader)
@@ -212,7 +266,7 @@ function CompanyView(state, { getEntries, setEntries }) {
 function EmployeesView({ employees }, { getEntries }) {
   return h(Layout, null,
     h("div", { key: "employees",
-        oncreate: el => getEntries("employees") },
+        oncreate: el => getEntries({ name: "employees" }) },
       employees ? h("table", null,
         h("thead", null,
           h("tr", null,
@@ -237,20 +291,33 @@ function EmployeesView({ employees }, { getEntries }) {
   );
 }
 
-function EmployeeView({ employee, route }, { getEntry }) {
+function EmployeeView({ employees, route }, { getEntries, setEntries }) {
+  let key = route.params.key;
+  let employee = employees ? employees[0] : null;
   return h(Layout, null,
-    h("div", { key: "emploee:" + route.params.key,
-        oncreate: el => getEntry("employees") },
-      employee ? DescList([
-        [ "First name", employee.first_name],
-        [ "Last name", employee.last_name],
-        [ "Phone", employee.phone],
-        [ "Email", employee.email],
-        [ "Country", employee.country],
-        [ "City", employee.city],
-        [ "Street", employee.street],
-        [ "Gender", employee.gender]
-      ]) : h(Loader)
+    h("div", {
+        key: "emploee:" + key,
+        oncreate: el => {
+          getEntries({
+            name: "employees",
+            where: key
+          });
+          setEntries({ name: "companies", entries: null });
+        }
+      },
+      employee ? h(Descriptions, {
+        list: [
+          [ "First name", employee.first_name],
+          [ "Last name", employee.last_name],
+          [ "Phone", employee.phone],
+          [ "Email", employee.email],
+          [ "Country", employee.country],
+          [ "City", employee.city],
+          [ "Street", employee.street],
+          [ "Gender", employee.gender],
+          [ "Company", h(CompanyLinkView, { company: employee.company })]
+        ]
+      }) : h(Loader)
     )
   );
 }
@@ -263,4 +330,5 @@ if (!localStorage.hypercrm) {
   fetch("dump.json").then(resp => resp.json()).then(data => {
     database("hypercrm").restore(data);
   });
+  location.reload();
 }
