@@ -210,10 +210,10 @@ function CompanyView(actions, actions) {
 
       company ? h(Descriptions, {
         list: [
-          [" ", isEdit ?
+          ["", isEdit ?
             h(Link, {
               to: "/companies/" + key,
-              onclick: event => db.refs.
+              onclick: event => db.refs.companies.find
             }, "save") :
             h(Link, { to: "/companies/" + key + "/edit"}, "edit")
           ],
