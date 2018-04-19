@@ -17,13 +17,16 @@ let actions = {
 };
 
 let routes = {
-  "*": NotFoundView,
   "/": IndexView,
+  "/:type/:key/delete": DeleteItemView,
   "/companies": CompaniesView,
+  "/companies/new": CompanyView,
   "/companies/:key": CompanyView,
   "/companies/:key/:action": CompanyView,
   "/employees": EmployeesView,
-  "/employees/:key": EmployeeView
+  "/employees/:key": EmployeeView,
+  "/employees/:key/:action": EmployeeView,
+  "*": NotFoundView
 };
 
 db.refs = {
@@ -52,12 +55,14 @@ function Router(app) {
         path = location.hash.slice(2) || "/";
       }
       let match, params = {};
-      preparedRoutes.map(({ regex, keys, view }) => {
+      for (let i = 0; i < preparedRoutes.length; i++) {
+        let { regex, keys, view } = preparedRoutes[i];
         if (match = regex.exec(path)) {
           keys.map((key, i) => params[key] = match[i + 1] || "");
           currentView = view;
+          break;
         }
-      });
+      }
       return { route: { path, params } }
     };
     state.route = actions.setRoute().route;
@@ -152,15 +157,18 @@ function IndexView(state, actions) {
 
 function CompaniesView({ companies }, { getEntries }) {
   return h(Layout, null,
-    h("div", { key: "companies",
+    h("div", { key: "companies", class: "view",
         oncreate: el => getEntries({ name: "companies" }) },
+      h("div", { style: { textAlign: "right" } },
+        h(Link, { class: "btn",
+          to: "/companies/new" }, "new company")
+      ),
       companies ? h("table", null,
         h("thead", null,
           h("tr", null,
             h("th", null, "Name"),
             h("th", null, "Industry"),
-            h("th", null, "Phone"),
-            h("th", null, "actions"),
+            h("th", null, "Phone")
           )
         ),
         h("tbody", null,
@@ -168,12 +176,7 @@ function CompaniesView({ companies }, { getEntries }) {
             h("tr", null,
               h("td", null, h(Link, { to: "/companies/" + company.$key }, company.name)),
               h("td", null, company.industry),
-              h("td", null, company.phone),
-              h("td", null,
-                h(Link, { to: "/companies/" + company.$key + "/edit" }, "edit"),
-                " ",
-                h(Link, { to: "/companies/" + company.$key + "/delete" }, "delete")
-              ),
+              h("td", null, company.phone)
             )
           )
         )
@@ -182,15 +185,15 @@ function CompaniesView({ companies }, { getEntries }) {
   );
 }
 
-function CompanyView(actions, actions) {
+function CompanyView(state, actions) {
   let { companies, employees, tasks, route } = state;
   let { getEntries, setEntries } = actions;
-  let company = companies ? companies[0] : null;
   let { key, action } = route.params;
+  let company = companies ? Object.assign({}, companies[0]) : null;
   let isEdit = action == "edit";
   return h(Layout, null,
     h("div", {
-        class: "item_view",
+        class: "view",
         key: "companies:" + key,
         oncreate: el => {
           getEntries({
@@ -207,16 +210,33 @@ function CompanyView(actions, actions) {
           });
         }
       },
-
       company ? h(Descriptions, {
         list: [
-          ["", isEdit ?
-            h(Link, {
-              to: "/companies/" + key,
-              onclick: event => db.refs.companies.find
-            }, "save") :
-            h(Link, { to: "/companies/" + key + "/edit"}, "edit")
-          ],
+          ["", h("div", { style: { textAlign: "right" } }, isEdit ?
+              [
+                h(Link, {
+                  to: "/companies/" + key,
+                  class: "btn",
+                  onclick: event => db.refs.companies.find(key).then(result => {
+                    let entry = result.first();
+                    if (entry) entry.update(company);
+                  }),
+                }, "save"),
+                h(Link, {
+                  class: "btn red",
+                  to: "/companies/" + key
+                }, "cancel")
+              ] : [
+                h(Link, {
+                  class: "btn",
+                  to: "/companies/" + key + "/edit"
+                }, "edit"),
+                h(Link, {
+                  class: "btn red",
+                  to: "/companies/" + key + "/delete"
+                }, "delete")
+              ]
+            )],
           [ "Name",
             isEdit ? h("input", {
               value: company.name,
@@ -248,14 +268,14 @@ function CompanyView(actions, actions) {
               onchange: event => company.address = event.target.value
             }) : company.address],
           isEdit || [ "Emploees", h(ItemsList, { items: employees,
-              iterator: emploee => h("p", null,
+              iterator: emploee => h("div", null,
                 h(Link, { to: "/employees/" + emploee.$key },
                   emploee.first_name + " " + emploee.last_name
                 )
               )
             })],
           isEdit || [ "Tasks", h(ItemsList, { items: tasks,
-              iterator: task => h("p", null, task.content)
+              iterator: task => h("div", null, task.content)
             })],
         ]
       }) : h(Loader)
@@ -265,7 +285,7 @@ function CompanyView(actions, actions) {
 
 function EmployeesView({ employees }, { getEntries }) {
   return h(Layout, null,
-    h("div", { key: "employees",
+    h("div", { key: "employees", class: "view",
         oncreate: el => getEntries({ name: "employees" }) },
       employees ? h("table", null,
         h("thead", null,
@@ -291,11 +311,15 @@ function EmployeesView({ employees }, { getEntries }) {
   );
 }
 
-function EmployeeView({ employees, route }, { getEntries, setEntries }) {
-  let key = route.params.key;
-  let employee = employees ? employees[0] : null;
+function EmployeeView(state, actions) {
+  let { employees, route } = state;
+  let { getEntries, setEntries } = actions;
+  let { key, action } = route.params;
+  let employee = employees ? Object.assign(employees[0]) : null;
+  let isEdit = action == "edit";
   return h(Layout, null,
     h("div", {
+        class: "view",
         key: "emploee:" + key,
         oncreate: el => {
           getEntries({
@@ -307,23 +331,119 @@ function EmployeeView({ employees, route }, { getEntries, setEntries }) {
       },
       employee ? h(Descriptions, {
         list: [
-          [ "First name", employee.first_name],
-          [ "Last name", employee.last_name],
-          [ "Phone", employee.phone],
-          [ "Email", employee.email],
-          [ "Country", employee.country],
-          [ "City", employee.city],
-          [ "Street", employee.street],
-          [ "Gender", employee.gender],
-          [ "Company", h(CompanyLinkView, { company: employee.company })]
+          ["", h("div", { style: { textAlign: "right" } },
+            isEdit ? [
+                h(Link, {
+                  to: "/employees/" + key,
+                  class: "btn",
+                  onclick: event => db.refs.employees.find(key).then(result => {
+                    let entry = result.first();
+                    if (entry) entry.update(employee);
+                  }),
+                }, "save"),
+                h(Link, {
+                  class: "btn red",
+                  to: "/employees/" + key
+                }, "cancel")
+              ] : [
+                h(Link, {
+                  class: "btn",
+                  to: "/employees/" + key + "/edit"
+                }, "edit"),
+                h(Link, {
+                  class: "btn red",
+                  to: "/employees/" + key + "/delete"
+                }, "delete")
+              ]
+            )],
+          [ "First name", isEdit ? h("input", {
+              value: employee.first_name,
+              onchange: event => employee.first_name = event.target.value
+            }) : employee.first_name],
+          [ "Last name", isEdit ? h("input", {
+              value: employee.last_name,
+              onchange: event => employee.last_name = event.target.value
+            }) : employee.last_name],
+          [ "Phone", isEdit ? h("input", {
+              value: employee.phone,
+              onchange: event => employee.phone = event.target.value
+            }) : employee.phone],
+          [ "Email", isEdit ? h("input", {
+              value: employee.email,
+              onchange: event => employee.email = event.target.value
+            }) : employee.email],
+          [ "Country", isEdit ? h("input", {
+              value: employee.country,
+              onchange: event => employee.country = event.target.value
+            }) : employee.country],
+          [ "City", isEdit ? h("input", {
+              value: employee.city,
+              onchange: event => employee.city = event.target.value
+            }) : employee.city],
+          [ "Street", isEdit ? h("input", {
+              value: employee.street,
+              onchange: event => employee.street = event.target.value
+            }) : employee.street],
+          [ "Gender", isEdit ? h("input", {
+              value: employee.gender,
+              onchange: event => employee.gender = event.target.value
+            }) : employee.gender],
+          isEdit || [ "Company", h(CompanyLinkView, { company: employee.company })]
         ]
       }) : h(Loader)
     )
   );
 }
 
+function DeleteItemView(state, { getEntries, setEntries }) {
+  let { type, key } = state.route.params;
+  let entry = state[type] ? state[type][0] : null;
+  return h(Layout, null,
+      h("div", {
+        key: "delete_view:" + type + ":" + key,
+        class: "view",
+        oncreate: el => getEntries({
+          name: type,
+          where: key
+        })
+      },
+      entry ? h("div", null,
+        h("p", null,
+          "Are you sure you want to delete entry:",
+          h("br"),
+          h("br"),
+          h("i", null, (entry.name || (entry.first_name + " " + entry.last_name))
+            + " (" + type + ")"),
+          h("br"),
+          h("br"),
+          h(Link, { class: "btn", to: "/" + type,
+            onclick: event => {
+              event.preventDefault();
+              setEntries({ name: type, entries: null });
+              db.refs[type].find(key).then(result => {
+                let entry = result.first();
+                if (entry) {
+                  entry.delete().then(() => {
+                    location.hash = "#!/" + type;
+                  });
+                } else {
+                  location.hash = "#!/" + type;
+                }
+              });
+            }
+          }, "yes"),
+          h(Link, { class: "btn red",
+            to: "/" + type + "/" + key }, "no"),
+        ),
+      ) : h(Loader)
+    )
+  );
+}
+
 function NotFoundView(state, actions) {
-  return h("div", null, "404! Page not found");
+  return h(Layout, null,
+    h("div", { class: "view" }, "404! Page not found")
+  );
 }
 
 if (!localStorage.hypercrm) {

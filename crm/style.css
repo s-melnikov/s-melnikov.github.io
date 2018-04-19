@@ -21,31 +21,51 @@ body {
   font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
 }
 a:focus {
-  opacity: 0.7;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.btn {
+  display: inline-block;
+  border: 1px solid #eeeeee;
+  padding: 4px 8px;
+  font-size: 13px;
+  min-width: 60px;
+  text-align: center;
+}
+.btn.red {
+  color: #ce2b2b;
 }
 .main {
   max-width: 920px;
 }
 .main .content {
-  padding: 20px 0;
+  margin: 10px 0;
+  padding: 20px;
+  border: 1px solid #eeeeee;
+}
+.view .btn {
+  margin-left: 10px;
 }
 .title {
   margin: 20px 5px 5px;
   font-size: 17px;
 }
+.tabs {
+  border: 1px solid #eeeeee;
+}
 .tabs .tab {
   border-bottom: 2px solid transparent;
   display: inline-block;
   padding: 10px;
-  color: #777777;
+  color: #999999;
 }
 .tabs .tab.active {
   border-bottom-color: #eeeeee;
   color: #000000;
 }
 .loader {
-  display: inline-block;
-  margin: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 5px;
   height: 5px;
   border-radius: 100%;
@@ -72,9 +92,6 @@ a:focus {
   left: 200%;
   margin-left: 10px;
   animation-delay: 0.6s;
-}
-.item_view {
-  width: 620px;
 }
 @keyframes loaderFade {
   50% { background-color: rgba(0, 0, 0, 1) }
@@ -105,13 +122,13 @@ dl::after {
 }
 dl {
   margin: 0;
-  padding: 7px 0;
+  padding: 5px 0;
 }
 dl dt, dl dd {
   display: block;
   margin: 0;
-  padding: 0 10px;
-  min-height: 1px;
+  padding: 5px 10px;
+  min-height: 28px;
 }
 dl dt {
   float: left;
@@ -137,4 +154,7 @@ input:not([type=checkbox]):not([type=radio]) {
 }
 input:focus:not([type=checkbox]):not([type=radio]) {
   border-color: #000000;
+}
+dl dd input {
+  margin: -1px 0 -3px;
 }

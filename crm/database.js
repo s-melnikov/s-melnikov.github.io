@@ -91,6 +91,7 @@
               i++;
             }
           }
+          this.$database.set();
           resolve();
         });
       });
@@ -163,7 +164,7 @@
     return id;
   }
 
-  let delay = cb => setTimeout(cb, Math.random() * 200);
+  let delay = cb => setTimeout(cb, Math.random() * 1000);
 
   let database = name => new Database(name);
   database.Database = Database;
