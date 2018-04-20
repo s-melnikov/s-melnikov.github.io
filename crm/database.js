@@ -164,7 +164,7 @@
     return id;
   }
 
-  let delay = cb => setTimeout(cb, Math.random() * 1000);
+  let delay = cb => setTimeout(cb, Math.random() * 100);
 
   let database = name => new Database(name);
   database.Database = Database;

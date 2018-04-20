@@ -189,25 +189,19 @@ function CompanyView(state, actions) {
   let { companies, employees, tasks, route } = state;
   let { getEntries, setEntries } = actions;
   let { key, action } = route.params;
-  let company = companies ? Object.assign({}, companies[0]) : null;
-  let isEdit = action == "edit";
+  let isNew = !key;
+  let company = isNew ? {} : companies ? Object.assign({}, companies[0]) : null;
+  let isEdit = isNew || action == "edit";
   return h(Layout, null,
     h("div", {
         class: "view",
         key: "companies:" + key,
         oncreate: el => {
-          getEntries({
-            name: "companies",
-            where: key
-          });
-          getEntries({
-            name: "employees",
-            where: { company: key }
-          });
-          getEntries({
-            name: "tasks",
-            where: { company: key }
-          });
+          if (!isNew) {
+            getEntries({ name: "companies", where: key });
+            getEntries({ name: "employees", where: { company: key } });
+            getEntries({ name: "tasks", where: { company: key } });
+          }
         }
       },
       company ? h(Descriptions, {
@@ -217,10 +211,20 @@ function CompanyView(state, actions) {
                 h(Link, {
                   to: "/companies/" + key,
                   class: "btn",
-                  onclick: event => db.refs.companies.find(key).then(result => {
-                    let entry = result.first();
-                    if (entry) entry.update(company);
-                  }),
+                  onclick: event => {
+                    if (isNew) {
+                      event.preventDefault();
+                      db.refs.companies.push(company, entry => {
+                        location.hash = "!/companies/" + entry.$key;
+                      });
+                      setEntries({ name: "companies", entries: null });
+                    } else {
+                      db.refs.companies.find(key).then(result => {
+                        let entry = result.first();
+                        if (entry) entry.update(company);
+                      });
+                    }
+                  },
                 }, "save"),
                 h(Link, {
                   class: "btn red",
