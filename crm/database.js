@@ -1,62 +1,63 @@
 (function(global) {
-  let cache = {};
 
   class Database {
     constructor(name) {
-      this.$name = name;
-      if (!cache[this.$name]) {
-        try {
-          cache[this.$name] = JSON.parse(localStorage[this.$name]);
-        } catch(e) {
-          cache[this.$name] = {};
-        }
-      }
-      this.$collections = cache[this.$name];
-    }
-    set() {
-      try {
-        localStorage[this.$name] = JSON.stringify(cache[this.$name]);
-      } catch(e) {}
+      this.name = name;
     }
     collection(name) {
-      return new Collection(name, this);
+      return new Collection(this.name, name);
     }
     drop() {
-      delete cache[this.$name];
-      localStorage.removeItem(this.$name);
+      localStorage.removeItem(this.name);
     }
     dump() {
       let a = document.createElement("a");
       a.href = "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(cache[this.$name]));
-      a.download = "dump_" + this.$name + "_" + Date.now() + ".json";
+        encodeURIComponent(localStorage[this.name]);
+      a.download = "dump_" + this.name + "_" + Date.now() + ".json";
       a.click();
     }
-    restore(data) {
-      cache[this.$name] = data;
-      this.set();
+    restore(json) {
+      localStorage[this.name] = json;
+    }
+    query(params) {
+
     }
   }
 
   class Collection {
-    constructor(name, database) {
-      this.$name = name;
-      this.$database = database;
-      if (!this.$database.$collections[this.$name]) {
-        this.$database.$collections[this.$name] = [];
+    constructor(database, name) {
+      this.database = database;
+      this.name = name;
+    }
+    get() {
+      try {
+        return JSON.parse(localStorage[this.database])[this.name] || [];
+      } catch(e) {
+        return [];
       }
-      this.$entries = this.$database.$collections[this.$name];
+    }
+    set(collection) {
+      let data = null;
+      try {
+        data = JSON.parse(localStorage[this.database]);
+      } catch(e) {
+        data = {};
+      }
+      data[this.name] = collection;
+      try {
+        localStorage[this.database] = JSON.stringify(data);
+      } catch(e) {}
     }
     pushMany(entries, callback) {
       let result = entries.map(entry => {
-        entry.$key = uniqid();
-        return new Entry(entry, this);
-      })
+        entry.key = uniqid();
+        return entry;
+      }).concat();
       delay(() => {
-        entries.forEach(entry => {
-          this.$entries.push(entry);
-        })
-        this.$database.set();
+        let collection = this.get();
+        collection = collection.concat(entries);
+        this.set(collection);
         if (callback) callback(result);
       })
       return result;
@@ -69,84 +70,62 @@
     find(where) {
       return new Promise((resolve, reject) => {
         let entries = [];
+        let collection = this.get();
         if (typeof where === "string") {
           where = { $key: where };
         }
-        this.$entries.forEach(entry => {
+        collection.forEach(entry => {
           for (let prop in where) {
             if (entry[prop] !== where[prop]) return;
           }
-          entries.push(entry);
-        })
-        delay(() => resolve(new Result(entries, this)));
-      })
-    }
-    delete(entry) {
-      return new Promise((resolve, reject) => {
-        delay(() => {
-          for (let i = 0; i < this.$entries.length;) {
-            if (this.$entries[i] === entry) {
-              this.$entries.splice(i, 1);
-            } else {
-              i++;
-            }
-          }
-          this.$database.set();
-          resolve();
+          entries.push(Object.assign({}, entry));
         });
+        delay(() => resolve(entries));
+      });
+    }
+    update(data, where) {
+      return new Promise((resolve, reject) => {
+        let collection = this.get();
+        let i = 0;
+        if (typeof where === "string") {
+          where = { $key: where };
+        }
+        collection.forEach(entry => {
+          for (let prop in where) {
+            if (entry[prop] !== where[prop]) return;
+          }
+          Object.assign(entry, data);
+          i++;
+        });
+        this.set(collection);
+        delay(() => resolve(i));
+      });
+    }
+    delete(where) {
+      return new Promise((resolve, reject) => {
+        let collection = this.get();
+        let new_collection = [];
+        let i = 0;
+        if (typeof where === "string") {
+          where = { $key: where };
+        }
+        collection.forEach(entry => {
+          for (let prop in where) {
+            if (entry[prop] !== where[prop]) return i++;
+          }
+          new_collection.push(entry);
+        });
+        this.set(new_collection);
+        delay(() => resolve(i));
       });
     }
     truncate() {
       return new Promise((resolve, reject) => {
         delay(() => {
-          this.$database.$collections[this.$name] = this.$entries = [];
-          this.$database.set();
+          this.set([]);
           resolve();
         });
       });
-    }
-  }
-
-  class Result {
-    constructor(entries, collection) {
-      this.$entries = entries.map(entry => new Entry(entry, collection));
-      this.$collection = collection;
-    }
-    first() {
-      return this.$entries[0];
-    }
-    data() {
-      return this.$entries.map(entry => entry.data());
-    }
-    each(cb) {
-      this.$entries.forEach(entry => cb(entry));
-      return this;
-    }
-  }
-
-  class Entry {
-    constructor(data, collection) {
-      this.$data = data;
-      this.$key = data.$key;
-      this.$collection = collection;
-    }
-    data() {
-      return this.$data;
-    }
-    update(data, cb) {
-      for (let key in data) {
-        this.$data[key] = data[key];
-      }
-      delay(() => {
-        this.$collection.$database.set();
-        cb && cb(this);
-      })
-      return this;
-    }
-    delete() {
-      let promise = this.$collection.delete(this.data());
-      this.$data = null;
-      return promise;
     }
   }
 
@@ -166,12 +145,6 @@
 
   let delay = cb => setTimeout(cb, Math.random() * 100);
 
-  let database = name => new Database(name);
-  database.Database = Database;
-  database.Collection = Collection;
-  database.Result = Result;
-  database.Entry = Entry;
-  database.uniqid = uniqid;
-  global.database = database;
+  global.database = name => new Database(name);
 
 })(this);
