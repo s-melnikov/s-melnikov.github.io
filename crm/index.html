@@ -13,12 +13,10 @@
   <script src="tags/main.html" type="riot/tag"></script>
   <script src="tags/router.html" type="riot/tag"></script>
   <script>
+    riot.compile(() => riot.mount("*"));
+
     // fetch("dump.json").then(resp => resp.text()).then(text => db.restore(text));
-    // riot.compile(() => riot.mount("*"));
-    let db = database("hypercrm");
-    db.query({
-      employees: { fields: "*" },
-    })
+    // let db = database("hypercrm");
   </script>
 </body>
 </html>
