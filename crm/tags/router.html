@@ -1,5 +1,25 @@
 <router>
 
-  <p>Router tag</p>
+  <yield/>
 
+  <script>
+    let self = this;
+    // this.select = function (target) {
+    // //   [].concat(self.tags.route).forEach(function(r) {
+    // //     return r.show = (r === target);
+    // //   });
+    // };
+    this.on("mount", this.hashchange);
+  </script>
 </router>
+
+<route>
+
+  <virtual><yield/></virtual>
+
+  <script>
+    var self = this;
+    self.show = true
+
+  </script>
+</route>

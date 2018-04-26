@@ -185,5 +185,6 @@
   let type = o => Object.prototype.toString.call(o).slice(8, -1);
 
   global.database = name => new Database(name);
+  global.database.uniqid = uniqid;
 
 })(this);
