@@ -1,5 +1,12 @@
 <page-company>
 
-  <h2>Page company</h2>
+  <h2>Page company { uid }</h2>
+
+  <script>
+    this.uid = null;
+    this.on("route", uid => {
+      this.uid = uid;
+    });
+  </script>
 
 </page-company>

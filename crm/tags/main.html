@@ -21,7 +21,7 @@
       </ul>
     </li>
     <li>
-      <a href="#">Employees</a>
+      <a href="#!/employees">Employees</a>
       <ul>
         <li>
           <a href="#!/employees/first">Employee first</a>
@@ -40,16 +40,16 @@
     <route path="/">
       <page-index/>
     </route>
-    <route path="/companies">
+    <route path="companies">
       <page-companies/>
     </route>
-    <route path="/companies/:uid">
+    <route path="companies/*">
       <page-company/>
     </route>
-    <route path="/employees">
+    <route path="employees">
       <page-employees/>
     </route>
-    <route path="/employee/uid">
+    <route path="employee/*">
       <page-employee/>
     </route>
   </router>
