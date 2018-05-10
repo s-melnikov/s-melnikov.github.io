@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Gooact</title>
+</head>
+<body>
+  <script src="gooact.js"></script>
+  <script>
+    const { h, render, Component } = gooact;
+
+    class Router extends Component {
+      handleHashChange() {
+        console.log(this)
+      }
+      render() {
+        return h("div", null,
+          h("p", null, "Router"),
+          this.props.children
+        );
+      }
+      componentDidMount() {
+        window.addEventListener("hashchange", this.handleHashChange);
+      }
+    }
+
+    class Main extends Component {
+      render() {
+        return h("div", { class: "container" },
+          h("p", { class: "test" }, "Header"),
+          h("ul", null,
+            h("li", null, h("a", { href: "#" }, "- index")),
+            h("li", null, h("a", { href: "#!/one" }, "- page one")),
+            h("li", null, h("a", { href: "#!/two" }, "- page two")),
+            h("li", null, h("a", { href: "#!/three" }, "- page three"))
+          ),
+          h(Router, null,
+            h(PageIndex),
+            h(PageOne, { path: "/one" }),
+            h(PageTwo, { path: "/two" }),
+            h(PageThree, { path: "/three" })
+          ),
+          h("p", { class: "test" }, "Footer")
+        );
+      }
+    }
+    class PageIndex extends Component {
+      render() {
+        return h("div", null, "Page Index");
+      }
+    }
+    class PageOne extends Component {
+      render() {
+        return h("div", null, "Page One");
+      }
+    }
+    class PageTwo extends Component {
+      render() {
+        return h("div", null, "Page Two");
+      }
+    }
+    class PageThree extends Component {
+      render() {
+        return h("div", null, "Page Three");
+      }
+    }
+    render(h(Main, { foo: "bar" }), document.body);
+  </script>
+</body>
+</html>
