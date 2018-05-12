@@ -23,6 +23,9 @@ body {
 a:focus {
   background-color: rgba(0, 0, 0, 0.05);
 }
+.text-right {
+  text-align: right;
+}
 .btn {
   display: inline-block;
   border: 1px solid #eeeeee;

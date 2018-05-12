@@ -7,22 +7,9 @@
   <title>CRM</title>
 </head>
 <body>
-  <main></main>
-  <script src="riot+compiler.min.js"></script>
-  <script src="route+tag.min.js"></script>
+  <div id="main"></div>
   <script src="database.js"></script>
-  <script src="tags/main.html" type="riot/tag"></script>
-  <script src="tags/pages/page-index.html" type="riot/tag"></script>
-  <script src="tags/pages/page-companies.html" type="riot/tag"></script>
-  <script src="tags/pages/page-company.html" type="riot/tag"></script>
-  <script src="tags/pages/page-employees.html" type="riot/tag"></script>
-  <script src="tags/pages/page-employee.html" type="riot/tag"></script>
-  <script>
-    route.base('#!');
-    riot.compile(() => riot.mount("*"));
-
-    // fetch("dump.json").then(resp => resp.text()).then(text => db.restore(text));
-    // let db = database("hypercrm");
-  </script>
+  <script src="gooact.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

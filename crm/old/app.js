@@ -1,11 +1,3 @@
-let { h, app } = hyperapp;
-let db = database("hypercrm");
-let state = {
-  companies: null,
-  employees: null,
-  tasks: null
-};
-
 let actions = {
   getEntries: ({ name, where }) => (_, { setEntries }) => {
     db.refs[name].find(where).then(result => {
@@ -28,90 +20,6 @@ let routes = {
   "/employees/:key/:action": EmployeeView,
   "*": NotFoundView
 };
-
-db.refs = {
-  companies: db.collection("companies"),
-  employees: db.collection("employees"),
-  tasks: db.collection("tasks"),
-}
-
-Router(Logger(app))(state, actions, routes, document.body);
-
-function Router(app) {
-  return (state, actions, routes, container) => {
-    let currentView = null;
-    let hash = () => location.hash.slice(2);
-    let preparedRoutes = Object.keys(routes).map(path => {
-      let keys = [];
-      let regex = RegExp(path === "*" ? ".*" :
-        "^" + path.replace(/:([\w]+)/g, function(_, key) {
-          keys.push(key.toLowerCase());
-          return "([-\\.%\\w\\(\\)]+)";
-        }) + "$");
-      return { regex, keys, view: routes[path] };
-    });
-    actions.setRoute = path => {
-      if (!path || path.type) {
-        path = location.hash.slice(2) || "/";
-      }
-      let match, params = {};
-      for (let i = 0; i < preparedRoutes.length; i++) {
-        let { regex, keys, view } = preparedRoutes[i];
-        if (match = regex.exec(path)) {
-          keys.map((key, i) => params[key] = match[i + 1] || "");
-          currentView = view;
-          break;
-        }
-      }
-      return { route: { path, params } }
-    };
-    state.route = actions.setRoute().route;
-    let main = app(state, actions, (state, actions) => currentView(state, actions), container);
-    window.addEventListener("hashchange", main.setRoute);
-    return main;
-  }
-}
-
-function Logger(app) {
-  return (state, actions, view, container) => {
-    actions = enhance(actions);
-    return app(state, actions, view, container);
-  }
-  function log(prevState, action, nextState) {
-    console.groupCollapsed("%c action", "color: gray", action.name);
-    console.log("%c prev state", "color:#9E9E9E", prevState);
-    console.log("%c data", "color: #03A9F4", action.data);
-    console.log("%c next state", "color:#4CAF50", nextState);
-    console.groupEnd();
-  }
-  function enhance(actions, prefix) {
-    let namespace = prefix ? prefix + "." : ""
-    return Object.keys(actions || {}).reduce((otherActions, name) => {
-      let namedspacedName = namespace + name, action = actions[name];
-      otherActions[name] = typeof action === "function" ? data => (state, actions) => {
-        let result = action(data);
-        result = typeof result === "function" ? result(state, actions) : result;
-        log(state,{ name: namedspacedName, data: data }, result);
-        return result;
-      } : enhance(action, namedspacedName);
-      return otherActions;
-    }, {});
-  }
-}
-
-function Loader() {
-  return h("div", { class: "loader" });
-}
-
-function Link(props, ...childrens) {
-  let hash = "#!" + props.to;
-  if (hash === location.hash) {
-    props.class = (props.class ? props.class + " " : "") + "active";
-  }
-  props.href = hash;
-  delete props.to;
-  return h("a", props, childrens);
-}
 
 function Descriptions({ list }) {
   return list.map(item => item && h("dl", null,
@@ -136,53 +44,6 @@ function CompanyLinkView({ company: key }) {
       })
     }, company ? h(Link, { to: "/companies/" + company.$key }, company.name) : null);
   }
-}
-
-function Layout(props, children) {
-  return h("div", { class: "main", ...props },
-    h("div", { class: "header" },
-      h("div", { class: "tabs" },
-        h(Link, { class: "tab", to: "/companies" }, "Companies"),
-        h(Link, { class: "tab", to: "/employees" }, "Employees")
-      )
-    ),
-    h("div", { class: "content" }, children)
-  );
-}
-
-function IndexView(state, actions) {
-  setTimeout(() => location.hash = "#!/companies", 0);
-  return null;
-}
-
-function CompaniesView({ companies }, { getEntries }) {
-  return h(Layout, null,
-    h("div", { key: "companies", class: "view",
-        oncreate: el => getEntries({ name: "companies" }) },
-      h("div", { style: { textAlign: "right" } },
-        h(Link, { class: "btn",
-          to: "/companies/new" }, "new company")
-      ),
-      companies ? h("table", null,
-        h("thead", null,
-          h("tr", null,
-            h("th", null, "Name"),
-            h("th", null, "Industry"),
-            h("th", null, "Phone")
-          )
-        ),
-        h("tbody", null,
-          companies.map(company =>
-            h("tr", null,
-              h("td", null, h(Link, { to: "/companies/" + company.$key }, company.name)),
-              h("td", null, company.industry),
-              h("td", null, company.phone)
-            )
-          )
-        )
-      ) : h(Loader)
-    )
-  );
 }
 
 function CompanyView(state, actions) {
@@ -444,15 +305,3 @@ function DeleteItemView(state, { getEntries, setEntries }) {
   );
 }
 
-function NotFoundView(state, actions) {
-  return h(Layout, null,
-    h("div", { class: "view" }, "404! Page not found")
-  );
-}
-
-if (!localStorage.hypercrm) {
-  fetch("dump.json").then(resp => resp.json()).then(data => {
-    database("hypercrm").restore(data);
-  });
-  location.reload();
-}

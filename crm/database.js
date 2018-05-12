@@ -116,7 +116,7 @@
     }
     find(where) {
       return new Promise((resolve, reject) => {
-        let entries = this._find(where);
+        let entries = this.findSync(where);
         delay(() => resolve(entries));
       });
     }
