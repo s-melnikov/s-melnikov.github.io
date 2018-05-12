@@ -8,13 +8,14 @@ function h(type, props, ...children) {
 function render(vdom, parent = null) {
   if (parent) parent.textContent = "";
   const mount = parent ? (el => parent.appendChild(el)) : (el => el);
-  if (typeof vdom == "string" || typeof vdom == "number") {
+  let type = typeof vdom;
+  if (type == "string" || type == "number") {
     return mount(document.createTextNode(vdom));
-  } else if (typeof vdom == "boolean" || vdom === null) {
-    return mount(document.createTextNode(''));
-  } else if (typeof vdom == "object" && typeof vdom.type == "function") {
+  } else if (type == "boolean" || vdom === null) {
+    return mount(document.createTextNode(""));
+  } else if (type == "object" && typeof vdom.type == "function") {
     return mount(Component.render(vdom));
-  } else if (typeof vdom == "object" && typeof vdom.type == "string") {
+  } else if (type == "object" && typeof vdom.type == "string") {
     const dom = document.createElement(vdom.type);
     for (const child of [].concat(...vdom.children)) {
       dom.appendChild(render(child));
@@ -29,7 +30,7 @@ function render(vdom, parent = null) {
 }
 
 function setAttribute(dom, key, value) {
-  if (typeof value == "function" && key.startsWith('on')) {
+  if (typeof value == "function" && key.startsWith("on")) {
     const eventType = key.slice(2).toLowerCase();
     dom.__gooactHandlers = dom.__gooactHandlers || {};
     dom.removeEventListener(eventType, dom.__gooactHandlers[eventType]);
@@ -46,6 +47,7 @@ function setAttribute(dom, key, value) {
 
 function patch(dom, vdom, parent = dom.parentNode) {
   const replace = parent ? el => (parent.replaceChild(el, dom) && el) : (el => el);
+  let isObject = typeof vdom == "object";
   if (typeof vdom == "object" && typeof vdom.type == "function") {
     return Component.patch(dom, vdom, parent);
   } else if (typeof vdom != "object" && dom instanceof Text) {
@@ -147,6 +149,71 @@ class Component {
   }
 }
 
-global.gooact = { h, render, Component }
+class Router extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { children: [] };
+  }
+  hashChangeHandler() {
+    let hash = location.hash.slice(2) || "/";
+    let children = [];
+    this.props.children.forEach(child => {
+      let keys = [];
+      let regex = RegExp(child.props.path === "*" ? ".*" :
+        "^" + child.props.path.replace(/:([\w]+)/g, function(_, key) {
+          keys.push(key.toLowerCase());
+          return "([-\\.%\\w\\(\\)]+)";
+        }) + "$");
+      let match, params = {};
+      child.props.params = null;
+      if (match = regex.exec(hash)) {
+        keys.map((key, i) => params[key] = match[i + 1] || "");
+        child.props.params = params;
+        children = children.concat(child);
+      }
+    });
+    this.setState({ children });
+  }
+  render() {
+    return h("div", { class: "router" }, this.state.children);
+  }
+  componentWillMount() {
+    this.hashChangeHandler = this.hashChangeHandler.bind(this);
+    window.addEventListener("hashchange", this.hashChangeHandler);
+    this.hashChangeHandler();
+  }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.hashChangeHandler);
+  }
+}
+
+class Link extends Component {
+  constructor(props) {
+    super(props);
+    this.class = this.props.class || "";
+    this.props.href = "#!" + this.props.to;
+    this.state = { active: false };
+  }
+  hashChangeHandler() {
+    this.setState({ active: this.props.href.slice(2) == (location.hash.slice(2) || "/") });
+  }
+  componentWillMount() {
+    this.hashChangeHandler = this.hashChangeHandler.bind(this);
+    window.addEventListener("hashchange", this.hashChangeHandler);
+    this.hashChangeHandler();
+  }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.hashChangeHandler);
+  }
+  render() {
+    this.props.class = this.class;
+    if (this.state.active) {
+      this.props.class += (this.class ? " " : "") + "active";
+    }
+    return h("a", this.props, this.props.children);
+  }
+}
+
+global.gooact = { h, render, Component, Router, Link }
 
 })(this)
