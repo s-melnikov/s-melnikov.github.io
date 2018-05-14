@@ -52,6 +52,7 @@ class PageCompanies extends Component {
     });
   }
   render() {
+    console.log(this.state.companies)
     return h("div", { class: "view" },
       h("div", { class: "text-right" },
         h(Link, { class: "btn",
@@ -68,7 +69,7 @@ class PageCompanies extends Component {
         h("tbody", null,
           this.state.companies.map(company =>
             h("tr", null,
-              h("td", null, h(Link, { to: "/companies/" + company.$key }, company.name)),
+              h("td", null, h(Link, { to: "/companies/" + company.uid }, company.name)),
               h("td", null, company.industry),
               h("td", null, company.phone)
             )
