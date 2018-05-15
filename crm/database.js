@@ -180,7 +180,7 @@
     return id;
   }
 
-  let delay = cb => setTimeout(cb, Math.random() * 100);
+  let delay = cb => setTimeout(cb, Math.random() * 400 + 400);
 
   let type = o => Object.prototype.toString.call(o).slice(8, -1);
 
