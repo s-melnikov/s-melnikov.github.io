@@ -42,8 +42,6 @@ a:focus {
 }
 .main .content {
   margin: 10px 0;
-  padding: 20px;
-  border: 1px solid #eeeeee;
 }
 .view .btn {
   margin-left: 10px;
@@ -52,9 +50,7 @@ a:focus {
   margin: 20px 5px 5px;
   font-size: 17px;
 }
-.tabs {
-  border: 1px solid #eeeeee;
-}
+.tabs {}
 .tabs .tab {
   border-bottom: 2px solid transparent;
   display: inline-block;
@@ -96,6 +92,9 @@ a:focus {
   margin-left: 10px;
   animation-delay: 0.6s;
 }
+.controls {
+  padding: 10px;
+}
 @keyframes loaderFade {
   50% { background-color: rgba(0, 0, 0, 1) }
   0%, 100% { background-color: rgba(0, 0, 0, 0.2) }
@@ -111,12 +110,6 @@ table thead th {
 }
 table td {
   padding: 12px 10px;
-}
-tbody tr:first-child {
-  border-top: 2px solid #eeeeee;
-}
-tbody tr {
-  border-bottom: 1px solid #eeeeee;
 }
 dl::after {
   display: table;
