@@ -11,11 +11,21 @@ db.refs = {
 
 const Loader = () => h("div", { class: "loader" });
 
-const NotFoundPage = () => {
-  return h(Layout, null,
-    h("div", { class: "view" }, "404! Page not found")
-  );
+const DescriptionList = ({ list }) => list.map(item => item && h("dl", null,
+  h("dt", null, item[0]),
+  h("dd", null, item[1])
+));
+
+const ItemsList = ({ items, iterator }) => {
+  if (!items) return h(Loader);
+  if (!items.length) return h("span", null, "no items");
+  return items.map(iterator);
 }
+
+const NotFoundPage = () => h(Layout, null,
+  h("div", { class: "view" }, "404! Page not found")
+);
+
 
 const PageIndex = (state, actions) => {
   setTimeout(() => location.hash = "#!/companies", 0);
@@ -35,6 +45,7 @@ class Main extends Component {
         h(Router, null,
           h(PageIndex, { path: "/" }),
           h(PageCompanies, { path: "/companies" }),
+          h(PageCompany, { path: "/companies/:uid" }),
         )
       )
     );
@@ -78,94 +89,89 @@ class PageCompanies extends Component {
   }
 }
 
-class PageCompany extends Component () {
-  constructor() {
-
+class PageCompany extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      company: null,
+      isEdit: false
+    };
   }
   componentWillMount() {
+    db.refs.companies.find(this.props.params.uid).then(([company]) => {
+      this.setState({ company });
+    });
     // getEntries({ name: "companies", where: key });
     // getEntries({ name: "employees", where: { company: key } });
     // getEntries({ name: "tasks", where: { company: key } });
   }
   render() {
     return h("div", { class: "view" },
-      this.state.company ? h(Descriptions, {
-        list: [
-          ["", h("div", { style: { textAlign: "right" } }, isEdit ?
-              [
-                h(Link, {
-                  to: "/companies/" + key,
-                  class: "btn",
-                  onclick: event => {
-                    // if (isNew) {
-                    //   event.preventDefault();
-                    //   db.refs.companies.push(company, entry => {
-                    //     location.hash = "!/companies/" + entry.$key;
-                    //   });
-                    //   setEntries({ name: "companies", entries: null });
-                    // } else {
-                    //   db.refs.companies.find(key).then(result => {
-                    //     let entry = result.first();
-                    //     if (entry) entry.update(company);
-                    //   });
-                    // }
-                  },
-                }, "save"),
-                h(Link, {
-                  class: "btn red",
-                  to: "/companies/" + key
-                }, "cancel")
-              ] : [
-                h(Link, {
-                  class: "btn",
-                  to: "/companies/" + key + "/edit"
-                }, "edit"),
-                h(Link, {
-                  class: "btn red",
-                  to: "/companies/" + key + "/delete"
-                }, "delete")
-              ]
+      this.state.company ? h(DescriptionList, {
+        list: /*this.state.isEdit ? [
+          ["", h("div", { class: "text-right" },
+              h(Link, { to: "/companies/" + key, class: "btn", onclick: event => {
+                  if (isNew) {
+                    event.preventDefault();
+                    db.refs.companies.push(company, entry => {
+                      location.hash = "!/companies/" + entry.$key;
+                    });
+                    setEntries({ name: "companies", entries: null });
+                  } else {
+                    db.refs.companies.find(key).then(result => {
+                      let entry = result.first();
+                      if (entry) entry.update(company);
+                    });
+                  }
+                },
+              }, "save"),
+              h(Link, { class: "btn red", to: "/companies/" + this.props.params.uid }, "cancel")
             )],
-          [ "Name",
-            this.state.isEdit ? h("input", {
+          ["Name", h("input", {
               value: this.state.company.name,
               onchange: event => this.state.company.name = event.target.value
-            }) : this.state.company.name],
-          [ "Industry",
-            this.state.isEdit ? h("input", {
+            })],
+          ["Industry", h("input", {
               value: this.state.company.industry,
               onchange: event => this.state.company.industry = event.target.value
-            }) : this.state.company.industry],
-          [ "Phone",
-            this.state.isEdit ? h("input", {
+            })],
+          ["Phone", h("input", {
               value: this.state.company.phone,
               onchange: event => this.state.company.phone = event.target.value
-            }) : this.state.company.phone],
-          [ "Country",
-            this.state.isEdit ? h("input", {
+            })],
+          ["Country", h("input", {
               value: this.state.company.country,
               onchange: event => this.state.company.country = event.target.value
-            }) : this.state.company.country],
-          [ "City",
-            this.state.isEdit ? h("input", {
+            })],
+          ["City", h("input", {
               value: this.state.company.city,
               onchange: event => this.state.company.city = event.target.value
-            }) : this.state.company.city],
-          [ "Address",
-            this.state.isEdit ? h("input", {
+            })],
+          ["Address", h("input", {
               value: this.state.company.address,
               onchange: event => this.state.company.address = event.target.value
-            }) : this.state.company.address],
-          this.state.isEdit || [ "Emploees", h(ItemsList, { items: employees,
+            })]
+        ] : */[
+          ["", h("div", { class: "text-right" },
+              h(Link, { class: "btn", to: "/companies/" + this.props.params.uid + "/edit" }, "edit"),
+              h(Link, { class: "btn red", to: "/companies/" + this.props.params.uid + "/delete" }, "delete")
+            )],
+          ["Name", this.state.company.name],
+          ["Industry", this.state.company.industry],
+          ["Phone", this.state.company.phone],
+          ["Country", this.state.company.country],
+          ["City", this.state.company.city],
+          ["Address", this.state.company.address],
+          ["Emploees", h(ItemsList, { items: this.state.employees,
               iterator: emploee => h("div", null,
                 h(Link, { to: "/employees/" + emploee.$key },
                   emploee.first_name + " " + emploee.last_name
                 )
               )
             })],
-          this.state.isEdit || [ "Tasks", h(ItemsList, { items: tasks,
+          ["Tasks", h(ItemsList, { items: this.state.tasks,
               iterator: task => h("div", null, task.content)
-            })],
+            })]
         ]
       }) : h(Loader)
     )

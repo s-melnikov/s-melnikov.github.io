@@ -21,19 +21,6 @@ let routes = {
   "*": NotFoundView
 };
 
-function Descriptions({ list }) {
-  return list.map(item => item && h("dl", null,
-    h("dt", null, item[0]),
-    h("dd", null, item[1])
-  ));
-}
-
-function ItemsList({ items, iterator }) {
-  if (!items) return h(Loader);
-  if (!items.length) return h("span", null, "no items");
-  return items.map(iterator);
-}
-
 function CompanyLinkView({ company: key }) {
   return ({ companies }, { getEntries }) => {
     let company = companies ? companies[0] : null;
