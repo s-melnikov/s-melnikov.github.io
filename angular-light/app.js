@@ -1,11 +1,11 @@
 function TodoCtrl($scope) {
-  $scope.todos = [];
+  $scope.todos = ["first","second","third"];
   $scope.add = function () {
     $scope.todos.push($scope.todo);
     $scope.todo = "";
   };
 }
 
-ngl.Provider.controller("TodoCtrl", TodoCtrl);
+ngl.controller("TodoCtrl", TodoCtrl);
 
-ngl.DOMCompiler.bootstrap();
+ngl.bootstrap();
