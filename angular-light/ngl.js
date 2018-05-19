@@ -1,5 +1,4 @@
 ;(global => {
-
 const Utils = {
   equals: (a, b) => JSON.stringify(a) === JSON.stringify(b),
   clone: a => {
@@ -10,7 +9,6 @@ const Utils = {
     }
   }
 };
-
 class Scope {
   constructor(parent, id) {
     this.$$watchers = [];
@@ -35,7 +33,7 @@ class Scope {
     return val;
   }
   $new() {
-    Scope.counter += 1;
+    Scope.counter++;
     let obj = new Scope(this, Scope.counter);
     Object.setPrototypeOf(obj, this);
     this.$$children.push(obj);
@@ -65,32 +63,31 @@ class Scope {
   }
 }
 Scope.counter = 0;
-
 class Provider {
   constructor() {
-    this._cache = { 
+    this.cache = {
       $rootScope: new Scope()
     }
-    this._providers = {}
+    this.providers = {}
   }
   get(name, locals) {
-    if (this._cache[name]) {
-      return this._cache[name];
+    if (this.cache[name]) {
+      return this.cache[name];
     }
-    let provider = this._providers[name];
+    let provider = this.providers[name];
     if (!provider || typeof provider !== "function") {
       return null;
     }
-    return (this._cache[name] = this.invoke(provider, locals));
+    return (this.cache[name] = this.invoke(provider, locals));
   }
   directive(name, fn) {
-    this._register(name + Provider.DIRECTIVES_SUFFIX, fn);
+    this.register(name + Provider.DIRECTIVES_SUFFIX, fn);
   }
   controller(name, fn) {
-    this._register(name + Provider.CONTROLLERS_SUFFIX, () => fn);
+    this.register(name + Provider.CONTROLLERS_SUFFIX, () => fn);
   }
   service(name, fn) {
-    this._register(name, fn);
+    this.register(name, fn);
   }
   annotate(fn) {
     let res = fn.toString()
@@ -105,9 +102,9 @@ class Provider {
     locals = locals || {};
     let deps = this.annotate(fn).map(s => locals[s] || this.get(s, locals), this);
     return fn.apply(null, deps);
-  }  
-  _register(name, service) {
-    this._providers[name] = service;
+  }
+  register(name, service) {
+    this.providers[name] = service;
   }
 };
 Provider.DIRECTIVES_SUFFIX = "Directive";
@@ -116,12 +113,16 @@ const provider = new Provider();
 
 class DOMCompiler {
   bootstrap() {
-    this.compile(document.children[0], provider.get("$rootScope"));
+    let root = document.querySelector("[ngl-app]");
+    if (root) {
+      this.compile(root, provider.get("$rootScope"));
+    }
   }
   compile(el, scope) {
-    let dirs = this._getElDirectives(el);
+    let dirs = this.getElDirectives(el);
     let dir;
     let scopeCreated;
+    console.log(el, dirs)
     dirs.forEach(d => {
       dir = provider.get(d.name + Provider.DIRECTIVES_SUFFIX);
       if (dir.scope && !scopeCreated) {
@@ -133,7 +134,7 @@ class DOMCompiler {
     let children = Array.prototype.slice.call(el.children).map(c => c);
     children.forEach(c => this.compile(c, scope), this);
   }
-  _getElDirectives(el) {
+  getElDirectives(el) {
     let attrs = el.attributes;
     let result = [];
     for (var i = 0; i < attrs.length; i += 1) {
@@ -148,7 +149,6 @@ class DOMCompiler {
   }
 };
 const domcompiler = new DOMCompiler();
-
 provider.directive("ngl-bind", () => ({
     scope: false,
     link(el, scope, exp) {
@@ -157,7 +157,6 @@ provider.directive("ngl-bind", () => ({
     }
   })
 );
-
 provider.directive("ngl-click", () => ({
     scope: false,
     link(el, scope, exp) {
@@ -168,9 +167,9 @@ provider.directive("ngl-click", () => ({
     }
   })
 );
-
 provider.directive("ngl-model", () => ({
     link(el, scope, exp) {
+      el.value = scope[exp];
       el.onkeyup = () => {
         scope[exp] = el.value;
         scope.$digest();
@@ -179,7 +178,6 @@ provider.directive("ngl-model", () => ({
     }
   })
 );
-
 provider.directive("ngl-controller", () => ({
     scope: true,
     link(el, scope, exp) {
@@ -188,7 +186,6 @@ provider.directive("ngl-controller", () => ({
     }
   })
 );
-
 provider.directive("ngl-repeat", () => ({
     scope: false,
     link(el, scope, exp) {
@@ -207,7 +204,7 @@ provider.directive("ngl-repeat", () => ({
         scopes.forEach(s => s.$destroy());
         scopes = [];
         els.forEach(val => {
-          currentNode = el.cloneNode();
+          currentNode = el.cloneNode(true);
           currentNode.removeAttribute("ngl-repeat");
           currentNode.removeAttribute("ngl-scope");
           s = scope.$new();
@@ -222,10 +219,8 @@ provider.directive("ngl-repeat", () => ({
     }
   })
 );
-
 global.ngl = {
   controller: provider.controller.bind(provider),
   bootstrap: domcompiler.bootstrap.bind(domcompiler)
 };
-
 })(window)

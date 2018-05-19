@@ -11,21 +11,24 @@ db.refs = {
 
 const Loader = () => h("div", { class: "loader" });
 
-const DescriptionList = ({ list }) => list.map(item => item && h("dl", null,
-  h("dt", null, item[0]),
-  h("dd", null, item[1])
-));
+const DescriptionList = ({ list }) => {
+  return h("div", { class: "description-list" },
+    list.map(item => item && h("dl", null,
+      h("dt", null, item[0]),
+      h("dd", null, item[1])
+    ))
+  );
+};
 
 const ItemsList = ({ items, iterator }) => {
   if (!items) return h(Loader);
   if (!items.length) return h("span", null, "no items");
-  return items.map(iterator);
+  return h("div", { class: "items-list" }, items.map(iterator));
 }
 
 const NotFoundPage = () => h(Layout, null,
   h("div", { class: "view" }, "404! Page not found")
 );
-
 
 const PageIndex = (state, actions) => {
   setTimeout(() => location.hash = "#!/companies", 0);
@@ -98,12 +101,17 @@ class PageCompany extends Component {
     };
   }
   componentWillMount() {
-    db.refs.companies.find(this.props.params.uid).then(([company]) => {
+    console.log("!")
+    let uid = this.props.params.uid;
+    db.refs.companies.find(uid).then(([company]) => {
       this.setState({ company });
     });
-    // getEntries({ name: "companies", where: key });
-    // getEntries({ name: "employees", where: { company: key } });
-    // getEntries({ name: "tasks", where: { company: key } });
+    db.refs.employees.find({ company: uid }).then(employees => {
+      this.setState({ employees });
+    });
+    db.refs.tasks.find({ company: uid }).then(tasks => {
+      this.setState({ tasks });
+    });
   }
   render() {
     return h("div", { class: "view" },
@@ -176,8 +184,6 @@ class PageCompany extends Component {
       }) : h(Loader)
     )
   }
-
-
 
   // let { companies, employees, tasks, route } = state;
   // let { getEntries, setEntries } = actions;

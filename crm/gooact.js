@@ -119,7 +119,7 @@ class Component {
     if (this.base && this.shouldComponentUpdate(this.props, nextState)) {
       const prevState = this.state;
       this.componentWillUpdate(this.props, nextState);
-      this.state = nextState;
+      this.state = Object.assign({}, this.state, nextState);
       patch(this.base, this.render());
       this.componentDidUpdate(this.props, prevState);
     } else {
