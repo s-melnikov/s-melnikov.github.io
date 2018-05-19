@@ -33,9 +33,16 @@ a:focus {
   font-size: 13px;
   min-width: 60px;
   text-align: center;
+  cursor: pointer;
+}
+.btn.link {
+  border: none;
 }
 .btn.red {
   color: #ce2b2b;
+}
+.btn:hover {
+  background: #f5f5f5;
 }
 .main {
   max-width: 920px;
@@ -93,7 +100,7 @@ a:focus {
   animation-delay: 0.6s;
 }
 .controls {
-  padding: 10px;
+  padding: 10px 0;
 }
 @keyframes loaderFade {
   50% { background-color: rgba(0, 0, 0, 1) }

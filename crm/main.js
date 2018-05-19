@@ -1,12 +1,78 @@
 // fetch("dump.json").then(resp => resp.text()).then(text => db.restore(text));
 
-const { h, render, Component, Router, Link } = gooact;
+const { h, render, Component } = preact;
 const db = database("hypercrm");
 
 db.refs = {
   companies: db.collection("companies"),
   employees: db.collection("employees"),
   tasks: db.collection("tasks"),
+}
+
+class Router extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { children: [] };
+  }
+  hashChangeHandler() {
+    let hash = location.hash.slice(2) || "/";
+    let children = [];
+    this.props.children.forEach(child => {
+      let keys = [];
+      let regex = RegExp(child.props.path === "*" ? ".*" :
+        "^" + child.props.path.replace(/:([\w]+)/g, function(_, key) {
+          keys.push(key.toLowerCase());
+          return "([-\\.%\\w\\(\\)]+)";
+        }) + "$");
+      let match, params = {};
+      child.props.params = null;
+      if (match = regex.exec(hash)) {
+        keys.map((key, i) => params[key] = match[i + 1] || "");
+        child.props.params = params;
+        children = children.concat(child);
+      }
+    });
+    this.setState({ children });
+  }
+  render(props, state) {
+    return h("div", { class: "router" }, this.state.children);
+  }
+  componentWillMount() {
+    this.hashChangeHandler = this.hashChangeHandler.bind(this);
+    window.addEventListener("hashchange", this.hashChangeHandler);
+    this.hashChangeHandler();
+  }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.hashChangeHandler);
+  }
+}
+
+class Link extends Component {
+  constructor(props) {
+    super(props);
+    this.id = Link.counter++;
+    this.class = this.props.class || "";
+    this.props.href = "#!" + this.props.to;
+    this.state = { active: false };
+  }
+  hashChangeHandler() {
+    this.setState({ active: this.props.href.slice(2) == (location.hash.slice(2) || "/") });
+  }
+  componentWillMount() {
+    this.hashChangeHandler = this.hashChangeHandler.bind(this);
+    window.addEventListener("hashchange", this.hashChangeHandler);
+    this.hashChangeHandler();
+  }
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.hashChangeHandler);
+  }
+  render(props, state) {
+    this.props.class = this.class;
+    if (this.state.active) {
+      this.props.class += (this.class ? " " : "") + "active";
+    }
+    return h("a", this.props, this.props.children);
+  }
 }
 
 const Loader = () => h("div", { class: "loader" });
@@ -66,9 +132,9 @@ class PageCompanies extends Component {
     });
   }
   render() {
-    return h("div", { class: "view" },
+    return h("div", { key: "page-companies", class: "view" },
       h("div", { class: "controls" },
-        h(Link, { to: "/companies/new" }, "new company")
+        h(Link, { class: "btn link", to: "/companies/new" }, "new company")
       ),
       this.state.companies ? h("table", null,
         h("thead", null,
@@ -101,7 +167,6 @@ class PageCompany extends Component {
     };
   }
   componentWillMount() {
-    console.log("!")
     let uid = this.props.params.uid;
     db.refs.companies.find(uid).then(([company]) => {
       this.setState({ company });
@@ -114,7 +179,7 @@ class PageCompany extends Component {
     });
   }
   render() {
-    return h("div", { class: "view" },
+    return h("div", { key: "page-company-" + this.props.params.uid, class: "view" },
       this.state.company ? h(DescriptionList, {
         list: /*this.state.isEdit ? [
           ["", h("div", { class: "text-right" },
@@ -161,8 +226,8 @@ class PageCompany extends Component {
             })]
         ] : */[
           ["", h("div", { class: "text-right" },
-              h(Link, { class: "btn", to: "/companies/" + this.props.params.uid + "/edit" }, "edit"),
-              h(Link, { class: "btn red", to: "/companies/" + this.props.params.uid + "/delete" }, "delete")
+              h(Link, { class: "btn link", to: "/companies/" + this.props.params.uid + "/edit" }, "edit"),
+              h(Link, { class: "btn link red", to: "/companies/" + this.props.params.uid + "/delete" }, "delete")
             )],
           ["Name", this.state.company.name],
           ["Industry", this.state.company.industry],
