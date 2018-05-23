@@ -1,6 +1,7 @@
 // fetch("dump.json").then(resp => resp.text()).then(text => db.restore(text));
 
 const { h, render, Component } = preact;
+const { Router, Link } = router;
 const db = database("hypercrm");
 
 db.refs = {
@@ -9,70 +10,11 @@ db.refs = {
   tasks: db.collection("tasks"),
 }
 
-class Router extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { children: [] };
-  }
-  hashChangeHandler() {
-    let hash = location.hash.slice(2) || "/";
-    let children = [];
-    this.props.children.forEach(child => {
-      let keys = [];
-      let regex = RegExp(child.props.path === "*" ? ".*" :
-        "^" + child.props.path.replace(/:([\w]+)/g, function(_, key) {
-          keys.push(key.toLowerCase());
-          return "([-\\.%\\w\\(\\)]+)";
-        }) + "$");
-      let match, params = {};
-      child.props.params = null;
-      if (match = regex.exec(hash)) {
-        keys.map((key, i) => params[key] = match[i + 1] || "");
-        child.props.params = params;
-        children = children.concat(child);
-      }
-    });
-    this.setState({ children });
-  }
-  render(props, state) {
-    return h("div", { class: "router" }, this.state.children);
-  }
-  componentWillMount() {
-    this.hashChangeHandler = this.hashChangeHandler.bind(this);
-    window.addEventListener("hashchange", this.hashChangeHandler);
-    this.hashChangeHandler();
-  }
-  componentWillUnmount() {
-    window.removeEventListener("hashchange", this.hashChangeHandler);
-  }
-}
-
-class Link extends Component {
-  constructor(props) {
-    super(props);
-    this.id = Link.counter++;
-    this.class = this.props.class || "";
-    this.props.href = "#!" + this.props.to;
-    this.state = { active: false };
-  }
-  hashChangeHandler() {
-    this.setState({ active: this.props.href.slice(2) == (location.hash.slice(2) || "/") });
-  }
-  componentWillMount() {
-    this.hashChangeHandler = this.hashChangeHandler.bind(this);
-    window.addEventListener("hashchange", this.hashChangeHandler);
-    this.hashChangeHandler();
-  }
-  componentWillUnmount() {
-    window.removeEventListener("hashchange", this.hashChangeHandler);
-  }
-  render(props, state) {
-    this.props.class = this.class;
-    if (this.state.active) {
-      this.props.class += (this.class ? " " : "") + "active";
-    }
-    return h("a", this.props, this.props.children);
-  }
+const customHistory = () => {
+  const history = {
+    listen: cb => window.addEventListener("hashchange", () => cb(location.hash.slice(2)))
+  };
+  return history
 }
 
 const Loader = () => h("div", { class: "loader" });
@@ -111,7 +53,7 @@ class Main extends Component {
         )
       ),
       h("div", { class: "content" },
-        h(Router, null,
+        h(Router, { history: customHistory() },
           h(PageIndex, { path: "/" }),
           h(PageCompanies, { path: "/companies" }),
           h(PageCompany, { path: "/companies/:uid" }),
@@ -259,7 +201,7 @@ class PageCompany extends Component {
 
 }
 
-render(h(Main), document.body.querySelector("#main"));
+render(h(Main), document.body.querySelector("#root"));
 
 if (!localStorage.hypercrm) {
   fetch("dump.json").then(resp => resp.json()).then(data => {
