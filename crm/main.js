@@ -10,13 +10,6 @@ db.refs = {
   tasks: db.collection("tasks"),
 }
 
-const customHistory = () => {
-  const history = {
-    listen: cb => window.addEventListener("hashchange", () => cb(location.hash.slice(2)))
-  };
-  return history
-}
-
 const Loader = () => h("div", { class: "loader" });
 
 const DescriptionList = ({ list }) => {
@@ -53,7 +46,7 @@ class Main extends Component {
         )
       ),
       h("div", { class: "content" },
-        h(Router, { history: customHistory() },
+        h(Router, null,
           h(PageIndex, { path: "/" }),
           h(PageCompanies, { path: "/companies" }),
           h(PageCompany, { path: "/companies/:uid" }),
