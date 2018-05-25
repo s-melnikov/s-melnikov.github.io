@@ -1,7 +1,7 @@
 // fetch("dump.json").then(resp => resp.text()).then(text => db.restore(text));
 
 const { h, render, Component } = preact;
-const { Router, Link } = router;
+const { Route, Link } = router;
 const db = database("hypercrm");
 
 db.refs = {
@@ -46,11 +46,9 @@ class Main extends Component {
         )
       ),
       h("div", { class: "content" },
-        h(Router, null,
-          h(PageIndex, { path: "/" }),
-          h(PageCompanies, { path: "/companies" }),
-          h(PageCompany, { path: "/companies/:uid" }),
-        )
+        h(Route, { exact: true, path: "/", component: PageIndex }),
+        h(Route, { exact: true, path: "/companies", component: PageCompanies }),
+        h(Route, { exact: true, path: "/companies/:uid", component: PageCompany })
       )
     );
   }
@@ -102,7 +100,7 @@ class PageCompany extends Component {
     };
   }
   componentWillMount() {
-    let uid = this.props.params.uid;
+    let uid = this.props.match.params.uid;
     db.refs.companies.find(uid).then(([company]) => {
       this.setState({ company });
     });
@@ -114,7 +112,8 @@ class PageCompany extends Component {
     });
   }
   render() {
-    return h("div", { key: "page-company-" + this.props.params.uid, class: "view" },
+    let uid = this.props.match.params.uid;
+    return h("div", { key: "page-company-" + uid, class: "view" },
       this.state.company ? h(DescriptionList, {
         list: /*this.state.isEdit ? [
           ["", h("div", { class: "text-right" },
@@ -161,8 +160,8 @@ class PageCompany extends Component {
             })]
         ] : */[
           ["", h("div", { class: "text-right" },
-              h(Link, { class: "btn link", to: "/companies/" + this.props.params.uid + "/edit" }, "edit"),
-              h(Link, { class: "btn link red", to: "/companies/" + this.props.params.uid + "/delete" }, "delete")
+              h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "edit"),
+              h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "delete")
             )],
           ["Name", this.state.company.name],
           ["Industry", this.state.company.industry],
