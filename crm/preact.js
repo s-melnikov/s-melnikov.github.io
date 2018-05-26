@@ -150,7 +150,6 @@
   const setProperty = (node, name, value) => {
     try { node[name] = value; } catch (e) {}
   };
-  const eventProxy = event => this._listeners[event.type](options.event && options.event(event) || event);
   let mounts = [];
   let diffLevel = 0;
   let isSvgMode = false;
@@ -376,9 +375,6 @@
     }
     return inst;
   };
-  function doRender(props, state, context) {
-    return this.constructor(props, context);
-  };
   const setComponentProps = (component, props, opts, context, mountAll) => {
     if (component._disable) return;
     component._disable = true;
@@ -597,7 +593,13 @@
     renderComponent(this, 2);
   };
   Component.prototype.render = function render() {};
-  const render = (vnode, parent, merge) => diff(merge, vnode, {}, false, parent, false);
+  const render = (vnode, parent, merge) => diff(merge, vnode, {}, false, parent, false);  
+  function doRender(props, state, context) {
+    return this.constructor(props, context);
+  };
+  function eventProxy(event) {
+    this._listeners[event.type](options.event && options.event(event) || event);
+  }
   global.preact = {
     createElement: h,
     cloneElement,

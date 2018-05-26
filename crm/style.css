@@ -110,9 +110,11 @@ table {
   width: 100%;
 }
 table thead th {
-  color: #444;
+  color: #000;
   padding: 10px;
   text-align: left;
+  text-transform: uppercase;
+  font-weight: normal;
 }
 table td {
   padding: 12px 10px;

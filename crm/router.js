@@ -1,6 +1,6 @@
 ;(function(global) {
 const { h, Component, createElement } = preact;
-const getCurrentPath = () => location.hash.slice(2) || "/";
+const getCurrentPath = () => location.hash.replace(/^#!|\/$/g, "") || "/";
 const matchPath = (pathname, options) => {
   const { exact = false, path } = options;
   if (!path) {
@@ -69,10 +69,10 @@ class Link extends Component {
     this.forceUpdate();
   }
   render() {
-    let { to, children, activeClass } = this.props;
+    let { children, to, activeClass, onclick } = this.props;
     let href = "#!" + to;
     let _active = to == getCurrentPath() ? (activeClass || "active ") : "";
-    return h("a", { href, class: _active + this.props.class }, children);
+    return h("a", { href, onclick, class: _active + this.props.class }, children);
   }
 }
 class Redirect extends Component {

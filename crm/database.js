@@ -1,7 +1,5 @@
 (function(global) {
-
   let regexp = /\$parent\.(\w+)/g;
-
   class Database {
     constructor(name) {
       this.name = name;
@@ -57,7 +55,6 @@
       return result;
     }
   }
-
   class Collection {
     constructor(database, name) {
       this.database = database;
@@ -165,26 +162,22 @@
       });
     }
   }
-
   const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   const CHARS_LENGTH = CHARS.length;
-
   let uniqid = () => {
     let now = Date.now(), chars = [], i = 8, id;
-    while (i--)
+    while (i--) {
       chars[i] = CHARS.charAt(now % CHARS_LENGTH), now = Math.floor(now / CHARS_LENGTH);
+    }
     id = chars.join("");
     i = 8;
-    while (i--)
+    while (i--) {
       id += CHARS.charAt(Math.floor(Math.random() * CHARS_LENGTH));
+    }
     return id;
   }
-
-  let delay = cb => setTimeout(cb, Math.random() * 400 + 400);
-
+  let delay = cb => setTimeout(cb, Math.random() * 100 + 100);
   let type = o => Object.prototype.toString.call(o).slice(8, -1);
-
   global.database = name => new Database(name);
   global.database.uniqid = uniqid;
-
 })(this);
