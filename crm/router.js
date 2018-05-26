@@ -1,15 +1,6 @@
 ;(function(global) {
-
 const { h, Component, createElement } = preact;
-let instances = [];
-const register = component => instances.push(component);
-const unregister = component => instances.splice(instances.indexOf(component), 1);
-const historyPush = path => {
-  instances.forEach(instance => instance.forceUpdate());
-}
-const historyReplace = path => {
-  instances.forEach(instance => instance.forceUpdate());
-}
+const getCurrentPath = () => location.hash.slice(2) || "/";
 const matchPath = (pathname, options) => {
   const { exact = false, path } = options;
   if (!path) {
@@ -42,18 +33,16 @@ class Route extends Component {
   }
   componentWillMount() {
     addEventListener("hashchange", this.handleHashChangeBinded);
-    register(this);
   }
   componentWillUnmount() {
-    unregister(this);
-    removeEventListener("popstate", this.handleHashChangeBinded);
+    removeEventListener("hashchange", this.handleHashChangeBinded);
   }
   handleHashChange() {
     this.forceUpdate();
   }
   render() {
     const { path, exact, component, render } = this.props;
-    const match = matchPath(location.hash.slice(2) || "/", { path, exact });
+    const match = matchPath(getCurrentPath(), { path, exact });
     if (!match) return null;
     if (component) {
       return createElement(component, { match });
@@ -64,23 +53,36 @@ class Route extends Component {
     return null
   }
 }
+const links = [];
 class Link extends Component {
+  constructor(props) {
+    super(props);
+    this.hashChangeHandlerBinded = this.hashChangeHandler.bind(this);
+  }
+  componentWillMount() {
+    addEventListener("hashchange", this.hashChangeHandlerBinded);
+  }
+  componentWillUnmount() {
+    removeEventListener("hashchange", this.hashChangeHandlerBinded);
+  }
+  hashChangeHandler() {
+    this.forceUpdate();
+  }
   render() {
-    let props = this.props;
-    props.href = "#!" + props.to;
-    return h("a", props, props.children);
+    let { to, children, activeClass } = this.props;
+    let href = "#!" + to;
+    let _active = to == getCurrentPath() ? (activeClass || "active ") : "";
+    return h("a", { href, class: _active + this.props.class }, children);
   }
 }
 class Redirect extends Component {
   componentDidMount() {
     const { to } = this.props;
-    setTimeout(() => { location.hash = to });
+    setTimeout(() => location.hash = to);
   }
   render() {
-    return null
+    return null;
   }
 }
-
-global.router = { Route, Link }
-
+global.router = { Route, Link, Redirect }
 })(this);

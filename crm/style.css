@@ -29,11 +29,11 @@ a:focus {
 .btn {
   display: inline-block;
   border: 1px solid #eeeeee;
-  padding: 4px 8px;
+  padding: 5px 10px;
   font-size: 13px;
-  min-width: 60px;
   text-align: center;
   cursor: pointer;
+  text-transform:
 }
 .btn.link {
   border: none;
@@ -51,13 +51,12 @@ a:focus {
   margin: 10px 0;
 }
 .view .btn {
-  margin-left: 10px;
+  margin-кшпре: 10px;
 }
 .title {
   margin: 20px 5px 5px;
   font-size: 17px;
 }
-.tabs {}
 .tabs .tab {
   border-bottom: 2px solid transparent;
   display: inline-block;

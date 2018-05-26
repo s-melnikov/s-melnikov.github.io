@@ -1,6 +1,5 @@
 (function (global) {
   "use strict";
-
   class VNode {};
   const options = {
     //syncComponentUpdates: true,
@@ -11,7 +10,6 @@
   };
   const stack = [];
   const EMPTY_CHILDREN = [];
-
   function h(nodeName, attributes) {
     let children = EMPTY_CHILDREN;
     let lastSimple;
@@ -54,7 +52,7 @@
     p.key = attributes == null ? undefined : attributes.key;
     if (options.vnode !== undefined) options.vnode(p);
     return p;
-  }
+  };
   const cloneElement = ({ nodeName, attributes, children }, props, ...rest) => h(
     nodeName,
     Object.assign({}, attributes, props),
@@ -65,14 +63,14 @@
     if (!component._dirty && (component._dirty = true) && queueItems.push(component) == 1) {
       (options.debounceRendering || Promise.resolve().then.bind(Promise.resolve()))(rerender);
     }
-  }
+  };
   const rerender = () => {
     let component;
     while (component = queueItems.pop()) {
       if (component._dirty) renderComponent(component);
     }
     queueItems.length = 0;
-  }
+  };
   const isSameNodeType = (node, vnode, hydrating) => {
     if (typeof vnode === "string" || typeof vnode === "number") {
       return node.splitText !== undefined;
@@ -81,10 +79,10 @@
       return !node._componentConstructor && isNamedNode(node, vnode.nodeName);
     }
     return hydrating || node._componentConstructor === vnode.nodeName;
-  }
+  };
   const isNamedNode = (node, nodeName) => {
     return node.normalizedNodeName === nodeName || node.nodeName.toLowerCase() === nodeName.toLowerCase();
-  }
+  };
   const getNodeProps = vnode => {
     let props = Object.assign({}, vnode.attributes);
     props.children = vnode.children;
@@ -97,16 +95,16 @@
       }
     }
     return props;
-  }
+  };
   const createNode = (nodeName, isSvg) => {
     let node = isSvg ? document.createElementNS("http://www.w3.org/2000/svg", nodeName) : document.createElement(nodeName);
     node.normalizedNodeName = nodeName;
     return node;
-  }
+  };
   const removeNode = node => {
     var parentNode = node.parentNode;
     if (parentNode) parentNode.removeChild(node);
-  }
+  };
   const setAccessor = (node, name, old, value, isSvg) => {
     if (name === "key") {
     } else if (name === "ref") {
@@ -148,25 +146,23 @@
         if (ns) node.setAttributeNS("http://www.w3.org/1999/xlink", name.toLowerCase(), value);else node.setAttribute(name, value);
       }
     }
-  }
+  };
   const setProperty = (node, name, value) => {
     try { node[name] = value; } catch (e) {}
-  }
+  };
   const eventProxy = event => this._listeners[event.type](options.event && options.event(event) || event);
-
   let mounts = [];
   let diffLevel = 0;
   let isSvgMode = false;
   let hydrating = false;
-  const PREACT_ATTR = "__preactattr__"
-
+  const PREACT_ATTR = "__preactattr__";
   const flushMounts = () => {
     let component;
     while (component = mounts.pop()) {
       if (options.afterMount) options.afterMount(component);
       if (component.componentDidMount) component.componentDidMount();
     }
-  }
+  };
   const diff = (dom, vnode, context, mountAll, parent, componentRoot) => {
     if (!diffLevel++) {
       isSvgMode = parent != null && parent.ownerSVGElement !== undefined;
@@ -181,7 +177,7 @@
       if (!componentRoot) flushMounts();
     }
     return ret;
-  }
+  };
   const idiff = (dom, vnode, context, mountAll, componentRoot) => {
     let out = dom;
     let prevSvgMode = isSvgMode;
@@ -244,7 +240,7 @@
     diffAttributes(out, vnode.attributes, props);
     isSvgMode = prevSvgMode;
     return out;
-  }
+  };
   const innerDiffNode = (dom, vchildren, context, mountAll, isHydrating) => {
     let originalChildren = dom.childNodes;
     let children = [];
@@ -273,7 +269,6 @@
         }
       }
     }
-
     if (vlen !== 0) {
       for (let i = 0; i < vlen; i++) {
         vchild = vchildren[i];
@@ -317,7 +312,7 @@
     while (min <= childrenLen) {
       if ((child = children[childrenLen--]) !== undefined) recollectNodeTree(child, false);
     }
-  }
+  };
   const recollectNodeTree = (node, unmountOnly) => {
     let component = node._component;
     if (component) {
@@ -331,7 +326,7 @@
       }
       removeChildren(node);
     }
-  }
+  };
   const removeChildren = node => {
     node = node.lastChild;
     while (node) {
@@ -339,7 +334,7 @@
       recollectNodeTree(node, true);
       node = next;
     }
-  }
+  };
   const diffAttributes = (dom, attrs, old) => {
     let name;
     for (name in old) {
@@ -353,12 +348,12 @@
         setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
       }
     }
-  }
+  };
   let components = {};
   const collectComponent = component => {
     let name = component.constructor.name;
     (components[name] || (components[name] = [])).push(component);
-  }
+  };
   const createComponent = (Ctor, props, context) => {
     let list = components[Ctor.name];
     let inst;
@@ -380,367 +375,236 @@
       }
     }
     return inst;
-  }
+  };
   function doRender(props, state, context) {
     return this.constructor(props, context);
-  }
-  /** Set a component"s `props` (generally derived from JSX attributes).
-   *  @param {Object} props
-   *  @param {Object} [opts]
-   *  @param {boolean} [opts.renderSync=false]  If `true` and {@link options.syncComponentUpdates} is `true`, triggers synchronous rendering.
-   *  @param {boolean} [opts.render=true]   If `false`, no render will be triggered.
-   */
-  function setComponentProps(component, props, opts, context, mountAll) {
-  if (component._disable) return;
-  component._disable = true;
-
-  if (component.__ref = props.ref) delete props.ref;
-  if (component.__key = props.key) delete props.key;
-
-  if (!component.base || mountAll) {
-    if (component.componentWillMount) component.componentWillMount();
-  } else if (component.componentWillReceiveProps) {
-    component.componentWillReceiveProps(props, context);
-  }
-
-  if (context && context !== component.context) {
-    if (!component.prevContext) component.prevContext = component.context;
-    component.context = context;
-  }
-
-  if (!component.prevProps) component.prevProps = component.props;
-  component.props = props;
-
-  component._disable = false;
-
-  if (opts !== 0) {
-    if (opts === 1 || options.syncComponentUpdates !== false || !component.base) {
-    renderComponent(component, 1, mountAll);
-    } else {
-    enqueueRender(component);
+  };
+  const setComponentProps = (component, props, opts, context, mountAll) => {
+    if (component._disable) return;
+    component._disable = true;
+    if (component.__ref = props.ref) delete props.ref;
+    if (component.__key = props.key) delete props.key;
+    if (!component.base || mountAll) {
+      if (component.componentWillMount) {
+        component.componentWillMount();
+      }
+    } else if (component.componentWillReceiveProps) {
+      component.componentWillReceiveProps(props, context);
     }
-  }
-
-  if (component.__ref) component.__ref(component);
-  }
-
-  /** Render a Component, triggering necessary lifecycle events and taking High-Order Components into account.
-   *  @param {Component} component
-   *  @param {Object} [opts]
-   *  @param {boolean} [opts.build=false]   If `true`, component will build and store a DOM node if not already associated with one.
-   *  @private
-   */
-  function renderComponent(component, opts, mountAll, isChild) {
-  if (component._disable) return;
-
-  var props = component.props,
-    state = component.state,
-    context = component.context,
-    previousProps = component.prevProps || props,
-    previousState = component.prevState || state,
-    previousContext = component.prevContext || context,
-    isUpdate = component.base,
-    nextBase = component.nextBase,
-    initialBase = isUpdate || nextBase,
-    initialChildComponent = component._component,
-    skip = false,
-    rendered,
-    inst,
-    cbase;
-
-  // if updating
-  if (isUpdate) {
-    component.props = previousProps;
-    component.state = previousState;
-    component.context = previousContext;
-    if (opts !== 2 && component.shouldComponentUpdate && component.shouldComponentUpdate(props, state, context) === false) {
-    skip = true;
-    } else if (component.componentWillUpdate) {
-    component.componentWillUpdate(props, state, context);
+    if (context && context !== component.context) {
+      if (!component.prevContext) {
+        component.prevContext = component.context;
+      }
+      component.context = context;
+    }
+    if (!component.prevProps) {
+      component.prevProps = component.props;
     }
     component.props = props;
-    component.state = state;
-    component.context = context;
-  }
-
-  component.prevProps = component.prevState = component.prevContext = component.nextBase = null;
-  component._dirty = false;
-
-  if (!skip) {
-    rendered = component.render(props, state, context);
-
-    // context to pass to the child, can be updated via (grand-)parent component
-    if (component.getChildContext) {
-    context = Object.assign({}, context, component.getChildContext());
-    }
-
-    var childComponent = rendered && rendered.nodeName,
-      toUnmount,
-      base;
-
-    if (typeof childComponent === "function") {
-    // set up high order component link
-
-    var childProps = getNodeProps(rendered);
-    inst = initialChildComponent;
-
-    if (inst && inst.constructor === childComponent && childProps.key == inst.__key) {
-      setComponentProps(inst, childProps, 1, context, false);
-    } else {
-      toUnmount = inst;
-
-      component._component = inst = createComponent(childComponent, childProps, context);
-      inst.nextBase = inst.nextBase || nextBase;
-      inst._parentComponent = component;
-      setComponentProps(inst, childProps, 0, context, false);
-      renderComponent(inst, 1, mountAll, true);
-    }
-
-    base = inst.base;
-    } else {
-    cbase = initialBase;
-
-    // destroy high order component link
-    toUnmount = initialChildComponent;
-    if (toUnmount) {
-      cbase = component._component = null;
-    }
-
-    if (initialBase || opts === 1) {
-      if (cbase) cbase._component = null;
-      base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, true);
-    }
-    }
-
-    if (initialBase && base !== initialBase && inst !== initialChildComponent) {
-    var baseParent = initialBase.parentNode;
-    if (baseParent && base !== baseParent) {
-      baseParent.replaceChild(base, initialBase);
-
-      if (!toUnmount) {
-      initialBase._component = null;
-      recollectNodeTree(initialBase, false);
+    component._disable = false;
+    if (opts !== 0) {
+      if (opts === 1 || options.syncComponentUpdates !== false || !component.base) {
+        renderComponent(component, 1, mountAll);
+      } else {
+        enqueueRender(component);
       }
     }
+    if (component.__ref) {
+      component.__ref(component);
     }
-
-    if (toUnmount) {
-    unmountComponent(toUnmount);
-    }
-
-    component.base = base;
-    if (base && !isChild) {
-    var componentRef = component,
-      t = component;
-    while (t = t._parentComponent) {
-      (componentRef = t).base = base;
-    }
-    base._component = componentRef;
-    base._componentConstructor = componentRef.constructor;
-    }
-  }
-
-  if (!isUpdate || mountAll) {
-    mounts.unshift(component);
-  } else if (!skip) {
-    // Ensure that pending componentDidMount() hooks of child components
-    // are called before the componentDidUpdate() hook in the parent.
-    // Note: disabled as it causes duplicate hooks, see https://github.com/developit/preact/issues/750
-    // flushMounts();
-
-    if (component.componentDidUpdate) {
-    component.componentDidUpdate(previousProps, previousState, previousContext);
-    }
-    if (options.afterUpdate) options.afterUpdate(component);
-  }
-
-  if (component._renderCallbacks != null) {
-    while (component._renderCallbacks.length) {
-    component._renderCallbacks.pop().call(component);
-    }
-  }
-
-  if (!diffLevel && !isChild) flushMounts();
-  }
-
-  /** Apply the Component referenced by a VNode to the DOM.
-   *  @param {Element} dom  The DOM node to mutate
-   *  @param {VNode} vnode  A Component-referencing VNode
-   *  @returns {Element} dom  The created/mutated element
-   *  @private
-   */
-  function buildComponentFromVNode(dom, vnode, context, mountAll) {
-  var c = dom && dom._component,
-    originalComponent = c,
-    oldDom = dom,
-    isDirectOwner = c && dom._componentConstructor === vnode.nodeName,
-    isOwner = isDirectOwner,
-    props = getNodeProps(vnode);
-  while (c && !isOwner && (c = c._parentComponent)) {
-    isOwner = c.constructor === vnode.nodeName;
-  }
-
-  if (c && isOwner && (!mountAll || c._component)) {
-    setComponentProps(c, props, 3, context, mountAll);
-    dom = c.base;
-  } else {
-    if (originalComponent && !isDirectOwner) {
-    unmountComponent(originalComponent);
-    dom = oldDom = null;
-    }
-
-    c = createComponent(vnode.nodeName, props, context);
-    if (dom && !c.nextBase) {
-    c.nextBase = dom;
-    // passing dom/oldDom as nextBase will recycle it if unused, so bypass recycling on L229:
-    oldDom = null;
-    }
-    setComponentProps(c, props, 1, context, mountAll);
-    dom = c.base;
-
-    if (oldDom && dom !== oldDom) {
-    oldDom._component = null;
-    recollectNodeTree(oldDom, false);
-    }
-  }
-
-  return dom;
-  }
-
-  /** Remove a component from the DOM and recycle it.
-   *  @param {Component} component  The Component instance to unmount
-   *  @private
-   */
-  function unmountComponent(component) {
-  if (options.beforeUnmount) options.beforeUnmount(component);
-
-  var base = component.base;
-
-  component._disable = true;
-
-  if (component.componentWillUnmount) component.componentWillUnmount();
-
-  component.base = null;
-
-  // recursively tear down & recollect high-order component children:
-  var inner = component._component;
-  if (inner) {
-    unmountComponent(inner);
-  } else if (base) {
-    if (base[PREACT_ATTR] && base[PREACT_ATTR].ref) base[PREACT_ATTR].ref(null);
-
-    component.nextBase = base;
-
-    removeNode(base);
-    collectComponent(component);
-
-    removeChildren(base);
-  }
-
-  if (component.__ref) component.__ref(null);
-  }
-
-  /** Base Component class.
-   *  Provides `setState()` and `forceUpdate()`, which trigger rendering.
-   *  @public
-   *
-   *  @example
-   *  class MyFoo extends Component {
-   *  render(props, state) {
-   *    return <div />;
-   *  }
-   *  }
-   */
-  function Component(props, context) {
-  this._dirty = true;
-
-  /** @public
-  * @type {object}
-  */
-  this.context = context;
-
-  /** @public
-  * @type {object}
-  */
-  this.props = props;
-
-  /** @public
-  * @type {object}
-  */
-  this.state = this.state || {};
-  }
-
-  Object.assign(Component.prototype, {
-
-  /** Returns a `boolean` indicating if the component should re-render when receiving the given `props` and `state`.
-  * @param {object} nextProps
-  * @param {object} nextState
-  * @param {object} nextContext
-  * @returns {Boolean} should the component re-render
-  * @name shouldComponentUpdate
-  * @function
-  */
-
-  /** Update component state by copying properties from `state` to `this.state`.
-  * @param {object} state   A hash of state properties to update with new values
-  * @param {function} callback  A function to be called once component state is updated
-  */
-  setState: function setState(state, callback) {
-    var s = this.state;
-    if (!this.prevState) this.prevState = Object.assign({}, s);
-    Object.assign(s, typeof state === "function" ? state(s, this.props) : state);
-    if (callback) (this._renderCallbacks = this._renderCallbacks || []).push(callback);
-    enqueueRender(this);
-  },
-
-
-  /** Immediately perform a synchronous re-render of the component.
-  * @param {function} callback  A function to be called after component is re-rendered.
-  * @private
-  */
-  forceUpdate: function forceUpdate(callback) {
-    if (callback) (this._renderCallbacks = this._renderCallbacks || []).push(callback);
-    renderComponent(this, 2);
-  },
-
-
-  /** Accepts `props` and `state`, and returns a new Virtual DOM tree to build.
-  * Virtual DOM is generally constructed via [JSX](http://jasonformat.com/wtf-is-jsx).
-  * @param {object} props   Props (eg: JSX attributes) received from parent element/component
-  * @param {object} state   The component"s current state
-  * @param {object} context   Context object (if a parent component has provided context)
-  * @returns VNode
-  */
-  render: function render() {}
-  });
-
-  /** Render JSX into a `parent` Element.
-   *  @param {VNode} vnode  A (JSX) VNode to render
-   *  @param {Element} parent   DOM element to render into
-   *  @param {Element} [merge]  Attempt to re-use an existing DOM tree rooted at `merge`
-   *  @public
-   *
-   *  @example
-   *  // render a div into <body>:
-   *  render(<div id="hello">hello!</div>, document.body);
-   *
-   *  @example
-   *  // render a "Thing" component into #foo:
-   *  const Thing = ({ name }) => <span>{ name }</span>;
-   *  render(<Thing name="one" />, document.querySelector("#foo"));
-   */
-  function render(vnode, parent, merge) {
-  return diff(merge, vnode, {}, false, parent, false);
-  }
-
-  global.preact = {
-  h: h,
-  createElement: h,
-  cloneElement: cloneElement,
-  Component: Component,
-  render: render,
-  rerender: rerender,
-  options: options
   };
-
+  function renderComponent(component, opts, mountAll, isChild) {
+    if (component._disable) return;
+    let props = component.props;
+    let state = component.state;
+    let context = component.context;
+    let previousProps = component.prevProps || props;
+    let previousState = component.prevState || state;
+    let previousContext = component.prevContext || context;
+    let isUpdate = component.base;
+    let nextBase = component.nextBase;
+    let initialBase = isUpdate || nextBase;
+    let initialChildComponent = component._component;
+    let skip = false;
+    let rendered;
+    let inst;
+    let cbase;
+    if (isUpdate) {
+      component.props = previousProps;
+      component.state = previousState;
+      component.context = previousContext;
+      if (opts !== 2 && component.shouldComponentUpdate &&
+        component.shouldComponentUpdate(props, state, context) === false) {
+        skip = true;
+      } else if (component.componentWillUpdate) {
+        component.componentWillUpdate(props, state, context);
+      }
+      component.props = props;
+      component.state = state;
+      component.context = context;
+    }
+    component.prevProps = component.prevState = component.prevContext = component.nextBase = null;
+    component._dirty = false;
+    if (!skip) {
+      rendered = component.render(props, state, context);
+      if (component.getChildContext) {
+        context = Object.assign({}, context, component.getChildContext());
+      }
+      let childComponent = rendered && rendered.nodeName;
+      let toUnmount;
+      let base;
+      if (typeof childComponent === "function") {
+        let childProps = getNodeProps(rendered);
+        inst = initialChildComponent;
+        if (inst && inst.constructor === childComponent && childProps.key == inst.__key) {
+          setComponentProps(inst, childProps, 1, context, false);
+        } else {
+          toUnmount = inst;
+          component._component = inst = createComponent(childComponent, childProps, context);
+          inst.nextBase = inst.nextBase || nextBase;
+          inst._parentComponent = component;
+          setComponentProps(inst, childProps, 0, context, false);
+          renderComponent(inst, 1, mountAll, true);
+        }
+        base = inst.base;
+      } else {
+        cbase = initialBase;
+        toUnmount = initialChildComponent;
+      if (toUnmount) {
+        cbase = component._component = null;
+      }
+      if (initialBase || opts === 1) {
+        if (cbase) cbase._component = null;
+          base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, true);
+        }
+      }
+      if (initialBase && base !== initialBase && inst !== initialChildComponent) {
+        let baseParent = initialBase.parentNode;
+        if (baseParent && base !== baseParent) {
+          baseParent.replaceChild(base, initialBase);
+          if (!toUnmount) {
+            initialBase._component = null;
+            recollectNodeTree(initialBase, false);
+          }
+        }
+      }
+      if (toUnmount) {
+        unmountComponent(toUnmount);
+      }
+      component.base = base;
+      if (base && !isChild) {
+        let componentRef = component;
+        let t = component;
+        while (t = t._parentComponent) {
+          (componentRef = t).base = base;
+        }
+        base._component = componentRef;
+        base._componentConstructor = componentRef.constructor;
+      }
+    }
+    if (!isUpdate || mountAll) {
+      mounts.unshift(component);
+    } else if (!skip) {
+      if (component.componentDidUpdate) {
+        component.componentDidUpdate(previousProps, previousState, previousContext);
+      }
+      if (options.afterUpdate) options.afterUpdate(component);
+    }
+    if (component._renderCallbacks != null) {
+      while (component._renderCallbacks.length) {
+        component._renderCallbacks.pop().call(component);
+      }
+    }
+    if (!diffLevel && !isChild) flushMounts();
+  };
+  const buildComponentFromVNode = (dom, vnode, context, mountAll) => {
+    let c = dom && dom._component;
+    let originalComponent = c;
+    let oldDom = dom;
+    let isDirectOwner = c && dom._componentConstructor === vnode.nodeName;
+    let isOwner = isDirectOwner;
+    let props = getNodeProps(vnode);
+    while (c && !isOwner && (c = c._parentComponent)) {
+      isOwner = c.constructor === vnode.nodeName;
+    }
+    if (c && isOwner && (!mountAll || c._component)) {
+      setComponentProps(c, props, 3, context, mountAll);
+      dom = c.base;
+    } else {
+      if (originalComponent && !isDirectOwner) {
+        unmountComponent(originalComponent);
+        dom = oldDom = null;
+      }
+      c = createComponent(vnode.nodeName, props, context);
+      if (dom && !c.nextBase) {
+        c.nextBase = dom;
+        oldDom = null;
+      }
+      setComponentProps(c, props, 1, context, mountAll);
+      dom = c.base;
+      if (oldDom && dom !== oldDom) {
+        oldDom._component = null;
+        recollectNodeTree(oldDom, false);
+      }
+    }
+    return dom;
+  };
+  function unmountComponent(component) {
+    let base = component.base;
+    if (options.beforeUnmount) {
+      options.beforeUnmount(component);
+    }
+    component._disable = true;
+    if (component.componentWillUnmount) {
+      component.componentWillUnmount();
+    }
+    component.base = null;
+    var inner = component._component;
+    if (inner) {
+      unmountComponent(inner);
+    } else if (base) {
+      if (base[PREACT_ATTR] && base[PREACT_ATTR].ref) {
+        base[PREACT_ATTR].ref(null);
+      }
+      component.nextBase = base;
+      removeNode(base);
+      collectComponent(component);
+      removeChildren(base);
+    }
+    if (component.__ref) component.__ref(null);
+  };
+  function Component(props, context) {
+    this._dirty = true;
+    this.context = context;
+    this.props = props;
+    this.state = this.state || {};
+  };
+  Component.prototype.setState = function setState(state, callback) {
+    let s = this.state;
+    if (!this.prevState) {
+      this.prevState = Object.assign({}, s);
+    }
+    Object.assign(s, typeof state === "function" ? state(s, this.props) : state);
+    if (callback) {
+      (this._renderCallbacks = this._renderCallbacks || []).push(callback);
+    }
+    enqueueRender(this);
+  };
+  Component.prototype.forceUpdate = function forceUpdate(callback) {
+    if (callback) {
+      (this._renderCallbacks = this._renderCallbacks || []).push(callback);
+    }
+    renderComponent(this, 2);
+  };
+  Component.prototype.render = function render() {};
+  const render = (vnode, parent, merge) => diff(merge, vnode, {}, false, parent, false);
+  global.preact = {
+    createElement: h,
+    cloneElement,
+    Component,
+    rerender,
+    options,
+    render,
+    h
+  };
 }(this));
