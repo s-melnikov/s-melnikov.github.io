@@ -94,9 +94,9 @@ class PageCompany extends Component {
     this.state.isEdit = null;
   }
   componentWillMount() {
-    let { uid, action } = this.props.match.params;
-    if (uid === "new") {
-      this.setState({ 
+    let { uid } = this.props.match.params;
+    if (uid == "new") {
+      this.setState({
         company: {},
         employees: [],
         tasks: []
@@ -111,42 +111,53 @@ class PageCompany extends Component {
       db.refs.tasks.find({ company: uid }).then(tasks => {
         this.setState({ tasks });
     });
-    }    
+    }
+  }
+  componentWillReciveProps() {
+
+  }
+  saveForm() {
+    let { uid } = this.props.match.params;
+    if (uid == "new") {
+      db.refs.companies.push(company, entry => {
+        // location.hash = "!/companies/" + entry.uid;
+      });
+    } else {
+      db.refs.companies.update(company, uid).then(result => {});
+    }
+  }
+  inputElement(name) {
+    return h("input", {
+      value: this.state.company[name],
+      oninput: event => {
+        let { company } = this.state;
+        company[name] = event.target.value;
+        this.setState({ company });
+      }
+    })
   }
   render() {
     let { uid, action } = this.props.match.params;
     let { company, employees, tasks } = this.state;
     let isNew = uid == "new";
     let isEdit = action == "edit" || isNew;
-    console.log(isNew, isEdit)
     company = company ? Object.assign({}, company) : null;
     return h("div", { key: "page-company-" + uid, class: "view" },
       company ? [
         isEdit ? h("div", { class: "controls" },
-          h(Link, { to: "/companies/" + uid, class: "btn link",
-            onclick: e => {   
-              if (isNew) {           
-                db.refs.companies.push(company, entry => {
-                  location.hash = "!/companies/" + entry.uid;
-                });
-                setEntries({ name: "companies", entries: null });
-              } else {
-                db.refs.companies.update(company, uid).then(result => {});
-              }
-            },
-          }, "save"),
+          h(Link, { class: "btn link", to: "/companies/" + uid, onclick: this.saveForm }, "save"),
           h(Link, { class: "btn link red", to: "/companies/" + (isNew ? "" : uid) }, "cancel")
         ) : h("div", { class: "controls" },
           h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "edit"),
           h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "delete")
         ),
         h(DescriptionList, { list: isEdit ? [
-            ["Name", h("input", { value: company.name, oninput: e => company.name = e.target.value })],
-            ["Industry", h("input", { value: company.industry, oninput: e => company.industry = e.target.value })],
-            ["Phone", h("input", { value: company.phone, oninput: e => company.phone = e.target.value })],
-            ["Country", h("input", { value: company.country, oninput: e => company.country = e.target.value })],
-            ["City", h("input", { value: company.city, oninput: e => company.city = e.target.value })],
-            ["Address", h("input", { value: company.address, oninput: e => company.address = e.target.value })]
+            ["Name", this.inputElement("name")],
+            ["Industry", this.inputElement("industry")],
+            ["Phone", this.inputElement("phone")],
+            ["Country", this.inputElement("country")],
+            ["City", this.inputElement("city")],
+            ["Address", this.inputElement("address")]
           ] : [
             ["Name", company.name],
             ["Industry", company.industry],
@@ -154,15 +165,17 @@ class PageCompany extends Component {
             ["Country", company.country],
             ["City", company.city],
             ["Address", company.address],
-            ["Emploees", h(ItemsList, { items: employees,
-                iterator: emploee => h("div", null,
-                  h(Link, { to: "/employees/" + emploee.$key },
-                    emploee.first_name + " " + emploee.last_name
-                  )
-                )
-              })],
-            ["Tasks", h(ItemsList, { items: tasks,
-                iterator: task => h("div", null, task.content) })]
+            ["Emploees", h(ItemsList, {
+              items: employees,
+              iterator: emploee => h("div", null,
+                h(Link, { to: "/employees/" + emploee.$key },
+                  emploee.first_name + " " + emploee.last_name)
+              )
+            })],
+            ["Tasks", h(ItemsList, {
+              items: tasks,
+              iterator: task => h("div", null, task.content)
+            })]
           ]
         })
       ] : h(Loader)
