@@ -33,6 +33,20 @@ const PageIndex = (state, actions) => {
   setTimeout(() => location.hash = "#!/companies", 0);
   return null;
 };
+class Router extends Component {
+  constructor(props) {
+    super(props);
+    this.prepareRoutes();
+  }
+  prepareRoutes() {
+    let { routes } = this.props;
+    let paths = Object.keys(routes);
+    this.routes = paths.map(path => {
+      console.log(path)
+      return {}
+    });
+  }
+}
 class Main extends Component {
   render() {
     return h("div", { class: "main" },
@@ -42,12 +56,15 @@ class Main extends Component {
           h(Link, { class: "tab", to: "/employees" }, "Employees")
         )
       ),
-      h("div", { class: "content" },
-        h(Route, { exact: true, path: "/", component: PageIndex }),
-        h(Route, { exact: true, path: "/companies", component: PageCompanies }),
-        h(Route, { exact: true, path: "/companies/:uid", component: PageCompany }),
-        h(Route, { exact: true, path: "/companies/:uid/:action", component: PageCompany })
-      )
+      h(Router, {
+        routes: {
+          "/": PageIndex,
+          "/companies": PageCompanies,
+          "/companies/:uid": PageCompany,
+          "/companies/new": PageCompanyForm,
+          "/companies/:uid/edit": PageCompanyForm
+        }
+      })
     );
   }
 };
@@ -88,42 +105,47 @@ class PageCompanies extends Component {
   }
 };
 class PageCompany extends Component {
-  constructor(props) {
-    super(props);
-    this.state.company = null;
-    this.state.isEdit = null;
-  }
   componentWillMount() {
     let { uid } = this.props.match.params;
-    if (uid == "new") {
-      this.setState({
-        company: {},
-        employees: [],
-        tasks: []
-      });
-    } else {
+    db.refs.companies.find(uid).then(([company]) => {
+      this.setState({ company });
+    });
+  }
+  render() {
+    let { uid } = this.props.match.params;
+    let { company } = this.state;
+    if (!company) {
+      return h(Loader);
+    }
+    return h("div", { key: "page-company-" + uid, class: "view" },
+      h("div", { class: "controls" },
+        h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "edit"),
+        h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "delete")
+      ),
+      h(DescriptionList, {
+        list: [
+          ["Name", company.name],
+          ["Industry", company.industry],
+          ["Phone", company.phone],
+          ["Country", company.country],
+          ["City", company.city],
+          ["Address", company.address],
+          ["Emploees", h(EmploeesShortList, { where: { company: uid } })],
+          ["Tasks", h(TasksShortList, { where: { company: uid } })]
+        ]
+      })
+    );
+  }
+};
+class PageCompanyForm extends Component {
+  componentWillMount() {
+    let { uid } = this.props.match.params;
+    if (uid) {
       db.refs.companies.find(uid).then(([company]) => {
         this.setState({ company });
       });
-      db.refs.employees.find({ company: uid }).then(employees => {
-        this.setState({ employees });
-      });
-      db.refs.tasks.find({ company: uid }).then(tasks => {
-        this.setState({ tasks });
-    });
-    }
-  }
-  componentWillReciveProps() {
-
-  }
-  saveForm() {
-    let { uid } = this.props.match.params;
-    if (uid == "new") {
-      db.refs.companies.push(company, entry => {
-        // location.hash = "!/companies/" + entry.uid;
-      });
     } else {
-      db.refs.companies.update(company, uid).then(result => {});
+      this.setState({ company: {} });
     }
   }
   inputElement(name) {
@@ -137,49 +159,56 @@ class PageCompany extends Component {
     })
   }
   render() {
-    let { uid, action } = this.props.match.params;
-    let { company, employees, tasks } = this.state;
-    let isNew = uid == "new";
-    let isEdit = action == "edit" || isNew;
-    company = company ? Object.assign({}, company) : null;
-    return h("div", { key: "page-company-" + uid, class: "view" },
-      company ? [
-        isEdit ? h("div", { class: "controls" },
-          h(Link, { class: "btn link", to: "/companies/" + uid, onclick: this.saveForm }, "save"),
-          h(Link, { class: "btn link red", to: "/companies/" + (isNew ? "" : uid) }, "cancel")
-        ) : h("div", { class: "controls" },
-          h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "edit"),
-          h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "delete")
-        ),
-        h(DescriptionList, { list: isEdit ? [
-            ["Name", this.inputElement("name")],
-            ["Industry", this.inputElement("industry")],
-            ["Phone", this.inputElement("phone")],
-            ["Country", this.inputElement("country")],
-            ["City", this.inputElement("city")],
-            ["Address", this.inputElement("address")]
-          ] : [
-            ["Name", company.name],
-            ["Industry", company.industry],
-            ["Phone", company.phone],
-            ["Country", company.country],
-            ["City", company.city],
-            ["Address", company.address],
-            ["Emploees", h(ItemsList, {
-              items: employees,
-              iterator: emploee => h("div", null,
-                h(Link, { to: "/employees/" + emploee.$key },
-                  emploee.first_name + " " + emploee.last_name)
-              )
-            })],
-            ["Tasks", h(ItemsList, {
-              items: tasks,
-              iterator: task => h("div", null, task.content)
-            })]
-          ]
-        })
-      ] : h(Loader)
-    );
+    let { company } = this.state;
+    return company ?
+      h(DescriptionList, {
+        list: [
+          ["Name", company.name],
+          ["Industry", company.industry],
+          ["Phone", company.phone],
+          ["Country", company.country],
+          ["City", company.city],
+          ["Address", company.address]
+        ]
+      }) :
+      h(Loader);
   }
-};
+}
+class EmploeesShortList extends Component {
+  componentWillMount() {
+    let { where } = this.props;
+    db.refs.employees.find(where).then(employees => {
+      this.setState({ employees });
+    });
+  }
+  render() {
+    let { employees } = this.state;
+    return employees ?
+      h(ItemsList, {
+        items: employees,
+        iterator: emploee => h("div", null,
+          h(Link, { to: "/employees/" + emploee.uid },
+            emploee.first_name + " " + emploee.last_name)
+        )
+      }) :
+      h(Loader);
+  }
+}
+class TasksShortList extends Component {
+  componentWillMount() {
+    let { where } = this.props;
+    db.refs.tasks.find(where).then(tasks => {
+      this.setState({ tasks });
+    });
+  }
+  render() {
+    let { tasks } = this.state;
+    return tasks ?
+      h(ItemsList, {
+        items: tasks,
+        iterator: task => h("div", null, task.content)
+      }) :
+      h(Loader);
+  }
+}
 render(h(Main), document.body.querySelector("#root"));
