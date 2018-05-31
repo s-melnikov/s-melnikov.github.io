@@ -5,7 +5,7 @@ if (!localStorage.hypercrm) {
   });
 }
 const { h, render, Component } = preact;
-const { Route, Link } = router;
+const getCurrentPath = () => location.hash.replace(/^#!|\/$/g, "") || "/";
 const db = database("hypercrm");
 db.refs = {
   companies: db.collection("companies"),
@@ -13,9 +13,11 @@ db.refs = {
   tasks: db.collection("tasks"),
 };
 const Loader = () => h("div", { class: "loader" });
-const DescriptionList = ({ list }) => {
-  return h("div", { class: "description-list" },
-    list.map(item => item && h("dl", null,
+const DescriptionList = props => {
+  return h("div", {
+      class: "description-list" + (props.class ? (" " + props.class) : "")
+    },
+    props.list.map(item => item && h("dl", null,
       h("dt", null, item[0]),
       h("dd", null, item[1])
     ))
@@ -26,25 +28,73 @@ const ItemsList = ({ items, iterator }) => {
   if (!items.length) return h("span", null, "no items");
   return h("div", { class: "items-list" }, items.map(iterator));
 };
-const NotFoundPage = () => h(Layout, null,
-  h("div", { class: "view" }, "404! Page not found")
-);
-const PageIndex = (state, actions) => {
-  setTimeout(() => location.hash = "#!/companies", 0);
-  return null;
-};
 class Router extends Component {
   constructor(props) {
     super(props);
     this.prepareRoutes();
+    this.hashChangeHandler = this.hashChangeHandler.bind(this);
+  }
+  componentWillMount() {
+    this.state.path = getCurrentPath();
+    addEventListener("hashchange", this.hashChangeHandler);
+  }
+  componentWillUnmount() {
+    removeEventListener("hashchange", this.hashChangeHandler);
+  }
+  hashChangeHandler() {
+    this.setState({ path: getCurrentPath() });
   }
   prepareRoutes() {
     let { routes } = this.props;
     let paths = Object.keys(routes);
     this.routes = paths.map(path => {
-      console.log(path)
-      return {}
+      let keys = [];
+      let component = routes[path];
+      let regexp = RegExp(path === "*" ? ".*" :
+        "^" + path.replace(/:([\w]+)/g, (_, key) => {
+          keys.push(key);
+          return "([-\\.%\\w\\(\\)]+)";
+        }) + "$");
+      return { regexp, keys, component };
     });
+  }
+  render() {
+    let { path } = this.state;
+    let match, params = {};
+    for (let i = 0; i < this.routes.length; i++) {
+      let { regexp, keys, component } = this.routes[i];
+      if (match = regexp.exec(path)) {
+        keys.map((key, i) => params[key] = match[i + 1] || "");
+        return h(component, { params });
+      }
+    }
+    return null;
+  }
+}
+class Link extends Component {
+  constructor(props) {
+    super(props);
+    this.hashChangeHandlerBinded = this.hashChangeHandler.bind(this);
+  }
+  componentWillMount() {
+    addEventListener("hashchange", this.hashChangeHandlerBinded);
+  }
+  componentWillUnmount() {
+    removeEventListener("hashchange", this.hashChangeHandlerBinded);
+  }
+  hashChangeHandler() {
+    this.forceUpdate();
+  }
+  render() {
+    let { children, to, activeClass, onclick } = this.props;
+    let href = "#!" + to;
+    let _active = to == getCurrentPath() ? (activeClass || "active ") : "";
+    return h("a", { href, onclick, class: _active + this.props.class }, children);
+  }
+}
+class Redirect extends Component {
+  componentDidMount() {
+    setTimeout(() => location.hash = "!" + this.props.to);
   }
 }
 class Main extends Component {
@@ -60,12 +110,19 @@ class Main extends Component {
         routes: {
           "/": PageIndex,
           "/companies": PageCompanies,
-          "/companies/:uid": PageCompany,
           "/companies/new": PageCompanyForm,
-          "/companies/:uid/edit": PageCompanyForm
+          "/companies/:uid": PageCompany,
+          "/companies/:uid/edit": PageCompanyForm,
+          "*": PageNotFound
         }
       })
     );
+  }
+};
+const PageNotFound = () => h("div", { class: "view" }, "404! Page not found");
+class PageIndex extends Component {
+  render() {
+    return h(Redirect, { to: "/companies" });
   }
 };
 class PageCompanies extends Component {
@@ -106,21 +163,21 @@ class PageCompanies extends Component {
 };
 class PageCompany extends Component {
   componentWillMount() {
-    let { uid } = this.props.match.params;
+    let { uid } = this.props.params;
     db.refs.companies.find(uid).then(([company]) => {
       this.setState({ company });
     });
   }
   render() {
-    let { uid } = this.props.match.params;
+    let { uid } = this.props.params;
     let { company } = this.state;
     if (!company) {
       return h(Loader);
     }
     return h("div", { key: "page-company-" + uid, class: "view" },
       h("div", { class: "controls" },
-        h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "edit"),
-        h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "delete")
+        h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "eEit"),
+        h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "Delete")
       ),
       h(DescriptionList, {
         list: [
@@ -139,7 +196,7 @@ class PageCompany extends Component {
 };
 class PageCompanyForm extends Component {
   componentWillMount() {
-    let { uid } = this.props.match.params;
+    let { uid } = this.props.params;
     if (uid) {
       db.refs.companies.find(uid).then(([company]) => {
         this.setState({ company });
@@ -151,27 +208,34 @@ class PageCompanyForm extends Component {
   inputElement(name) {
     return h("input", {
       value: this.state.company[name],
-      oninput: event => {
-        let { company } = this.state;
-        company[name] = event.target.value;
+      onchange: ({ target }) => {
+        let company = Object.assign({}, this.state.company, { [name]: target.value });
         this.setState({ company });
       }
     })
   }
   render() {
+    let { uid } = this.props;
     let { company } = this.state;
-    return company ?
-      h(DescriptionList, {
-        list: [
-          ["Name", company.name],
-          ["Industry", company.industry],
-          ["Phone", company.phone],
-          ["Country", company.country],
-          ["City", company.city],
-          ["Address", company.address]
-        ]
-      }) :
-      h(Loader);
+    return h("div", { key: "page-company-" + (uid || "new"), class: "view" },
+      h("div", { class: "controls" },
+        h(Link, { class: "btn link", to: "/" }, "Save"),
+        h(Link, { class: "btn link red", to: "/" }, "Cancel")
+      ),
+      company ?
+        h(DescriptionList, {
+          class: "edit-form",
+          list: [
+            ["Name", this.inputElement("name")],
+            ["Industry", this.inputElement("industry")],
+            ["Phone", this.inputElement("phone")],
+            ["Country", this.inputElement("country")],
+            ["City", this.inputElement("city")],
+            ["Address", this.inputElement("address")]
+          ]
+        }) :
+        h(Loader)
+    );
   }
 }
 class EmploeesShortList extends Component {

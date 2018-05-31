@@ -51,7 +51,7 @@ a:focus {
   margin: 10px 0;
 }
 .view .btn {
-  margin-кшпре: 10px;
+  margin-right: 10px;
 }
 .title {
   margin: 20px 5px 5px;
@@ -161,4 +161,10 @@ input:focus:not([type=checkbox]):not([type=radio]) {
 }
 dl dd input {
   margin: -1px 0 -3px;
+}
+.page_404 {
+  padding: 25px 10px;
+}
+.description-list.edit-form {
+  width: 560px;
 }
