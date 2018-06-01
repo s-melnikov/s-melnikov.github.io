@@ -37,6 +37,7 @@ a:focus {
 }
 .btn.link {
   border: none;
+  color: #00adff;
 }
 .btn.red {
   color: #ce2b2b;

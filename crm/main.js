@@ -9,8 +9,7 @@ const getCurrentPath = () => location.hash.replace(/^#!|\/$/g, "") || "/";
 const db = database("hypercrm");
 db.refs = {
   companies: db.collection("companies"),
-  employees: db.collection("employees"),
-  tasks: db.collection("tasks"),
+  employees: db.collection("employees")
 };
 const Loader = () => h("div", { class: "loader" });
 const DescriptionList = props => {
@@ -113,6 +112,10 @@ class Main extends Component {
           "/companies/new": PageCompanyForm,
           "/companies/:uid": PageCompany,
           "/companies/:uid/edit": PageCompanyForm,
+          "/employees": PageEmployees,
+          "/employees/new": PageEmployeeForm,
+          "/employees/:uid": PageEmployee,
+          "/employees/:uid/edit": PageEmployeeForm,
           "*": PageNotFound
         }
       })
@@ -138,26 +141,28 @@ class PageCompanies extends Component {
   render() {
     return h("div", { key: "page-companies", class: "view" },
       h("div", { class: "controls" },
-        h(Link, { class: "btn link", to: "/companies/new" }, "new company")
+        h(Link, { class: "btn link", to: "/companies/new" }, "New company")
       ),
-      this.state.companies ? h("table", null,
-        h("thead", null,
-          h("tr", null,
-            h("th", null, "Name"),
-            h("th", null, "Industry"),
-            h("th", null, "Phone")
-          )
-        ),
-        h("tbody", null,
-          this.state.companies.map(company =>
+      this.state.companies ?
+        h("table", null,
+          h("thead", null,
             h("tr", null,
-              h("td", null, h(Link, { to: "/companies/" + company.uid }, company.name)),
-              h("td", null, company.industry),
-              h("td", null, company.phone)
+              h("th", null, "Name"),
+              h("th", null, "Industry"),
+              h("th", null, "Phone")
+            )
+          ),
+          h("tbody", null,
+            this.state.companies.map(company =>
+              h("tr", null,
+                h("td", null, h(Link, { to: "/companies/" + company.uid }, company.name)),
+                h("td", null, company.industry),
+                h("td", null, company.phone)
+              )
             )
           )
-        )
-      ) : h(Loader)
+        ) :
+        h(Loader)
     )
   }
 };
@@ -171,26 +176,24 @@ class PageCompany extends Component {
   render() {
     let { uid } = this.props.params;
     let { company } = this.state;
-    if (!company) {
-      return h(Loader);
-    }
     return h("div", { key: "page-company-" + uid, class: "view" },
       h("div", { class: "controls" },
-        h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "eEit"),
+        h(Link, { class: "btn link", to: "/companies/" + uid + "/edit" }, "Edit"),
         h(Link, { class: "btn link red", to: "/companies/" + uid + "/delete" }, "Delete")
       ),
-      h(DescriptionList, {
-        list: [
-          ["Name", company.name],
-          ["Industry", company.industry],
-          ["Phone", company.phone],
-          ["Country", company.country],
-          ["City", company.city],
-          ["Address", company.address],
-          ["Emploees", h(EmploeesShortList, { where: { company: uid } })],
-          ["Tasks", h(TasksShortList, { where: { company: uid } })]
-        ]
-      })
+      company ?
+        h(DescriptionList, {
+          list: [
+            ["Name", company.name],
+            ["Industry", company.industry],
+            ["Phone", company.phone],
+            ["Country", company.country],
+            ["City", company.city],
+            ["Address", company.address],
+            ["Employees", h(EmployeesShortList, { where: { company: uid } })]
+          ]
+        }) :
+        h(Loader)
     );
   }
 };
@@ -214,12 +217,25 @@ class PageCompanyForm extends Component {
       }
     })
   }
+  saveEntry() {
+    let { uid } = this.props.params;
+    let { company } = this.state;
+    if (uid) {
+      db.refs.companies.update(company, uid).then(() => {
+        location.hash = "!/companies/" + uid
+      });
+    } else {
+      db.refs.companies.push(company, ({ uid }) => {
+        location.hash = "!/companies/" + uid
+      });
+    }
+  }
   render() {
     let { uid } = this.props;
     let { company } = this.state;
     return h("div", { key: "page-company-" + (uid || "new"), class: "view" },
       h("div", { class: "controls" },
-        h(Link, { class: "btn link", to: "/" }, "Save"),
+        h("span", { class: "btn link", onClick: () => { this.saveEntry() } }, "Save"),
         h(Link, { class: "btn link red", to: "/" }, "Cancel")
       ),
       company ?
@@ -238,7 +254,146 @@ class PageCompanyForm extends Component {
     );
   }
 }
-class EmploeesShortList extends Component {
+class PageEmployees extends Component {
+  constructor(props) {
+    super(props);
+    this.state.employees = null;
+  }
+  componentWillMount() {
+    db.refs.employees.find().then(employees => {
+      this.setState({ employees });
+    });
+  }
+  render() {
+    return h("div", { key: "page-employees", class: "view" },
+      h("div", { class: "controls" },
+        h(Link, { class: "btn link", to: "/employees/new" }, "New employee")
+      ),
+      this.state.employees ?
+        h("table", null,
+          h("thead", null,
+            h("tr", null,
+              h("th", null, "Name"),
+              h("th", null, "Phone"),
+              h("th", null, "Email")
+            )
+          ),
+          h("tbody", null,
+            this.state.employees.map(employee =>
+              h("tr", null,
+                h("td", null, h(Link, { to: "/employees/" + employee.uid },
+                  employee.first_name + " " + employee.last_name)),
+                h("td", null, employee.phone),
+                h("td", null, employee.email)
+              )
+            )
+          )
+        ) :
+        h(Loader)
+    )
+  }
+};
+class PageEmployee extends Component {
+  componentWillMount() {
+    let { uid } = this.props.params;
+    db.refs.employees.find(uid).then(([employee]) => {
+      this.setState({ employee });
+      db.refs.companies
+        .find({ uid: employee.company })
+        .then(([company = { name: "[ empty ]" }]) => {
+          this.setState({ company });
+        })
+    });
+  }
+  render() {
+    let { uid } = this.props.params;
+    let { employee, company = {} } = this.state;
+    return h("div", { key: "page-company-" + uid, class: "view" },
+      h("div", { class: "controls" },
+        h(Link, { class: "btn link", to: "/employees/" + uid + "/edit" }, "Edit"),
+        h(Link, { class: "btn link red", to: "/employees/" + uid + "/delete" }, "Delete")
+      ),
+      employee ?
+        h(DescriptionList, {
+          list: [
+            ["First name", employee.first_name],
+            ["Last name", employee.last_name],
+            ["Gender", employee.gender],
+            ["Email", employee.email],
+            ["Phone", employee.phone],
+            ["Country", employee.country],
+            ["City", employee.city],
+            ["Street", employee.street],
+            ["Company", company.uid ?
+              h(Link, { to: "/companies/" + company.uid }, company.name) :
+              company.name
+            ]
+          ]
+        }) :
+        h(Loader)
+    );
+  }
+};
+class PageEmployeeForm extends Component {
+  componentWillMount() {
+    let { uid } = this.props.params;
+    if (uid) {
+      db.refs.employees.find(uid).then(([employee]) => {
+        this.setState({ employee });
+      });
+    } else {
+      this.setState({ employee: {} });
+    }
+  }
+  inputElement(name) {
+    return h("input", {
+      value: this.state.employee[name],
+      onchange: ({ target }) => {
+        let employee = Object.assign({}, this.state.employee, { [name]: target.value });
+        this.setState({ employee });
+      }
+    })
+  }
+  saveEntry() {
+    let { uid } = this.props.params;
+    let { employee } = this.state;
+    if (uid) {
+      db.refs.employees.update(employee, uid).then(() => {
+        location.hash = "!/employees/" + uid
+      });
+    } else {
+      db.refs.employees.push(employee, ({ uid }) => {
+        location.hash = "!/employees/" + uid
+      });
+    }
+  }
+  render() {
+    let { uid } = this.props;
+    let { employee } = this.state;
+    return h("div", { key: "page-employee-" + (uid || "new"), class: "view" },
+      h("div", { class: "controls" },
+        h("span", { class: "btn link", onClick: () => { this.saveEntry() } }, "Save"),
+        h(Link, { class: "btn link red", to: "/" }, "Cancel")
+      ),
+      employee ?
+        h(DescriptionList, {
+          class: "edit-form",
+          list: [
+            ["First name", this.inputElement("first_name")],
+            ["Last name", this.inputElement("last_name")],
+            ["Gender", this.inputElement("gender")],
+            ["Email", this.inputElement("email")],
+            ["Phone", this.inputElement("phone")],
+            ["Country", this.inputElement("country")],
+            ["City", this.inputElement("city")],
+            ["Street", this.inputElement("street")]
+          ]
+        }) :
+        h(Loader)
+    );
+  }
+}
+class EmployeesShortList extends Component {
   componentWillMount() {
     let { where } = this.props;
     db.refs.employees.find(where).then(employees => {
@@ -250,27 +405,10 @@ class EmploeesShortList extends Component {
     return employees ?
       h(ItemsList, {
         items: employees,
-        iterator: emploee => h("div", null,
-          h(Link, { to: "/employees/" + emploee.uid },
-            emploee.first_name + " " + emploee.last_name)
+        iterator: employee => h("div", null,
+          h(Link, { to: "/employees/" + employee.uid },
+            employee.first_name + " " + employee.last_name)
         )
-      }) :
-      h(Loader);
-  }
-}
-class TasksShortList extends Component {
-  componentWillMount() {
-    let { where } = this.props;
-    db.refs.tasks.find(where).then(tasks => {
-      this.setState({ tasks });
-    });
-  }
-  render() {
-    let { tasks } = this.state;
-    return tasks ?
-      h(ItemsList, {
-        items: tasks,
-        iterator: task => h("div", null, task.content)
       }) :
       h(Loader);
   }

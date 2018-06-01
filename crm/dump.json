@@ -22,22 +22,5 @@
     { "uid": "jhpvfc9pq7wob3dk", "name": "Jensyn Acquistion Corp.", "industry": "Business Services", "country": "China", "city": "Yongyang", "phone": "221-741-2834", "address": "650 Shasta Place" },
     { "uid": "jhpvfc9pdwxa9zaj", "name": "Source Capital, Inc.", "industry": "n/a", "country": "Peru", "city": "Taurija", "phone": "293-159-7079", "address": "684 Derek Plaza" },
     { "uid": "jhpvfc9phbu93rpk", "name": "Teck Resources Ltd", "industry": "Mining & Quarrying of Nonmetallic Minerals (No Fuels)", "country": "China", "city": "Yixin", "phone": "327-383-0923", "address": "75086 Crest Line Hill" }
-  ],
-  "tasks": [
-    { "uid": "jhpvfc9ppdq9zunh", "company": "jhpvfc9p8fq6gwoa", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9q7iukqeon", "company": "jhpvfc9par95qqy8", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9rcvrlb38g", "company": "jhpvfc9pq7wob3dk", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9ru0jl9oxk", "company": "jhpvfc9p8fq6gwoa", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9r71c1khss", "company": "jhpvfc9par95qqy8", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9rczkfber9", "company": "jhpvfc9pq7wob3dk", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9rdcgwjk03", "company": "jhpvfc9par95qqy8", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9sf7qncq5j", "company": "jhpvfc9p8fq6gwoa", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9s8dah2m7y", "company": "jhpvfc9phbu93rpk", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9sz5f8hsm6", "company": "jhpvfc9phbu93rpk", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9s0zalv6ey", "company": "jhpvfc9p8fq6gwoa", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9sd4fx6sf8", "company": "jhpvfc9phbu93rpk", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9sdrcpsq6j", "company": "jhpvfc9par95qqy8", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9seni0on74", "company": "jhpvfc9pdwxa9zaj", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."},
-    { "uid": "jhpvfc9tbbmde1mh", "company": "jhpvfc9pdwxa9zaj", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident maxime corporis minus hic."}
   ]
 }
