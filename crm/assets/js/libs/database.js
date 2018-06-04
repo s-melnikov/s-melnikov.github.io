@@ -1,4 +1,4 @@
-(function(global) {
+define("libs/database", [], () => {
   let regexp = /\$parent\.(\w+)/g;
   class Database {
     constructor(name) {
@@ -18,7 +18,14 @@
       a.click();
     }
     restore(json) {
-      localStorage[this.name] = json;
+      try {
+        JSON.parse(json);
+        localStorage[this.name] = json;
+        return true;
+      } catch(e) {
+        console.error(e);
+        return false;
+      }
     }
     _fields(entries, fields) {
       fields.uid = true;
@@ -171,6 +178,7 @@
   }
   let delay = cb => setTimeout(cb, Math.random() * 100 + 100);
   let type = o => Object.prototype.toString.call(o).slice(8, -1);
-  global.database = name => new Database(name);
-  global.database.uniqid = uniqid;
-})(this);
+  const database = name => new Database(name);
+  database.uniqid = uniqid;
+  return database;
+});
