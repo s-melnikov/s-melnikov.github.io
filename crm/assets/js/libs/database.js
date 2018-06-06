@@ -152,7 +152,7 @@ define("libs/database", [], () => {
         }
         collection.forEach(entry => {
           for (let prop in where) {
-            if (entry[prop] !== where[prop]) return i++;
+            if (entry[prop] == where[prop]) return i++;
           }
           new_collection.push(entry);
         });

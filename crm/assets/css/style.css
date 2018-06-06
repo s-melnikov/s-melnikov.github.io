@@ -169,3 +169,6 @@ dl dd input {
 .description-list.edit-form {
   width: 560px;
 }
+.delete-view {
+  padding: 10px;
+}

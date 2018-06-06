@@ -6,6 +6,7 @@ define("pages", [
   "pages/employees",
   "pages/employee",
   "pages/employee-form",
+  "pages/delete",
   ], (
     Components,
     PageCompanies,
@@ -13,7 +14,8 @@ define("pages", [
     PageCompanyForm,
     PageEmployees,
     PageEmployee,
-    PageEmployeeForm
+    PageEmployeeForm,
+    PageDelete
     ) => {
   const { h, Component } = preact;
   const { Redirect } = Components;
@@ -30,6 +32,7 @@ define("pages", [
     PageCompanyForm,
     PageEmployees,
     PageEmployeeForm,
-    PageEmployee
+    PageEmployee,
+    PageDelete
   };
 });

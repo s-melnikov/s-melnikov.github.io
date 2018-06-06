@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf=8"/>
+  <title>Document</title>
+  <style></style>
+</head>
+<body>
+
+<script>
+
+class Weapon {
+  constructor(name, damage) {
+    this.name = name;
+    this.damage = damage;
+  }
+  getDamage() {
+    return this.damage;
+  }
+  toString() {
+    return `${this.name} (${this.getDamage()})`;
+  }
+}
+
+class Unit {
+  constructor(maxHealth, basicDamage, evasion, type) {
+    this.maxHealth = maxHealth;
+    this.currentHealth = maxHealth;
+    this.basicDamage = basicDamage;
+    this.evasion = evasion;
+    this.type = type;
+    this.dead = false;
+  }
+  isAlive() {
+    if (this.dead) {
+      return false;
+    }
+    if (this.currentHealth <= 0) {
+      console.log("%c%s", "color:red", `${this.name} die!`);
+      this.dead = true;
+      return false;
+    }
+    return true;
+  }
+  getFormattedHealth() {
+    return `[${this.currentHealth}/${this.maxHealth}]`;
+  }
+  probability() {
+    let notRandomNumbers = [];
+    let maxEvasion = this.evasion * 10;
+    let i;
+    let idx;
+    for (i = 0; i < maxEvasion; i++) {
+      notRandomNumbers.push(1);
+    }
+    for (i = 0; i < 10 - maxEvasion; i++) {
+      notRandomNumbers.push(0);
+    }
+    idx = Math.floor(Math.random() * notRandomNumbers.length);
+    if (!notRandomNumbers[idx]) {
+      console.log("%c%s", "color:yellow", `${this.name} miss`);
+    }
+    return notRandomNumbers[idx];
+  }
+  setWeapon(weapon) {
+    this.weapon = weapon;
+    return this;
+  }
+  getDamage() {
+    return (this.weapon ? this.weapon.getDamage() : 0) + this.basicDamage;
+  }
+  kick(target) {
+    if (this.isAlive()) {
+      if (this.probability()) {
+        let damage = this.getDamage();
+        target.currentHealth = Math.max(0, target.currentHealth - damage);
+        console.log("%c%s", "color:orange", `${this.name} -> ${target.name} -${damage}`);
+      }
+    }
+    return this;
+  }
+  toString() {
+    return `${this.name} / ${this.type}; ${this.getFormattedHealth()} ` +
+      `weapon: ${this.weapon}; damage: ${this.getDamage()}; evasion: ${this.evasion}`;
+  }
+  selectSameType(targetTeam) {
+    for (let i = 0; i < targetTeam.members.length; i++) {
+      let target = targetTeam.members[i];
+      if (target.type === this.type && target.isAlive()) return target;
+    }
+    return null;
+  }
+}
+
+class Archer extends Unit {
+  constructor(maxHealth, basicDamage, evasion, name) {
+    super(maxHealth, basicDamage, evasion, name);
+    this.type = "archer";
+    this.name = name;
+  }
+}
+
+class Swordsman extends Unit {
+  constructor(maxHealth, basicDamage, evasion, name) {
+    super(maxHealth, basicDamage, evasion, name);
+    this.type = "swordsman";
+    this.name = name;
+  }
+}
+
+class Mage extends Unit {
+  constructor(maxHealth, basicDamage, evasion, name) {
+    super(maxHealth, basicDamage, evasion, name);
+    this.type = "mage";
+    this.name = name;
+  }
+  heal(target) {
+    if (target.currentHealth < target.maxHealth) {
+      target.currentHealth = Math.min(target.maxHealth, target.currentHealth + 20);
+    }
+    return this;
+  }
+}
+
+class Team {
+  constructor(name) {
+    this.name = name;
+    this.members = [];
+  }
+  addMember(...members) {
+    this.members.push(...members);
+  }
+  isAlive() {
+    return this.members.some(m => m.isAlive());
+  }
+  selectRandomTarget(targetTeam) {
+    let numberOfMembers = targetTeam.members.length;
+    let target = null;
+    while (target === null || !target.isAlive()) {
+      let randomIndex = Math.floor(Math.random() * numberOfMembers);
+      target = targetTeam.members[randomIndex];
+    }
+    return target;
+  }
+  kick(targetTeam) {
+    console.log(`\nTeam ${this.name} is attacking`);
+    for (let i = 0; i < this.members.length; i++) {
+      let singleMember = this.members[i];
+      if (!this.isAlive() || !targetTeam.isAlive()) break;
+      if (!singleMember.isAlive()) continue;
+
+      let target = singleMember.selectSameType(targetTeam);
+      if (target === null) target = this.selectRandomTarget(targetTeam);
+
+      singleMember.kick(target);
+      if (target.isAlive()) target.kick(singleMember);
+    }
+  }
+  toString() {
+    let str = `Team: ${this.name}; has alive: ${this.isAlive()}
+  members:\n\t`;
+    return str + this.members.join("\n\t");
+  }
+}
+
+class Game {
+  constructor(team1, team2) {
+    this.team1 = team1;
+    this.team2 = team2;
+  }
+  battle() {
+    if (!this.team1.isAlive() || !this.team2.isAlive()) {
+      if (this.team1.isAlive()) {
+        console.log(`Team ${this.team1.name} is WIN`);
+      }
+      if (this.team2.isAlive()) {
+        console.log(`Team ${this.team2.name} is WIN`);
+      }
+      console.log(`THE BATTLE IS END :
+${this.team1.toString()}
+${this.team2.toString()}
+${this.team1.name}\n${this.team1.members.map(m => `  ${m.name}: ${m.currentHealth};`).join("\n")}
+${this.team2.name}\n${this.team2.members.map(m => `  ${m.name}: ${m.currentHealth};`).join("\n")}
+      `);
+      return;
+    }
+    team1.kick(team2);
+    team2.kick(team1);
+    requestAnimationFrame(this.battle.bind(this));
+  }
+}
+
+let bow = new Weapon("Golden bow", 20);
+let sword = new Weapon("Magic sword", 30);
+let staff = new Weapon("Whale-Stick Harpoon", 10);
+let spear = new Weapon("Selizas Spear", 15);
+let axe = new Weapon("Nifflevar Bearded Axe", 30);
+let stick = new Weapon("Wanderers Stick of Deserts", 15);
+
+let archer = new Archer(60, 5, 0.6, "archer");
+let swordsman = new Swordsman(100, 10, 0.3, "swordsman");
+let mage = new Mage(40, 15, 0.5, "mage");
+
+let troll = new Archer(60, 10, 0.6, "troll");
+let orc = new Swordsman(100, 10, 0.3, "orc");
+let druid = new Mage(40, 10, 0.5, "druid");
+
+archer.setWeapon(bow);
+swordsman.setWeapon(sword);
+mage.setWeapon(staff);
+
+troll.setWeapon(spear);
+orc.setWeapon(axe);
+druid.setWeapon(stick);
+
+let team1 = new Team("Alliance");
+var team2 = new Team("Horde");
+
+team1.addMember(archer, swordsman, mage);
+team2.addMember(troll, orc, druid);
+
+let game = new Game(team1, team2);
+
+console.log(team1.toString());
+console.log(team2.toString());
+
+game.battle();
+
+</script>
+</body>
+</html>

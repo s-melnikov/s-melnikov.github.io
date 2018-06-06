@@ -9,7 +9,8 @@ define("main", ["components", "pages"], (Components, Pages) => {
     PageCompanyForm,
     PageEmployees,
     PageEmployeeForm,
-    PageEmployee
+    PageEmployee,
+    PageDelete
   } = Pages;
 
   class Main extends Component {
@@ -32,6 +33,7 @@ define("main", ["components", "pages"], (Components, Pages) => {
             "/employees/new": PageEmployeeForm,
             "/employees/:uid": PageEmployee,
             "/employees/:uid/edit": PageEmployeeForm,
+            "/:type/:uid/delete": PageDelete,
             "*": PageNotFound
           }
         })
