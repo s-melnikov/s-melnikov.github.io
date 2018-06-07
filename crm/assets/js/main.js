@@ -17,8 +17,8 @@ define("main", ["components", "pages"], (Components, Pages) => {
     render() {
       return h("div", { class: "main" },
         h("div", { id: "sidebar" },
-          h(Link, { class: "btn btn-link", to: "/companies" }, "Companies"),
-          h(Link, { class: "btn btn-link", to: "/employees" }, "Employees")
+          h(Link, { class: "btn btn-link btn-block text-left", to: "/companies" }, "Companies"),
+          h(Link, { class: "btn btn-link btn-block text-left", to: "/employees" }, "Employees")
         ),
         h(Router, {
           routes: {
