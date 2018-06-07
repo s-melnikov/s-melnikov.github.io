@@ -16,11 +16,9 @@ define("main", ["components", "pages"], (Components, Pages) => {
   class Main extends Component {
     render() {
       return h("div", { class: "main" },
-        h("div", { class: "header" },
-          h("div", { class: "tabs" },
-            h(Link, { class: "tab", to: "/companies" }, "Companies"),
-            h(Link, { class: "tab", to: "/employees" }, "Employees")
-          )
+        h("div", { id: "sidebar" },
+          h(Link, { class: "btn btn-link", to: "/companies" }, "Companies"),
+          h(Link, { class: "btn btn-link", to: "/employees" }, "Employees")
         ),
         h(Router, {
           routes: {
