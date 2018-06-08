@@ -17,8 +17,17 @@ define("main", ["components", "pages"], (Components, Pages) => {
     render() {
       return h("div", { class: "main" },
         h("div", { id: "sidebar" },
-          h(Link, { class: "btn btn-link btn-block text-left", to: "/companies" }, "Companies"),
-          h(Link, { class: "btn btn-link btn-block text-left", to: "/employees" }, "Employees")
+          h("ul", { class: "nav" },
+            h("li", { class: "nav-item" },
+              h(Link, { to: "/projects" }, "Projects")
+            ),
+            h("li", { class: "nav-item" },
+              h(Link, { to: "/tasks" }, "Tasks")
+            ),
+            h("li", { class: "nav-item" },
+              h(Link, { to: "/employees" }, "Employees")
+            )
+          )
         ),
         h(Router, {
           routes: {
@@ -34,7 +43,8 @@ define("main", ["components", "pages"], (Components, Pages) => {
             "/:type/:uid/delete": PageDelete,
             "*": PageNotFound
           }
-        })
+        }),
+        h("div", { id: "header" })
       );
     }
   }
