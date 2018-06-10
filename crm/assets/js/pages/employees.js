@@ -16,7 +16,7 @@ define("pages/employees", ["utils", "components"], (Utils, Components) => {
     render() {
       return h("div", { key: "page-employees", class: "view" },
         h("div", { class: "controls" },
-          h(Link, { class: "btn link", to: "/employees/new" }, "New employee")
+          h(Link, { class: "btn btn-link", to: "/employees/new" }, "New employee")
         ),
         this.state.employees ?
           h("table", null,

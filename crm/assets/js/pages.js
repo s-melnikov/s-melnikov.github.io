@@ -1,17 +1,17 @@
 define("pages", [
   "components",
-  "pages/companies",
-  "pages/company",
-  "pages/company-form",
+  "pages/projects",
+  "pages/project",
+  "pages/project-form",
   "pages/employees",
   "pages/employee",
   "pages/employee-form",
   "pages/delete",
   ], (
     Components,
-    PageCompanies,
-    PageCompany,
-    PageCompanyForm,
+    PageProjects,
+    PageProject,
+    PageProjectForm,
     PageEmployees,
     PageEmployee,
     PageEmployeeForm,
@@ -22,17 +22,24 @@ define("pages", [
 
   const PageNotFound = () => h("div", { class: "view" }, "404! Page not found");
 
-  const PageIndex  = () => h(Redirect, { to: "/companies" });
+  const PageIndex  = () => h(Redirect, { to: "/projects" });
+
+  const PageTasks = () => h("div", { class: "view" }, "Tasks");
+  const PageTask = () => h("div", { class: "view" }, "Task");
+  const PageTaskForm = () => h("div", { class: "view" }, "Task form");
 
   return {
     PageNotFound,
     PageIndex,
-    PageCompanies,
-    PageCompany,
-    PageCompanyForm,
+    PageProjects,
+    PageProject,
+    PageProjectForm,
     PageEmployees,
     PageEmployeeForm,
     PageEmployee,
+    PageTasks,
+    PageTask,
+    PageTaskForm,
     PageDelete
   };
 });

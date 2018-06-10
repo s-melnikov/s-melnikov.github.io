@@ -1,4 +1,4 @@
-define("pages/company", ["utils", "components"], (Utils, Components) => {
+define("pages/project", ["utils", "components"], (Utils, Components) => {
   const { h, Component } = preact;
   const { db } = Utils;
   const { Link, Loader, DescriptionList, EmployeesShortList } = Components;

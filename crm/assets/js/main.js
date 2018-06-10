@@ -4,18 +4,41 @@ define("main", ["components", "pages"], (Components, Pages) => {
   const {
     PageNotFound,
     PageIndex,
-    PageCompanies,
-    PageCompany,
-    PageCompanyForm,
+    PageProjects,
+    PageProject,
+    PageProjectForm,
     PageEmployees,
     PageEmployeeForm,
     PageEmployee,
+    PageTasks,
+    PageTask,
+    PageTaskForm,
     PageDelete
   } = Pages;
 
   class Main extends Component {
     render() {
       return h("div", { class: "main" },
+        h(Router, {
+          routes: {
+            "/": PageIndex,
+            "/projects": PageProjects,
+            "/projects/new": PageProjectForm,
+            "/projects/:uid": PageProject,
+            "/projects/:uid/edit": PageProjectForm,
+            "/employees": PageEmployees,
+            "/employees/new": PageEmployeeForm,
+            "/employees/:uid": PageEmployee,
+            "/employees/:uid/edit": PageEmployeeForm,
+            "/tasks": PageTasks,
+            "/tasks/new": PageTaskForm,
+            "/tasks/:uid": PageTask,
+            "/tasks/:uid/edit": PageTaskForm,
+            "/:type/:uid/delete": PageDelete,
+            "*": PageNotFound
+          }
+        }),
+        h("div", { id: "header" }),
         h("div", { id: "sidebar" },
           h("ul", { class: "nav" },
             h("li", { class: "nav-item" },
@@ -28,23 +51,7 @@ define("main", ["components", "pages"], (Components, Pages) => {
               h(Link, { to: "/employees" }, "Employees")
             )
           )
-        ),
-        h(Router, {
-          routes: {
-            "/": PageIndex,
-            "/companies": PageCompanies,
-            "/companies/new": PageCompanyForm,
-            "/companies/:uid": PageCompany,
-            "/companies/:uid/edit": PageCompanyForm,
-            "/employees": PageEmployees,
-            "/employees/new": PageEmployeeForm,
-            "/employees/:uid": PageEmployee,
-            "/employees/:uid/edit": PageEmployeeForm,
-            "/:type/:uid/delete": PageDelete,
-            "*": PageNotFound
-          }
-        }),
-        h("div", { id: "header" })
+        )
       );
     }
   }

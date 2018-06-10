@@ -1,4 +1,4 @@
-define("pages/companies", ["utils", "components"], (Utils, Components) => {
+define("pages/projects", ["utils", "components"], (Utils, Components) => {
   const { h, Component } = preact;
   const { db } = Utils;
   const { Link, Loader } = Components;
@@ -16,10 +16,10 @@ define("pages/companies", ["utils", "components"], (Utils, Components) => {
     render() {
       return h("div", { key: "page-companies", class: "view" },
         h("div", { class: "controls" },
-          h(Link, { class: "btn link", to: "/companies/new" }, "New company")
+          h(Link, { class: "btn btn-link", to: "/companies/new" }, "New company")
         ),
         this.state.companies ?
-          h("table", null,
+          h("table", { class: "table table-striped table-hover" },
             h("thead", null,
               h("tr", null,
                 h("th", null, "Name"),
