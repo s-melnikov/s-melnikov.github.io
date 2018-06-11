@@ -1,41 +1,18 @@
 body {
-  padding-left: 10em;
   padding-top: 3em;
   font-size: 0.7em;
-}
-#sidebar {
-  padding: 30px 15px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 10em;
-  height: 100%;
-  background: #222222;
-}
-#sidebar .nav-item a {
-  display: block;
-  color: #dddddd;
-}
-#sidebar .nav-item a:hover {
-  color: #ffffff;
-}
-#sidebar .nav-item a:focus {
-  box-shadow: 0 0 0 0.1rem rgba(255, 255, 255,.2);
 }
 #header {
   position: absolute;
   height: 3em;
-  left: 10em;
+  left: 0;
   top: 0;
   right: 0;
   border-bottom: 1px solid #dcdcdc;
   background: #ffffff;
 }
 .view {
-  padding: 1em;
-}
-.btn {
-  font-size: .7rem;
-  height: 1.6rem;
-  padding: .3rem .3rem;
+  padding: 1rem;
+  max-width: 60rem;
+  margin: 0 auto;
 }

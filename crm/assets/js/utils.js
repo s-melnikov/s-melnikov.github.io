@@ -3,11 +3,21 @@ define("utils", ["libs/database"], (database) => {
 
   const getCurrentPath = () => location.hash.replace(/^#!|\/$/g, "") || "/";
 
-  if (!localStorage.simplecrm) {
-    fetch("assets/json/dump.json").then(resp => resp.text()).then(text => {
-      if (db.restore(text)) {
-        location.reload();
-      }
+  window.mock = () => {
+    const rand = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
+    const randArrVal = array => array[rand(0, array.length - 1)];
+    const statuses = ["new", "assigned", "converted", "in_process", "recycled", "closed"];
+    const leadsRef = db.collection("leads");
+    db.drop();
+    fetch("assets/json/leads.json").then(resp => resp.json()).then(items => {
+      let leads = db.collection("leads");
+      items = items.map(item => {
+        item.status = randArrVal(statuses);
+        return item;
+      });
+      leads.pushMany(items, () => {
+        console.log("Leads ready")
+      });
     });
   }
 
