@@ -12,17 +12,19 @@ define("main", ["components", "pages"], (Components, Pages) => {
   class Main extends Component {
     render() {
       return h("div", { class: "main" },
-        h(Router, {
-          routes: {
-            "/": PageLeads,
-            "/leads": PageLeads,
-            "/leads/new": PageLeadForm,
-            "/leads/:uid": PageLead,
-            "/leads/:uid/edit": PageLeadForm,
-            "/leads/:uid/delete": PageDelete,
-            "*": PageNotFound
-          }
-        }),
+        h("div", { class: "container"},
+          h(Router, {
+            routes: {
+              "/": PageLeads,
+              "/leads": PageLeads,
+              "/leads/new": PageLeadForm,
+              "/leads/:uid": PageLead,
+              "/leads/:uid/edit": PageLeadForm,
+              "/leads/:uid/delete": PageDelete,
+              "*": PageNotFound
+            }
+          })
+        ),
         h("div", { id: "header" })
       );
     }
