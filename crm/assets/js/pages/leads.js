@@ -20,12 +20,13 @@ define("pages/leads", ["utils", "components"], (Utils, Components) => {
         ),
         h("div", { class: "card" },
           h("div", { class: "card-header" },
-            h("div", { class: "card-title" },
+            h("div", { class: "card-title" }),
+            h("div", { class: "card-header-control" },
               h(Link, { class: "btn", to: "/leads/new" }, "New lead")
             )
           ),
           this.state.leads ?
-            h("table", { class: "table table-striped table-hover" },
+            h("table", { class: "table card-table" },
               h("thead", null,
                 h("tr", null,
                   h("th", null, "First name"),
@@ -49,8 +50,8 @@ define("pages/leads", ["utils", "components"], (Utils, Components) => {
                     h("td", null, lead.gender),
                     h("td", null, lead.status),
                     h("td", null,
-                      h(Link, { class: "btn btn-sm btn-link", to: "/leads/" + lead.uid + "/edit" }, "Edit"),
-                      h(Link, { class: "btn btn-sm btn-link", to: "/leads/" + lead.uid + "/delete" }, "Delete"),
+                      h(Link, { class: "link", to: "/leads/" + lead.uid + "/edit" }, "Edit"),
+                      h(Link, { class: "link", to: "/leads/" + lead.uid + "/delete" }, "Delete"),
                     )
                   )
                 )

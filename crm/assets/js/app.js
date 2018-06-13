@@ -1,4 +1,2 @@
-require(["main"], Main => {
-  const { h, render } = preact;
-  render(h(Main), document.body.querySelector("#root"));
-});
+const { h, app } = hyperapp;
+app(State, Actions, Views.Main, document.body);
