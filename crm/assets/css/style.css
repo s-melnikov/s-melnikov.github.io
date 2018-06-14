@@ -81,6 +81,18 @@ h5, .h5 {
 h6, .h6 {
   font-size: 0.75rem;
 }
+.loader {
+  min-height: 20px;
+}
+.loader::after {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--blue);
+  border-right: transparent;
+  border-radius: 20px;
+  content: "";
+}
 .text-right {
   text-align: right;
 }

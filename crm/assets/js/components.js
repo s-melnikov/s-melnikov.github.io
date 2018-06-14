@@ -1,4 +1,4 @@
-
+const Loader = () => h("div", { class: "loader" });
 
 // define("components", [
 //   "utils",
@@ -7,8 +7,6 @@
 //   ], (Utils, Router, Link) => {
 //   const { h, Component } = preact;
 //   const { db } = Utils;
-
-//   const Loader = () => h("div", { class: "loader" });
 
 //   const DescriptionList = props => {
 //     return h("div", {
