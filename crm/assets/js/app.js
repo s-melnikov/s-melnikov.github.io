@@ -1,11 +1,11 @@
-const { h, app } = hyperapp;
-const routes =  {
-  "/": Views.Pages.Leads,
-  "/leads": Views.Pages.Leads,
-  "/leads/new": Views.Pages.LeadForm,
-  "/leads/:uid": Views.Pages.Lead,
-  "/leads/:uid/edit": Views.Pages.Form,
-  "/leads/:uid/delete": Views.Pages.Delete,
-  "*": Views.Pages.NotFound
+const { app } = hyperapp;
+const Routes =  {
+  "/": PageLeads,
+  "/leads": PageLeads,
+  "/leads/new": PageLeadForm,
+  "/leads/:uid": PageLead,
+  "/leads/:uid/edit": PageLeadForm,
+  "/leads/:uid/delete": PageDelete,
+  "*": PageNotFound
 }
-Router(Logger(app))(State, Actions, routes, document.body);
+Router(Logger(app))(State, Actions, Routes, document.body);

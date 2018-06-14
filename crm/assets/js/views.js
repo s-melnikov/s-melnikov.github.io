@@ -1,3 +1,5 @@
+const { h } = hyperapp;
+
 const Layout = (state, actions) => {
   return h("div", { class: "main" },
     h("div", { class: "container"},
@@ -8,7 +10,9 @@ const Layout = (state, actions) => {
 }
 
 const PageLeads = (state, actions) => {
-  console.log(1, state, actions)
+
+  return h(Layout);
+
   return h(Views.Main, { state, actions },
     h("div", { class: "page page-leads" },
         h("div", { class: "page-header" },
@@ -59,6 +63,7 @@ const PageLeads = (state, actions) => {
   );
 }
 
-/*
-
-*/
+const PageLead = () => h("div", null, "PageLead");
+const PageLeadForm = () => h("div", null, "PageLeadForm");
+const PageDelete = () => h("div", null, "PageDelete");
+const PageNotFound = () => h("div", null, "PageNotFound");
