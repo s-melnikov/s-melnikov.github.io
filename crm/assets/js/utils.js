@@ -60,8 +60,13 @@ function Router(app) {
   }
 }
 
-const Link = () => {
-
+const Link = (props, children) => {
+  props.href = "#!" + props.to;
+  delete props.to;
+  if (props.href == location.hash) {
+    props.class = (props.class ? (props.class + " ") : "") + "active";
+  }
+  return h("a", props, children);
 }
 
 // define("utils", ["libs/database"], (database) => {

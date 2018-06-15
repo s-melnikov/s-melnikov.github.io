@@ -42,6 +42,8 @@ html {
 body {
   box-sizing: border-box;
   margin: 0;
+  padding-top: 5rem;
+  padding-bottom: 1rem;
   font-size: 0.7em;
   color: var(--gray-dark);
   font-family: var(--font-family-sans-serif);
@@ -54,6 +56,9 @@ a {
   color: #467fcf;
   text-decoration: none;
   background-color: transparent;
+}
+a:hover {
+  color: #777;
 }
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -81,23 +86,57 @@ h5, .h5 {
 h6, .h6 {
   font-size: 0.75rem;
 }
+.va-m {
+  vertical-align: middle;
+}
 .loader {
-  min-height: 20px;
+  min-height: 2rem;
 }
 .loader::after {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--blue);
-  border-right: transparent;
-  border-radius: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: .8rem;
+  height: .8rem;
+  margin: -.4rem 0 0 -.4rem;
+  border: .1rem solid var(--blue);
+  border-right-color: transparent;
+  border-left-color: transparent;
+  border-radius: 50%;
+  animation: rotate .5s infinite linear;
   content: "";
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.navbar {
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.navbar .navbar-section {
+  align-items: center;
+  display: flex;
+  flex: 1 0 0;
+}
+.navbar .navbar-section:not(:first-child):last-child {
+  justify-content: flex-end;
+}
+.navbar .logo {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background: url(../img/logo.svg);
 }
 .text-right {
   text-align: right;
 }
 .container {
-  padding: 2.5rem 1rem 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   max-width: var(--breakpoint-xl);
   margin: 0 auto;
 }
@@ -125,7 +164,6 @@ h6, .h6 {
   background-clip: border-box;
   border: 1px solid rgba(0, 40, 100, 0.12);
   border-radius: 3px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   margin-bottom: 1.5rem;
   width: 100%;
 }
@@ -231,10 +269,27 @@ h6, .h6 {
 }
 #header {
   position: fixed;
-  height: 2.5rem;
   left: 0;
   top: 0;
   right: 0;
+}
+#header .top-section,
+#header .bottom-section {
   border-bottom: 1px solid var(--gray-light);
   background: #ffffff;
+}
+#header .bottom-section .nav a {
+  display: inline-block;
+  padding: 0.7rem 0;
+  height: 2.5rem;
+  color: var(--gray-dark);
+  border-bottom: 1px solid transparent;
+  margin-bottom: -1px;
+}
+#header .bottom-section .nav a + a {
+  margin-left: 0.5rem;
+}
+#header .bottom-section .nav a.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
 }
