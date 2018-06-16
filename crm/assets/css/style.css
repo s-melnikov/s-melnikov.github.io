@@ -277,6 +277,7 @@ h6, .h6 {
 #header .bottom-section {
   border-bottom: 1px solid var(--gray-light);
   background: #ffffff;
+  height: 2.5rem;
 }
 #header .bottom-section .nav a {
   display: inline-block;
