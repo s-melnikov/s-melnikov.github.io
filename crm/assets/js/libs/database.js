@@ -1,4 +1,4 @@
-define("libs/database", [], () => {
+(global => {
   let regexp = /\$parent\.(\w+)/g;
   class Database {
     constructor(name) {
@@ -178,7 +178,6 @@ define("libs/database", [], () => {
   }
   let delay = cb => setTimeout(cb, Math.random() * 100 + 100);
   let type = o => Object.prototype.toString.call(o).slice(8, -1);
-  const database = name => new Database(name);
+  global.database = name => new Database(name);
   database.uniqid = uniqid;
-  return database;
-});
+})(window)

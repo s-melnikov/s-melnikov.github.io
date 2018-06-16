@@ -2,7 +2,9 @@ const Actions = {
   pages: {
     leads: {
       create: () => (state, actions) => {
-        console.log(actions)
+        db.collection("leads").find().then(result => {
+          setLeads(result);
+        })
       }
     },
     "lead-form": {

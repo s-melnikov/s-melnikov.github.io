@@ -1,4 +1,5 @@
 const { app } = hyperapp;
+const db = database("simplecrm");
 const Routes =  {
   "/": PageLeads,
   "/leads": PageLeads,
