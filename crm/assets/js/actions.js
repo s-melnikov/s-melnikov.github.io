@@ -1,16 +1,16 @@
 const Actions = {
-  pages: {
-    leads: {
-      create: () => (state, actions) => {
-        db.collection("leads").find().then(result => {
-          setLeads(result);
-        })
-      }
+  items: {
+    get: name => (state, actions) => {
+      db.collection(name).find().then(items => {
+        actions.set({ name, items });
+      });
     },
-    "lead-form": {
-      create: element => (state, actions) => {
-        console.log("Page leads create")
-      }
-    }
+    set: ({ name, items }) => () => ({ [name]: items })
+  },
+  "page-leads-oncreate": () => (state, actions) => {
+    actions.items.get("leads");
+  },
+  "page-lead-form-oncreate": () => {
+    console.log("Page lead form create")
   }
 };

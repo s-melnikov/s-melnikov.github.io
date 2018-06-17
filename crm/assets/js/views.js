@@ -5,10 +5,10 @@ const Page = ({ name }, children) => (state, actions) => {
     h("div", { class: "container"},
       h("div", {
         key: "page-" + name,
-        oncreate: actions.pages[name].create,
-        onupdate: actions.pages[name].update,
-        onremove: actions.pages[name].remove,
-        ondestroy: actions.pages[name].destroy
+        oncreate: actions[`page-${name}-oncreate`],
+        onupdate: actions[`page-${name}-onupdate`],
+        onremove: actions[`page-${name}-onremove`],
+        ondestroy: actions[`page-${name}-ondestroy`]
       }, children)
     ),
     h("div", { id: "header" },
@@ -38,6 +38,7 @@ const Page = ({ name }, children) => (state, actions) => {
 }
 
 const PageLeads = (state, actions) => h(Page, { name: "leads" },
+  console.log(state),
   h("div", { class: "page-header" },
     h("h1", { class: "page-title" }, "Leads")
   ),
