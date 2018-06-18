@@ -75,20 +75,43 @@ const installDemoData = () => {
   const db = database("simplecrm");
   const rand = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
   const randArrVal = array => array[rand(0, array.length - 1)];
-  const statuses = ["new", "assigned", "converted", "in_process", "recycled", "closed"];
-  const leadsRef = db.collection("leads");
+  const slugify = str => str.toLowerCase().replace(/\s/g, "_");
   db.drop();
-  fetch("assets/json/leads.json").then(resp => resp.json()).then(items => {
-    let leads = db.collection("leads");
-    items = items.map(item => {
-      item.status = randArrVal(statuses);
-      return item;
+
+  Promise
+    .all([
+      "assets/json/account_sectors.json",
+      "assets/json/account_types.json",
+      "assets/json/colors.json",
+      "assets/json/account_sources.json",
+    ].map(src => fetch(src)))
+    .then(responses => Promise.all(responses.map(r => r.json())))
+    .then(responses => {
+      let [
+        account_sectors,
+        account_types,
+        colors,
+        account_sources
+      ] = responses;
+      account_sectors = account_sectors.map(item => ({
+        "name": slugify(item),
+        "title": item
+      }));
+      account_types = account_types.map(item => ({
+        "name": slugify(item),
+        "title": item
+      }));
+      account_sources = account_sources.map(item => ({
+        "name": slugify(item),
+        "title": item
+      }));
+      db.collection("account_sectors").pushMany(account_sectors);
+      db.collection("account_types").pushMany(account_types);
+      db.collection("account_sources").pushMany(account_sources);
     });
-    leads.pushMany(items, () => {
-      console.log("Leads ready")
-    });
-  });
 }
+
+installDemoData();
 
 // define("utils", ["libs/database"], (database) => {
 //   const db = database("simplecrm");
