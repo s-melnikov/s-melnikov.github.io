@@ -7,10 +7,10 @@ const Actions = {
     },
     set: ({ name, items }) => () => ({ [name]: items })
   },
-  "page-leads-oncreate": () => (state, actions) => {
-    actions.items.get("leads");
+  "page-accounts-oncreate": () => (state, actions) => {
+    actions.items.get("accounts");
   },
-  "page-lead-form-oncreate": () => {
+  "page-account-form-oncreate": () => {
     console.log("Page lead form create")
   }
 };

@@ -168,7 +168,6 @@ h6, .h6 {
   width: 100%;
 }
 .card-header {
-  margin-bottom: 0;
   background-color: rgba(0, 0, 0, 0.03);
   border-bottom: 1px solid rgba(0, 40, 100, 0.12);
   background: none;
@@ -187,6 +186,19 @@ h6, .h6 {
 }
 .card-header-control {
   text-align: right;
+}
+.card-footer {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid rgba(0, 40, 100, 0.12);
+  background: none;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  min-height: 2.5rem;
+  align-items: center;
+}
+.card-footer.centered {
+  justify-content: center;
 }
 .table {
   width: 100%;
@@ -240,6 +252,9 @@ h6, .h6 {
   vertical-align: middle;
   white-space: nowrap;
 }
+.btn-link {
+  border-color: transparent;
+}
 .btn.btn-sm {
   font-size: .7rem;
   height: 1.4rem;
@@ -266,6 +281,18 @@ h6, .h6 {
   cursor: default;
   opacity: .5;
   pointer-events: none;
+}
+.pagination {
+  text-align: center;
+}
+.pagination :not(:first-child):not(:last-child).current {
+  background: #467fcf;
+  border-color: #3a67a7;
+  color: #ffffff;
+}
+.pagination .current:first-child,
+.pagination .current:last-child {
+  color: #999999;
 }
 #header {
   position: fixed;
