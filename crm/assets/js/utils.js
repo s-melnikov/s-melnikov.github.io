@@ -62,39 +62,6 @@ function Router(app) {
   }
 }
 
-const Link = (props, children) => {
-  props.href = "#!" + props.to;
-  delete props.to;
-  if (props.href == location.hash) {
-    props.class = (props.class ? (props.class + " ") : "") + "active";
-  }
-  return h("a", props, children);
-}
-
-const Pagination = ({ path, current, length, per_page }) => {
-  current = parseInt(current) || 1;
-  let max_pages = Math.ceil(length / per_page);
-  let buttons = [];
-  let is_current = current == 1;
-  buttons.push(h("a", {
-    class: "btn btn-link" + (is_current ? " current" : ""),
-    href: is_current ? null : ("#!" + path + (current - 1))
-  }, "Prev"));
-  for (let i = 1; i <= max_pages; i++) {
-    is_current = current == i;
-    buttons.push(h("a", {
-      class: "btn btn-link" + (is_current ? " current" : ""),
-      href: is_current ? null : ("#!" + path + i)
-    }, i));
-  }
-  is_current = current == max_pages;
-  buttons.push(h("a", {
-    class: "btn btn-link" + (is_current ? " current" : ""),
-    href: is_current ? null : ("#!" + path + (current + 1))
-  }, "Next"));
-  return h("div", { class: "pagination" }, buttons);
-}
-
 const installDemoData = () => {
   const db = database("simplecrm");
   const rand = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));

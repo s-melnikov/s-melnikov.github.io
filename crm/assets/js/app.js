@@ -4,9 +4,9 @@ const Routes =  {
   "/": PageAccounts,
   "/accounts": PageAccounts,
   "/accounts/page/:page": PageAccounts,
-  "/accounts/new": PageAccountForm,
+  "/accounts/new": PageAccountEdit,
   "/accounts/:uid": PageAccount,
-  "/accounts/:uid/edit": PageAccountForm,
+  "/accounts/:uid/edit": PageAccountEdit,
   "/accounts/:uid/delete": PageDelete,
   "*": PageNotFound
 }
