@@ -399,20 +399,20 @@ h6, .h6 {
   pointer-events: none;
 }
 .btn.btn-primary {
-  background: #5755d9;
-  border-color: #4b48d6;
+  background: #467fcf;
+  border-color: #3b6db3;
   color: #fff
 }
 .btn.btn-primary:focus,
 .btn.btn-primary:hover {
-  background: #4240d4;
-  border-color: #3634d2;
+  background: #3b6db3;
+  border-color: #315a94;
   color: #fff
 }
 .btn.btn-primary.active,
 .btn.btn-primary:active {
-  background: #3a38d2;
-  border-color: #302ecd;
+  background: #315a94;
+  border-color: #264673;
   color: #fff
 }
 .pagination {

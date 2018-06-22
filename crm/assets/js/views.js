@@ -1,5 +1,5 @@
 const { h } = hyperapp;
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 30;
 
 const Loader = () => h("div", { class: "loader" });
 
@@ -8,6 +8,14 @@ const Link = (props, children) => {
   delete props.to;
   if (location.hash.indexOf(props.href) === 0) {
     props.class = (props.class ? (props.class + " ") : "") + "active";
+  }
+  return h("a", props, children);
+}
+
+const BackLink = (props, children) => {
+  props.onclick = event => {
+    event.preventDefault();
+    history.back();
   }
   return h("a", props, children);
 }

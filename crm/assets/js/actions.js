@@ -1,30 +1,44 @@
 const Actions = {
-  item: {
-    get: (name, uid) => (state, actions) => {
-      db.collection(name).find(uid).then(items => {
-        actions.set({ name, items });
-      });
-    },
-    set: ({ name, items }) => (state, actions) => ({ [name]: items[0] })
+  getItems: ({ name, where }) => (state, actions) => {
+    db.collection(name).find(where).then(items => {
+      actions.setItems({ name, items });
+    });
   },
-  items: {
-    get: name => (state, actions) => {
-      db.collection(name).find().then(items => {
-        actions.set({ name, items });
-      });
-    },
-    set: ({ name, items }) => () => ({ [name]: items })
+  setItems: ({ name, items }) => {
+    return { [name]: items }
   },
-  "page-accounts-oncreate": element => (state, actions) => {
-    actions.items.get("accounts");
-    actions.items.get("account_types");
-    actions.items.get("account_sources");
-    actions.items.get("account_sectors");
+  getItem: ({ itemsName, itemName,  where }) => (state, actions) => {
+    db.collection(itemsName).find(where).then(items => {
+      actions.setItem({ itemName, item: items[0] });
+    });
   },
-  "page-account-oncreate": element => (state, actions) => {
-    actions.item.get("accounts", state.route.params.uid);
-    actions.items.get("account_types");
-    actions.items.get("account_sources");
-    actions.items.get("account_sectors");
+  setItem: ({ itemName, item }) => {
+    return { [itemName]: item }
+  },
+  pageAccountsOnCreate: element => (state, { getItems }) => {
+    getItems({ name: "accounts" });
+    getItems({ name: "account_types" });
+    getItems({ name: "account_sorces" });
+    getItems({ name: "account_sectors" });
+  },
+  pageAccountOnCreate: element => (state, { getItem, getItems }) => {
+    getItem({
+      itemsName: "accounts",
+      itemName: "account",
+      where: state.route.params.uid
+    });
+    getItems({ name: "account_types" });
+    getItems({ name: "account_sorces" });
+    getItems({ name: "account_sectors" });
+  },
+  pageAccountEditOnCreate: element => (state, { getItem, getItems }) => {
+    getItem({
+      itemsName: "accounts",
+      itemName: "account",
+      where: state.route.params.uid
+    });
+    getItems({ name: "account_types" });
+    getItems({ name: "account_sorces" });
+    getItems({ name: "account_sectors" });
   }
 };

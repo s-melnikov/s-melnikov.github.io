@@ -1,1 +1,3 @@
-const State = {};
+const State = {
+  form: {}
+};
