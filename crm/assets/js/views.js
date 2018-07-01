@@ -1,106 +1,49 @@
 const { h } = hyperapp;
+const ITEMS_PER_PAGE = 30;
 
-const Page = ({ name }, children) => (state, actions) => {
-  return h("div", { class: "main" },
-    h("div", { class: "container"},
-      h("div", {
-        key: "page-" + name,
-        oncreate: actions[`page-${name}-oncreate`],
-        onupdate: actions[`page-${name}-onupdate`],
-        onremove: actions[`page-${name}-onremove`],
-        ondestroy: actions[`page-${name}-ondestroy`]
-      }, children)
-    ),
-    h("div", { id: "header" },
-      h("div", { class: "top-section" },
-        h("div", { class: "container" },
-          h("div", { class: "navbar" },
-            h("div", { class: "navbar-section" },
-              h(Link, { to: "/" },
-                h("span", { class: "logo va-m" }),
-                h("span", { class: "va-m" }, "SimpleCRM")
-              )
-            )
-          )
-        )
-      ),
-      h("div", { class: "bottom-section" },
-        h("div", { class: "container" },
-          h("div", { class: "navbar" },
-            h("div", { class: "navbar-section nav" },
-              h(Link, { to: "/leads" }, "Leads")
-            )
-          )
-        )
-      ),
-    )
-  );
+const Loader = () => h("div", { class: "loader" });
+
+const Link = (props, children) => {
+  props.href = "#!" + props.to;
+  delete props.to;
+  if (location.hash.indexOf(props.href) === 0) {
+    props.class = (props.class ? (props.class + " ") : "") + "active";
+  }
+  return h("a", props, children);
 }
 
-const PageLeads = (state, actions) => h(Page, { name: "leads" },
-  console.log(state),
-  h("div", { class: "page-header" },
-    h("h1", { class: "page-title" }, "Leads")
-  ),
-  h("div", { class: "card" },
-    h("div", { class: "card-header" },
-      h("div", { class: "card-title" }),
-      h("div", { class: "card-header-control" },
-        h(Link, { class: "btn", to: "/leads/new" }, "New lead")
-      )
-    ),
-    state.leads ?
-      h("table", { class: "table card-table" },
-        h("thead", null,
-          h("tr", null,
-            h("th", null, "First name"),
-            h("th", null, "Last name"),
-            h("th", null, "Phone"),
-            h("th", null, "Email"),
-            h("th", null, "Birthday"),
-            h("th", null, "Gender"),
-            h("th", null, "Status"),
-            h("th", null, "Action")
-          )
-        ),
-        h("tbody", null,
-          state.leads.slice(0, 30).map(lead =>
-            h("tr", null,
-              h("td", null, h(Link, { to: "/leads/" + lead.uid }, lead.first_name)),
-              h("td", null, h(Link, { to: "/leads/" + lead.uid }, lead.last_name)),
-              h("td", null, lead.phone),
-              h("td", null, lead.email),
-              h("td", null, lead.birthdate),
-              h("td", null, lead.gender),
-              h("td", null, lead.status),
-              h("td", null,
-                h(Link, { class: "link", to: "/leads/" + lead.uid + "/edit" }, "Edit"),
-                h(Link, { class: "link", to: "/leads/" + lead.uid + "/delete" }, "Delete"),
-              )
-            )
-          )
-        )
-      ) :
-      h(Loader)
-  )
-);
+const BackLink = (props, children) => {
+  props.onclick = event => {
+    event.preventDefault();
+    history.back();
+  }
+  return h("a", props, children);
+}
 
-const PageLeadForm = (state, actions) => h(Page, { name: "lead-form" },
-  h("div", { class: "page-header" },
-    h("h1", { class: "page-title" }, "Create new lead")
-  ),
-  h("div", { class: "card" },
-    h("div", { class: "card-header" },
-      h("div", { class: "card-title" }),
-      h("div", { class: "card-header-control" },
-        h(Link, { class: "btn", to: "/" }, "Save"),
-        h(Link, { class: "btn", to: "/" }, "Cancel"),
-      )
-    ),
-    h(Loader)
-  )
-);
+const Pagination = ({ path, current, length, per_page }) => {
+  current = parseInt(current) || 1;
+  let max_pages = Math.ceil(length / per_page);
+  let buttons = [];
+  let is_current = current == 1;
+  buttons.push(h("a", {
+    class: "btn btn-link" + (is_current ? " current" : ""),
+    href: is_current ? null : ("#!" + path + (current - 1))
+  }, "Prev"));
+  for (let i = 1; i <= max_pages; i++) {
+    is_current = current == i;
+    buttons.push(h("a", {
+      class: "btn btn-link" + (is_current ? " current" : ""),
+      href: is_current ? null : ("#!" + path + i)
+    }, i));
+  }
+  is_current = current == max_pages;
+  buttons.push(h("a", {
+    class: "btn btn-link" + (is_current ? " current" : ""),
+    href: is_current ? null : ("#!" + path + (current + 1))
+  }, "Next"));
+  return h("div", { class: "pagination" }, buttons);
+}
 
-const PageLead = () => h("div", null, "PageLead");
+
 const PageDelete = () => h("div", null, "PageDelete");
 const PageNotFound = () => h("div", null, "PageNotFound");

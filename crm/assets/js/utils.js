@@ -62,32 +62,64 @@ function Router(app) {
   }
 }
 
-const Link = (props, children) => {
-  props.href = "#!" + props.to;
-  delete props.to;
-  if (props.href == location.hash) {
-    props.class = (props.class ? (props.class + " ") : "") + "active";
-  }
-  return h("a", props, children);
-}
-
 const installDemoData = () => {
   const db = database("simplecrm");
   const rand = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
   const randArrVal = array => array[rand(0, array.length - 1)];
-  const statuses = ["new", "assigned", "converted", "in_process", "recycled", "closed"];
-  const leadsRef = db.collection("leads");
+  const slugify = str => str.toLowerCase().replace(/\s/g, "_");
   db.drop();
-  fetch("assets/json/leads.json").then(resp => resp.json()).then(items => {
-    let leads = db.collection("leads");
-    items = items.map(item => {
-      item.status = randArrVal(statuses);
-      return item;
+  Promise
+    .all([
+      "assets/json/colors.json",
+      "assets/json/account_types.json",
+      "assets/json/account_sectors.json",
+      "assets/json/account_sources.json",
+      "assets/json/accounts.json",
+      "assets/json/contacts.json",
+    ].map(src => fetch(src)))
+    .then(responses => Promise.all(responses.map(r => r.json())))
+    .then(responses => {
+      let [
+        colors,
+        account_types,
+        account_sectors,
+        account_sources,
+        accounts,
+        contacts,
+      ] = responses;
+      account_types = account_types.map(item => ({
+        name: slugify(item),
+        title: item
+      }));
+      account_sources = account_sources.map(item => ({
+        name: slugify(item),
+        title: item
+      }));
+      account_sectors = account_sectors.map(item => ({
+        name: slugify(item),
+        title: item
+      }));
+      accounts = accounts.map(item => ({
+        type: randArrVal(account_types).name,
+        source: randArrVal(account_sources).name,
+        sector: randArrVal(account_sectors).name,
+        created: Date.now(),
+        updated: null,
+        ...item
+      }));
+      db.collection("colors").pushMany(colors);
+      db.collection("account_sectors").pushMany(account_sectors);
+      db.collection("account_types").pushMany(account_types);
+      db.collection("account_sources").pushMany(account_sources);
+      accounts = db.collection("accounts").pushMany(accounts);
+      contacts = contacts.map(item => ({
+        account: randArrVal(accounts).uid,
+        created: Date.now(),
+        updated: null,
+        ...item
+      }));
+      db.collection("contacts").pushMany(contacts);
     });
-    leads.pushMany(items, () => {
-      console.log("Leads ready")
-    });
-  });
 }
 
 // define("utils", ["libs/database"], (database) => {

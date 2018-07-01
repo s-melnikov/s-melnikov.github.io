@@ -1,12 +1,13 @@
 const { app } = hyperapp;
 const db = database("simplecrm");
 const Routes =  {
-  "/": PageLeads,
-  "/leads": PageLeads,
-  "/leads/new": PageLeadForm,
-  "/leads/:uid": PageLead,
-  "/leads/:uid/edit": PageLeadForm,
-  "/leads/:uid/delete": PageDelete,
+  "/": PageAccounts,
+  "/accounts": PageAccounts,
+  "/accounts/page/:page": PageAccounts,
+  "/accounts/new": PageAccountEdit,
+  "/accounts/:uid": PageAccount,
+  "/accounts/:uid/edit": PageAccountEdit,
+  "/accounts/:uid/delete": PageDelete,
   "*": PageNotFound
 }
 Router(Logger(app))(State, Actions, Routes, document.body);
