@@ -1,0 +1,73 @@
+{
+  "name": "Melnykov Serhii",
+  "position": "Front-End Developer",
+  "address": { 
+    "street": "Akademika Zabolotnogo street, 2, 109",
+    "city": "Odessa",
+    "country": "Ukraine",
+    "zip": "65000" 
+  },
+  "contacts": [
+    { "title": "Phone", "value": "+38 093 627 52 53" },
+    { "title": "Email", "value": "mlnkv87@gmail.com" }
+  ],
+  "skills": [
+    { "title": "HTML5", "level": 10 },
+    { "title": "CSS3", "level": 10 },
+    { "title": "ReactJS", "level": 8 },
+    { "title": "VueJS", "level": 6 },
+    { "title": "AngularJS", "level": 5 },
+    { "title": "CreateJS", "level": 4 },
+    { "title": "NodeJS", "level": 5 },
+    { "title": "PHP", "level": 6 },
+    { "title": "SQL", "level": 5 },
+    { "title": "SVN", "level": 4 },
+    { "title": "GIT", "level": 4 },
+    { "title": "MongoDB", "level": 3 },
+    { "title": "Apache", "level": 3 }
+  ],
+  "experience": [
+    { 
+      "title": "Product Company (NDA), Odessa",
+      "position": "Senior Front-End Developer",
+      "period": {
+        "start": { "month": "7", "year": "2017" },
+        "end": null
+      }
+    },    
+    { 
+      "title": "Product Company (NDA), Odessa",
+      "position": "Middle Front-End Developer",
+      "period": {
+        "start": { "month": "0", "year": "2014" },
+        "end": { "month": "7", "year": "2017" }
+      }
+    },    
+    { 
+      "title": "Product Company (NDA), Odessa",
+      "position": "Junior Front-End Developer",
+      "period": {
+        "start": { "month": "7", "year": "2012" },
+        "end": { "month": "0", "year": "2014" }
+      }
+    }
+  ],
+  "education": [
+    {
+      "title": "Odessa College of Transport Technologies",
+      "level": "Specialist (Construction and civil engineering)",
+      "period": {
+        "start": { "month": "8", "year": "2004" },
+        "end": { "month": "5", "year": "2007" }
+      }
+    },
+    {
+      "title": "Belgorod Dnestrovsky Middle School",
+      "level": "",
+      "period": {
+        "start": { "month": "8", "year": "1994" },
+        "end": { "month": "5", "year": "2004" }
+      }
+    }
+  ]
+}

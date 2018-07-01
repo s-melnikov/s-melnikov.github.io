@@ -1,0 +1,26 @@
+<div class="contacts table">
+  <h3 ng-if="$ctrl.isEditing">Contacts</h3>
+  <div ng-repeat="item in $ctrl.data track by $index" class="contact table-row">
+    <span class="title table-cell">
+      <editable-field
+        ng-if="$ctrl.isEditing"
+        field-value="item.title" 
+        on-update="$ctrl.update($index, 'title', value)"></editable-field>
+        <span ng-if="!$ctrl.isEditing">{{ item.title }}</span>      
+    </span>
+    <span class="value table-cell">
+      <editable-field
+        ng-if="$ctrl.isEditing"
+        field-value="item.value" 
+        on-update="$ctrl.update($index, 'value', value)"></editable-field>
+        <span ng-if="!$ctrl.isEditing">{{ item.value }}</span>
+    <span 
+      ng-if="$ctrl.isEditing" 
+      ng-click="$ctrl.removeItem($index)" 
+      class="icon icon-trash"></span>  
+  </div>
+  <span 
+    ng-if="$ctrl.isEditing" 
+    ng-click="$ctrl.addItem()" 
+    class="icon icon-plus"></span>    
+</div>
