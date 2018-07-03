@@ -1,0 +1,16 @@
+<div class="address_lines">
+  <h3 ng-if="$ctrl.isEditing">Address</h3>
+  <div ng-if="!$ctrl.isEditing">
+    <div class="address_line">{{ $ctrl.data.street }}</div>
+    <div class="address_line">
+      <span>{{ $ctrl.data.city }}</span>,
+      <span>{{ $ctrl.data.country }}</span>,
+      <span>{{ $ctrl.data.zip }}</span>
+    </div>
+  </div>
+  <div ng-if="$ctrl.isEditing">
+    <div ng-repeat="(key, value) in $ctrl.data">
+      <editable-field field-value="value" on-update="$ctrl.update({ [key]: value })"></editable-field>
+    </div>    
+  </div>
+</div>

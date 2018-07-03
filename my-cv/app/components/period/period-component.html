@@ -1,0 +1,53 @@
+<div class="period">
+
+  <span ng-if="!$ctrl.editMode">
+    <span>
+      {{ $ctrl.getMonthName($ctrl.data.start.month) }}
+      {{ $ctrl.data.start.year }} - 
+    </span>
+    <span ng-if="$ctrl.data.end">
+      {{ $ctrl.getMonthName($ctrl.data.end.month) }}
+      {{ $ctrl.data.end.year }}
+    </span>
+    <span ng-if="!$ctrl.data.end">Current</span>
+  </span>
+  
+  <div ng-if="$ctrl.editMode">
+    <div>
+      <span>start:</span>
+      <select ng-model="$ctrl.data.start.month">
+        <option
+          ng-repeat="item in $ctrl.monthes"          
+          value="{{ $index }}">{{ item }}</option>
+      </select>
+      <select ng-model="$ctrl.data.start.year">
+        <option 
+          ng-repeat="item in $ctrl.years" 
+          value="{{ item }}">{{ item }}</option>
+      </select>
+    </div>
+    <div>
+      <span>end:</span>
+      <select ng-model="$ctrl.data.end.month" ng-disabled="$ctrl.endCurrent">
+        <option
+          ng-repeat="item in $ctrl.monthes"
+          value="{{ $index }}">{{ item }}</option>
+      </select>
+      <select ng-model="$ctrl.data.end.year" ng-disabled="$ctrl.endCurrent">
+        <option 
+          ng-repeat="item in $ctrl.years" 
+          value="{{ item }}">{{ item }}</option>
+      </select>
+      <input 
+        type="checkbox" 
+        ng-model="$ctrl.endCurrent" 
+        ng-change="$ctrl.onCurrentChange()"> current
+    </div>
+  </div>
+
+  <span 
+    ng-if="$ctrl.isEditing"
+    ng-click="$ctrl.toggleEditMode()" 
+    class="icon icon-{{ $ctrl.editMode ? 'save' : 'edit' }}"></span>
+
+</div>

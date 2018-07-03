@@ -1,0 +1,34 @@
+<div class="skills">
+  <h3>Skills</h3>
+  <div ng-if="!$ctrl.isEditing" class="table">
+    <div ng-repeat="item in $ctrl.data | orderBy:'level':true" class="skill table-row">
+      <span class="title table-cell">{{ item.title }}</span>
+      <span class="level table-cell">
+        <level count="10" selected="item.level"></level>
+      </span>
+    </div> 
+  </div> 
+  <div ng-if="$ctrl.isEditing">
+    <div class="table">
+      <div ng-repeat="item in $ctrl.data track by $index" class="skill table-row">
+        <span class="title table-cell">
+          <editable-field
+            ng-if="$ctrl.isEditing"
+            field-value="item.title" 
+            on-update="$ctrl.update($index, 'title', value)"></editable-field>
+        </span>
+        <span class="level table-cell">
+          <level 
+            count="10" 
+            selected="item.level" 
+            edit-mode="true" 
+            on-update="$ctrl.update($index, 'level', value)"></level>
+        </span>
+        <span class="table-cell">
+          <span ng-click="$ctrl.removeItem($index)" class="icon icon-trash"></span>
+        </span>
+      </div> 
+    </div>
+    <span ng-click="$ctrl.addItem()" class="icon icon-plus"></span>
+  </div>     
+</div>
