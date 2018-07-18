@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+    <h2 id="prototypepatternjavascript">The Prototype Pattern</h2>
+    <p>The GoF refer to the prototype pattern as one which creates objects based on a template of an existing object through cloning.</p>
+    <p>We can think of the prototype pattern as being based on prototypal inheritance where we create objects which act as prototypes for other objects. The prototype object itself is effectively used as a blueprint for each object the constructor creates. If the prototype of the constructor function used contains a property called <code>name</code> for example (as per the code sample lower down), then each object created by that same constructor will also have this same property.</p>
+    <p>Reviewing the definitions for this pattern in existing (non-JavaScript) literature, we <strong>may</strong> find references to classes once again. The reality is that prototypal inheritance avoids using classes altogether. There isn't a "definition" object nor a core object in theory. We're simply creating copies of existing functional objects.</p>
+    <p>One of the benefits of using the prototype pattern is that we're working with the prototypal strengths JavaScript has to offer natively rather than attempting to imitate features of other languages. With other design patterns, this isn't always the case.</p>
+    <p>Not only is the pattern an easy way to implement inheritance, but it can also come with a performance boost as well: when defining a function in an object, they're all created by reference (so all child objects point to the same function) instead of creating their own individual copies. </p>
+    <p>For those interested, real prototypal inheritance, as defined in the ECMAScript 5 standard, requires the use of <code>Object.create</code> (which we previously looked at earlier in this section). To remind ourselves, <code>Object.create</code> creates an object which has a specified prototype and optionally contains specified properties as well (e.g <code>Object.create( prototype, optionalDescriptorObjects )</code>).</p>
+    <p>We can see this demonstrated in the example below:</p>
+    <pre>
+var myCar = {
+  name: "Ford Escort",
+
+  drive: function () {
+    console.log( "Weeee. I'm driving!" );
+  },
+
+  panic: function () {
+    console.log( "Wait. How do you stop this thing?" );
+  }
+};
+
+// Use Object.create to instantiate a new car
+var yourCar = Object.create( myCar );
+
+// Now we can see that one is a prototype of the other
+console.log( yourCar.name );
+</pre>
+    <p>
+      <code>Object.create</code> also allows us to easily implement advanced concepts such as differential inheritance where objects are able to directly inherit from other objects. We saw earlier that <code>Object.create</code> allows us to initialise object properties using the second supplied argument. For example:
+    </p>
+    <pre>
+
+var vehicle = {
+  getModel: function () {
+    console.log( "The model of this vehicle is.." + this.model );
+  }
+};
+
+var car = Object.create(vehicle, {
+  "id": {
+    value: MY_GLOBAL.nextId(),
+    // writable:false, configurable:false by default
+    enumerable: true
+  },
+
+  "model": {
+    value: "Ford",
+    enumerable: true
+  }
+});
+</pre>
+    <p>
+      Here the properties can be initialized on the second argument of <code>Object.create</code> using an object literal with a syntax similar to that used by the <code>Object.defineProperties</code> and <code>Object.defineProperty</code> methods that we looked at previously.</p>
+    <p>It is worth noting that prototypal relationships can cause trouble when enumerating properties of objects and (as Crockford recommends) wrapping the contents of the loop in a <code>hasOwnProperty()</code> check.</p>
+    <p>If we wish to implement the prototype pattern without directly using <code>Object.create</code>, we can simulate the pattern as per the above example as follows:</p>
+    <pre>
+var vehiclePrototype = {
+  init: function ( carModel ) {
+    this.model = carModel;
+  },
+
+  getModel: function () {
+    console.log( "The model of this vehicle is.." + this.model);
+  }
+};
+
+function vehicle( model ) {
+  function F() {};
+  F.prototype = vehiclePrototype;
+
+  var f = new F();
+
+  f.init( model );
+  return f;
+}
+
+var car = vehicle( "Ford Escort" );
+car.getModel();
+</pre>
+    <p><strong>Note:</strong> This alternative does not allow the user to define read-only properties in the same manner (as the vehiclePrototype may be altered if not careful).</p>
+    <p>A final alternative implementation of the Prototype pattern could be the following:</p>
+    <pre>
+var beget = (function () {
+  function F() {}
+
+  return function ( proto ) {
+      F.prototype = proto;
+      return new F();
+  };
+})();
+</pre>
+    <p>One could reference this method from the <code>vehicle</code> function. Note, however that <code>vehicle</code> here is emulating a constructor, since the prototype pattern does not include any notion of initialization beyond linking an object to a prototype.</p>
+    <a href="index.html" class="prev">Previous</a>
+    <a href="index.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>
