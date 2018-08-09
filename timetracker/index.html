@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: 'Fira Sans', Consolas, monospace;
+      font-size: 13px;
+      background-color: #f5f5f5;
+      color: #444444;
+    }
+    .btn {
+      cursor: pointer;
+    }
+    .btn:hover {
+      opacity: .9;
+    }
+    .btn-primary {
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
+  <script>
+    const
+      LOCALE = 'ru-RU',
+      { app, h } = hyperapp,
+      state = {
+        tasks: [],
+        events: []
+      },
+      actions = {
+        startNewTask: () => ({ tasks, events }) => {
+          let lastTask = tasks[tasks.length - 1];
+          let nextTaskId = lastTask ? lastTask.id + 1 : 1;
+          let lastEvent = events[events.length - 1];
+          let nextEventId = lastEvent ? lastEvent.id + 1 : 1;
+          tasks.push({
+            id: nextTaskId,
+            title: `New task #${nextTaskId}`
+          });
+          events.push({
+            id: nextEventId,
+            taskId: nextTaskId,
+            timestamp: Date.now()
+          });
+          return { tasks };
+        }
+      },
+      timeSpended = time => {
+
+      }
+      TasksList = ({ tasks }) => {
+        return tasks.map(({ title, timeStart, timeSpended }) => {
+          timeStart = new Date(timeStart);
+          return h('tr', {},
+            h('td', {}, title),
+            h('td', {}, `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
+            h('td', {}, timeSpended)
+          );
+        })
+      },
+      RootView = ({ tasks, events }, $a) => {
+        for (let i = 0, prevTimestamp, prevTask; i < events.length; i++) {
+          let { taskId, timestamp } = events[i];
+          let [ task ] = tasks.filter(({ id }) => id === taskId);
+          if (task) {
+            if (!task.timeStart) {
+              task.timeStart = timestamp;
+              task.timeSpended = 0;
+            }
+            if (prevTask) {
+              prevTask.timeSpended += (timestamp - prevTimestamp);
+            }
+          }
+          prevTimestamp = timestamp;
+          prevTask = task;
+        }
+        return h('div', { id: 'container' },
+          h('p', { class: 'control' },
+            h('span', { class: 'btn btn-primary', onclick: $a.startNewTask }, 'Start New Task')
+          ),
+          h('table', {},
+            h('thead', {},
+              h('tr', {},
+                h('th', {}, 'Title'),
+                h('th', {}, 'Time Started'),
+                h('th', {}, 'Time Spended'),
+              )
+            ),
+            h('tbody', {}, TasksList({ tasks }))
+          )
+        )
+      }
+
+    app(state, actions, RootView, document.body);
+  </script>
+</body>
+</html>
