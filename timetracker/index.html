@@ -34,41 +34,42 @@
 <body>
   <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
   <script>
+    let 
+      nextTaskId = 1,
+      nextTimestampId = 1;
     const
       LOCALE = 'ru-RU',
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
       state = {
         tasks: [],
-        events: []
+        timestamps: []
       },
       actions = {
-        startNewTask: () => ({ tasks, events }) => {
-          let lastTask = tasks[tasks.length - 1];
-          let nextTaskId = lastTask ? lastTask.id + 1 : 1;
-          let lastEvent = events[events.length - 1];
-          let nextEventId = lastEvent ? lastEvent.id + 1 : 1;
-          tasks.push({
-            id: nextTaskId,
-            title: `New task #${nextTaskId}`
-          });
-          events.push({
-            id: nextEventId,
-            taskId: nextTaskId,
-            timestamp: Math.floor(Date.now() / 1000)
-          });
-          return { tasks };
+        startNewTask: () => ({ tasks, timestamps }) => {
+          let newTask = {
+            id: nextTaskId++,
+            title: 'New task'
+          };
+          let newTimestamp = {
+            id: nextTimestampId++,
+            task: newTask.id,
+            timestamp: dateNow()
+          };
+          return { 
+            tasks: tasks.concat(newTask),
+            timestamps: timestamps.concat(newTimestamp)
+          };
         },
-        startTask: id => ({ events }) => {
-          console.log(id)
-          let lastEvent = events[events.length - 1];
-          let nextEventId = lastEvent ? lastEvent.id + 1 : 1;
-          events.push({
-            id: nextEventId,
-            taskId: id,
-            timestamp: Math.floor(Date.now() / 1000)
-          });
-          return events;
+        startTask: id => ({ timestamps }) => {
+          let newTimestamp = {
+            id: nextTimestampId++,
+            task: id,
+            timestamp: dateNow()
+          }
+          return {
+            timestamps: timestamps.concat(newTimestamp)
+          };
         },
         update: () => true
       },
@@ -80,27 +81,37 @@
         d = Math.floor(time / WORK_DAY_DURATION);
         return `${d}d ${h}h ${m}m ${s}s`;
       },
-      getPreparedTasks = (tasks, events) => {
-        let items = [];
-        for (let i = 0, prevTimestamp, prevItem, item; i < events.length; i++) {
-          let { taskId, timestamp } = events[i];
-          let item = items.find(item => item.id = taskId);
-          if (item) {
-            items.splice(items.indexOf(item), 1);
-          } else {
-            item = Object.assign({timeSpended: 0}, tasks.find(({ id }) => id === taskId));
-          }
-          items.push(item);
-          if (prevItem) {
-            prevItem.timeSpended += (timestamp - prevTimestamp);
-          }
-          prevTimestamp = timestamp;
-          prevItem = item;
-        }
-        return items;
-      };
-      TasksList = ({ history, startTask }) => {
-        return history.reverse().map(({ taskId, title, timeStart, timeSpended, current }) => {
+      getLastTasks = ({ tasks, timestamps }) => {
+        let oldest = dateNow() - 60 * 60 * 24 * 30;        
+        let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest);
+        let lastTasks = tasks
+          .reverse()
+          .filter(task => {
+            return !!lastTimestamps.find(timestamp => timestamp.task = task.id);
+          })
+          .map(task => {
+            timestamps.map((timestamp, i) => {
+              let nextTimestamp = timestamps[i + 1];
+              if (timestamp.task === task.id) {
+                if (!task.timeStart) {
+                  task.timeStart = timestamp.timestamp;
+                  task.timeSpended = 0;
+                }
+                if (nextTimestamp) {
+                  task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
+                } else {
+                  task.current = true;
+                }             
+              }
+            });
+            return task;
+          });                
+        return lastTasks;
+      },
+      dateNow = () => Math.floor(Date.now() / 1000),
+      cloneArray = array => array.slice().map(item => Object.assign({}, item)),
+      TasksList = ({ tasks, startTask }) => {  
+        return tasks ? tasks.map(({ id, title, timeStart, timeSpended, current }) => {
           timeStart = new Date(timeStart * 1000);
           return h('tr', { class: current ? 'current' : '' },
             h('td', {}, `${title}`),
@@ -109,14 +120,17 @@
             h('td', {},
               current || h('span', {
                 class: 'btn btn-primary',
-                onclick: event => startTask(taskId)
+                onclick: event => startTask(id)
               }, 'Start')
             )
           );
-        })
+        }) : null;
       },
-      RootView = ({ tasks, events }, { startNewTask, startTask }) => {
-        let preparedTasks = getPreparedTasks(tasks, events);
+      RootView = ({ tasks, timestamps }, { startNewTask, startTask }) => {
+        let lastTasks = getLastTasks({ 
+          tasks: cloneArray(tasks), 
+          timestamps 
+        });
         return h('div', { id: 'container' },
           h('p', { class: 'control' },
             h('span', {
@@ -133,7 +147,7 @@
                 h('th', {}, 'Actions')
               )
             ),
-            h('tbody', {}, TasksList({ tasks: preparedTasks, startTask }))
+            h('tbody', {}, TasksList({ tasks: lastTasks, startTask }))
           )
         )
       }
