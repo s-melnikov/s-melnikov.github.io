@@ -20,6 +20,15 @@
     .btn-primary {
       color: blue;
     }
+    table {
+      border-collapse: collapse;
+    }
+    table td, table th {
+      padding: 5px;
+    }
+    table .current {
+      background: #e3eaf1;
+    }
   </style>
 </head>
 <body>
@@ -27,6 +36,7 @@
   <script>
     const
       LOCALE = 'ru-RU',
+      WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
       state = {
         tasks: [],
@@ -45,43 +55,74 @@
           events.push({
             id: nextEventId,
             taskId: nextTaskId,
-            timestamp: Date.now()
+            timestamp: Math.floor(Date.now() / 1000)
           });
           return { tasks };
-        }
+        },
+        startTask: id => ({ events }) => {
+          console.log(id)
+          let lastEvent = events[events.length - 1];
+          let nextEventId = lastEvent ? lastEvent.id + 1 : 1;
+          events.push({
+            id: nextEventId,
+            taskId: id,
+            timestamp: Math.floor(Date.now() / 1000)
+          });
+          return events;
+        },
+        update: () => true
       },
-      timeSpended = time => {
-
-      }
-      TasksList = ({ tasks }) => {
-        return tasks.map(({ title, timeStart, timeSpended }) => {
-          timeStart = new Date(timeStart);
-          return h('tr', {},
-            h('td', {}, title),
+      timeSpendedString = time => {
+        let s, m, h, d;
+        s = time % 60;
+        m = ((time = Math.floor(time / 60)) % 60);
+        h = ((time = Math.floor(time / 60)) % WORK_DAY_DURATION);
+        d = Math.floor(time / WORK_DAY_DURATION);
+        return `${d}d ${h}h ${m}m ${s}s`;
+      },
+      getPreparedTasks = (tasks, events) => {
+        let items = [];
+        for (let i = 0, prevTimestamp, prevItem, item; i < events.length; i++) {
+          let { taskId, timestamp } = events[i];
+          let item = items.find(item => item.id = taskId);
+          if (item) {
+            items.splice(items.indexOf(item), 1);
+          } else {
+            item = Object.assign({timeSpended: 0}, tasks.find(({ id }) => id === taskId));
+          }
+          items.push(item);
+          if (prevItem) {
+            prevItem.timeSpended += (timestamp - prevTimestamp);
+          }
+          prevTimestamp = timestamp;
+          prevItem = item;
+        }
+        return items;
+      };
+      TasksList = ({ history, startTask }) => {
+        return history.reverse().map(({ taskId, title, timeStart, timeSpended, current }) => {
+          timeStart = new Date(timeStart * 1000);
+          return h('tr', { class: current ? 'current' : '' },
+            h('td', {}, `${title}`),
             h('td', {}, `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
-            h('td', {}, timeSpended)
+            h('td', {}, timeSpendedString(timeSpended)),
+            h('td', {},
+              current || h('span', {
+                class: 'btn btn-primary',
+                onclick: event => startTask(taskId)
+              }, 'Start')
+            )
           );
         })
       },
-      RootView = ({ tasks, events }, $a) => {
-        for (let i = 0, prevTimestamp, prevTask; i < events.length; i++) {
-          let { taskId, timestamp } = events[i];
-          let [ task ] = tasks.filter(({ id }) => id === taskId);
-          if (task) {
-            if (!task.timeStart) {
-              task.timeStart = timestamp;
-              task.timeSpended = 0;
-            }
-            if (prevTask) {
-              prevTask.timeSpended += (timestamp - prevTimestamp);
-            }
-          }
-          prevTimestamp = timestamp;
-          prevTask = task;
-        }
+      RootView = ({ tasks, events }, { startNewTask, startTask }) => {
+        let preparedTasks = getPreparedTasks(tasks, events);
         return h('div', { id: 'container' },
           h('p', { class: 'control' },
-            h('span', { class: 'btn btn-primary', onclick: $a.startNewTask }, 'Start New Task')
+            h('span', {
+              class: 'btn btn-primary',
+              onclick: startNewTask
+            }, 'Start New Task')
           ),
           h('table', {},
             h('thead', {},
@@ -89,14 +130,16 @@
                 h('th', {}, 'Title'),
                 h('th', {}, 'Time Started'),
                 h('th', {}, 'Time Spended'),
+                h('th', {}, 'Actions')
               )
             ),
-            h('tbody', {}, TasksList({ tasks }))
+            h('tbody', {}, TasksList({ tasks: preparedTasks, startTask }))
           )
         )
       }
 
-    app(state, actions, RootView, document.body);
+    let { update } = app(state, actions, RootView, document.body);
+    // setInterval(update, 1000);
   </script>
 </body>
 </html>
