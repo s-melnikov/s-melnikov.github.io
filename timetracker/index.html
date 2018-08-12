@@ -185,11 +185,12 @@
       TasksListView = ($s, $a) => {
         let { latestTasks } = $s;
         let monthes = [];
-        latestTasks.forEach(task => {
-          let month = 
-        });
+        // latestTasks.forEach(task => {
+        //   let month = 
+        // });
+        return TaskDayView($s, $a);
       },
-      TaskDayView = ($tasks, $a) => {
+      TaskDayView = ($s, $a) => {
         return $s.latestTasks ? $s.latestTasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
           if (!id) return null;
           timeStart = new Date(timeStart);
