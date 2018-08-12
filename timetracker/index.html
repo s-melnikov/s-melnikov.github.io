@@ -113,7 +113,7 @@
         },
         getLatestTasks: () => ({ tasks, timestamps }) => {
           let now = Date.now();
-          let oldest = now - 30 * 24 * 60 * 60 * 1000;        
+          let oldest = now - 14 * 24 * 60 * 60 * 1000;
           let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest);
           let latestTasks = cloneArray(tasks)
             .reverse()
@@ -178,8 +178,18 @@
         return `${d}d ${h}h ${m}m ${s}s`;
       },
       cloneArray = array => array.slice().map(item => Object.assign({}, item)),
+      intervalIdleCallback = (cb, interval) => requestIdleCallback(() => {
+        let tick = () => { cb(); setTimeout(() => requestIdleCallback(tick), interval); };
+        requestIdleCallback(tick);
+      }),
       TasksListView = ($s, $a) => {
-        let intervalId = null;
+        let { latestTasks } = $s;
+        let monthes = [];
+        latestTasks.forEach(task => {
+          let month = 
+        });
+      },
+      TaskDayView = ($tasks, $a) => {
         return $s.latestTasks ? $s.latestTasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
           if (!id) return null;
           timeStart = new Date(timeStart);
@@ -210,7 +220,7 @@
             )
           );
         }) : null;
-      },
+      }
       RootView = ($s, $a) => {        
         return h('div', { id: 'container' },
           h('p', { class: 'control' },
@@ -235,7 +245,7 @@
     mock(state);
     let { getLatestTasks, update } = app(state, actions, RootView, document.body);
     getLatestTasks();
-    setInterval(update, 1000);
+    intervalIdleCallback(update, 1000);
     function mock({ tasks, timestamps }) {
       const HOUR = 60 * 60 * 1000;
       let lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit ea fugit iure aut deserunt eum ex labore eaque porro voluptatibus eos saepe magnam odit quia esse ab id eius ipsa maiores autem voluptates dignissimos necessitatibus perferendis quia nulla enim quas omnis dolorem quo veniam placeat cumque in quibusdam maxime voluptatum ad voluptatem expedita natus vero sequi provident quas et aliquid doloribus cumque delectus possimus quidem officia est quaerat unde expedita fugiat animi atque odio suscipit natus dolores asperiores libero cupiditate placeat consequuntur velit nisi Itaque tempora ad maxime officia voluptates accusantium unde eaque amet repellendus optio incidunt soluta asperiores sint possimus".split(" ");
