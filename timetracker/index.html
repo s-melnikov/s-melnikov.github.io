@@ -20,6 +20,9 @@
     .btn-primary {
       color: blue;
     }
+    .btn-warning {
+      color: orange;
+    }
     table {
       border-collapse: collapse;
     }
@@ -42,38 +45,131 @@
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
       state = {
-        tasks: [],
-        timestamps: []
+        tasks: [{
+          id: 0,
+          title: '[Ignored task]'
+        }],
+        timestamps: [{
+          id: 0,
+          task: 0,
+          timestamp: 0
+        }],
+        latestTasks: []
       },
       actions = {
-        startNewTask: () => ({ tasks, timestamps }) => {
+        startNewTask: () => ({ tasks, timestamps, latestTasks }) => {
+          let now = Date.now();
           let newTask = {
-            id: nextTaskId++,
-            title: 'New task'
+            id: nextTaskId,
+            title: `New task #${nextTaskId++}`
           };
           let newTimestamp = {
             id: nextTimestampId++,
             task: newTask.id,
-            timestamp: dateNow()
+            timestamp: now
           };
+          latestTasks.map((task, i) => {
+            if (task.current) {
+              task.timeSpended += (now - task.lastTimestamp);
+              delete task.current;
+              delete task.lastTimestamp;
+            }
+          });
           return { 
-            tasks: tasks.concat(newTask),
-            timestamps: timestamps.concat(newTimestamp)
+            tasks: [...tasks, newTask],
+            timestamps: [...timestamps, newTimestamp],
+            latestTasks: [Object.assign({
+              timeStart: now,
+              timeSpended: 0,
+              lastTimestamp: now,
+              current: true
+            }, newTask), ...latestTasks]
           };
         },
-        startTask: id => ({ timestamps }) => {
+        startTask: id => ({ timestamps, latestTasks }) => {
+          let now = Date.now();
           let newTimestamp = {
             id: nextTimestampId++,
             task: id,
-            timestamp: dateNow()
-          }
+            timestamp: now
+          };
+          let targetTask = latestTasks.find(task => task.id === id);      
+          latestTasks.splice(latestTasks.indexOf(targetTask), 1);    
+          latestTasks.forEach(task => {
+            if (task.current) {
+              task.timeSpended += (now - task.lastTimestamp);
+              delete task.current;
+              delete task.lastTimestamp;
+            }            
+            return task;
+          });  
+          targetTask.current = true;
+          targetTask.lastTimestamp = now;
+          latestTasks.unshift();
           return {
-            timestamps: timestamps.concat(newTimestamp)
+            timestamps: [...timestamps, newTimestamp],
+            latestTasks: [targetTask, ...latestTasks]
           };
         },
-        update: () => true
+        getLatestTasks: () => ({ tasks, timestamps }) => {
+          let now = Date.now();
+          let oldest = now - 30 * 24 * 60 * 60 * 1000;        
+          let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest);
+          let latestTasks = cloneArray(tasks)
+            .reverse()
+            .filter(task => {
+              return !!lastTimestamps.find(timestamp => timestamp.task === task.id);
+            })
+            .map(task => {
+              timestamps.map((timestamp, i) => {
+                let nextTimestamp = timestamps[i + 1];
+                if (timestamp.task === task.id) {
+                  if (!task.timeStart) {
+                    task.timeStart = timestamp.timestamp;
+                    task.timeSpended = 0;
+                  }
+                  if (nextTimestamp) {
+                    task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
+                  } else {
+                    task.timeSpended += (now - timestamp.timestamp);
+                    task.lastTimestamp = timestamp.timestamp;
+                    task.current = true;
+                  }             
+                }
+              });
+              return task;
+            });   
+          return { latestTasks };
+        },
+        update: () => ({ latestTasks }) => {
+          let [ currenttask ] = latestTasks;
+          let now = Date.now();
+          if (currenttask) {
+            currenttask.timeSpended += (now - latestTasks[0].lastTimestamp);
+            currenttask.lastTimestamp = now;            
+          }
+          return {
+            latestTasks
+          };
+        },
+        makeTaskEditable: id => ({ latestTasks }) => {
+          let task = latestTasks.find(task => task.id === id);
+          task.editable = true;
+          return { latestTasks };
+        },
+        editTitle: ({ id, title }) => ({ latestTasks }) => {
+          let task = latestTasks.find(task => task.id === id);
+          task.title = title;
+          return { latestTasks };
+        },
+        saveTitle: id => ({ latestTasks }) => {
+          let task = latestTasks.find(task => task.id === id);          
+          task.editable = false;
+          return { latestTasks };          
+        }
       },
       timeSpendedString = time => {
+        time = Math.floor(time / 1000);
         let s, m, h, d;
         s = time % 60;
         m = ((time = Math.floor(time / 60)) % 60);
@@ -81,61 +177,46 @@
         d = Math.floor(time / WORK_DAY_DURATION);
         return `${d}d ${h}h ${m}m ${s}s`;
       },
-      getLastTasks = ({ tasks, timestamps }) => {
-        let oldest = dateNow() - 60 * 60 * 24 * 30;        
-        let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest);
-        let lastTasks = tasks
-          .reverse()
-          .filter(task => {
-            return !!lastTimestamps.find(timestamp => timestamp.task = task.id);
-          })
-          .map(task => {
-            timestamps.map((timestamp, i) => {
-              let nextTimestamp = timestamps[i + 1];
-              if (timestamp.task === task.id) {
-                if (!task.timeStart) {
-                  task.timeStart = timestamp.timestamp;
-                  task.timeSpended = 0;
-                }
-                if (nextTimestamp) {
-                  task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
-                } else {
-                  task.current = true;
-                }             
-              }
-            });
-            return task;
-          });                
-        return lastTasks;
-      },
-      dateNow = () => Math.floor(Date.now() / 1000),
       cloneArray = array => array.slice().map(item => Object.assign({}, item)),
-      TasksList = ({ tasks, startTask }) => {  
-        return tasks ? tasks.map(({ id, title, timeStart, timeSpended, current }) => {
-          timeStart = new Date(timeStart * 1000);
+      TasksListView = ($s, $a) => {
+        let intervalId = null;
+        return $s.latestTasks ? $s.latestTasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
+          if (!id) return null;
+          timeStart = new Date(timeStart);
           return h('tr', { class: current ? 'current' : '' },
-            h('td', {}, `${title}`),
+            h('td', {
+                ondblclick: event => $a.makeTaskEditable(id)
+              }, 
+              editable ? h('input', {
+                oninput: event => $a.editTitle({ id, title: event.target.value }),
+                onkeyup: event => {
+                  if (event.key === "Enter") {
+                    $a.saveTitle(id);
+                  }
+                },
+                value: title
+              }) : title
+            ),
             h('td', {}, `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
             h('td', {}, timeSpendedString(timeSpended)),
             h('td', {},
-              current || h('span', {
+              current ? h('span', {
+                class: 'btn btn-warning',
+                onclick: event => $a.startTask(0)
+              }, 'Stop') : h('span', {
                 class: 'btn btn-primary',
-                onclick: event => startTask(id)
+                onclick: event => $a.startTask(id)
               }, 'Start')
             )
           );
         }) : null;
       },
-      RootView = ({ tasks, timestamps }, { startNewTask, startTask }) => {
-        let lastTasks = getLastTasks({ 
-          tasks: cloneArray(tasks), 
-          timestamps 
-        });
+      RootView = ($s, $a) => {        
         return h('div', { id: 'container' },
           h('p', { class: 'control' },
             h('span', {
               class: 'btn btn-primary',
-              onclick: startNewTask
+              onclick: $a.startNewTask
             }, 'Start New Task')
           ),
           h('table', {},
@@ -147,13 +228,43 @@
                 h('th', {}, 'Actions')
               )
             ),
-            h('tbody', {}, TasksList({ tasks: lastTasks, startTask }))
+            h('tbody', {}, TasksListView($s, $a))
           )
         )
       }
-
-    let { update } = app(state, actions, RootView, document.body);
-    // setInterval(update, 1000);
+    mock(state);
+    let { getLatestTasks, update } = app(state, actions, RootView, document.body);
+    getLatestTasks();
+    setInterval(update, 1000);
+    function mock({ tasks, timestamps }) {
+      const HOUR = 60 * 60 * 1000;
+      let lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit ea fugit iure aut deserunt eum ex labore eaque porro voluptatibus eos saepe magnam odit quia esse ab id eius ipsa maiores autem voluptates dignissimos necessitatibus perferendis quia nulla enim quas omnis dolorem quo veniam placeat cumque in quibusdam maxime voluptatum ad voluptatem expedita natus vero sequi provident quas et aliquid doloribus cumque delectus possimus quidem officia est quaerat unde expedita fugiat animi atque odio suscipit natus dolores asperiores libero cupiditate placeat consequuntur velit nisi Itaque tempora ad maxime officia voluptates accusantium unde eaque amet repellendus optio incidunt soluta asperiores sint possimus".split(" ");
+      let shuffle = arr => arr.map(a => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map(a => a[1]);
+      let random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+      let getTitle = () => {
+        let title = shuffle(lorem).slice(0, random(3, 10)).join(" ");
+        return title[0].toUpperCase() + title.slice(1);
+      }
+      let now = Date.now();
+      let mockStartTime = now - 100 * 24 * HOUR;
+      let timestamp = mockStartTime;
+      let nextTaskId = 1;
+      let nextTimestampId = 1;
+      while (timestamp < now) {
+        let newTask = {
+          id: nextTaskId++,
+          title: getTitle()
+        };
+        let newTimestamp = {
+          id: nextTimestampId++,
+          task: newTask.id,
+          timestamp: timestamp
+        }
+        tasks.push(newTask);
+        timestamps.push(newTimestamp);
+        timestamp += random(HOUR, HOUR * 8);
+      } 
+    }
   </script>
 </body>
 </html>
