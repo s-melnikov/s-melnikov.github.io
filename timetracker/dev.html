@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: 'Fira Sans', Consolas, monospace;
+      font-size: 13px;
+      background-color: #f5f5f5;
+      color: #444444;
+    }
+    .btn {
+      cursor: pointer;
+    }
+    .btn:hover {
+      opacity: .9;
+    }
+    .btn-primary {
+      color: blue;
+    }
+    .btn-warning {
+      color: orange;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    table td, table th {
+      padding: 5px;
+    }
+    table .current {
+      background: #e3eaf1;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
+  <script>
+    let
+      nextTaskId = 1,
+      nextTimestampId = 1;
+    const
+      LOCALE = 'ru-RU',
+      WORK_DAY_DURATION = 8,
+      { app, h } = hyperapp,
+      stored = JSON.parse(localStorage.timetracker || "{}"),
+      state = {
+        tasks: stored.tasks || [{
+          id: 0,
+          title: '[Ignored task]'
+        }],
+        timestamps: stored.timestamps || [{
+          id: 0,
+          task: 0,
+          timestamp: 0
+        }],
+        latestTasks: []
+      },
+      actions = {
+        startNewTask: () => ({ tasks, timestamps, latestTasks }, { sync }) => {
+          let now = Date.now();
+          let newTask = {
+            id: nextTaskId,
+            title: `New task #${nextTaskId++}`
+          };
+          let newTimestamp = {
+            id: nextTimestampId++,
+            task: newTask.id,
+            timestamp: now
+          };
+          latestTasks.map((task, i) => {
+            if (task.current) {
+              task.timeSpended += (now - task.lastTimestamp);
+              delete task.current;
+            }
+          });
+          requestIdleCallback(sync);
+          return {
+            tasks: [...tasks, newTask],
+            timestamps: [...timestamps, newTimestamp],
+            latestTasks: [Object.assign({
+              timeStart: now,
+              timeSpended: 0,
+              lastTimestamp: now,
+              current: true
+            }, newTask), ...latestTasks]
+          };
+        },
+        startTask: id => ({ timestamps, latestTasks }, { sync }) => {
+          let now = Date.now();
+          let newTimestamp = {
+            id: nextTimestampId++,
+            task: id,
+            timestamp: now
+          };
+          let targetTask = latestTasks.find(task => task.id === id);
+          latestTasks.splice(latestTasks.indexOf(targetTask), 1);
+          latestTasks.forEach(task => {
+            if (task.current) {
+              task.timeSpended += (now - task.lastTimestamp);
+              delete task.current;
+            }
+            return task;
+          });
+          targetTask.current = true;
+          targetTask.lastTimestamp = now;
+          latestTasks.unshift();
+          requestIdleCallback(sync);
+          return {
+            timestamps: [...timestamps, newTimestamp],
+            latestTasks: [targetTask, ...latestTasks]
+          };
+        },
+        getLatestTasks: () => ({ tasks, timestamps }) => {
+          let now = Date.now();
+          let oldest = now - 14 * 24 * 60 * 60 * 1000;
+          let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest || !timestamp.task);
+          let latestTasks = [];
+          lastTimestamps.forEach((timestamp, i) => {
+            let nextTimestamp = lastTimestamps[i + 1];
+            let task = latestTasks.find(_task => _task.id === timestamp.task);
+            if (task) {
+              latestTasks.splice(latestTasks.indexOf(task), 1);
+            } else {
+              task = Object.assign({
+                timeStart: timestamp.timestamp,
+                timeSpended: 0
+              }, tasks.find(_task => _task.id === timestamp.task));
+            }
+            latestTasks.push(task);
+            if (nextTimestamp) {
+              task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
+              task.lastTimestamp = timestamp.timestamp;
+            } else {
+              task.timeSpended += (now - timestamp.timestamp);
+              task.lastTimestamp = now;
+              task.current = true;
+            }
+          });
+          return {
+            latestTasks: latestTasks.reverse()
+          };
+        },
+        update: () => ({ latestTasks }) => {
+          let [ currenttask ] = latestTasks;
+          let now = Date.now();
+          if (currenttask) {
+            currenttask.timeSpended += (now - currenttask.lastTimestamp);
+            currenttask.lastTimestamp = now;
+          }
+          return {
+            latestTasks
+          };
+        },
+        makeTaskEditable: id => ({ latestTasks }) => {
+          let task = latestTasks.find(task => task.id === id);
+          task.editable = true;
+          return { latestTasks };
+        },
+        editTitle: ({ id, title }) => ({ latestTasks }) => {
+          let task = latestTasks.find(task => task.id === id);
+          task.title = title;
+          return { latestTasks };
+        },
+        saveTitle: id => ({ latestTasks }, { sync }) => {
+          let task = latestTasks.find(task => task.id === id);
+          task.editable = false;
+          requestIdleCallback(sync);
+          return { latestTasks };
+        },
+        sync: () => ({ tasks, timestamps }) => {
+          localStorage.timetracker = JSON.stringify({ tasks, timestamps });
+        }
+      },
+      timeSpendedString = time => {
+        time = Math.floor(time / 1000);
+        let s, m, h, d;
+        s = time % 60;
+        m = ((time = Math.floor(time / 60)) % 60);
+        h = ((time = Math.floor(time / 60)) % WORK_DAY_DURATION);
+        d = Math.floor(time / WORK_DAY_DURATION);
+        return `${d}d ${h}h ${m}m ${s}s`;
+      },
+      cloneArray = array => array.slice().map(item => Object.assign({}, item)),
+      intervalIdleCallback = (cb, interval) => requestIdleCallback(() => {
+        let tick = () => { cb(); setTimeout(() => requestIdleCallback(tick), interval); };
+        requestIdleCallback(tick);
+      }),
+      TasksListView = ($s, $a) => {
+        return TaskDayView($s, $a);
+      },
+      TaskDayView = ($s, $a) => {
+        return $s.latestTasks ? $s.latestTasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
+          if (!id) return null;
+          timeStart = new Date(timeStart);
+          return h('tr', { class: current ? 'current' : '' },
+            h('td', {
+                ondblclick: event => $a.makeTaskEditable(id)
+              },
+              editable ? h('input', {
+                oninput: event => $a.editTitle({ id, title: event.target.value }),
+                onkeyup: event => {
+                  if (event.key === "Enter") {
+                    $a.saveTitle(id);
+                  }
+                },
+                value: title
+              }) : title
+            ),
+            h('td', {}, `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
+            h('td', {}, timeSpendedString(timeSpended)),
+            h('td', {},
+              current ? h('span', {
+                class: 'btn btn-warning',
+                onclick: event => $a.startTask(0)
+              }, 'stop') : h('span', {
+                class: 'btn btn-primary',
+                onclick: event => $a.startTask(id)
+              }, 'start')
+            )
+          );
+        }) : null;
+      }
+      RootView = ($s, $a) => {
+        return h('div', { id: 'container' },
+          h('p', { class: 'control' },
+            h('span', {
+              class: 'btn btn-primary',
+              onclick: $a.startNewTask
+            }, 'start new task')
+          ),
+          h('table', {},
+            h('thead', {},
+              h('tr', {},
+                h('th', {}, 'title'),
+                h('th', {}, 'started'),
+                h('th', {}, 'spended'),
+                h('th', {}, 'actions')
+              )
+            ),
+            h('tbody', {}, TasksListView($s, $a))
+          )
+        )
+      }
+    let { getLatestTasks, update } = app(state, actions, RootView, document.body);
+    getLatestTasks();
+    intervalIdleCallback(update, 1000);
+  </script>
+</body>
+</html>
