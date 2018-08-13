@@ -37,19 +37,20 @@
 <body>
   <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
   <script>
-    let 
+    let
       nextTaskId = 1,
       nextTimestampId = 1;
     const
       LOCALE = 'ru-RU',
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
+      stored = JSON.parse(localStorage.timetracker || "{}"),
       state = {
-        tasks: [{
+        tasks: stored.tasks || [{
           id: 0,
           title: '[Ignored task]'
         }],
-        timestamps: [{
+        timestamps: stored.timestamps || [{
           id: 0,
           task: 0,
           timestamp: 0
@@ -57,7 +58,7 @@
         latestTasks: []
       },
       actions = {
-        startNewTask: () => ({ tasks, timestamps, latestTasks }) => {
+        startNewTask: () => ({ tasks, timestamps, latestTasks }, { sync }) => {
           let now = Date.now();
           let newTask = {
             id: nextTaskId,
@@ -72,10 +73,10 @@
             if (task.current) {
               task.timeSpended += (now - task.lastTimestamp);
               delete task.current;
-              delete task.lastTimestamp;
             }
           });
-          return { 
+          requestIdleCallback(sync);
+          return {
             tasks: [...tasks, newTask],
             timestamps: [...timestamps, newTimestamp],
             latestTasks: [Object.assign({
@@ -86,26 +87,26 @@
             }, newTask), ...latestTasks]
           };
         },
-        startTask: id => ({ timestamps, latestTasks }) => {
+        startTask: id => ({ timestamps, latestTasks }, { sync }) => {
           let now = Date.now();
           let newTimestamp = {
             id: nextTimestampId++,
             task: id,
             timestamp: now
           };
-          let targetTask = latestTasks.find(task => task.id === id);      
-          latestTasks.splice(latestTasks.indexOf(targetTask), 1);    
+          let targetTask = latestTasks.find(task => task.id === id);
+          latestTasks.splice(latestTasks.indexOf(targetTask), 1);
           latestTasks.forEach(task => {
             if (task.current) {
               task.timeSpended += (now - task.lastTimestamp);
               delete task.current;
-              delete task.lastTimestamp;
-            }            
+            }
             return task;
-          });  
+          });
           targetTask.current = true;
           targetTask.lastTimestamp = now;
           latestTasks.unshift();
+          requestIdleCallback(sync);
           return {
             timestamps: [...timestamps, newTimestamp],
             latestTasks: [targetTask, ...latestTasks]
@@ -114,39 +115,39 @@
         getLatestTasks: () => ({ tasks, timestamps }) => {
           let now = Date.now();
           let oldest = now - 14 * 24 * 60 * 60 * 1000;
-          let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest);
-          let latestTasks = cloneArray(tasks)
-            .reverse()
-            .filter(task => {
-              return !!lastTimestamps.find(timestamp => timestamp.task === task.id);
-            })
-            .map(task => {
-              timestamps.map((timestamp, i) => {
-                let nextTimestamp = timestamps[i + 1];
-                if (timestamp.task === task.id) {
-                  if (!task.timeStart) {
-                    task.timeStart = timestamp.timestamp;
-                    task.timeSpended = 0;
-                  }
-                  if (nextTimestamp) {
-                    task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
-                  } else {
-                    task.timeSpended += (now - timestamp.timestamp);
-                    task.lastTimestamp = timestamp.timestamp;
-                    task.current = true;
-                  }             
-                }
-              });
-              return task;
-            });   
-          return { latestTasks };
+          let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest || !timestamp.task);
+          let latestTasks = [];
+          lastTimestamps.forEach((timestamp, i) => {
+            let nextTimestamp = lastTimestamps[i + 1];
+            let task = latestTasks.find(_task => _task.id === timestamp.task);
+            if (task) {
+              latestTasks.splice(latestTasks.indexOf(task), 1);
+            } else {
+              task = Object.assign({
+                timeStart: timestamp.timestamp,
+                timeSpended: 0
+              }, tasks.find(_task => _task.id === timestamp.task));
+            }
+            latestTasks.push(task);
+            if (nextTimestamp) {
+              task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
+              task.lastTimestamp = timestamp.timestamp;
+            } else {
+              task.timeSpended += (now - timestamp.timestamp);
+              task.lastTimestamp = now;
+              task.current = true;
+            }
+          });
+          return {
+            latestTasks: latestTasks.reverse()
+          };
         },
         update: () => ({ latestTasks }) => {
           let [ currenttask ] = latestTasks;
           let now = Date.now();
           if (currenttask) {
-            currenttask.timeSpended += (now - latestTasks[0].lastTimestamp);
-            currenttask.lastTimestamp = now;            
+            currenttask.timeSpended += (now - currenttask.lastTimestamp);
+            currenttask.lastTimestamp = now;
           }
           return {
             latestTasks
@@ -162,10 +163,14 @@
           task.title = title;
           return { latestTasks };
         },
-        saveTitle: id => ({ latestTasks }) => {
-          let task = latestTasks.find(task => task.id === id);          
+        saveTitle: id => ({ latestTasks }, { sync }) => {
+          let task = latestTasks.find(task => task.id === id);
           task.editable = false;
-          return { latestTasks };          
+          requestIdleCallback(sync);
+          return { latestTasks };
+        },
+        sync: () => ({ tasks, timestamps }) => {
+          localStorage.timetracker = JSON.stringify({ tasks, timestamps });
         }
       },
       timeSpendedString = time => {
@@ -183,11 +188,6 @@
         requestIdleCallback(tick);
       }),
       TasksListView = ($s, $a) => {
-        let { latestTasks } = $s;
-        let monthes = [];
-        // latestTasks.forEach(task => {
-        //   let month = 
-        // });
         return TaskDayView($s, $a);
       },
       TaskDayView = ($s, $a) => {
@@ -197,7 +197,7 @@
           return h('tr', { class: current ? 'current' : '' },
             h('td', {
                 ondblclick: event => $a.makeTaskEditable(id)
-              }, 
+              },
               editable ? h('input', {
                 oninput: event => $a.editTitle({ id, title: event.target.value }),
                 onkeyup: event => {
@@ -214,68 +214,38 @@
               current ? h('span', {
                 class: 'btn btn-warning',
                 onclick: event => $a.startTask(0)
-              }, 'Stop') : h('span', {
+              }, 'stop') : h('span', {
                 class: 'btn btn-primary',
                 onclick: event => $a.startTask(id)
-              }, 'Start')
+              }, 'start')
             )
           );
         }) : null;
       }
-      RootView = ($s, $a) => {        
+      RootView = ($s, $a) => {
         return h('div', { id: 'container' },
           h('p', { class: 'control' },
             h('span', {
               class: 'btn btn-primary',
               onclick: $a.startNewTask
-            }, 'Start New Task')
+            }, 'start new task')
           ),
           h('table', {},
             h('thead', {},
               h('tr', {},
-                h('th', {}, 'Title'),
-                h('th', {}, 'Time Started'),
-                h('th', {}, 'Time Spended'),
-                h('th', {}, 'Actions')
+                h('th', {}, 'title'),
+                h('th', {}, 'started'),
+                h('th', {}, 'spended'),
+                h('th', {}, 'actions')
               )
             ),
             h('tbody', {}, TasksListView($s, $a))
           )
         )
       }
-    mock(state);
     let { getLatestTasks, update } = app(state, actions, RootView, document.body);
     getLatestTasks();
     intervalIdleCallback(update, 1000);
-    function mock({ tasks, timestamps }) {
-      const HOUR = 60 * 60 * 1000;
-      let lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit ea fugit iure aut deserunt eum ex labore eaque porro voluptatibus eos saepe magnam odit quia esse ab id eius ipsa maiores autem voluptates dignissimos necessitatibus perferendis quia nulla enim quas omnis dolorem quo veniam placeat cumque in quibusdam maxime voluptatum ad voluptatem expedita natus vero sequi provident quas et aliquid doloribus cumque delectus possimus quidem officia est quaerat unde expedita fugiat animi atque odio suscipit natus dolores asperiores libero cupiditate placeat consequuntur velit nisi Itaque tempora ad maxime officia voluptates accusantium unde eaque amet repellendus optio incidunt soluta asperiores sint possimus".split(" ");
-      let shuffle = arr => arr.map(a => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map(a => a[1]);
-      let random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-      let getTitle = () => {
-        let title = shuffle(lorem).slice(0, random(3, 10)).join(" ");
-        return title[0].toUpperCase() + title.slice(1);
-      }
-      let now = Date.now();
-      let mockStartTime = now - 100 * 24 * HOUR;
-      let timestamp = mockStartTime;
-      let nextTaskId = 1;
-      let nextTimestampId = 1;
-      while (timestamp < now) {
-        let newTask = {
-          id: nextTaskId++,
-          title: getTitle()
-        };
-        let newTimestamp = {
-          id: nextTimestampId++,
-          task: newTask.id,
-          timestamp: timestamp
-        }
-        tasks.push(newTask);
-        timestamps.push(newTimestamp);
-        timestamp += random(HOUR, HOUR * 8);
-      } 
-    }
   </script>
 </body>
 </html>
