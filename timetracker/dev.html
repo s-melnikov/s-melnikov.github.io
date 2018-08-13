@@ -83,10 +83,12 @@
       nextTaskId = 1,
       nextTimestampId = 1;
     const
+      DEV = location.pathname.indexOf('dev') !== -1,
+      STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
       LOCALE = 'ru-RU',
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
-      stored = JSON.parse(localStorage.timetracker || "{}"),
+      stored = JSON.parse(localStorage[STORAGE] || "{}"),
       state = {
         tasks: stored.tasks || [{
           id: 0,
@@ -224,7 +226,7 @@
           return { latestTasks };
         },
         sync: () => ({ tasks, timestamps }) => {
-          localStorage.timetracker = JSON.stringify({ tasks, timestamps });
+          localStorage[STORAGE] = JSON.stringify({ tasks, timestamps });
         }
       },
       timeSpendedString = time => {
@@ -305,7 +307,7 @@
     // mock(state);
     let { getLatestTasks, update } = app(state, actions, RootView, document.body);
     getLatestTasks();
-    // intervalIdleCallback(update, 1000);
+    intervalIdleCallback(update, 1000);
 
     function mock({ tasks, timestamps }) {
       const HOUR = 60 * 60 * 1000;
