@@ -20,6 +20,12 @@
     }
     .btn {
       cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      outline: none;
     }
     .btn:hover {
       opacity: .9;
@@ -44,9 +50,6 @@
     }
     .day_title {
       padding: 20px 7px 10px;
-    }
-    .column_head {
-      padding: 10px 7px;
     }
     .column {
       padding: 7px;
@@ -73,6 +76,18 @@
     .column_actions {
       text-align: right;
       width: 60px;
+    }
+    @media (max-width: 480px) {
+      .flex {
+        display: block;
+      }
+      .current .column {
+        border-color: transparent;
+      }
+      .column {
+        width: 100%;
+        text-align: left;
+      }
     }
   </style>
 </head>
@@ -247,12 +262,6 @@
         let { daysTasks } = $s;
         return daysTasks ? daysTasks.map(dayTasks => h('div', { class: 'day_tasks' },
           h('div', { class: 'day_title' }, dayTasks.day),
-          h('div', { class: 'column_heads flex' },
-            h('div', { class: 'column_head column_title' }, 'title'),
-            h('div', { class: 'column_head column_started' }, 'started'),
-            h('div', { class: 'column_head column_spended' }, 'spended'),
-            h('div', { class: 'column_head column_actions' })
-          ),
           TasksDayView(dayTasks.tasks, $a)
         )) : null;
       },
@@ -282,10 +291,10 @@
               `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
             h('td', { class: 'column column_spended' }, timeSpendedString(timeSpended)),
             h('td', { class: 'column column_actions' },
-              current ? h('span', {
+              current ? h('button', {
                 class: 'btn btn-warning',
                 onclick: event => $a.startTask(0)
-              }, 'stop') : h('span', {
+              }, 'stop') : h('button', {
                 class: 'btn btn-primary',
                 onclick: event => $a.startTask(id)
               }, 'start')
@@ -296,7 +305,7 @@
       RootView = ($s, $a) => {
         return h('div', { id: 'container' },
           h('p', { class: 'control column' },
-            h('span', {
+            h('button', {
               class: 'btn btn-primary',
               onclick: $a.startNewTask
             }, 'start new task')
