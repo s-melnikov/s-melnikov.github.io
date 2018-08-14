@@ -91,10 +91,12 @@
       nextTaskId = 1,
       nextTimestampId = 1;
     const
+      DEV = location.pathname.indexOf('dev') !== -1,
+      STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
       LOCALE = 'ru-RU',
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
-      stored = JSON.parse(localStorage.timetracker || "{}"),
+      stored = JSON.parse(localStorage[STORAGE] || "{}"),
       state = {
         tasks: stored.tasks || [{
           id: 0,
@@ -236,10 +238,22 @@
           return { latestTasks };
         },
         sync: () => ({ tasks, timestamps }) => {
-          localStorage.timetracker = JSON.stringify({ tasks, timestamps });
+          localStorage[STORAGE] = JSON.stringify({ tasks, timestamps });
         },
         showTaskInfo: id => ({ latestTasks }) => {
-          console.log(latestTasks.find(t => t.id === id));
+          let task = Object.assign({}, latestTasks.find(t => t.id === id));
+          task.lastTimestamp = new Date(task.lastTimestamp).toUTCString();
+          task.timeStart = new Date(task.timeStart).toUTCString();
+          task.timeSpended = timeSpendedString(task.timeSpended);
+          console.log(task);
+        },
+        showTaskTimestamps: id => ({ timestamps }) => {
+          let taskTimestamps = timestamps
+            .filter(timestamp => timestamp.task === id)
+            .map(timestamp => Object.assign({}, timestamp, {
+              timestamp: new Date(timestamp.timestamp).toUTCString()
+            }));
+          console.log(taskTimestamps);
         }
       },
       timeSpendedString = time => {
@@ -291,7 +305,8 @@
               },
               `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
             h('td', {
-                class: 'column column_spended'
+                class: 'column column_spended',
+                onclick: () => $a.showTaskTimestamps(id)
               }, timeSpendedString(timeSpended)),
             h('td', { class: 'column column_actions' },
               current ? h('button', {
