@@ -23,9 +23,10 @@
       border: none;
       background: none;
       font-family: inherit;
-      font-size: inherit;
       color: inherit;
-      outline: none;
+      font-size: inherit;
+      padding: 0 5px;
+      outline: 0;
     }
     .btn:hover {
       opacity: .9;
@@ -35,6 +36,9 @@
     }
     .btn-warning {
       color: orange;
+    }
+    .btn-success {
+      color: green;
     }
     .flex {
       display: flex;
@@ -50,6 +54,7 @@
     }
     .day_title {
       padding: 20px 7px 10px;
+      font-size: 110%;
     }
     .column {
       padding: 7px;
@@ -75,19 +80,7 @@
     }
     .column_actions {
       text-align: right;
-      width: 60px;
-    }
-    @media (max-width: 480px) {
-      .flex {
-        display: block;
-      }
-      .current .column {
-        border-color: transparent;
-      }
-      .column {
-        width: 100%;
-        text-align: left;
-      }
+      width: 115px;
     }
   </style>
 </head>
@@ -98,12 +91,10 @@
       nextTaskId = 1,
       nextTimestampId = 1;
     const
-      DEV = location.pathname.indexOf('dev') !== -1,
-      STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
       LOCALE = 'ru-RU',
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
-      stored = JSON.parse(localStorage[STORAGE] || "{}"),
+      stored = JSON.parse(localStorage.timetracker || "{}"),
       state = {
         tasks: stored.tasks || [{
           id: 0,
@@ -171,7 +162,7 @@
             latestTasks: [targetTask, ...latestTasks]
           };
         },
-        getLatestTasks: () => ({ tasks, timestamps }) => {
+        getLatestTasks: () => ({ tasks, timestamps }, { getLatestDaysTasks }) => {
           let now = Date.now();
           let oldest = now - 14 * 24 * 60 * 60 * 1000;
           let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest || !timestamp.task);
@@ -197,6 +188,10 @@
               task.current = true;
             }
           });
+          console.log(1, { latestTasks })
+          getLatestDaysTasks(latestTasks);
+        },
+        getLatestDaysTasks: latestTasks => {
           let daysTasks = [];
           latestTasks.reverse().forEach(task => {
             let date = new Date(task.lastTimestamp);
@@ -241,7 +236,10 @@
           return { latestTasks };
         },
         sync: () => ({ tasks, timestamps }) => {
-          localStorage[STORAGE] = JSON.stringify({ tasks, timestamps });
+          localStorage.timetracker = JSON.stringify({ tasks, timestamps });
+        },
+        showTaskInfo: id => ({ latestTasks }) => {
+          console.log(latestTasks.find(t => t.id === id));
         }
       },
       timeSpendedString = time => {
@@ -287,9 +285,14 @@
                 value: title
               }) : title
             ),
-            h('div', { class: 'column column_started' },
+            h('div', {
+                class: 'column column_started',
+                onclick: () => $a.showTaskInfo(id)
+              },
               `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
-            h('td', { class: 'column column_spended' }, timeSpendedString(timeSpended)),
+            h('td', {
+                class: 'column column_spended'
+              }, timeSpendedString(timeSpended)),
             h('td', { class: 'column column_actions' },
               current ? h('button', {
                 class: 'btn btn-warning',
@@ -297,7 +300,11 @@
               }, 'stop') : h('button', {
                 class: 'btn btn-primary',
                 onclick: event => $a.startTask(id)
-              }, 'start')
+              }, 'start'),
+              h('button', {
+                class: 'btn btn-success',
+                onclick: () => {}
+              }, 'merge')
             )
           );
         }) : null;
@@ -314,10 +321,13 @@
         )
       }
     // mock(state);
-    let { getLatestTasks, update } = app(state, actions, RootView, document.body);
+    let { getLatestTasks, getLatestDaysTasks, update } = app(state, actions, RootView, document.body);
     getLatestTasks();
-    intervalIdleCallback(update, 1000);
-
+    // intervalIdleCallback(update, 1000);
+    if (!!stored) {
+      nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
+      nextTimestampId = stored.timestamps[stored.timestamps.length - 1].id + 1;
+    }
     function mock({ tasks, timestamps }) {
       const HOUR = 60 * 60 * 1000;
       let lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit ea fugit iure aut deserunt eum ex labore eaque porro voluptatibus eos saepe magnam odit quia esse ab id eius ipsa maiores autem voluptates dignissimos necessitatibus perferendis quia nulla enim quas omnis dolorem quo veniam placeat cumque in quibusdam maxime voluptatum ad voluptatem expedita natus vero sequi provident quas et aliquid doloribus cumque delectus possimus quidem officia est quaerat unde expedita fugiat animi atque odio suscipit natus dolores asperiores libero cupiditate placeat consequuntur velit nisi Itaque tempora ad maxime officia voluptates accusantium unde eaque amet repellendus optio incidunt soluta asperiores sint possimus".split(" ");
