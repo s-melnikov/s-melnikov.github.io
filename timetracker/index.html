@@ -246,6 +246,10 @@
     let { getLatestTasks, update } = app(state, actions, RootView, document.body);
     getLatestTasks();
     intervalIdleCallback(update, 1000);
+    if (!!stored) {
+      nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
+      nextTimestampId = stored.timestamps[stored.timestamps.length - 1].id + 1;
+    }
   </script>
 </body>
 </html>
