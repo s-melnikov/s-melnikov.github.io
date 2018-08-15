@@ -87,36 +87,36 @@
 </head>
 <body>
   <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script> -->
   <script>
-    firebase.initializeApp({
-      apiKey: 'AIzaSyAYoWsXOGnwLjlzbqR2uokozrDqXQCuuJU',
-      databaseURL: 'https://timetracker-2dbde.firebaseio.com'
-    });
-    let auth = firebase.auth(),
-      uid,
-      database,
-      ref;
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
+    // firebase.initializeApp({
+    //   apiKey: 'AIzaSyAYoWsXOGnwLjlzbqR2uokozrDqXQCuuJU',
+    //   databaseURL: 'https://timetracker-2dbde.firebaseio.com'
+    // });
+    // let auth = firebase.auth(),
+    //   uid,
+    //   database,
+    //   ref;
+    // auth.onAuthStateChanged(function(user) {
+    //   if (user) {
 
-      }
-    });
-    auth.signInAnonymously();
-    let { h, app } = hyperapp,
-  ,
-  ref = database.ref("dashboards/" + dashBoardId),
-  boardsRef = ref.child("boards"),
-  tasksRef = ref.child("tasks"),
-  typesRef = ref.child("types"),
-  lastBoardId = 0,
-  lastTypeId = 0,
-  lastTaskId = 0
+    //   }
+    // });
+    // auth.signInAnonymously();
+    // let { h, app } = hyperapp,
+    //   ,
+    //   ref = database.ref("dashboards/" + dashBoardId),
+    //   boardsRef = ref.child("boards"),
+    //   tasksRef = ref.child("tasks"),
+    //   typesRef = ref.child("types"),
+    //   lastBoardId = 0,
+    //   lastTypeId = 0,
+    //   lastTaskId = 0
     let
       nextTaskId = 1,
-      nextTimestampId = 1,
-      database = firebase.database(),
-      ref = database.ref("users/" + dashBoardId);
+      nextTimestampId = 1;
+      // database = firebase.database(),
+      // ref = database.ref("users/" + dashBoardId);
     const
       DEV = location.pathname.indexOf('dev') !== -1,
       STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
@@ -299,6 +299,22 @@
             daysTasks.push(dayTasks);
           }
           dayTasks.tasks.push(task);
+          dayTasks.lastTimestamp = task.lastTimestamp;
+        });
+        daysTasks.forEach(dayTasks => {
+          let date = new Date(dayTasks.lastTimestamp), fromTime, toTime;
+          date.setHours(0);
+          date.setMinutes(0);
+          date.setSeconds(0);
+          fromTime = date.getTime();
+          date.setHours(23);
+          date.setMinutes(59);
+          date.setSeconds(59);
+          toTime = date.getTime();
+          console.log({
+            from: new Date(fromTime),
+            to: new Date(toTime),
+          });
         });
         return daysTasks;
       },
