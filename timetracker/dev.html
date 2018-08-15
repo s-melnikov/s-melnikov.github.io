@@ -46,11 +46,12 @@
     input {
       display: block;
       width: 100%;
-      border: 1px solid #dcdcdc;
+      border: none;
+      background: none;
       font-family: inherit;
       font-size: inherit;
       color: inherit;
-      padding: 5px;
+      outline: 0;
     }
     .day_title {
       padding: 20px 7px 10px;
@@ -107,9 +108,13 @@
           task: 0,
           timestamp: 0
         }],
-        latestTasks: []
+        latestTasks: [],
+        daysTasks: []
       },
       actions = {
+        init: () => ($s, { getLatestTasks }) => {
+          getLatestTasks();
+        },
         startNewTask: () => ({ tasks, timestamps, latestTasks }, { sync }) => {
           let now = Date.now();
           let newTask = {
@@ -128,15 +133,20 @@
             }
           });
           requestIdleCallback(sync);
+          tasks = [...tasks, newTask];
+          timestamps = [...timestamps, newTimestamp];
+          latestTasks = [...latestTasks, Object.assign({
+            timeStart: now,
+            timeSpended: 0,
+            lastTimestamp: now,
+            current: true
+          }, newTask)];
+          let daysTasks = getLatestDaysTasks(latestTasks);
           return {
-            tasks: [...tasks, newTask],
-            timestamps: [...timestamps, newTimestamp],
-            latestTasks: [Object.assign({
-              timeStart: now,
-              timeSpended: 0,
-              lastTimestamp: now,
-              current: true
-            }, newTask), ...latestTasks]
+            tasks,
+            timestamps,
+            latestTasks,
+            daysTasks
           };
         },
         startTask: id => ({ timestamps, latestTasks }, { sync }) => {
@@ -157,14 +167,13 @@
           });
           targetTask.current = true;
           targetTask.lastTimestamp = now;
-          latestTasks.unshift();
+          timestamps = [...timestamps, newTimestamp];
+          latestTasks = [...latestTasks, targetTask];
+          let daysTasks = getLatestDaysTasks(latestTasks);
           requestIdleCallback(sync);
-          return {
-            timestamps: [...timestamps, newTimestamp],
-            latestTasks: [targetTask, ...latestTasks]
-          };
+          return { timestamps, latestTasks, daysTasks };
         },
-        getLatestTasks: () => ({ tasks, timestamps }, { getLatestDaysTasks }) => {
+        getLatestTasks: () => ({ tasks, timestamps }) => {
           let now = Date.now();
           let oldest = now - 14 * 24 * 60 * 60 * 1000;
           let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest || !timestamp.task);
@@ -190,36 +199,17 @@
               task.current = true;
             }
           });
-          console.log(1, { latestTasks })
-          getLatestDaysTasks(latestTasks);
+          let daysTasks = getLatestDaysTasks(latestTasks);
+          return { latestTasks, daysTasks };
         },
-        getLatestDaysTasks: latestTasks => {
-          let daysTasks = [];
-          latestTasks.reverse().forEach(task => {
-            let date = new Date(task.lastTimestamp);
-            let day = date.toLocaleDateString(LOCALE);
-            let dayTasks = daysTasks.find(_dayTasks => _dayTasks.day === day);
-            if (!dayTasks) {
-              dayTasks = { day, tasks: [] };
-              daysTasks.push(dayTasks);
-            }
-            dayTasks.tasks.push(task);
-          });
-          return {
-            latestTasks,
-            daysTasks
-          };
-        },
-        update: () => ({ latestTasks }) => {
-          let [ currenttask ] = latestTasks;
-          let now = Date.now();
-          if (currenttask) {
-            currenttask.timeSpended += (now - currenttask.lastTimestamp);
-            currenttask.lastTimestamp = now;
+        update: () => ({ daysTasks }) => {
+          let task = daysTasks[0] && daysTasks[0].tasks[0];
+          if (task && task.id) {
+            let now = Date.now();
+            task.timeSpended += (now - task.lastTimestamp);
+            task.lastTimestamp = now;
           }
-          return {
-            latestTasks
-          };
+          return { daysTasks };
         },
         makeTaskEditable: id => ({ latestTasks }) => {
           let task = latestTasks.find(task => task.id === id);
@@ -270,6 +260,21 @@
         let tick = () => { cb(); setTimeout(() => requestIdleCallback(tick), interval); };
         requestIdleCallback(tick);
       }),
+      getLatestDaysTasks = latestTasks => {
+        let daysTasks = [];
+        latestTasks.slice().reverse().forEach(task => {
+          task = Object.assign(task);
+          let date = new Date(task.lastTimestamp);
+          let day = date.toLocaleDateString(LOCALE);
+          let dayTasks = daysTasks.find(_dayTasks => _dayTasks.day === day);
+          if (!dayTasks) {
+            dayTasks = { day, tasks: [] };
+            daysTasks.push(dayTasks);
+          }
+          dayTasks.tasks.push(task);
+        });
+        return daysTasks;
+      },
       TasksListView = ($s, $a) => {
         let { daysTasks } = $s;
         return daysTasks ? daysTasks.map(dayTasks => h('div', { class: 'day_tasks' },
@@ -296,6 +301,7 @@
                     $a.saveTitle(id);
                   }
                 },
+                oncreate: el => el.focus(),
                 value: title
               }) : title
             ),
@@ -316,7 +322,7 @@
                 class: 'btn btn-primary',
                 onclick: event => $a.startTask(id)
               }, 'start'),
-              h('button', {
+              false && h('button', {
                 class: 'btn btn-success',
                 onclick: () => {}
               }, 'merge')
@@ -336,10 +342,10 @@
         )
       }
     // mock(state);
-    let { getLatestTasks, getLatestDaysTasks, update } = app(state, actions, RootView, document.body);
-    getLatestTasks();
-    // intervalIdleCallback(update, 1000);
-    if (!!stored) {
+    let { init, update } = app(state, actions, RootView, document.body);
+    init();
+    intervalIdleCallback(update, 1000);
+    if (stored && stored.tasks && stored.timestamps) {
       nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
       nextTimestampId = stored.timestamps[stored.timestamps.length - 1].id + 1;
     }
