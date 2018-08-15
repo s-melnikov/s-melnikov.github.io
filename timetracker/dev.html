@@ -87,10 +87,36 @@
 </head>
 <body>
   <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
   <script>
+    firebase.initializeApp({
+      apiKey: 'AIzaSyAYoWsXOGnwLjlzbqR2uokozrDqXQCuuJU',
+      databaseURL: 'https://timetracker-2dbde.firebaseio.com'
+    });
+    let auth = firebase.auth(),
+      uid,
+      database,
+      ref;
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+
+      }
+    });
+    auth.signInAnonymously();
+    let { h, app } = hyperapp,
+  ,
+  ref = database.ref("dashboards/" + dashBoardId),
+  boardsRef = ref.child("boards"),
+  tasksRef = ref.child("tasks"),
+  typesRef = ref.child("types"),
+  lastBoardId = 0,
+  lastTypeId = 0,
+  lastTaskId = 0
     let
       nextTaskId = 1,
-      nextTimestampId = 1;
+      nextTimestampId = 1,
+      database = firebase.database(),
+      ref = database.ref("users/" + dashBoardId);
     const
       DEV = location.pathname.indexOf('dev') !== -1,
       STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
@@ -333,7 +359,7 @@
       }
       RootView = ($s, $a) => {
         return h('div', { id: 'container' },
-          h('p', { class: 'control column' },
+          h('p', { class: 'control' },
             h('button', {
               class: 'btn btn-primary',
               onclick: $a.startNewTask
@@ -342,7 +368,6 @@
           h('div', { class: 'days_tasks' }, TasksListView($s, $a))
         )
       }
-    // mock(state);
     let { init, update } = app(state, actions, RootView, document.body);
     init();
     update();
@@ -350,35 +375,6 @@
     if (stored && stored.tasks && stored.timestamps) {
       nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
       nextTimestampId = stored.timestamps[stored.timestamps.length - 1].id + 1;
-    }
-    function mock({ tasks, timestamps }) {
-      const HOUR = 60 * 60 * 1000;
-      let lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit ea fugit iure aut deserunt eum ex labore eaque porro voluptatibus eos saepe magnam odit quia esse ab id eius ipsa maiores autem voluptates dignissimos necessitatibus perferendis quia nulla enim quas omnis dolorem quo veniam placeat cumque in quibusdam maxime voluptatum ad voluptatem expedita natus vero sequi provident quas et aliquid doloribus cumque delectus possimus quidem officia est quaerat unde expedita fugiat animi atque odio suscipit natus dolores asperiores libero cupiditate placeat consequuntur velit nisi Itaque tempora ad maxime officia voluptates accusantium unde eaque amet repellendus optio incidunt soluta asperiores sint possimus".split(" ");
-      let shuffle = arr => arr.map(a => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map(a => a[1]);
-      let random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-      let getTitle = () => {
-        let title = shuffle(lorem).slice(0, random(3, 10)).join(" ");
-        return title[0].toUpperCase() + title.slice(1);
-      }
-      let now = Date.now();
-      let mockStartTime = now - 100 * 24 * HOUR;
-      let timestamp = mockStartTime;
-      let nextTaskId = 1;
-      let nextTimestampId = 1;
-      while (timestamp < now) {
-        let newTask = {
-          id: nextTaskId++,
-          title: getTitle()
-        };
-        let newTimestamp = {
-          id: nextTimestampId++,
-          task: newTask.id,
-          timestamp: timestamp
-        }
-        tasks.push(newTask);
-        timestamps.push(newTimestamp);
-        timestamp += random(HOUR, HOUR * 8);
-      }
     }
   </script>
 </body>
