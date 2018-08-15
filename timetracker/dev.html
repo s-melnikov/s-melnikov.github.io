@@ -204,7 +204,7 @@
         },
         update: () => ({ daysTasks }) => {
           let task = daysTasks[0] && daysTasks[0].tasks[0];
-          if (task && task.id) {
+          if (task && task.current) {
             let now = Date.now();
             task.timeSpended += (now - task.lastTimestamp);
             task.lastTimestamp = now;
@@ -263,6 +263,7 @@
       getLatestDaysTasks = latestTasks => {
         let daysTasks = [];
         latestTasks.slice().reverse().forEach(task => {
+          if (task.id === 0) return;
           task = Object.assign(task);
           let date = new Date(task.lastTimestamp);
           let day = date.toLocaleDateString(LOCALE);
@@ -344,6 +345,7 @@
     // mock(state);
     let { init, update } = app(state, actions, RootView, document.body);
     init();
+    update();
     intervalIdleCallback(update, 1000);
     if (stored && stored.tasks && stored.timestamps) {
       nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
