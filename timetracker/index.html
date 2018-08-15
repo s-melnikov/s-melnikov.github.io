@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <title>Document</title>
   <style>
+    html {
+      box-sizing: border-box;
+    }
+    * {
+      position: relative;
+      box-sizing: inherit;
+    }
     body {
       font-family: 'Fira Sans', Consolas, monospace;
       font-size: 13px;
@@ -13,6 +20,13 @@
     }
     .btn {
       cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      color: inherit;
+      font-size: inherit;
+      padding: 0 5px;
+      outline: 0;
     }
     .btn:hover {
       opacity: .9;
@@ -23,14 +37,51 @@
     .btn-warning {
       color: orange;
     }
-    table {
-      border-collapse: collapse;
+    .btn-success {
+      color: green;
     }
-    table td, table th {
-      padding: 5px;
+    .flex {
+      display: flex;
     }
-    table .current {
-      background: #e3eaf1;
+    input {
+      display: block;
+      width: 100%;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      outline: 0;
+    }
+    .day_title {
+      padding: 20px 7px 10px;
+      font-size: 110%;
+    }
+    .column {
+      padding: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid transparent;
+    }
+    .current .column {
+      border-color: #dcdcdc;
+    }
+    .column_title {
+      width: 360px;
+    }
+    .column_started {
+      text-align: right;
+      width: 170px;
+    }
+    .column_spended {
+      text-align: right;
+      width: 120px;
+    }
+    .column_actions {
+      text-align: right;
+      width: 115px;
     }
   </style>
 </head>
@@ -41,10 +92,12 @@
       nextTaskId = 1,
       nextTimestampId = 1;
     const
+      DEV = location.pathname.indexOf('dev') !== -1,
+      STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
       LOCALE = 'ru-RU',
       WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
-      stored = JSON.parse(localStorage.timetracker || "{}"),
+      stored = JSON.parse(localStorage[STORAGE] || "{}"),
       state = {
         tasks: stored.tasks || [{
           id: 0,
@@ -55,9 +108,13 @@
           task: 0,
           timestamp: 0
         }],
-        latestTasks: []
+        latestTasks: [],
+        daysTasks: []
       },
       actions = {
+        init: () => ($s, { getLatestTasks }) => {
+          getLatestTasks();
+        },
         startNewTask: () => ({ tasks, timestamps, latestTasks }, { sync }) => {
           let now = Date.now();
           let newTask = {
@@ -76,15 +133,20 @@
             }
           });
           requestIdleCallback(sync);
+          tasks = [...tasks, newTask];
+          timestamps = [...timestamps, newTimestamp];
+          latestTasks = [...latestTasks, Object.assign({
+            timeStart: now,
+            timeSpended: 0,
+            lastTimestamp: now,
+            current: true
+          }, newTask)];
+          let daysTasks = getLatestDaysTasks(latestTasks);
           return {
-            tasks: [...tasks, newTask],
-            timestamps: [...timestamps, newTimestamp],
-            latestTasks: [Object.assign({
-              timeStart: now,
-              timeSpended: 0,
-              lastTimestamp: now,
-              current: true
-            }, newTask), ...latestTasks]
+            tasks,
+            timestamps,
+            latestTasks,
+            daysTasks
           };
         },
         startTask: id => ({ timestamps, latestTasks }, { sync }) => {
@@ -105,12 +167,11 @@
           });
           targetTask.current = true;
           targetTask.lastTimestamp = now;
-          latestTasks.unshift();
+          timestamps = [...timestamps, newTimestamp];
+          latestTasks = [...latestTasks, targetTask];
+          let daysTasks = getLatestDaysTasks(latestTasks);
           requestIdleCallback(sync);
-          return {
-            timestamps: [...timestamps, newTimestamp],
-            latestTasks: [targetTask, ...latestTasks]
-          };
+          return { timestamps, latestTasks, daysTasks };
         },
         getLatestTasks: () => ({ tasks, timestamps }) => {
           let now = Date.now();
@@ -138,20 +199,17 @@
               task.current = true;
             }
           });
-          return {
-            latestTasks: latestTasks.reverse()
-          };
+          let daysTasks = getLatestDaysTasks(latestTasks);
+          return { latestTasks, daysTasks };
         },
-        update: () => ({ latestTasks }) => {
-          let [ currenttask ] = latestTasks;
-          let now = Date.now();
-          if (currenttask) {
-            currenttask.timeSpended += (now - currenttask.lastTimestamp);
-            currenttask.lastTimestamp = now;
+        update: () => ({ daysTasks }) => {
+          let task = daysTasks[0] && daysTasks[0].tasks[0];
+          if (task && task.id) {
+            let now = Date.now();
+            task.timeSpended += (now - task.lastTimestamp);
+            task.lastTimestamp = now;
           }
-          return {
-            latestTasks
-          };
+          return { daysTasks };
         },
         makeTaskEditable: id => ({ latestTasks }) => {
           let task = latestTasks.find(task => task.id === id);
@@ -170,7 +228,22 @@
           return { latestTasks };
         },
         sync: () => ({ tasks, timestamps }) => {
-          localStorage.timetracker = JSON.stringify({ tasks, timestamps });
+          localStorage[STORAGE] = JSON.stringify({ tasks, timestamps });
+        },
+        showTaskInfo: id => ({ latestTasks }) => {
+          let task = Object.assign({}, latestTasks.find(t => t.id === id));
+          task.lastTimestamp = new Date(task.lastTimestamp).toUTCString();
+          task.timeStart = new Date(task.timeStart).toUTCString();
+          task.timeSpended = timeSpendedString(task.timeSpended);
+          console.log(task);
+        },
+        showTaskTimestamps: id => ({ timestamps }) => {
+          let taskTimestamps = timestamps
+            .filter(timestamp => timestamp.task === id)
+            .map(timestamp => Object.assign({}, timestamp, {
+              timestamp: new Date(timestamp.timestamp).toUTCString()
+            }));
+          console.log(taskTimestamps);
         }
       },
       timeSpendedString = time => {
@@ -187,15 +260,38 @@
         let tick = () => { cb(); setTimeout(() => requestIdleCallback(tick), interval); };
         requestIdleCallback(tick);
       }),
-      TasksListView = ($s, $a) => {
-        return TaskDayView($s, $a);
+      getLatestDaysTasks = latestTasks => {
+        let daysTasks = [];
+        latestTasks.slice().reverse().forEach(task => {
+          task = Object.assign(task);
+          let date = new Date(task.lastTimestamp);
+          let day = date.toLocaleDateString(LOCALE);
+          let dayTasks = daysTasks.find(_dayTasks => _dayTasks.day === day);
+          if (!dayTasks) {
+            dayTasks = { day, tasks: [] };
+            daysTasks.push(dayTasks);
+          }
+          dayTasks.tasks.push(task);
+        });
+        return daysTasks;
       },
-      TaskDayView = ($s, $a) => {
-        return $s.latestTasks ? $s.latestTasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
+      TasksListView = ($s, $a) => {
+        let { daysTasks } = $s;
+        return daysTasks ? daysTasks.map(dayTasks => h('div', { class: 'day_tasks' },
+          h('div', { class: 'day_title' }, dayTasks.day),
+          TasksDayView(dayTasks.tasks, $a)
+        )) : null;
+      },
+      TasksDayView = (tasks, $a) => {
+        return tasks ? tasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
           if (!id) return null;
           timeStart = new Date(timeStart);
-          return h('tr', { class: current ? 'current' : '' },
-            h('td', {
+          return h('div', {
+              class: 'row flex ' + (current ? ' current' : '')
+            },
+            h('div', {
+                class: 'column column_title',
+                title: title,
                 ondblclick: event => $a.makeTaskEditable(id)
               },
               editable ? h('input', {
@@ -205,50 +301,82 @@
                     $a.saveTitle(id);
                   }
                 },
+                oncreate: el => el.focus(),
                 value: title
               }) : title
             ),
-            h('td', {}, `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
-            h('td', {}, timeSpendedString(timeSpended)),
-            h('td', {},
-              current ? h('span', {
+            h('div', {
+                class: 'column column_started',
+                onclick: () => $a.showTaskInfo(id)
+              },
+              `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
+            h('td', {
+                class: 'column column_spended',
+                onclick: () => $a.showTaskTimestamps(id)
+              }, timeSpendedString(timeSpended)),
+            h('td', { class: 'column column_actions' },
+              current ? h('button', {
                 class: 'btn btn-warning',
                 onclick: event => $a.startTask(0)
-              }, 'stop') : h('span', {
+              }, 'stop') : h('button', {
                 class: 'btn btn-primary',
                 onclick: event => $a.startTask(id)
-              }, 'start')
+              }, 'start'),
+              false && h('button', {
+                class: 'btn btn-success',
+                onclick: () => {}
+              }, 'merge')
             )
           );
         }) : null;
       }
       RootView = ($s, $a) => {
         return h('div', { id: 'container' },
-          h('p', { class: 'control' },
-            h('span', {
+          h('p', { class: 'control column' },
+            h('button', {
               class: 'btn btn-primary',
               onclick: $a.startNewTask
             }, 'start new task')
           ),
-          h('table', {},
-            h('thead', {},
-              h('tr', {},
-                h('th', {}, 'title'),
-                h('th', {}, 'started'),
-                h('th', {}, 'spended'),
-                h('th', {}, 'actions')
-              )
-            ),
-            h('tbody', {}, TasksListView($s, $a))
-          )
+          h('div', { class: 'days_tasks' }, TasksListView($s, $a))
         )
       }
-    let { getLatestTasks, update } = app(state, actions, RootView, document.body);
-    getLatestTasks();
+    // mock(state);
+    let { init, update } = app(state, actions, RootView, document.body);
+    init();
     intervalIdleCallback(update, 1000);
     if (stored && stored.tasks && stored.timestamps) {
       nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
       nextTimestampId = stored.timestamps[stored.timestamps.length - 1].id + 1;
+    }
+    function mock({ tasks, timestamps }) {
+      const HOUR = 60 * 60 * 1000;
+      let lorem = "Lorem ipsum dolor sit amet consectetur adipisicing elit ea fugit iure aut deserunt eum ex labore eaque porro voluptatibus eos saepe magnam odit quia esse ab id eius ipsa maiores autem voluptates dignissimos necessitatibus perferendis quia nulla enim quas omnis dolorem quo veniam placeat cumque in quibusdam maxime voluptatum ad voluptatem expedita natus vero sequi provident quas et aliquid doloribus cumque delectus possimus quidem officia est quaerat unde expedita fugiat animi atque odio suscipit natus dolores asperiores libero cupiditate placeat consequuntur velit nisi Itaque tempora ad maxime officia voluptates accusantium unde eaque amet repellendus optio incidunt soluta asperiores sint possimus".split(" ");
+      let shuffle = arr => arr.map(a => [Math.random(), a]).sort((a, b) => a[0] - b[0]).map(a => a[1]);
+      let random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+      let getTitle = () => {
+        let title = shuffle(lorem).slice(0, random(3, 10)).join(" ");
+        return title[0].toUpperCase() + title.slice(1);
+      }
+      let now = Date.now();
+      let mockStartTime = now - 100 * 24 * HOUR;
+      let timestamp = mockStartTime;
+      let nextTaskId = 1;
+      let nextTimestampId = 1;
+      while (timestamp < now) {
+        let newTask = {
+          id: nextTaskId++,
+          title: getTitle()
+        };
+        let newTimestamp = {
+          id: nextTimestampId++,
+          task: newTask.id,
+          timestamp: timestamp
+        }
+        tasks.push(newTask);
+        timestamps.push(newTimestamp);
+        timestamp += random(HOUR, HOUR * 8);
+      }
     }
   </script>
 </body>
