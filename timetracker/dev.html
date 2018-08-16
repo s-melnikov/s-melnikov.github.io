@@ -112,24 +112,22 @@
     //   lastBoardId = 0,
     //   lastTypeId = 0,
     //   lastTaskId = 0
-    let
-      nextTaskId = 1,
-      nextTimestampId = 1;
       // database = firebase.database(),
       // ref = database.ref("users/" + dashBoardId);
-    const
+    let
       DEV = location.pathname.indexOf('dev') !== -1,
       STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
       LOCALE = 'ru-RU',
-      WORK_DAY_DURATION = 8,
       { app, h } = hyperapp,
-      stored = JSON.parse(localStorage[STORAGE] || "{}"),
+      nextTaskId = 1,
+      nextTimestampId = 1;
+      storedData = JSON.parse(localStorage[STORAGE] || "{}"),
       state = {
-        tasks: stored.tasks || [{
+        tasks: storedData.tasks || [{
           id: 0,
           title: '[Ignored task]'
         }],
-        timestamps: stored.timestamps || [{
+        timestamps: storedData.timestamps || [{
           id: 0,
           task: 0,
           timestamp: 0
@@ -167,7 +165,7 @@
             lastTimestamp: now,
             current: true
           }, newTask)];
-          let daysTasks = getLatestDaysTasks(latestTasks);
+          let daysTasks = getLatestDaysTasks({ latestTasks, timestamps });
           return {
             tasks,
             timestamps,
@@ -195,7 +193,7 @@
           targetTask.lastTimestamp = now;
           timestamps = [...timestamps, newTimestamp];
           latestTasks = [...latestTasks, targetTask];
-          let daysTasks = getLatestDaysTasks(latestTasks);
+          let daysTasks = getLatestDaysTasks({ latestTasks, timestamps });
           requestIdleCallback(sync);
           return { timestamps, latestTasks, daysTasks };
         },
@@ -225,7 +223,7 @@
               task.current = true;
             }
           });
-          let daysTasks = getLatestDaysTasks(latestTasks);
+          let daysTasks = getLatestDaysTasks({ latestTasks, timestamps });
           return { latestTasks, daysTasks };
         },
         update: () => ({ daysTasks }) => {
@@ -247,9 +245,11 @@
           task.title = title;
           return { latestTasks };
         },
-        saveTitle: id => ({ latestTasks }, { sync }) => {
+        saveTitle: id => ({ tasks, latestTasks }, { sync }) => {
           let task = latestTasks.find(task => task.id === id);
           task.editable = false;
+          let _task = tasks.find(task => task.id === id);
+          _task.title = task.title;
           requestIdleCallback(sync);
           return { latestTasks };
         },
@@ -277,8 +277,8 @@
         let s, m, h, d;
         s = time % 60;
         m = ((time = Math.floor(time / 60)) % 60);
-        h = ((time = Math.floor(time / 60)) % WORK_DAY_DURATION);
-        d = Math.floor(time / WORK_DAY_DURATION);
+        h = ((time = Math.floor(time / 60)) % 24);
+        d = Math.floor(time / 24);
         return `${d}d ${h}h ${m}m ${s}s`;
       },
       cloneArray = array => array.slice().map(item => Object.assign({}, item)),
@@ -286,7 +286,7 @@
         let tick = () => { cb(); setTimeout(() => requestIdleCallback(tick), interval); };
         requestIdleCallback(tick);
       }),
-      getLatestDaysTasks = latestTasks => {
+      getLatestDaysTasks = ({ latestTasks, timestamps }) => {
         let daysTasks = [];
         latestTasks.slice().reverse().forEach(task => {
           if (task.id === 0) return;
@@ -303,17 +303,26 @@
         });
         daysTasks.forEach(dayTasks => {
           let date = new Date(dayTasks.lastTimestamp), fromTime, toTime;
-          date.setHours(0);
-          date.setMinutes(0);
-          date.setSeconds(0);
+          date.setHours(0); date.setMinutes(0); date.setSeconds(0);
           fromTime = date.getTime();
-          date.setHours(23);
-          date.setMinutes(59);
-          date.setSeconds(59);
+          date.setHours(23); date.setMinutes(59); date.setSeconds(59);
           toTime = date.getTime();
-          console.log({
-            from: new Date(fromTime),
-            to: new Date(toTime),
+          let dayTimestamps = timestamps.filter(({ timestamp }) => timestamp > fromTime && timestamp < toTime);
+          console.log(dayTasks, dayTimestamps)
+          dayTasks.timeStart = 0;
+          dayTasks.timeSpended = 0;
+          dayTimestamps.map((timestamp, i) => {
+            let nextTimestamp = dayTimestamps[i + 1];
+            if (timestamp.task !== 0 && dayTasks.timeStart === 0) {
+              dayTasks.timeStart = timestamp.timestamp;
+            }
+            if (nextTimestamp) {
+              if (timestamp.task !== 0) {
+                dayTasks.timeSpended += nextTimestamp.timestamp - timestamp.timestamp;
+              }
+            } else {
+              dayTasks.timeEnd = timestamp.timestamp;
+            }
           });
         });
         return daysTasks;
@@ -322,7 +331,12 @@
         let { daysTasks } = $s;
         return daysTasks ? daysTasks.map(dayTasks => h('div', { class: 'day_tasks' },
           h('div', { class: 'day_title' }, dayTasks.day),
-          TasksDayView(dayTasks.tasks, $a)
+          TasksDayView(dayTasks.tasks, $a),
+          h('div', { class: 'column' },
+            h('small', {}, `(${new Date(dayTasks.timeStart).toLocaleTimeString(LOCALE)} |
+            ${new Date(dayTasks.timeEnd).toLocaleTimeString(LOCALE)} |
+            ${timeSpendedString(dayTasks.timeSpended)})`)
+          )
         )) : null;
       },
       TasksDayView = (tasks, $a) => {
@@ -372,7 +386,7 @@
             )
           );
         }) : null;
-      }
+      },
       RootView = ($s, $a) => {
         return h('div', { id: 'container' },
           h('p', { class: 'control' },
@@ -388,9 +402,9 @@
     init();
     update();
     intervalIdleCallback(update, 1000);
-    if (stored && stored.tasks && stored.timestamps) {
-      nextTaskId = stored.tasks[stored.tasks.length - 1].id + 1;
-      nextTimestampId = stored.timestamps[stored.timestamps.length - 1].id + 1;
+    if (storedData && storedData.tasks && storedData.timestamps) {
+      nextTaskId = storedData.tasks[storedData.tasks.length - 1].id + 1;
+      nextTimestampId = storedData.timestamps[storedData.timestamps.length - 1].id + 1;
     }
   </script>
 </body>
