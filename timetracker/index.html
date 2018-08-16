@@ -302,26 +302,33 @@
           dayTasks.lastTimestamp = task.lastTimestamp;
         });
         daysTasks.forEach(dayTasks => {
+          let now = Date.now();
           let date = new Date(dayTasks.lastTimestamp), fromTime, toTime;
           date.setHours(0); date.setMinutes(0); date.setSeconds(0);
           fromTime = date.getTime();
           date.setHours(23); date.setMinutes(59); date.setSeconds(59);
           toTime = date.getTime();
           let dayTimestamps = timestamps.filter(({ timestamp }) => timestamp > fromTime && timestamp < toTime);
-          console.log(dayTasks, dayTimestamps)
+          if (now > fromTime && now < toTime) {
+            dayTasks.current = true;
+          }
           dayTasks.timeStart = 0;
           dayTasks.timeSpended = 0;
           dayTimestamps.map((timestamp, i) => {
+            let skiped = timestamp.task === 0;
             let nextTimestamp = dayTimestamps[i + 1];
-            if (timestamp.task !== 0 && dayTasks.timeStart === 0) {
+            if (!skiped && dayTasks.timeStart === 0) {
               dayTasks.timeStart = timestamp.timestamp;
             }
             if (nextTimestamp) {
-              if (timestamp.task !== 0) {
+              if (!skiped) {
                 dayTasks.timeSpended += nextTimestamp.timestamp - timestamp.timestamp;
               }
             } else {
               dayTasks.timeEnd = timestamp.timestamp;
+              if (dayTasks.current && !skiped) {
+                dayTasks.timeSpended += now - timestamp.timestamp
+              }
             }
           });
         });
