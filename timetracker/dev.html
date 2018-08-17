@@ -295,7 +295,6 @@
         m = ((time = Math.floor(time / 60)) % 60);
         h = ((time = Math.floor(time / 60)) % WORK_DAY_LENGTH);
         d = Math.floor(time / WORK_DAY_LENGTH);
-        if (h < 10) h = '0' + h;
         if (m < 10) m = '0' + m;
         if (s < 10) s = '0' + s;
         return `${d}d ${h}h ${m}m ${s}s`;
