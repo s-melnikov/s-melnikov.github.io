@@ -14,8 +14,8 @@
     }
     body {
       font-family: 'Fira Sans', Consolas, monospace;
-      font-size: 13px;
-      background-color: #f5f5f5;
+      font-size: 11px;
+      background-color: #ffffff;
       color: #444444;
     }
     .btn {
@@ -59,29 +59,35 @@
     }
     .column {
       padding: 7px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      border-top: 1px solid transparent;
-      border-bottom: 1px solid transparent;
-    }
-    .current .column {
-      border-color: #dcdcdc;
     }
     .column_title {
-      width: 360px;
+      width: 100%;
+      white-space: pre-wrap;
     }
     .column_started {
       text-align: right;
-      width: 170px;
+      width: 110px;
     }
-    .column_spended {
+    .column_spent {
       text-align: right;
       width: 120px;
     }
     .column_actions {
       text-align: right;
-      width: 115px;
+      width: 80px;
+    }
+    .day_tasks {
+      margin: 15px;
+      padding: 5px;
+      border: 1px solid #eee;
+    }
+    .row {
+      margin: 5px 0;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .current.row {
+      border-color: #add4e6
     }
   </style>
 </head>
@@ -152,7 +158,7 @@
           };
           latestTasks.map((task, i) => {
             if (task.current) {
-              task.timeSpended += (now - task.lastTimestamp);
+              task.timeSpent += (now - task.lastTimestamp);
               delete task.current;
             }
           });
@@ -161,7 +167,7 @@
           timestamps = [...timestamps, newTimestamp];
           latestTasks = [...latestTasks, Object.assign({
             timeStart: now,
-            timeSpended: 0,
+            timeSpent: 0,
             lastTimestamp: now,
             current: true
           }, newTask)];
@@ -184,7 +190,7 @@
           latestTasks.splice(latestTasks.indexOf(targetTask), 1);
           latestTasks.forEach(task => {
             if (task.current) {
-              task.timeSpended += (now - task.lastTimestamp);
+              task.timeSpent += (now - task.lastTimestamp);
               delete task.current;
             }
             return task;
@@ -210,15 +216,15 @@
             } else {
               task = Object.assign({
                 timeStart: timestamp.timestamp,
-                timeSpended: 0
+                timeSpent: 0
               }, tasks.find(_task => _task.id === timestamp.task));
             }
             latestTasks.push(task);
             if (nextTimestamp) {
-              task.timeSpended += (nextTimestamp.timestamp - timestamp.timestamp);
+              task.timeSpent += (nextTimestamp.timestamp - timestamp.timestamp);
               task.lastTimestamp = timestamp.timestamp;
             } else {
-              task.timeSpended += (now - timestamp.timestamp);
+              task.timeSpent += (now - timestamp.timestamp);
               task.lastTimestamp = now;
               task.current = true;
             }
@@ -230,7 +236,7 @@
           let task = daysTasks[0] && daysTasks[0].tasks[0];
           if (task && task.current) {
             let now = Date.now();
-            task.timeSpended += (now - task.lastTimestamp);
+            task.timeSpent += (now - task.lastTimestamp);
             task.lastTimestamp = now;
           }
           return { daysTasks };
@@ -260,7 +266,7 @@
           let task = Object.assign({}, latestTasks.find(t => t.id === id));
           task.lastTimestamp = new Date(task.lastTimestamp).toUTCString();
           task.timeStart = new Date(task.timeStart).toUTCString();
-          task.timeSpended = timeSpendedString(task.timeSpended);
+          task.timeSpent = timeSpentString(task.timeSpent);
           console.log(task);
         },
         showTaskTimestamps: id => ({ timestamps }) => {
@@ -272,7 +278,7 @@
           console.log(taskTimestamps);
         }
       },
-      timeSpendedString = time => {
+      timeSpentString = time => {
         time = Math.floor(time / 1000);
         let s, m, h, d;
         s = time % 60;
@@ -313,7 +319,7 @@
             dayTasks.current = true;
           }
           dayTasks.timeStart = 0;
-          dayTasks.timeSpended = 0;
+          dayTasks.timeSpent = 0;
           dayTimestamps.map((timestamp, i) => {
             let skiped = timestamp.task === 0;
             let nextTimestamp = dayTimestamps[i + 1];
@@ -322,12 +328,12 @@
             }
             if (nextTimestamp) {
               if (!skiped) {
-                dayTasks.timeSpended += nextTimestamp.timestamp - timestamp.timestamp;
+                dayTasks.timeSpent += nextTimestamp.timestamp - timestamp.timestamp;
               }
             } else {
               dayTasks.timeEnd = timestamp.timestamp;
               if (dayTasks.current && !skiped) {
-                dayTasks.timeSpended += now - timestamp.timestamp
+                dayTasks.timeSpent += now - timestamp.timestamp
               }
             }
           });
@@ -339,15 +345,13 @@
         return daysTasks ? daysTasks.map(dayTasks => h('div', { class: 'day_tasks' },
           h('div', { class: 'day_title' }, dayTasks.day),
           TasksDayView(dayTasks.tasks, $a),
-          h('div', { class: 'column' },
-            h('small', {}, `(${new Date(dayTasks.timeStart).toLocaleTimeString(LOCALE)} |
-            ${new Date(dayTasks.timeEnd).toLocaleTimeString(LOCALE)} |
-            ${timeSpendedString(dayTasks.timeSpended)})`)
+          h('div', { class: 'column meta' },
+            h('small', {}, `(day start: ${new Date(dayTasks.timeStart).toLocaleTimeString(LOCALE)} | day end: ${new Date(dayTasks.timeEnd).toLocaleTimeString(LOCALE)} | spent: ${timeSpentString(dayTasks.timeSpent)})`)
           )
         )) : null;
       },
       TasksDayView = (tasks, $a) => {
-        return tasks ? tasks.map(({ id, title, timeStart, timeSpended, current, editable }) => {
+        return tasks ? tasks.map(({ id, title, timeStart, timeSpent, current, editable }) => {
           if (!id) return null;
           timeStart = new Date(timeStart);
           return h('div', {
@@ -375,9 +379,9 @@
               },
               `${timeStart.toLocaleDateString(LOCALE)} ${timeStart.toLocaleTimeString(LOCALE)}`),
             h('td', {
-                class: 'column column_spended',
+                class: 'column column_spent',
                 onclick: () => $a.showTaskTimestamps(id)
-              }, timeSpendedString(timeSpended)),
+              }, timeSpentString(timeSpent)),
             h('td', { class: 'column column_actions' },
               current ? h('button', {
                 class: 'btn btn-warning',
