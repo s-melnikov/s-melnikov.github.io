@@ -76,7 +76,7 @@
     }
     .column_spent {
       text-align: right;
-      width: 120px;
+      width: 80px;
     }
     .column_actions {
       text-align: right;
@@ -133,6 +133,7 @@
       DEV = location.pathname.indexOf('dev') !== -1,
       STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
       LOCALE = 'ru-RU',
+      WORK_DAY_LENGTH = 8,
       { app, h } = hyperapp,
       nextTaskId = 1,
       nextTimestampId = 1;
@@ -292,8 +293,11 @@
         let s, m, h, d;
         s = time % 60;
         m = ((time = Math.floor(time / 60)) % 60);
-        h = ((time = Math.floor(time / 60)) % 24);
-        d = Math.floor(time / 24);
+        h = ((time = Math.floor(time / 60)) % WORK_DAY_LENGTH);
+        d = Math.floor(time / WORK_DAY_LENGTH);
+        if (h < 10) h = '0' + h;
+        if (m < 10) m = '0' + m;
+        if (s < 10) s = '0' + s;
         return `${d}d ${h}h ${m}m ${s}s`;
       },
       cloneArray = array => array.slice().map(item => Object.assign({}, item)),
