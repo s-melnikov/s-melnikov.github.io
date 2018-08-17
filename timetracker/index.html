@@ -27,9 +27,15 @@
       font-size: inherit;
       padding: 0 5px;
       outline: 0;
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+      padding: 7px 10px;
+    }
+    .btn-sm {
+      padding: 5px 7px;
     }
     .btn:hover {
-      opacity: .9;
+      background: rgba(0, 0, 0, 0.05);
     }
     .btn-primary {
       color: blue;
@@ -387,14 +393,14 @@
               }, timeSpentString(timeSpent)),
             h('td', { class: 'column column_actions' },
               current ? h('button', {
-                class: 'btn btn-warning',
+                class: 'btn btn-sm btn-warning',
                 onclick: event => $a.startTask(0)
               }, 'stop') : h('button', {
-                class: 'btn btn-primary',
+                class: 'btn btn-sm btn-primary',
                 onclick: event => $a.startTask(id)
               }, 'start'),
               false && h('button', {
-                class: 'btn btn-success',
+                class: 'btn btn-sm btn-success',
                 onclick: () => {}
               }, 'merge')
             )
