@@ -1,0 +1,7 @@
+<div ng-class="{ 'edit-mode': $ctrl.editMode }" class="circles">
+  <span 
+    ng-repeat="index in $ctrl.items" 
+    ng-class="{ filled: index < $ctrl.selected }" 
+    ng-click="$ctrl.editMode ? $ctrl.onClick(index) : null"
+    class="circle"></span>  
+</div>

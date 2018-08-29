@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+
+    <h2 id="mixinpatternjavascript">The Mixin Pattern</h2>
+    <p>In traditional programming languages such as C++ and Lisp, Mixins are classes which offer functionality that can be easily inherited by a sub-class or group of sub-classes for the purpose of function re-use.</p>
+    <h2>Sub-classing</h2>
+    <p>For developers unfamiliar with sub-classing, we will go through a brief beginners primer on them before diving into Mixins and Decorators further.</p>
+    <p><em>Sub-classing</em> is a term that refers to inheriting properties for a new object from a base or <em>superclass</em> object. In traditional object-oriented programming, a class <code>B</code> is able to extend another class <code>A</code>. Here we consider <code>A</code> a superclass and <code>B</code> a subclass of <code>A</code>. As such, all instances of <code>B</code> inherit the methods from <code>A</code>. <code>B</code> is however still able to define its own methods, including those that override methods originally defined by <code>A</code>.</p>
+    <p>Should <code>B</code> need to invoke a method in <code>A</code> that has been overridden, we refer to this as method chaining. Should <code>B</code> need to invoke the constructor <code>A</code> (the superclass), we call this constructor chaining.</p>
+    <p>In order to demonstrate sub-classing, we first need a base object that can have new instances of itself created. let's model this around the concept of a person.</p>
+    <pre>
+var Person = function(firstName, lastName) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+  this.gender = "male";
+};
+</pre>
+    <p>Next, we'll want to specify a new class (object) that's a subclass of the existing <code>Person</code> object. Let us imagine we want to add distinct properties to distinguish a <code>Person</code> from a <code>Superhero</code> whilst inheriting the properties of the <code>Person</code> "superclass". As superheroes share many common traits with normal people (e.g. name, gender), this should hopefully illustrate how sub-classing works adequately.</p>
+    <pre>
+// a new instance of Person can then easily be created as follows:
+var clark = new Person( "Clark", "Kent" );
+
+// Define a subclass constructor for for "Superhero":
+var Superhero = function( firstName, lastName, powers ){
+
+  // Invoke the superclass constructor on the new object
+  // then use .call() to invoke the constructor as a method of
+  // the object to be initialized.
+
+  Person.call( this, firstName, lastName );
+
+  // Finally, store their powers, a new array of traits not found in a normal "Person"
+  this.powers = powers;
+};
+
+Superhero.prototype = Object.create( Person.prototype );
+var superman = new Superhero( "Clark", "Kent", ["flight","heat-vision"] );
+console.log( superman );
+
+// Outputs Person attributes as well as powers
+</pre>
+    <p>The <code>Superhero</code> constructor creates an object which descends from <code>Person</code>. Objects of this type have attributes of the objects that are above it in the chain and if we had set default values in the <code>Person</code> object, <code>Superhero</code> is capable of overriding any inherited values with values specific to it's object.</p>
+    <h2>Mixins</h2>
+    <p>In JavaScript, we can look at inheriting from Mixins as a means of collecting functionality through extension. Each new object we define has a prototype from which it can inherit further properties. Prototypes can inherit from other object prototypes but, even more importantly, can define properties for any number of object instances. We can leverage this fact to promote function re-use.</p>
+    <p>Mixins allow objects to borrow (or inherit) functionality from them with a minimal amount of complexity. As the pattern works well with JavaScripts object prototypes, it gives us a fairly flexible way to share functionality from not just one Mixin, but effectively many through multiple inheritance.</p>
+    <p>They can be viewed as objects with attributes and methods that can be easily shared across a number of other object prototypes. Imagine that we define a Mixin containing utility functions in a standard object literal as follows:</p>
+    <pre>
+var myMixins = {
+
+  moveUp: function(){
+    console.log( "move up" );
+  },
+
+  moveDown: function(){
+    console.log( "move down" );
+  },
+
+  stop: function(){
+    console.log( "stop! in the name of love!" );
+  }
+
+};
+</pre>
+    <p>We can then easily extend the prototype of existing constructor functions to include this behavior using a helper such as the Underscore.js <code>_.extend()</code> method:</p>
+    <pre>
+// A skeleton carAnimator constructor
+function CarAnimator(){
+  this.moveLeft = function(){
+    console.log( "move left" );
+  };
+}
+
+// A skeleton personAnimator constructor
+function PersonAnimator(){
+  this.moveRandomly = function(){ /*..*/ };
+}
+
+// Extend both constructors with our Mixin
+_.extend( CarAnimator.prototype, myMixins );
+_.extend( PersonAnimator.prototype, myMixins );
+
+// Create a new instance of carAnimator
+var myAnimator = new CarAnimator();
+myAnimator.moveLeft();
+myAnimator.moveDown();
+myAnimator.stop();
+
+// Outputs:
+// move left
+// move down
+// stop! in the name of love!
+</pre>
+    <p>As we can see, this allows us to easily "mix" in common behaviour into object constructors fairly trivially. </p>
+    <p>In the next example, we have two constructors: a Car and a Mixin. What we're going to do is augment (another way of saying extend) the Car so that it can inherit specific methods defined in the Mixin, namely <code>driveForward()</code> and <code>driveBackward()</code>. This time we won't be using Underscore.js.</p>
+    <p>Instead, this example will demonstrate how to augment a constructor to include functionality without the need to duplicate this process for every constructor function we may have.</p>
+    <pre>
+// Define a simple Car constructor
+var Car = function ( settings ) {
+
+  this.model = settings.model || "no model provided";
+  this.color = settings.color || "no colour provided";
+
+};
+
+// Mixin
+var Mixin = function () {};
+
+Mixin.prototype = {
+
+  driveForward: function () {
+      console.log( "drive forward" );
+  },
+
+  driveBackward: function () {
+      console.log( "drive backward" );
+  },
+
+  driveSideways: function () {
+      console.log( "drive sideways" );
+  }
+
+};
+
+// Extend an existing object with a method from another
+function augment( receivingClass, givingClass ) {
+
+  // only provide certain methods
+  if ( arguments[2] ) {
+      for ( var i = 2, len = arguments.length; i < len; i++ ) {
+          receivingClass.prototype[arguments[i]] = givingClass.prototype[arguments[i]];
+      }
+  }
+  // provide all methods
+  else {
+      for ( var methodName in givingClass.prototype ) {
+
+          // check to make sure the receiving class doesn't
+          // have a method of the same name as the one currently
+          // being processed
+          if ( !Object.hasOwnProperty.call(receivingClass.prototype, methodName) ) {
+              receivingClass.prototype[methodName] = givingClass.prototype[methodName];
+          }
+
+          // Alternatively (check prototype chain as well):
+          // if ( !receivingClass.prototype[methodName] ) {
+          // receivingClass.prototype[methodName] = givingClass.prototype[methodName];
+          // }
+      }
+  }
+}
+
+
+// Augment the Car constructor to include "driveForward" and "driveBackward"
+augment( Car, Mixin, "driveForward", "driveBackward" );
+
+// Create a new Car
+var myCar = new Car({
+  model: "Ford Escort",
+  color: "blue"
+});
+
+// Test to make sure we now have access to the methods
+myCar.driveForward();
+myCar.driveBackward();
+
+// Outputs:
+// drive forward
+// drive backward
+
+// We can also augment Car to include all functions from our mixin
+// by not explicitly listing a selection of them
+augment( Car, Mixin );
+
+var mySportsCar = new Car({
+  model: "Porsche",
+  color: "red"
+});
+
+mySportsCar.driveSideways();
+
+// Outputs:
+// drive sideways
+
+</pre>
+    </p>
+    <h3>Advantages &amp; Disadvantages</h3>
+    <p>Mixins assist in decreasing functional repetition and increasing function re-use in a system. Where an application is likely to require shared behaviour across object instances, we can easily avoid any duplication by maintaining this shared functionality in a Mixin and thus focusing on implementing only the functionality in our system which is truly distinct.</p>
+    <p>That said, the downsides to Mixins are a little more debatable. Some developers feel that injecting functionality into an object prototype is a bad idea as it leads to both prototype pollution and a level of uncertainty regarding the origin of our functions. In large systems this may well be the case.</p>
+    <p>I would argue that strong documentation can assist in minimizing the amount of confusion regarding the source of mixed in functions, but as with every pattern, if care is taken during implementation we should be okay.</p>
+    <a href="index.html" class="prev">Previous</a>
+    <a href="index.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>

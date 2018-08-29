@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+    <h2 id="factorypatternjavascript">The Factory Pattern</h2>
+    <p>The Factory pattern is another creational pattern concerned with the notion of creating objects. Where it differs from the other patterns in its category is that it doesn't explicitly require us to use a constructor. Instead, a Factory can provide a generic interface for creating objects, where we can specify the type of factory object we wish to be created.</p>
+    <p>Imagine that we have a UI factory where we are asked to create a type of UI component. Rather than creating this component directly using the <code>new</code> operator or via another creational constructor, we ask a Factory object for a new component instead. We inform the Factory what type of object is required (e.g "Button", "Panel") and it instantiates this, returning it to us for use.</p>
+    <p>This is particularly useful if the object creation process is relatively complex, e.g. if it strongly depends on dynamic factors or application configuration.</p>
+    <p>Examples of this pattern can be found in UI libraries such as ExtJS where the methods for creating objects or components may be further subclassed.</p>
+    <p>The following is an example that builds upon our previous snippets using the Constructor pattern logic to define cars. It demonstrates how a Vehicle <em>Factory</em> may be implemented using the Factory pattern:</p>
+    <pre>
+// Types.js - Constructors used behind the scenes
+
+// A constructor for defining new cars
+function Car( options ) {
+  // some defaults
+  this.doors = options.doors || 4;
+  this.state = options.state || "brand new";
+  this.color = options.color || "silver";
+}
+
+// A constructor for defining new trucks
+function Truck( options){
+  this.state = options.state || "used";
+  this.wheelSize = options.wheelSize || "large";
+  this.color = options.color || "blue";
+}
+
+// FactoryExample.js
+
+// Define a skeleton vehicle factory
+function VehicleFactory() {}
+
+// Define the prototypes and utilities for this factory
+
+// Our default vehicleClass is Car
+VehicleFactory.prototype.vehicleClass = Car;
+
+// Our Factory method for creating new Vehicle instances
+VehicleFactory.prototype.createVehicle = function ( options ) {
+
+switch(options.vehicleType){
+  case "car":
+    this.vehicleClass = Car;
+    break;
+  case "truck":
+    this.vehicleClass = Truck;
+    break;
+  //defaults to VehicleFactory.prototype.vehicleClass (Car)
+}
+
+return new this.vehicleClass( options );
+
+};
+
+// Create an instance of our factory that makes cars
+var carFactory = new VehicleFactory();
+var car = carFactory.createVehicle({
+  vehicleType: "car",
+  color: "yellow",
+  doors: 6
+});
+
+// Test to confirm our car was created using the vehicleClass/prototype Car
+
+// Outputs: true
+console.log( car instanceof Car );
+
+// Outputs: Car object of color "yellow", doors: 6 in a "brand new" state
+console.log( car );
+</pre>
+    <p><strong>Approach #1: Modify a VehicleFactory instance to use the Truck class</strong></p>
+    <pre>
+var movingTruck = carFactory.createVehicle({
+  vehicleType: "truck",
+  state: "like new",
+  color: "red",
+  wheelSize: "small"
+});
+
+// Test to confirm our truck was created with the vehicleClass/prototype Truck
+
+// Outputs: true
+console.log( movingTruck instanceof Truck );
+
+// Outputs: Truck object of color "red", a "like new" state
+// and a "small" wheelSize
+console.log( movingTruck );
+</pre>
+    <p><strong>Approach #2: Subclass VehicleFactory to create a factory class that builds Trucks</strong></p>
+    <pre>
+function TruckFactory () {}
+TruckFactory.prototype = new VehicleFactory();
+TruckFactory.prototype.vehicleClass = Truck;
+
+var truckFactory = new TruckFactory();
+var myBigTruck = truckFactory.createVehicle({
+  state: "omg..so bad.",
+  color: "pink",
+  wheelSize: "so big"
+});
+
+// Confirms that myBigTruck was created with the prototype Truck
+// Outputs: true
+console.log( myBigTruck instanceof Truck );
+
+// Outputs: Truck object with the color "pink", wheelSize "so big"
+// and state "omg. so bad"
+console.log( myBigTruck );
+</pre>
+    <h3>When To Use The Factory Pattern</h3>
+    <p>The Factory pattern can be especially useful when applied to the following situations:
+      <ul>
+        <li>When our object or component setup involves a high level of complexity</li>
+        <li>When we need to easily generate different instances of objects depending on the environment we are in</li>
+        <li>When we're working with many small objects or components that share the same properties</li>
+        <li>When composing objects with instances of other objects that need only satisfy an API contract (aka, duck typing) to work. This is useful for decoupling.</li>
+      </ul>
+    </p>
+    <h3>When Not To Use The Factory Pattern</h3>
+    <p>
+      When applied to the wrong type of problem, this pattern can introduce an unnecessarily great deal of complexity to an application. Unless providing an interface for object creation is a design goal for the library or framework we are writing, I would suggest sticking to explicit constructors to avoid the unnecessary overhead.</p>
+    <p>Due to the fact that the process of object creation is effectively abstracted behind an interface, this can also introduce problems with unit testing depending on just how complex this process might be.</p>
+    <h3>Abstract Factories</h3>
+    <p>It is also useful to be aware of the <strong>Abstract Factory</strong> pattern, which aims to encapsulate a group of individual factories with a common goal. It separates the details of implementation of a set of objects from their general usage.</p>
+    <p>An Abstract Factory should be used where a system must be independent from the way the objects it creates are generated or it needs to work with multiple types of objects.</p>
+    <p>An example which is both simple and easier to understand is a vehicle factory, which defines ways to get or register vehicles types. The abstract factory can be named abstractVehicleFactory. The Abstract factory will allow the definition of types of vehicle like "car" or "truck" and concrete factories will implement only classes that fulfill the vehicle contract (e.g <code>Vehicle.prototype.drive</code> and <code>Vehicle.prototype.breakDown</code>).</p>
+    <pre>
+var abstractVehicleFactory = (function () {
+  // Storage for our vehicle types
+  var types = {};
+
+  return {
+    getVehicle: function ( type, customizations ) {
+      var Vehicle = types[type];
+
+      return (Vehicle ? new Vehicle(customizations) : null);
+    },
+
+    registerVehicle: function ( type, Vehicle ) {
+      var proto = Vehicle.prototype;
+
+      // only register classes that fulfill the vehicle contract
+      if ( proto.drive && proto.breakDown ) {
+        types[type] = Vehicle;
+      }
+
+      return abstractVehicleFactory;
+    }
+  };
+})();
+
+
+// Usage:
+abstractVehicleFactory.registerVehicle( "car", Car );
+abstractVehicleFactory.registerVehicle( "truck", Truck );
+
+// Instantiate a new car based on the abstract vehicle type
+var car = abstractVehicleFactory.getVehicle("car", {
+  color: "lime green",
+  state: "like new"
+});
+
+// Instantiate a new truck in a similar manner
+var truck = abstractVehicleFactory.getVehicle("truck", {
+  wheelSize: "medium",
+  color: "neon yellow"
+});
+</pre>
+    <a href="index.html" class="prev">Previous</a>
+    <a href="index.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>

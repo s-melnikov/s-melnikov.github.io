@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+    <h1 id="writingdesignpatterns">Writing Design Patterns</h1>
+    <p>Although this book is aimed at those new to design patterns, a fundamental understanding of how a design pattern is written can offer a number of useful benefits. For starters, we can gain a deeper appreciation for the reasoning behind why a pattern is needed. We can also learn how to tell if a pattern (or proto-pattern) is up to scratch when reviewing it for our own needs.</p>
+    <p>
+      Writing good patterns is a challenging task. Patterns not only need to (ideally) provide a substantial quantity of reference material for end-users, but they also need to be able to defend why they are necessary.
+    </p>
+    <p>Having read the previous section on <em>what</em> a pattern is, we may think that this in itself is enough to help us identify patterns we see in the wild. This is actually not completely true. It's not always clear if a piece of code we're looking at is following a set pattern or just accidentally happens to appear like it does.</p>
+    <p>
+      When we're looking at a body of code we think may be using a pattern, we should consider writing down some of the aspects of the code that we believe falls under a particular existing pattern or set of patterns.</p>
+    <p>In many cases of pattern-analysis we can find that we're just looking at code that follows good principles and design practices that could happen to overlap with the rules for a pattern by accident. Remember - solutions in which neither interactions nor defined rules appear are <em>not</em> patterns. </p>
+    <p>
+      If interested in venturing down the path of writing your own design patterns I recommend learning from others who have already been through the process and done it well. Spend time absorbing the information from a number of different design pattern descriptions and take in what&rsquo;s meaningful to you.</p>
+    <p>Explore structure and semantics - this can be done by examining the interactions and context of the patterns you are interested in so you can identify the principles that assist in organizing those patterns together in useful configurations.</p>
+    <p>
+      Once we've exposed ourselves to a wealth of information on pattern literature, we may wish to begin writing our pattern using an <em>existing</em> format and see if we can brainstorm new ideas for improving it or integrating our ideas in there.</p>
+    <p>An example of a developer that did this is in recent years is Christian Heilmann, who took the existing <em>Module</em> pattern and made some fundamentally useful changes to it to create the <em>Revealing Module</em> pattern (this is one of the patterns covered later in this book). </p>
+    <p>
+      The following are tips I would suggest if interested in creating a new design pattern:</p>
+    <ul type="disc">
+      <li><strong>How practical is the pattern?</strong>: Ensure the pattern describes proven solutions to recurring problems rather than just speculative solutions which haven&rsquo;t been qualified.</li>
+      <li><strong>Keep best practices in mind:</strong> The design decisions we make should be based on principles we derive from an understanding of best practices. </li>
+      <li><strong>Our design patterns should be transparent to the user</strong>: Design patterns should be entirely transparent to any type of user-experience. They are primarily there to serve the developers using them and should not force changes to behavior in the user-experience that would not be incurred without the use of a pattern.</li>
+      <li><strong>Remember that originality is <em>not</em> key in pattern design</strong>: When writing a pattern, we do not need to be the original discoverer of the solutions being documented nor do you have to worry about our design overlapping with minor pieces of other patterns. If the approach is strong enough to have broad useful applicability, it has a chance of being recognized as a valid pattern.</li>
+      <li><strong>Patterns need a strong set of examples:</strong> A good pattern description needs to be followed by an equally strong set of examples demonstrating the successful application of our pattern. To show broad usage, examples that exhibit good design principles are ideal.</li>
+    </ul>
+    <p>
+      Pattern writing is a careful balance between creating a design that is general, specific and above all, useful. Try to ensure that if writing a pattern you cover the widest possible areas of application and you should be fine. &nbsp;I hope that this brief introduction to writing patterns has given you some insights that will assist your learning process for the next sections of this book. </p>
+    <a href="index.html" class="prev">Previous</a>
+    <a href="index.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>

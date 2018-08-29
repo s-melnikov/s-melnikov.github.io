@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <title>CV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+<body ng-controller="AppController as ctrl" ng-cloak ng-class="{ preloader: !ctrl.isInited }">
+  <div class="container">
+    <hr>
+
+    <h1>
+      <editable-field
+      ng-if="ctrl.isEditing"
+      field-value="ctrl.name"
+      on-update="ctrl.updateData({ name: value })"></editable-field>
+      <span ng-if="!ctrl.isEditing">{{ ctrl.name }}</span>
+    </h1>
+    <h2>
+      <editable-field
+      ng-if="ctrl.isEditing"
+      field-value="ctrl.position"
+      on-update="ctrl.updateData({ position: value })"></editable-field>
+      <span ng-if="!ctrl.isEditing">{{ ctrl.position }}</span>
+    </h2>
+
+    <address
+      data="ctrl.address"
+      is-editing="ctrl.isEditing"
+      on-update="ctrl.updateData({ address: value })"></address>
+
+    <contacts
+      data="ctrl.contacts"
+      is-editing="ctrl.isEditing"
+      on-update="ctrl.updateData({ contacts: value })"></contacts>
+
+    <skills
+      data="ctrl.skills"
+      is-editing="ctrl.isEditing"
+      on-update="ctrl.updateData({ skills: value })"></skills>
+
+    <experience
+      data="ctrl.experience"
+      is-editing="ctrl.isEditing"
+      on-update="ctrl.updateData({ experience: value })"></experience>
+
+    <education
+      data="ctrl.education"
+      is-editing="ctrl.isEditing"
+      on-update="ctrl.updateData({ education: value })"></education>
+
+    <hr>
+
+    <!-- <span ng-click="ctrl.toggleEditing()"
+      class="icon icon-{{ ctrl.isEditing ? 'x' : 'edit' }} edit-cv"></span> -->
+
+  </div>
+  <script src="https://unpkg.com/angular@1.7.2/angular.min.js"></script>
+  <script src="app/app.js"></script>
+
+  <script src="app/services/logger-service.js"></script>
+  <script src="app/services/rest-service.js"></script>
+
+  <script src="app/controllers/app-controller.js"></script>
+
+  <script src="app/components/editable-field/editable-field-component.js"></script>
+  <script src="app/components/address/address-component.js"></script>
+  <script src="app/components/contacts/contacts-component.js"></script>
+  <script src="app/components/skills/skills-component.js"></script>
+  <script src="app/components/level/level-component.js"></script>
+  <script src="app/components/experience/experience-component.js"></script>
+  <script src="app/components/education/education-component.js"></script>
+  <script src="app/components/period/period-component.js"></script>
+</body>
+</html>

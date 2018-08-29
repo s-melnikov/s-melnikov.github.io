@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+    <h1 id="patternity">"Pattern"-ity Testing, Proto-Patterns &amp; The Rule Of Three</h1>
+    <p>
+      Remember that not every algorithm, best practice or solution represents what might be considered a complete pattern. There may be a few key ingredients here that are missing and the pattern community is generally wary of something claiming to be one unless it has been heavily vetted. Even if something is presented to us which <strong>appears</strong> to meet the criteria for a pattern, it should not be considered one until it has undergone suitable periods of scrutiny and testing by others.</p>
+    <p>
+      Looking back upon the work by Alexander once more, he claims that a pattern should both be a process and a "thing". This definition is obtuse on purpose as he follows by saying that it is the process which should create the "thing". This is a reason why patterns generally focus on addressing a visually identifiable structure i.e we should be able to visually depict (or draw) a picture representing the structure that placing the pattern into practice results in. </p>
+    <p>
+      In studying design patterns, it's not irregular to come across the term "proto-pattern". What is this? Well, a pattern that has not yet been known to pass the "pattern"-ity tests is usually referred to as a proto-pattern. Proto-patterns may result from the work of someone that has established a particular solution that is worthy of sharing with the community, but may not have yet had the opportunity to have been vetted heavily due to its very young age.</p>
+    <p>
+      Alternatively, the individual(s) sharing the pattern may not have the time or interest of going through the "pattern"-ity process and might release a short description of their proto-pattern instead. Brief descriptions or snippets of this type of pattern are known as patlets.</p>
+    <p>
+      The work involved in fully documenting a qualified pattern can be quite daunting. Looking back at some of the earliest work in the field of design patterns, a pattern may be considered "good" if it does the following: </p>
+    <ul type="disc">
+      <li><strong>Solves a particular problem</strong>: Patterns are not supposed to just capture principles or strategies. They need to capture solutions. This is one of the most essential ingredients for a good pattern.</li>
+      <li><strong>The solution to this problem cannot be obvious</strong>: We can find that problem-solving techniques often attempt to derive from well-known first principles. The best design patterns usually provide solutions to problems indirectly - this is considered a necessary approach for the most challenging problems related to design.</li>
+      <li><strong>The concept described must have been proven</strong>: Design patterns require proof that they function as described and without this proof the design cannot be seriously considered. If a pattern is highly speculative in nature, only the brave may attempt to use it.</li>
+      <li><strong>It must describe a relationship</strong>: In some cases it may appear that a pattern describes a type of module. Although an implementation may appear this way, the official description of the pattern must describe much deeper system structures and mechanisms that explain its relationship to code.</li>
+    </ul>
+    <p>
+      We would be forgiven for thinking that a proto-pattern which fails to meet guidelines isn't worth learning from, however, this is far from the truth. Many proto-patterns are actually quite good. I&rsquo;m not saying that all proto-patterns are worth looking at, but there are quite a few useful ones in the wild that could assist us with future projects. Use best judgment with the above list in mind and you&rsquo;ll be fine in your selection process.</p>
+    <p>
+      One of the additional requirements for a pattern to be valid is that they display some recurring phenomenon. This is often something that can be qualified in at least three key areas, referred to as the <em>rule of three</em>. To show recurrence using this rule, one must demonstrate: </p>
+    <ol start="1" type="1">
+      <li><strong>Fitness of purpose</strong> - how is the pattern considered successful?</li>
+      <li><strong>Usefulness</strong> - why is the pattern considered successful?</li>
+      <li><strong>Applicability</strong> - is the design worthy of being a pattern because it has wider applicability? If so, this needs to be explained. When reviewing or defining a pattern, it is important to keep the above in mind.</li>
+    </ol>
+    <a href="whatisapattern.html" class="prev">Previous</a>
+    <a href="designpatternstructure.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>

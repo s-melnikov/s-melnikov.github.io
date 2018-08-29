@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+    <h1 id="whatisapattern">What is a Pattern?</h1>
+    <p>A pattern is a reusable solution that can be applied to commonly occurring problems in software design - in our case - in writing JavaScript web applications. Another way of looking at patterns are as templates for how we solve problems - ones which can be used in quite a few different situations.</p>
+    <p>So, why is it important to understand patterns and be familiar with them? Design patterns have three main benefits: </p>
+    <ol start="1" type="1">
+      <li><strong>Patterns are proven solutions:</strong> They provide solid approaches to solving issues in software development using proven techniques that reflect the experience and insights the developers that helped define them bring to the pattern.</li>
+      <li><strong>Patterns can be easily reused: </strong>A pattern usually reflects an out of the box solution that can be adapted to suit our own needs. This feature makes them quite robust.</li>
+      <li><strong>Patterns can be expressive: </strong>When we look at a pattern there&rsquo;s generally a set structure and <em>vocabulary</em> to the solution presented that can help express rather large solutions quite elegantly.</li>
+    </ol>
+    <p>Patterns are <strong>not</strong> an exact solution. It&rsquo;s important that we remember the role of a pattern is merely to provide us with a solution scheme. Patterns don&rsquo;t solve all design problems nor do they replace good software designers, however, they <strong>do</strong> support them. Next we&rsquo;ll take a look at some of the other advantages patterns have to offer. </p>
+    <ul>
+      <li><strong>Reusing patterns assists in preventing minor issues that can cause major problems in the application development process. </strong>What this means is when code is built on proven patterns, we can afford to spend less time worrying about the structure of our code and more time focusing on the quality of our overall solution. This is because patterns can encourage us to code in a more structured and organized fashion avoiding the need to refactor it for cleanliness purposes in the future.</li>
+      <li><strong>Patterns can provide generalized solutions which are documented in a fashion that doesn't require them to be tied to a specific problem.</strong> This generalized approach means that regardless of the application (and in many cases the programming language) we are working with, design patterns can be applied to improve the structure of our code.</li>
+      <li><strong>Certain patterns can actually decrease the overall file-size footprint of our code by avoiding repetition. </strong>By encouraging developers to look more closely at their solutions for areas where instant reductions in <span id="internal-source-marker_0.982673292361492">repetition</span> can be made, e.g. reducing the number of functions performing similar processes in favor of a single generalized function, the overall size of our codebase can be decreased. This is also known as making code more <em>DRY</em>.</li>
+      <li><strong>Patterns add to a developer's vocabulary, which makes communication faster.</strong></li>
+      <li><strong>Patterns that are frequently used can be improved over time by harnessing the collective experiences other developers using those patterns contribute back to the design pattern community.</strong> In some cases this leads to the creation of entirely new design patterns whilst in others it can lead to the provision of improved guidelines on how specific patterns can be best used. This can ensure that pattern-based solutions continue to become more robust than ad-hoc solutions may be.</li>
+    </ul>
+
+    <h3>We already use patterns everyday</h3>
+    <p>
+      To understand how useful patterns can be, let's review a very simple element selection problem that the jQuery library solves for us. </p>
+    <p>
+      Imagine that we have a script where for each DOM element found on a page with class "foo" we wish to increment a counter. What's the most efficient way to query for this collection of elements? Well, there are a few different ways this problem could be tackled:</p>
+    <p>
+      <ol>
+        <li>Select all of the elements in the page and then store references to them. Next, filter this collection and use regular expressions (or another means) to only store those with the class "foo".</li>
+        <li>
+          Use a modern native browser feature such as <code>querySelectorAll()</code> to select all of the elements with the class "foo".</li>
+        <li>Use a native feature such as <code>getElementsByClassName()</code> to similarly get back the desired collection. </li>
+      </ol>
+    </p>
+    <p>
+      So, which of these options is the fastest? It's actually option 3. by a factor of 8-10 times the <a href="http://jsperf.com/getelementsbyclassname-vs-queryselectorall/5">alternatives</a>. In a real-world application however, 3. will not work in versions of Internet Explorer below 9 and thus it's necessary to use 1. where both 2. and 3. aren't supported.</p>
+    <p>
+      Developers using jQuery don't have to worry about this problem however, as it's luckily abstracted away for us using the <em>Facade</em> pattern. As we'll review in more detail later, this pattern provides a simple set of abstracted interfaces (e.g <code>$el.css()</code>, <code>$el.animate()</code>) to several more complex underlying bodies of code. As we've seen, this means less time having to be concerned about implementation level details.</p>
+    <p>Behind the scenes, the library simply opts for the most optimal approach to selecting elements depending on what our current browser supports and we just consume the abstraction layer.</p>
+    <p>We're probably all also familiar with jQuery's <code>$("selector")</code>. This is significantly more easy to use for selecting HTML elements on a page versus having to manually opt for <code>getElementById()</code>, <code>getElementsByClassName()</code>, <code>getElementsByTagName()</code> and so on.</p>
+    <p>Although we know that <code>querySelectorAll()</code> attempts to solve this problem, compare the effort involved in using jQuery's Facade interfaces vs. selecting the most optimal selection paths ourselves. There's no contest! Abstractions using patterns can offer real-world value.</p>
+    <p>
+      We'll be looking at this and more design patterns later on in the book.</p>
+
+    <a href="introduction.html" class="prev">Previous</a>
+    <a href="patternity.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>

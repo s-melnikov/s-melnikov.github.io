@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Learning JavaScript Design Patterns</title>
+  <meta name="description" content="An open-source book on JavaScript Design Patterns">
+  <meta name="author" content="Addy Osmani">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="cleartype" content="on">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/googlecode.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <a href="toc.html" class="toc">Table Of Contents</a>
+    <h1 id="antipatterns">Anti-Patterns</h1>
+    <p>If we consider that a pattern represents a best practice, an anti-pattern represents a lesson that has been learned. The term anti-patterns was coined in 1995 by Andrew Koenig in the November C++ Report that year, inspired by the GoF's book <em>Design Patterns</em>. In Koenig&rsquo;s report, there are two notions of anti-patterns that are presented. Anti-Patterns: </p>
+    <ul type="disc">
+      <li>Describe a <em>bad</em> solution to a particular problem which resulted in a bad situation occurring </li>
+      <li>Describe <em>how</em> to get out of said situation and how to go from there to a good solution </li>
+    </ul>
+    <p>
+      <p>On this topic, Alexander writes about the difficulties in achieving a good balance between good design structure and good context:</p>
+      <p><em>&ldquo;These notes are about the process of design; the process of inventing physical things which display a new physical order, organization, form, in response to function.…every design problem begins with an effort to achieve fitness between two entities: the form in question and its context. The form is the solution to the problem; the context defines the problem&rdquo;.</em></p>
+      <p>
+        While it&rsquo;s quite important to be aware of design patterns, it can be equally important to understand anti-patterns. Let us qualify the reason behind this. When creating an application, a project&rsquo;s life-cycle begins with construction however once you&rsquo;ve got the initial release done, it needs to be maintained. The quality of a final solution will either be <em>good</em> or <em>bad</em>, depending on the level of skill and time the team have invested in it. Here <em>good</em> and <em>bad</em> are considered in context - a &lsquo;perfect&rsquo; design may qualify as an anti-pattern if applied in the wrong context. </p>
+      <p>
+        The bigger challenges happen after an application has hit production and is ready to go into maintenance mode. A developer working on such a system who hasn&rsquo;t worked on the application before may introduce a <em>bad</em> design into the project by accident. If said <em>bad</em> practices are created as anti-patterns, they allow developers a means to recognize these in advance so that they can avoid common mistakes that can occur - this is parallel to the way in which design patterns provide us with a way to recognize common techniques that are <em>useful.</em></p>
+      <p>
+        To summarize, an anti-pattern is a bad design that is worthy of documenting. Examples of anti-patterns in JavaScript are the following: </p>
+      <ul type="disc">
+        <li>Polluting the global namespace by defining a large number of variables in the global context</li>
+        <li>Passing strings rather than functions to either setTimeout or setInterval as this triggers the use of <code>eval()</code> internally.</li>
+        <li>Modifying the <code>Object</code> class prototype (this is a particularly bad anti-pattern)</li>
+        <li>Using JavaScript in an inline form as this is inflexible </li>
+        <li>The use of document.write where native DOM alternatives such as document.createElement are more appropriate. document.write has been grossly misused over the years and has quite a few disadvantages including that if it's executed after the page has been loaded it can actually overwrite the page we're on, whilst document.createElement does not. We can see <a href="http://jsfiddle.net/addyosmani/6T9vX/">here</a> for a live example of this in action. It also doesn't work with XHTML which is another reason opting for more DOM-friendly methods such as document.createElement is favorable.</li>
+      </ul>
+      <p>
+        Knowledge of anti-patterns is critical for success. Once we are able to recognize such anti-patterns, we're able to refactor our code to negate them so that the overall quality of our solutions improves instantly. </p>
+
+      <a href="index.html" class="prev">Previous</a>
+      <a href="index.html" class="next">Next</a>
+  </div>
+  <div class="footer">
+    <p>Learning JavaScript Design Patterns. &copy; Addy Osmani 2017.</p>
+  </div>
+  <script>
+  document.querySelectorAll("pre").forEach(block => {
+    hljs.highlightBlock(block);
+  });
+  </script>
+</body>
+
+</html>
