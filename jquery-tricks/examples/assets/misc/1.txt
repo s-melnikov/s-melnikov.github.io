@@ -1,1 +1,0 @@
-This is some text from 1.txt
