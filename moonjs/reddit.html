@@ -1,0 +1,258 @@
+<html>
+<head>
+  <title>MoonJS Reddit</title>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    a {
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    html {
+      font: normal 14px Ubuntu, sans-serif;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+    .container {
+      padding: 27px 20px;
+      margin: 30px auto 50px;
+      max-width: 1250px;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      background-color: #fff;
+      box-shadow: 0 0 1px #ccc;
+    }
+    .subreddit {
+      flex: 0 0 33%;
+      min-width: 400px;
+      padding: 20px 42px;
+    }
+    .subreddit h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .subreddit .item-list {
+      border-top: 1px solid #bec9d0;
+      padding-top: 20px;
+      list-style: none;
+    }
+    .subreddit .item-list li {
+      margin-bottom: 17px;
+    }
+    .post {
+      display: flex;
+    }
+    .post .thumbnail {
+      display: block;
+      flex: 0 0 60px;
+      height: 60px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      margin-right: 10px;
+      border-radius: 4px;
+      margin-right: 12px;
+    }
+    .post .details {
+      display: flex;
+      flex-direction: column;
+    }
+    .post .details .title {
+      font-size: 15px;
+      margin-bottom: 3px;
+      color: #04477b;
+    }
+    .post .details .title:visited {
+      color: purple;
+    }
+    .post .details .action-buttons a {
+      font-size: 11px;
+      margin-right: 4px;
+      display: inline-block;
+      color: #666;
+    }
+    .post .details .action-buttons i {
+      font-size: 10px;
+      margin-right: 1px;
+    }
+    @media(max-width: 1250px) {
+      .container {
+        justify-content: center;
+        margin: 30px 30px 50px 30px;
+      }
+    }
+    @media(max-width: 500px) {
+      .subreddit {
+        min-width: 300px;
+        padding: 20px 15px;
+      }
+    }
+    header {
+      background-color: #35495e;
+      box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+      padding: 20px 30px;
+      box-sizing: border-box;
+    }
+    header .header-limiter {
+      max-width: 1250px;
+      text-align: center;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+    }
+    header .header-limiter h1 {
+      line-height: 40px;
+      margin: 0;
+      font-size: 18px;
+      font-weight: normal;
+    }
+    header .header-limiter h1 span {
+      color: #41b883;
+    }
+    header .header-limiter a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+    header .header-limiter nav {
+      line-height: 40px;
+    }
+    header .header-limiter nav a {
+      display: inline-block;
+      padding: 0 5px;
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 14px;
+      opacity: 0.9;
+      font-weight: bold;
+      border-radius: 3px;
+      padding: 0px 25px;
+      background-color: #D6336A;
+    }
+    header .header-limiter nav a:hover {
+      opacity: 1;
+    }
+    header .header-limiter nav a.selected {
+      color: #608bd2;
+      pointer-events: none;
+      opacity: 1;
+    }
+    @media all and (max-width: 600px) {
+      header {
+        padding: 20px 0;
+      }
+      header .header-limiter {
+        flex-direction: column;
+      }
+      header .header-limiter h1 {
+        margin: 10px 0 10px;
+        text-align: center;
+        font-size: 16px;
+        line-height: 1;
+      }
+    }
+    @media (max-width: 1200px) {
+      #bsaHolder {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="text/html" id="app-tpl">
+    <div class="container">
+      <Subreddit name="aww"></Subreddit>
+      <Subreddit name="space"></Subreddit>
+      <Subreddit name="gifs"></Subreddit>
+      <Subreddit name="food"></Subreddit>
+      <Subreddit name="comics"></Subreddit>
+      <Subreddit name="sports"></Subreddit>
+    </div>
+  </script>
+
+  <script type="text/html" id="subreddit-tpl">
+    <div class="subreddit">
+      <h4>{name.toUpperCase()}</h4>
+      <ul class="item-list">
+        <li For={$item in posts}>
+          <Post item={$item}></Post>
+        </li>
+      </ul>
+    </div>
+  </script>
+
+  <script type="text/html" id="post-tpl">
+     <div class="post">
+        <a href={item.data.url} style={getImageBackgroundCSS(item.data.thumbnail)}
+          target="_blank" class="thumbnail"></a>
+
+        <div class="details">
+            <a href={item.data.url} title={item.data.title} target="_blank" class="title">
+              {truncate(item.data.title, 60)}
+            </a>
+
+            <div class="action-buttons">
+              <a href="http://reddit.com{item.data.permalink}" title="Vote">
+                <i class="material-icons">thumbs_up_down</i>
+                {item.data.score}
+              </a>
+
+              <a href="http://reddit.com{item.data.permalink}" title="Go to discussion">
+                <i class="material-icons">forum</i>
+                {item.data.num_comments}
+              </a>
+            </div>
+        </div>
+    </div>
+  </script>
+
+  <script src="moon.js"></script>
+  <script src="moon-router.js"></script>
+  <script>
+    const template = query => document.querySelector(query).innerHTML;
+
+    Moon.extend('Subreddit', () => ({
+      view: template('#subreddit-tpl'),
+      posts: [],
+      onCreate() {
+        fetch(`https://www.reddit.com/r/${this.name}/top.json?limit=5`)
+          .then(response => response.json())
+          .then(response => {
+            this.update({ posts: response.data.children });
+          });
+      }
+    }));
+
+    Moon.extend('Post', () => ({
+      view: template('#post-tpl'),
+      getImageBackgroundCSS: function(img) {
+        if(img && img != 'self' && img != 'nsfw') {
+          return 'background-image: url(' + img + ')';
+        }
+        else {
+          return 'background-image: url(assets/img/placeholder.png)';
+        }
+      },
+      truncate(text, length) {
+        if (text.length < length) {
+          return text;
+        }
+        return text.slice(0, length) + '...';
+      }
+    }));
+
+    Moon({
+      root: '#app',
+      view: template('#app-tpl'),
+    });
+  </script>
+</body>
+</html>
