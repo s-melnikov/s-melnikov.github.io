@@ -7,35 +7,20 @@
 <body>
   <div id="app"></div>
   <script type="text/html" id="template">
-    <div class="row">
-      <div class="col">
-        <input type="text" disabled={disabled}>
-        <button @click={toggle()}>Toggle</button>
-        <hr>
-        <p>{text}</p>
-        <input type="text" @bind={text}>
-      </div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-    </div>
-    <p If={disabled}>Disabled</p>
-    <p Else>!Disabled</p>
-    <hr>
-    <ul>
-      <li For={$item,$index in items}>{$item}</li>
-    </ul>
+    <p If={disabled}>Disabled is TRUE</p>
+    <p Else>Disabled is FALSE</p>
+    <button @click={toggle()}>Toggle</button>
   </script>
-  <script src="moon.js"></script>
+  <script src="app.js"></script>
   <script>
-    Moon({
+    App({
       root: "#app",
       view: document.getElementById("template").innerHTML,
-      disabled: false,
-      text: 'Hello world!',
-      items: ['Orange', 'Apple', 'Banana'],
+      disabled: true,
       toggle() {
-        this.update({disabled: !this.disabled});
+        this.update({
+          disabled: !this.disabled
+        });
       }
     });
   </script>
