@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>MoonJS Sandbox</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://unpkg.com/wingcss@1.0.0-beta/dist/wing.min.css">
+</head>
+<body>
+  <div id="app"></div>
+  <script type="text/html" id="template">
+    <p If={disabled}>Disabled is TRUE</p>
+    <p Else>Disabled is FALSE</p>
+    <button @click={toggle()}>Toggle</button>
+  </script>
+  <script src="app.js"></script>
+  <script>
+    App({
+      root: "#app",
+      view: document.getElementById("template").innerHTML,
+      disabled: true,
+      toggle() {
+        this.update({
+          disabled: !this.disabled
+        });
+      }
+    });
+  </script>
+</body>
+</html>
