@@ -7,9 +7,15 @@
 <body>
   <div id="app"></div>
   <script type="text/html" id="template">
-    <p If={disabled}>Disabled is TRUE</p>
-    <p Else>Disabled is FALSE</p>
+
+    <p style="color:red" if={disabled}>Disabled is TRUE</p>
+    <p if={!disabled}>Disabled is FALSE</p>
+
     <button @click={toggle()}>Toggle</button>
+
+    <ul>
+      <li for={item,index in items}>{item.name}</li>
+    </ul>
   </script>
   <script src="app.js"></script>
   <script>
@@ -21,7 +27,14 @@
         this.update({
           disabled: !this.disabled
         });
-      }
+      },
+      items: [
+        {id: 1, name: 'Orange'},
+        {id: 2, name: 'Banana'},
+        {id: 3, name: 'Apple'},
+        {id: 4, name: 'Pear'},
+        {id: 5, name: 'Pineapple'},
+      ]
     });
   </script>
 </body>

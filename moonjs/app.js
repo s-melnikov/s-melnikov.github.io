@@ -238,7 +238,6 @@
           }
           while (index < length) {
             char = input[index];
-
             if ((typeof quote === "object" && quote.test(char)) || char === quote) {
               index += 1;
               break;
@@ -257,8 +256,8 @@
         attributes.push({
           key,
           value,
-          expression: expression,
-          dynamic: dynamic
+          expression,
+          dynamic
         });
       }
     }
@@ -295,9 +294,27 @@
     return $root;
   }
 
+  function generateAll(element) {
+    switch (element.type) {
+      case "if":
+        let condition =
+        console.log(element)
+        return `(${element.attributes[0]})`;
+      case "for":
+        return [];
+    }
+  }
+
   function generate(root, reference) {
-    console.log({root, reference});
-    return "";
+    for (let i = 0; i < root.children.length; i++) {
+      let generated = generateAll(root.children[i]);
+      console.log(generated)
+    }
+    // let prelude = "let " + (getElement(root.element));
+    // for (let i$1 = root.element + 1; i$1 < root.nextElement; i$1++) {
+    //   prelude += "," + getElement(i$1);
+    // }
+    // return (prelude + ";return [(_0)=>{" + (setElement(root.element, "_0;")) + create + "},()=>{" + update + "},()=>{" + destroy + "}];");
   }
 
   function compile(input) {
@@ -380,7 +397,14 @@
     }
   }
 
-  return function App(options) {
+  function extend(name, options) {
+    components[name] = component(name, options);
+  };
+
+  components.if = true;
+  components.for = true;
+
+  function App(options) {
     let root = options.root;
     delete options.root;
     if (typeof root === "string") {
@@ -392,4 +416,6 @@
     // instance.update();
     // return instance;
   };
+
+  return App;
 }));
