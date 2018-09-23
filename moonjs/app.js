@@ -121,7 +121,7 @@
     }
     if (!whitespaceRE.test(content)) {
       stack[stack.length - 1].children.push({
-        type: "Text",
+        type: "text",
         attributes: [{
           key: "",
           value: content.replace(escapeRE, (match) => { return escapeMap[match]; }),
@@ -147,7 +147,7 @@
     }
     let template = parseTemplate(expression);
     stack[stack.length - 1].children.push({
-      type: "Text",
+      type: "text",
       attributes: [{
         key: "",
         value: template.expression,
@@ -295,26 +295,31 @@
   }
 
   function generateAll(element) {
-    switch (element.type) {
+    let { type, attributes, children } = element;
+    switch (type) {
       case "if":
-        let condition =
-        console.log(element)
-        return `(${element.attributes[0]})`;
+        return `((${vattributes[0].value})?(${generateAll(children[0])}):null),`;
+      case "text":
+        return `"${attributes[0].value}"`;
       case "for":
         return [];
+      default:
+        let childrenStr = children.map(child => generateAll(child)).join(",");
+        return `h("${type}",{},${childrenStr})`
     }
   }
 
   function generate(root, reference) {
+    let result = "";
     for (let i = 0; i < root.children.length; i++) {
-      let generated = generateAll(root.children[i]);
-      console.log(generated)
+      result += generateAll(root.children[i]);
     }
+    console.log("result", result)
     // let prelude = "let " + (getElement(root.element));
     // for (let i$1 = root.element + 1; i$1 < root.nextElement; i$1++) {
     //   prelude += "," + getElement(i$1);
     // }
-    // return (prelude + ";return [(_0)=>{" + (setElement(root.element, "_0;")) + create + "},()=>{" + update + "},()=>{" + destroy + "}];");
+    return ""
   }
 
   function compile(input) {
@@ -411,7 +416,7 @@
       root = document.querySelector(root);
     }
     let instance = component("", options)();
-    console.log(instance);
+    // console.log(instance);
     // instance.create(root);
     // instance.update();
     // return instance;
