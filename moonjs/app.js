@@ -298,7 +298,7 @@
     let { type, attributes, children } = element;
     switch (type) {
       case "if":
-        return `((${vattributes[0].value})?(${generateAll(children[0])}):null),`;
+        return `((${attributes[0].value})?(${generateAll(children[0])}):null),`;
       case "text":
         return `"${attributes[0].value}"`;
       case "for":
