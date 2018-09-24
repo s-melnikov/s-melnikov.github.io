@@ -7,19 +7,19 @@
 <body>
   <div id="app"></div>
   <script type="text/html" id="template">
-
     <p style="color:red" if={disabled}>Disabled is TRUE</p>
     <p if={!disabled}>Disabled is FALSE</p>
-
     <button @click={toggle()}>Toggle</button>
-
     <ul>
-      <li for={item,index in items}>{item.name}</li>
+      <li for={$fruit,$i in items}>{$i}: {$fruit.name}</li>
     </ul>
+    <input type="text" @bind={content} disabled={disabled}>
+    <p>{content}</p>
   </script>
+  <script src="superfine.js"></script>
   <script src="app.js"></script>
   <script>
-    App({
+    xapp({
       root: "#app",
       view: document.getElementById("template").innerHTML,
       disabled: true,
@@ -34,7 +34,8 @@
         {id: 3, name: 'Apple'},
         {id: 4, name: 'Pear'},
         {id: 5, name: 'Pineapple'},
-      ]
+      ],
+      content: 'Hello world!'
     });
   </script>
 </body>

@@ -1,14 +1,15 @@
 /**
- * Moon v1.0.1
+ * App
  */
 (((root, factory) => {
-  (typeof module === "undefined") ? (root.App = factory()) : (module.exports = factory())
+  (typeof module === "undefined") ? (root.xapp = factory()) : (module.exports = factory())
 })(this, () => {
+  let { h, patch } = superfine;
   let expressionRE = /"[^"]*"|'[^']*'|\d+[a-zA-Z$_]\w*|\.[a-zA-Z$_]\w*|[a-zA-Z$_]\w*:|([a-zA-Z$_]\w*)/g;
   let escapeRE = /(?:(?:&(?:amp|gt|lt|nbsp|quot);)|"|\\|\n)/g;
   let whitespaceRE = /^\s+$/;
   let valueEndRE = /[\s/>]/;
-  let uppercaseRE = /[A-Z]/
+  let forInRE = /\s+in\s+/;
   let globals = ["NaN", "false", "in", "null", "this", "true", "typeof", "undefined"];
   let selfClosedTags = ["hr", "br", "input", "img", "source"];
   let escapeMap = {
@@ -185,7 +186,7 @@
       } else {
         dynamic = true;
         if (name[0] === "$") {
-          return ("locals." + name);
+          return name;
         } else {
           return ("instance." + name);
         }
@@ -298,28 +299,40 @@
     let { type, attributes, children } = element;
     switch (type) {
       case "if":
-        return `((${attributes[0].value})?(${generateAll(children[0])}):null),`;
+        return `((${attributes[0].value})?(${generateAll(children[0])}):null)`;
       case "text":
-        return `"${attributes[0].value}"`;
+        let value = attributes[0].value;
+        return attributes[0].expression ? `${value}` : `"${value}"`;
       case "for":
-        return [];
+        let attr = element.attributes[0];
+        let expr = attr.value.split(forInRE);
+        let child = element.children[0];
+        return `${expr[1]}.map((${expr[0]})=>${generateAll(child)})`;
       default:
         let childrenStr = children.map(child => generateAll(child)).join(",");
-        return `h("${type}",{},${childrenStr})`
+        if (childrenStr) childrenStr = `,${childrenStr}`;
+        let attrStr = attributes.map(attr => {
+          if (attr.key[0] === "@") {
+            if (attr.key === "@bind") {
+              return `value:${attr.value},oninput:event=>{instance.update({${attr.value.slice(9)}:event.target.value})}`;
+            }
+            return `on${attr.key.slice(1)}:($event)=>${attr.value}`
+          } else {
+            let str = `${attr.key}:`;
+            return `${str}${attr.expression ? attr.value : `"${attr.value}"`}`;
+          }
+        }).join(",");
+        attrStr = attrStr ? `{${attrStr}}` : "null";
+        return `h("${type}",${attrStr}${childrenStr})`
     }
   }
 
   function generate(root, reference) {
-    let result = "";
+    let result = [];
     for (let i = 0; i < root.children.length; i++) {
-      result += generateAll(root.children[i]);
+      result.push(generateAll(root.children[i]));
     }
-    console.log("result", result)
-    // let prelude = "let " + (getElement(root.element));
-    // for (let i$1 = root.element + 1; i$1 < root.nextElement; i$1++) {
-    //   prelude += "," + getElement(i$1);
-    // }
-    return ""
+    return `return h("div", {id:"root"},${result.join(",")})`;
   }
 
   function compile(input) {
@@ -339,8 +352,7 @@
         data = options;
       }
       if (typeof data.view === "string") {
-        let m = {};
-        this.$$view = new Function("m", "instance", "locals", compile(data.view))(m, this, {});
+        this.$$view = new Function("h", "instance", "locals", compile(data.view));
       } else {
         // this.$$view = data.view(m, this, {});
       }
@@ -366,11 +378,18 @@
         }
       }
     }
-    create (root) {
+    create(root) {
+      let node = null;
+      this.render = () => {
+        node = patch(node, this.$$view(h, this, {}), root);
+      };
     }
-    update(key, value) {
+    update(newState) {
+      Object.assign(this, newState);
+      this.render();
     }
     destroy() {
+
     }
     on(type, handler) {
       if (!this.$$events[type]) {
@@ -409,18 +428,17 @@
   components.if = true;
   components.for = true;
 
-  function App(options) {
+  function xapp(options) {
     let root = options.root;
     delete options.root;
     if (typeof root === "string") {
       root = document.querySelector(root);
     }
     let instance = component("", options)();
-    // console.log(instance);
-    // instance.create(root);
-    // instance.update();
-    // return instance;
+    instance.create(root);
+    instance.update();
+    return instance;
   };
 
-  return App;
+  return xapp;
 }));
