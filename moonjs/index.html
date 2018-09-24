@@ -7,14 +7,16 @@
 <body>
   <div id="app"></div>
   <script type="text/html" id="template">
-    <p style="color:red" if={disabled}>Disabled is TRUE</p>
-    <p if={!disabled}>Disabled is FALSE</p>
-    <button @click={toggle()}>Toggle</button>
-    <ul>
-      <li for={$fruit,$i in items}>{$i}: {$fruit.name}</li>
-    </ul>
-    <input type="text" @bind={content} disabled={disabled}>
-    <p>{content}</p>
+    <div>
+      <p style="color:red" if={disabled}>Disabled is TRUE</p>
+      <p if={!disabled}>Disabled is FALSE</p>
+      <button @click={toggle()}>Toggle</button>
+      <ul>
+        <li for={$fruit,$i in items}>{$i}: {$fruit.name}</li>
+      </ul>
+      <input type="text" @bind={content} disabled={disabled}>
+      <p>{content}</p>
+    </div>
   </script>
   <script src="superfine.js"></script>
   <script src="app.js"></script>

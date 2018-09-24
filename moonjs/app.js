@@ -327,16 +327,8 @@
     }
   }
 
-  function generate(root, reference) {
-    let result = [];
-    for (let i = 0; i < root.children.length; i++) {
-      result.push(generateAll(root.children[i]));
-    }
-    return `return h("div", {id:"root"},${result.join(",")})`;
-  }
-
   function compile(input) {
-    return compileCache[input] || (compileCache[input] = generate(parse(input), null));
+    return compileCache[input] || (compileCache[input] = generateAll(parse(input)));
   }
 
   class Component {
@@ -351,11 +343,8 @@
       } else {
         data = options;
       }
-      if (typeof data.view === "string") {
-        this.$$view = new Function("h", "instance", "locals", compile(data.view));
-      } else {
-        // this.$$view = data.view(m, this, {});
-      }
+      this.$$view = typeof data.view === "string" ?
+        new Function("h", "instance", "return " + compile(data.view)) : data.view;
       delete data.view;
       if (data.onCreate) {
         this.$$events.create = data.onCreate.bind(this);
