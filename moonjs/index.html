@@ -16,11 +16,23 @@
       </ul>
       <input type="text" @bind={content} disabled={disabled}>
       <p>{content}</p>
+      <Counter start="0" iterator="1"/>
+      <Counter start="5" iterator="5"/>
+      <Counter start="15" iterator={iterator}/>
+    </div>
+  </script>
+  <script type="text/html" id="counter">
+    <div>
+      <button>Click</button> <span>{counter}</span>
     </div>
   </script>
   <script src="superfine.js"></script>
   <script src="app.js"></script>
   <script>
+    xapp.extend('Counter', () => ({
+      view: document.getElementById("template").innerHTML,
+      counter: 0
+    }))
     xapp({
       root: "#app",
       view: document.getElementById("template").innerHTML,
@@ -37,7 +49,8 @@
         {id: 4, name: 'Pear'},
         {id: 5, name: 'Pineapple'},
       ],
-      content: 'Hello world!'
+      content: 'Hello world!',
+      iterator: 10
     });
   </script>
 </body>
