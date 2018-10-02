@@ -26,14 +26,13 @@
       <button>Click</button> <span>{counter}</span>
     </div>
   </script>
-  <script src="superfine.js"></script>
   <script src="app.js"></script>
   <script>
-    xapp.extend('Counter', () => ({
+    Mon.extend('Counter', () => ({
       view: document.getElementById("template").innerHTML,
       counter: 0
     }))
-    xapp({
+    Mon({
       root: "#app",
       view: document.getElementById("template").innerHTML,
       disabled: true,
