@@ -3,13 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <title>Tasks</title>
-  <link rel="stylesheet" href="https://unpkg.com/wingcss@1.0.0-beta/dist/wing.min.css">
+  <style>
+    * {
+      box-sizing: inherit;
+    }
+    body {
+      box-sizing: border-box;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      color: #444;
+    }
+    .row {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    .col {
+      flex: 1;
+    }
+    .col-2 {
+      flex: 2;
+    }
+    .col-3 {
+      flex: 3;
+    }
+    .col-4 {
+      flex: 4;
+    }
+    .col-5 {
+      flex: 5;
+    }
+    .col-6 {
+      flex: 6;
+    }
+    .col-7 {
+      flex: 7;
+    }
+    .col-8 {
+      flex: 8;
+    }
+    .col-9 {
+      flex: 9;
+    }
+    .col-10 {
+      flex: 10;
+    }
+    .col-11 {
+      flex: 11;
+    }
+    .center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .row > .col + .col {
+      margin-left: 1rem;
+    }
+    .cards {
+      width: 640px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.01);
+      padding: 0 .5rem;
+      margin-top: .5rem;
+      margin-bottom: .5rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    input {
+      display: block;
+      width: 100%;
+      border: 1px solid #444;
+      border-radius: 2px;
+      padding: .5rem;
+      font: inherit;
+    }
+    edit-form {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    edit-form .form {
+      background: #fff;
+      width: 640px;
+      padding: 15px;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
   <app></app>
   <script src="https://unpkg.com/riot@3.12.0/riot.min.js"></script>
   <script type="text/html" id="app-template">
-    !!!!
+    <div class="cards">
+      <div class="card" each="{tasksList}">
+        <p class="card-body">{title}</p>
+      </div>
+    </div>
+    <edit-form if="{editedTask}"><edit-form>
+  </script>
+  <script type="text/html" id="edit-form-template">
+    <div class="form">
+      <div class="row">
+        <div class="col col-2">
+          <input type="text" placeholder="key" ref="key">
+        </div>
+        <div class="col col-10">
+          <input type="text" placeholder="title" ref="title">
+        </div>
+      </div>
+    </div>
   </script>
   <script>
     const tpl = name => document.querySelector('#' + name + '-template').innerHTML;
@@ -18,29 +127,50 @@
       while (s.length < 12) s += Math.floor(Math.random() * 36).toString(36);
       return s;
     }
-    const db = name => {
-      let data = JSON.parse(localStorage[name] || '{}');
+    const db = db_name => {
       return {
-        add(column, item) {
-          let col = data[column] || (data[column] = {});
-          col[uniqid()] = item;
-          localStorage[name] = JSON.stringify(data);
-          return col;
+        col(col_name) {
+          return {
+            get(asArray) {
+              let col = JSON.parse(localStorage[db_name] || '{}')[col_name];
+              if (asArray) {
+                return Object.keys(col).map(key => col[key]);
+              }
+              return col
+            },
+            set(item) {
+              let db = JSON.parse(localStorage[db_name] || '{}');
+              let col = db[col_name] || (db[col_name] = {});
+              item.id = uniqid();
+              col[item.id] = item;
+              localStorage[db_name] = JSON.stringify(db);
+              return item;
+            },
+            del(id) {
+              let db = JSON.parse(localStorage[db_name] || '{}');
+              let col = db[col_name] || (db[col_name] = {});
+              delete col[id];
+              localStorage[db_name] = JSON.stringify(db);
+              return id;
+            }
+          }
         },
-        get(column) {
-          return data[column];
-        },
-        del(column, uid) {
-          let col = data[column] || (data[column] = {});
-          if (uid) delete col[uid];
-          else data[column] = {};
-          localStorage[name] = JSON.stringify(data);
+        reset() {
+          localStorage[db_name] = '{}';
         }
       }
     }
+    let tasksRef = db('test123').col('tasks');
+
     riot.tag('app', tpl('app'), function(opts) {
+      this.tasksList = tasksRef.get(true);
+      this.editedTask = null;
+    })
+
+    riot.tag('edit-form', tpl('edit-form'), function(opts) {
 
     })
+
     riot.mount('*');
   </script>
 </body>
