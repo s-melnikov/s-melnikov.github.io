@@ -1,0 +1,238 @@
+:root {
+  --font-sant-serif: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --main-color: #444444;
+  --main-font-size: .7rem;
+  --color-info: #75ace8;
+}
+* {
+  box-sizing: inherit;
+}
+html {
+  font-size: 20px;
+}
+body {
+  box-sizing: border-box;
+  font-family: var(--font-sant-serif);
+  font-size: var(--main-font-size);
+  font-weight: 300;
+  color: var(--main-color);
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  font-weight: 300;
+  font-size: 2rem;
+}
+h2 {
+  font-weight: 300;
+  font-size: 1.6rem;
+}
+h3 {
+  font-weight: 300;
+  font-size: 1.4rem;
+}
+h4 {
+  font-weight: 300;
+  font-size: 1rem;
+}
+h5 {
+  font-weight: 400;
+  font-size: .7rem;
+}
+h6 {
+  font-weight: 400;
+  font-size: .6rem;
+}
+b {
+  font-weight: 500;
+}
+input:not([type="checkbox"]):not([type="radio"]),
+select {
+  display: block;
+  width: 100%;
+  border: 1px solid #777777;
+  border-radius: 2px;
+  padding: .5rem;
+  font-family: var(--font-sant-serif);
+  color: var(--main-color);
+  font-weight: 300;
+  font-size: var(--main-font-size);
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  background: #ffffff;
+  color: #777777;
+}
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus {
+  outline: 0;
+  box-shadow: 0 0 0 1px var(--color-info);
+  color: #444444;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+label {
+  display: block;
+  font-weight: 300;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  cursor: pointer;
+}
+label input:not([type="checkbox"]):not([type="radio"]),
+label select {
+  margin-top: .2rem;
+  margin-bottom: 0;
+}
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.row {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+.col {
+  flex: 1;
+}
+.col + .col {
+  margin-left: 1rem;
+}
+.col-2 {
+  flex: 2;
+}
+.col-3 {
+  flex: 3;
+}
+.col-4 {
+  flex: 4;
+}
+.col-5 {
+  flex: 5;
+}
+.col-6 {
+  flex: 6;
+}
+.col-7 {
+  flex: 7;
+}
+.col-8 {
+  flex: 8;
+}
+.col-9 {
+  flex: 9;
+}
+.col-10 {
+  flex: 10;
+}
+.col-11 {
+  flex: 11;
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.cards {}
+.card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.01);
+  padding: 0 .5rem;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.text-info {
+  color: var(--color-info);
+}
+.text-success {
+  color: #77bf70;
+}
+.text-warning {
+  color: #e0a77c;
+}
+.text-error {
+  color: #e26868;
+}
+.text-muted {
+  color: #dcdcdc;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+.p-1 {
+  padding: .5rem;
+}
+.p-2 {
+  padding: 1rem;
+}
+.p-3 {
+  padding: 2rem;
+}
+.p-y-1 {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+.p-x-2 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.p-x-3 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.p-y-1 {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+.p-y-2 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.p-y-3 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.m-1 {
+  margin: .5rem;
+}
+.m-2 {
+  margin: 1rem;
+}
+.m-3 {
+  margin: 2rem;
+}
+.m-y-1 {
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+.m-x-2 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.m-x-3 {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+.m-y-1 {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+.m-y-2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.m-y-3 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
