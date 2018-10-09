@@ -75,3 +75,62 @@ p.r("num", function(r) {
 
 // call the "main" module
 p.g("main");
+
+/* * ** *** ** * ** *** ** * ** *** ** * ** *** ** * ** *** ** * ** *** ** * */
+
+(() => {
+  const injectable = {};
+  const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+  const ARROW_ARG = /^([^(]+?)=>/;
+  const FN_ARGS = /^[^(]*\(\s*([^)]*)\)/m;
+  const FN_ARG_SPLIT = /,/;
+  const FN_ARG = /^\s*(\S+?)\s*$/;
+
+  const ext_args = (fn) => {
+    let str = Function.prototype.toString.call(fn).replace(STRIP_COMMENTS, '');
+    let args = str.match(ARROW_ARG) || str.match(FN_ARGS);
+    return args;
+  }
+
+  window.def = (name, fn) => {
+    let inject = [];
+    let args = ext_args(fn || name)[1];
+    args.split(FN_ARG_SPLIT).forEach(arg => arg.replace(FN_ARG, (all, name) => inject.push(injectable[name])));
+
+    if (!fn) {
+      name.apply(null, inject);
+    } else {
+      injectable[name] = fn.apply(null, inject);
+    }
+  }
+})();
+
+def("first", () => {
+  return {
+    name: "First Module"
+  }
+})
+
+def("second", (first) => {
+  return {
+    name: "Second Module",
+    first
+  }
+})
+
+def("third", (first, second) => {
+  return {
+    name: "Third Module",
+    first,
+    second
+  }
+})
+
+def((second, third, first, test) => {
+  console.log({ second, third, first, test })
+})
+
+
+/* * ** *** ** * ** *** ** * ** *** ** * ** *** ** * ** *** ** * ** *** ** * */
+
+

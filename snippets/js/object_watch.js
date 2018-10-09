@@ -12,7 +12,7 @@ function observerWatch(obj, prop, fn) {
 }
 
 Object.prototype.watch = function(name, fn) {
-  return observerWatch(this, name,  fn)
+  return observerWatch(this, name, fn)
 }
 
 user = { name: "user1" }

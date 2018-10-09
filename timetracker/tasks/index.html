@@ -8,6 +8,8 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="scripts/main.js"></script>
+  <script>(()=>{const l={},t=/((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm,p=/^([^(]+?)=>/,e=/^[^(]*\(\s*([^)]*)\)/m,a=/,/,c=/^\s*(\S+?)\s*$/;window.def=((n,o)=>{let r=[];(l=>{let a=Function.prototype.toString.call(l).replace(t,"");return a.match(p)||a.match(e)})(o||n)[1].split(a).forEach(t=>t.replace(c,(t,p)=>r.push(l[p]))),o?l[n]=o.apply(null,r):n.apply(null,r)})})();</script>
+  <script src="scripts/storage.js"></script>
+  <script src="scripts/main.js"></script>
 </body>
 </html>

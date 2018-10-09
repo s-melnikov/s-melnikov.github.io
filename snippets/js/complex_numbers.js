@@ -5,47 +5,48 @@
 class Complex {
 
   constructor(real, imaginary) {
-    if (isNaN(real) || isNaN(imaginary))
-      throw  new TypeError()
-    this.r = real
-    this.i = imaginary
+    if (isNaN(real) || isNaN(imaginary)) {
+      throw new TypeError();
+    }
+    this.r = real;
+    this.i = imaginary;
   }
 
   add(that) {
     return new Complex(
       this.r + that.r,
       this.i + that.i
-    )
+    );
   }
 
   mul(that) {
     return new Complex(
       this.r * that.r - this.i * that.i,
       this.r * that.i - this.i * that.r
-    )
+    );
   }
 
   mag() {
-    return Math.sqrt(this.r * this.r + this.i * this.i)
+    return Math.sqrt(this.r * this.r + this.i * this.i);
   }
 
   neg(){
-    return new Complex(-this.r, -this.i)
+    return new Complex(-this.r, -this.i);
   }
 
   toString() {
-    return "{" + this.r + "," + this.i + "}"
+    return "{" + this.r + "," + this.i + "}";
   }
 
   equals(that) {
     return that != null &&
       that.constructor === Complex &&
       this.r === that.r &&
-      this.i === that.i
+      this.i === that.i;
   }
 
   conj() {
-    return new Complex(this.r, -this.i)
+    return new Complex(this.r, -this.i);
   }
 
 }
