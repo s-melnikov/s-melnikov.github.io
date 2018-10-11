@@ -1,5 +1,32 @@
-/* module-manager.min */
-//p={f:{},m:{},r:function(a,b){p.f[a]=b},g:function(a){if(!p.m[a]){if(p.m[a]<1|!p.f[a])throw"p:"+a;p.m[a]=0;p.m[a]=p.f[a](p)}return p.m[a]}};
+// (w=>{let f={},m=(d,n)=>n(...d.map(d=>(d=>f[d]&&(f[d].m||(f[d].m=m(f[d].d,f[d].f))))(d)));w.def=((d,n,c)=>c?f[d]={d:n,f:c}:m(d,n))})(this);
+
+(root => {
+  const modules = {};
+  const get_mod = name => modules[name] && (modules[name].mod || (modules[name].mod = create(modules[name].deps, modules[name].func)));
+  const create = (deps, func) => func(...(deps.map(d => get_mod(d))));
+  root.def = (name, deps, func) => (func ? (modules[name] = {deps, func}) : create(name, deps));
+})(window);
+
+def('first', ['second', 'third'], function(second, third) {
+  console.log('module - first, deps', {second, third});
+  return {name: 'first'}
+})
+
+def('second', ['third'], function(third) {
+  console.log('module - second, deps', {third});
+  return {name: 'second'}
+})
+
+def('third', [], function() {
+  console.log('module - third');
+  return {name: 'third'}
+})
+
+def(['first'], function(first) {
+  console.log('module - main, deps', {first});
+})
+
+// p={f:{},m:{},r:function(a,b){p.f[a]=b},g:function(a){if(!p.m[a]){if(p.m[a]<1|!p.f[a])throw"p:"+a;p.m[a]=0;p.m[a]=p.f[a](p)}return p.m[a]}};
 
 /* module-manager */
 var p = {
@@ -132,5 +159,3 @@ def((second, third, first, test) => {
 
 
 /* * ** *** ** * ** *** ** * ** *** ** * ** *** ** * ** *** ** * ** *** ** * */
-
-
