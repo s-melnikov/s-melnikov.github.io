@@ -1,5 +1,5 @@
-m('storage', [], () => {
-    const CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
+(root => {
+  const CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
 
   const uniqid = () => {
     let result = Date.now().toString(36);
@@ -57,5 +57,5 @@ m('storage', [], () => {
 
   const storage = name => new Storage(name);
 
-  return storage;
-});
+  root.storage = storage;
+})(this);
