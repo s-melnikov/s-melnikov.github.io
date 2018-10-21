@@ -1,4 +1,4 @@
-;(exports => {
+(exports => {
   let modules = [],
     pending = [],
     loaded = []
