@@ -74,18 +74,31 @@
       top: 0;
       left: 0;
       width: 100%;
-      text-align: right;
+      text-align: center;
       font-size: 14px;
       padding: 5px 20px;
     }
     #control a {
       display: inline-block;
       margin-left: 20px;
+      text-decoration: none;
+      color: #555555;
+    }
+    #control a[href="#"] {
+      border-bottom: 1px solid #777777;
     }
     #editor:target, #preview:target {
       width: 100%;
       left: 0;
       z-index: 1;
+    }
+    #editor:target ~ #control a,
+    #preview:target ~ #control a {
+      border-bottom: none;
+    }
+    #editor:target ~ #control a[href="#editor"],
+    #preview:target ~ #control a[href="#preview"] {
+      border-bottom: 1px solid #777777;
     }
   </style>
 </head>
