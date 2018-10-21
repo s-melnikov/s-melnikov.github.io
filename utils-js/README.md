@@ -33,12 +33,12 @@ function compareNativeSubtypes(value1, value2) {
 }
 
 function compareArrays(value1, value2) {
-  var len = value1.length;
+  let len = value1.length;
   if (len != value2.length) {
     return false;
   }
-  var alike = true;
-  for (var i = 0; i < len; i++) {
+  let alike = true;
+  for (let i = 0; i < len; i++) {
     if (!compare(value1[i], value2[i])) {
       alike = false;
       break;
@@ -48,15 +48,15 @@ function compareArrays(value1, value2) {
 }
 
 function compareObjects(value1, value2) {
-  var keys1 = Object.keys(value1).sort();
-  var keys2 = Object.keys(value2).sort();
-  var len = keys1.length;
+  let keys1 = Object.keys(value1).sort();
+  let keys2 = Object.keys(value2).sort();
+  let len = keys1.length;
   if (len != keys2.length) {
     return false;
   }
-  for (var i = 0; i < len; i++) {
-    var key1 = keys1[i];
-    var key2 = keys2[i];
+  for (let i = 0; i < len; i++) {
+    let key1 = keys1[i];
+    let key2 = keys2[i];
     if (!((key1 == key2) && (compare(value1[key1], value2[key2])))) {
       return false;
     }
@@ -88,7 +88,7 @@ function pluck(collection, propertyName) {
     return new Error('expected first argument to be an object or array');
   }
 
-  var result, len, i, keys, key;
+  let result, len, i, keys, key;
   if (Array.isArray(collection)) {
     result = [];
     len = collection.length;
@@ -117,7 +117,7 @@ pluck({x: {a:1, b:2}, y: {a:4, b:3}, z: {a:2, b:5}}, 'a'); // {x: 1, y: 4, z: 2}
 
 ```js
 function flush(collection) {
-  var result, len, i;
+  let result, len, i;
   if (!collection) {
     return undefined;
   }
@@ -125,7 +125,7 @@ function flush(collection) {
     result = [];
     len = collection.length;
     for (i = 0; i < len; i++) {
-      var elem = collection[i];
+      let elem = collection[i];
       if (elem != null) {
         result.push(elem);
       }
@@ -134,11 +134,11 @@ function flush(collection) {
   };
   if (typeof collection == 'object') {
     result = {};
-    var keys = Object.keys(collection);
+    let keys = Object.keys(collection);
     len = keys.length;
     for (i = 0; i < len; i++) {
-      var key = keys[i];
-      var value = collection[key];
+      let key = keys[i];
+      let value = collection[key];
       if (value != null) {
         result[key] = value;
       }
@@ -163,21 +163,21 @@ flush(); // undefined
 
 ```js
 function extend(obj1, obj2 /*, [objn]*/) {
-  var args = [].slice.call(arguments);
-  var deep = false;
+  let args = [].slice.call(arguments);
+  let deep = false;
   if (typeof args[0] === 'boolean') {
     deep = args.shift();
   }
-  var result = args[0];
-  var extenders = args.slice(1);
-  var len = extenders.length;
-  for (var i = 0; i < len; i++) {
-    var extender = extenders[i];
-    for (var key in extender) {
+  let result = args[0];
+  let extenders = args.slice(1);
+  let len = extenders.length;
+  for (let i = 0; i < len; i++) {
+    let extender = extenders[i];
+    for (let key in extender) {
       // include prototype properties
-      var value = extender[key];
+      let value = extender[key];
       if (deep && value && (typeof value == 'object')) {
-        var base = Array.isArray(value) ? [] : {};
+        let base = Array.isArray(value) ? [] : {};
         result[key] = extend(true, result[key] || base, value);
       } else {
         result[key] = value;
@@ -214,14 +214,14 @@ obj; // {a: 3, b: 5, c: [1, 2, 3]}
 
 ```js
 function values(obj) {
-  var result = [];
+  let result = [];
   if (Array.isArray(obj)) {
     return obj.slice(0);
   }
   if (typeof obj == 'object' || typeof obj == 'function') {
-    var keys = Object.keys(obj);
-    var len = keys.length;
-    for (var i = 0; i < len; i++) {
+    let keys = Object.keys(obj);
+    let len = keys.length;
+    for (let i = 0; i < len; i++) {
       result.push(obj[keys[i]]);
     }
     return result;
@@ -247,13 +247,13 @@ values(null); // throw exception
 
 ```js
 function pick(obj, select) {
-  var result = {};
+  let result = {};
   if (typeof select === 'string') {
     select = [].slice.call(arguments, 1);
   }
-  var len = select.length;
-  for (var i = 0; i < len; i++) {
-    var key = select[i];
+  let len = select.length;
+  for (let i = 0; i < len; i++) {
+    let key = select[i];
     result[key] = obj[key];
   }
   return result;
@@ -261,7 +261,7 @@ function pick(obj, select) {
 ```
 Usage:
 ```js
-var obj = {a: 3, b: 5, c: 9};
+let obj = {a: 3, b: 5, c: 9};
 pick(obj, ['a', 'c']); // {a: 3, c: 9}
 pick(obj, 'a', 'c'); // {a: 3, c: 9}
 pick(obj, ['a', 'b', 'd']); // {a: 3, b: 5, d: undefined}
@@ -272,11 +272,11 @@ pick(obj, ['a', 'a']); // {a: 3}
 
 ```js
 function omit(obj, remove) {
-  var result = {};
+  let result = {};
   if (typeof remove === 'string') {
     remove = [].slice.call(arguments, 1);
   }
-  for (var prop in obj) {
+  for (let prop in obj) {
     if (!obj.hasOwnProperty || obj.hasOwnProperty(prop)) {
       if (remove.indexOf(prop) === -1) {
         result[prop] = obj[prop];
@@ -288,7 +288,7 @@ function omit(obj, remove) {
 ```
 Usage:
 ```js
-var obj = {a: 3, b: 5, c: 9};
+let obj = {a: 3, b: 5, c: 9};
 omit(obj, ['a', 'c']); // {b: 5}
 omit(obj, 'a', 'c'); // {b: 5}
 omit(obj, ['a', 'b', 'd']); // {c: 9}
@@ -299,11 +299,11 @@ omit(obj, ['a', 'a']); // {b: 5, c: 9}
 
 ```js
 function filter(obj, predicate) {
-  var result = {};
-  var keys = Object.keys(obj);
-  var len = keys.length;
-  for (var i = 0; i < len; i++) {
-    var key = keys[i];
+  let result = {};
+  let keys = Object.keys(obj);
+  let len = keys.length;
+  for (let i = 0; i < len; i++) {
+    let key = keys[i];
     if (predicate(key, obj[key])) {
       result[key] = obj[key];
     }
@@ -323,11 +323,11 @@ filter({a: 3, b: 5, c: null}, (key, value) => value); // {a: 3, b: 5}
 
 ```js
 function map(obj, predicate) {
-  var result = {};
-  var keys = Object.keys(obj);
-  var len = keys.length;
-  for (var i = 0; i < len; i++) {
-    var key = keys[i];
+  let result = {};
+  let keys = Object.keys(obj);
+  let len = keys.length;
+  for (let i = 0; i < len; i++) {
+    let key = keys[i];
     result[key] = predicate(key, obj[key]);
   }
   return result;
@@ -345,9 +345,9 @@ map({a: 3, b: 5, c: 9}, (key, value) => key + value); // {a: 'a3', b: 'b5', c: '
 
 ```js
 function reduce(obj, predicate/*, initialValue*/) {
-  var args = [callback];
+  let args = [callback];
   // `initialValue` is optional
-  var hasInitialValue = 2 in arguments;
+  let hasInitialValue = 2 in arguments;
   hasInitialValue && args.push(arguments[2]);
 
   function callback(previousValue, currentKey, currentIndex, array) {
@@ -412,7 +412,7 @@ function get(obj, props) {
   if (typeof props == 'string') {
     props = props.split('.');
   }
-  var prop;
+  let prop;
   while (prop = props.shift()) {
     obj = obj[prop];
     if (!obj) {
@@ -446,11 +446,11 @@ function set(obj, props, value) {
   if (typeof props == 'string') {
     props = props.split('.');
   }
-  var lastProp = props.pop();
+  let lastProp = props.pop();
   if (!lastProp) {
     return false;
   }
-  var thisProp;
+  let thisProp;
   while (thisProp = props.shift()) {
     if (!obj[thisProp]) {
       obj[thisProp] = {};
@@ -537,10 +537,10 @@ function unique(arr, sorted, strings) {
   if (!sorted && strings && (arr[0] !== Object(arr[0]))) {
     return stringUnique(arr);
   }
-  var result = [], duplicate, lastAdded;
-  var len = arr.length;
-  for (var i = 0; i < len; i++) {
-    var elem = arr[i];
+  let result = [], duplicate, lastAdded;
+  let len = arr.length;
+  for (let i = 0; i < len; i++) {
+    let elem = arr[i];
     duplicate = lastAdded && (lastAdded === elem);
     if (!duplicate && !sorted) {
       duplicate = result.indexOf(elem) > -1;
@@ -554,9 +554,9 @@ function unique(arr, sorted, strings) {
 }
 
 function stringUnique(arr) {
-  var lookup = {};
-  var len = arr.length;
-  for (var i = 0; i < len; i++) {
+  let lookup = {};
+  let len = arr.length;
+  for (let i = 0; i < len; i++) {
     lookup[arr[i]] = true;
   }
   return Object.keys(lookup);
@@ -566,9 +566,9 @@ Usage:
 ```js
 unique([1, 2, 3, 2, 3, 4, 3, 2, 1, 3]); // [1, 2, 3, 4]
 
-var a = {a: 3};
-var b = {b: 4};
-var c = {c: 5};
+let a = {a: 3};
+let b = {b: 4};
+let c = {c: 5};
 unique([a, a, b, c, b]); // [a, b, c]
 
 unique([1, '1', 2, '2', 3, 2]); // [1, '1', 2, '2', 3]
@@ -584,10 +584,10 @@ unique(['a', 'c', 'b', 'c', 'a'], false, true); // ['a', 'b', 'c']
 
 ```js
 function flatten(arr) {
-  var result = [];
-  var len = arr.length;
-  for (var i = 0; i < len; i++) {
-    var elem = arr[i];
+  let result = [];
+  let len = arr.length;
+  for (let i = 0; i < len; i++) {
+    let elem = arr[i];
     if (Array.isArray(elem)) {
       result.push.apply(result, flatten(elem));
     } else {
@@ -613,8 +613,8 @@ function insert(arr1, arr2, index) {
   if (!index) {
     return arr2.concat(arr1);
   }
-  var front = arr1.slice(0, index);
-  var back = arr1.slice(index);
+  let front = arr1.slice(0, index);
+  let back = arr1.slice(index);
   return front.concat(arr2, back);
 }
 ```
@@ -630,10 +630,10 @@ insert([1, 2, 5, 6], ['a', 'c', 'e']); // ['a', 'c', 'e', 1, 2, 5, 6]
 
 ```js
 function intersect(arr1, arr2) {
-  var result = [];
-  var len = arr1.length;
-  for (var i = 0; i < len; i++) {
-    var elem = arr1[i];
+  let result = [];
+  let len = arr1.length;
+  for (let i = 0; i < len; i++) {
+    let elem = arr1[i];
     if (arr2.indexOf(elem) > -1) {
       result.push(elem);
     }
@@ -653,10 +653,10 @@ function compact(arr) {
   if (!Array.isArray(arr)) {
     return undefined;
   }
-  var result = [];
-  var len = arr.length;
-  for (var i = 0; i < len; i++) {
-    var elem = arr[i];
+  let result = [];
+  let len = arr.length;
+  for (let i = 0; i < len; i++) {
+    let elem = arr[i];
     if (elem) {
       result.push(elem);
     }
@@ -727,9 +727,9 @@ function shuffle(arr) {
   if (!arr || !('length' in arr)) {
     return undefined;
   }
-  var len = arr.length;
-  var result = Array(len);
-  for (var i = 0, rand; i < len; i++) {
+  let len = arr.length;
+  let result = Array(len);
+  for (let i = 0, rand; i < len; i++) {
     rand = Math.floor(Math.random() * i);
     if (rand != i) {
       result[i] = result[rand];
@@ -760,8 +760,8 @@ function range(start, stop, step) {
   if (step == null) {
     step = stop > start ? 1 : -1;
   }
-  var toReturn = [];
-  var increasing = start < stop; //← here’s the change
+  let toReturn = [];
+  let increasing = start < stop; //← here’s the change
   for (; increasing ? start < stop : start > stop; start += step) {
     toReturn.push(start);
   }
@@ -780,10 +780,10 @@ range(0, 20, 5) // [0, 5, 10, 15]
 
 ```js
 function remove(arr1, arr2) {
-  var result = [];
-  var len = arr1.length;
-  for (var i = 0; i < len; i++) {
-    var elem = arr1[i];
+  let result = [];
+  let len = arr1.length;
+  for (let i = 0; i < len; i++) {
+    let elem = arr1[i];
     if (arr2.indexOf(elem) == -1) {
       result.push(elem);
     }
@@ -800,10 +800,10 @@ remove([1, 2, 3, 4, 5, 6], [1, 3, 6]); // [2, 4, 5]
 
 ```js
 function union(arr1, arr2) {
-  var result = arr1.concat([]);
-  var len = arr2.length;
-  for (var i = 0; i < len; i++) {
-    var elem = arr2[i];
+  let result = arr1.concat([]);
+  let len = arr2.length;
+  for (let i = 0; i < len; i++) {
+    let elem = arr2[i];
     if (arr1.indexOf(elem) == -1) {
       result.push(elem);
     }
@@ -822,11 +822,11 @@ union([1, 2, 5, 6], [2, 3, 4, 6]); // [1, 2, 3, 4, 5, 6]
 
 ```js
 function template(string, data) {
-  var proxyRegEx = /\{\{([^\}]+)?\}\}/g;
+  let proxyRegEx = /\{\{([^\}]+)?\}\}/g;
   return string.replace(proxyRegEx, function (_, key) {
-    var keyParts = key.split('.');
-    var value = data;
-    for (var i = 0; i < keyParts.length; i++) {
+    let keyParts = key.split('.');
+    let value = data;
+    for (let i = 0; i < keyParts.length; i++) {
       value = value[keyParts[i]];
     }
     return value || '';
@@ -881,8 +881,8 @@ function prune(str, length, end) {
   if (end == null) {
     end = '...';
   }
-  var remnantPlusOne = str.slice(0, Math.max(0, length - end.length) + 1);
-  var lastSpace = Math.max(0, remnantPlusOne.lastIndexOf(' '));
+  let remnantPlusOne = str.slice(0, Math.max(0, length - end.length) + 1);
+  let lastSpace = Math.max(0, remnantPlusOne.lastIndexOf(' '));
   return remnantPlusOne.slice(0, lastSpace) + end;
 }
 ```
@@ -898,8 +898,8 @@ prune('when shall we', 7, ' (more)'); // ' (more)'
 ### squash
 
 ```js
-var escapeSequencesRegex = /\s/g;
-var spacesRegex = / /g;
+let escapeSequencesRegex = /\s/g;
+let spacesRegex = / /g;
 
 function squash(str, squashEscapeSequences) {
   if (squashEscapeSequences) {
@@ -929,12 +929,12 @@ function leftPad(str, length, char) {
     return str;
   }
 
-  var arr = [];
+  let arr = [];
   if (char == null) {
     char = ' ';
   }
 
-  var count = length;
+  let count = length;
   while(count--) {
     arr.push(char);
   }
@@ -962,14 +962,14 @@ function rightPad(str, length, char) {
     return str;
   }
 
-  var arr = [];
+  let arr = [];
   if (char == null) {
     char = ' ';
   }
 
   arr.push(str);
 
-  var count = length;
+  let count = length;
   while(count--) {
     arr.push(char);
   }
@@ -991,18 +991,18 @@ rightPad(null, 7); 'null '
 ```js
 // any combination of spaces and punctuation characters
 // thanks to http://stackoverflow.com/a/25575009
-var wordSeparators = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
+let wordSeparators = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
 
 function camelCase(str) {
-  var words = str.split(wordSeparators);
-  var len = words.length;
-  var mappedWords = new Array(len);
-  for (var i = 0; i < len; i++) {
-    var word = words[i];
+  let words = str.split(wordSeparators);
+  let len = words.length;
+  let mappedWords = new Array(len);
+  for (let i = 0; i < len; i++) {
+    let word = words[i];
     if (word === '') {
       continue;
     }
-    var firstLetter = word[0];
+    let firstLetter = word[0];
     if (i > 0) {
       firstLetter = firstLetter.toUpperCase();
     }
@@ -1027,8 +1027,8 @@ camelCase('theQUICKBrownFox'); // 'theQUICKBrownFox'
 ```js
 // any combination of spaces and punctuation characters
 // thanks to http://stackoverflow.com/a/25575009
-var wordSeparators = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
-var capitals = /[A-Z\u00C0-\u00D6\u00D9-\u00DD]/g;
+let wordSeparators = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
+let capitals = /[A-Z\u00C0-\u00D6\u00D9-\u00DD]/g;
 
 function kebabCase(str) {
   //replace capitals with space + lower case equivalent for later parsing
@@ -1055,8 +1055,8 @@ kebabCase('theQUICKBrownFox'); // 'the-q-u-i-c-k-brown-fox'
 ```js
 // any combination of spaces and punctuation characters
 // thanks to http://stackoverflow.com/a/25575009
-var wordSeparators = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
-var capitals = /[A-Z\u00C0-\u00D6\u00D9-\u00DD]/g;
+let wordSeparators = /[\s\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]+/;
+let capitals = /[A-Z\u00C0-\u00D6\u00D9-\u00DD]/g;
 
 function snakeCase(str) {
   //replace capitals with space + lower case equivalent for later parsing
@@ -1098,7 +1098,7 @@ function clamp(lower, n, higher) {
 ```
 Usage:
 ```js
-var n = 5;
+let n = 5;
 clamp(1, n, 12); // 5
 clamp(1, n, 3); // 3
 clamp(8, n, 9); // 8
@@ -1120,12 +1120,12 @@ function compose(fn1, fn2/*, fn3, etc */) {
   if (!arguments.length) {
     throw new Error('expected at least one (and probably more) function arguments');
   }
-  var fns = arguments;
+  let fns = arguments;
 
   return function () {
-    var result = fns[0].apply(this, arguments);
-    var len = fns.length;
-    for (var i = 1; i < len; i++) {
+    let result = fns[0].apply(this, arguments);
+    let len = fns.length;
+    for (let i = 1; i < len; i++) {
       result = fns[i].call(this, result);
     }
     return result;
@@ -1143,7 +1143,7 @@ sqRootBiggest(7, 0, 16); // 4
 
 ```js
 function curry(fn /*, arg1, arg2 etc */) {
-  var curriedArgs = [].slice.call(arguments, 1);
+  let curriedArgs = [].slice.call(arguments, 1);
   if (!curriedArgs.length) {
     return fn;
   }
@@ -1166,14 +1166,14 @@ milesToKm(10); // 16.2
 
 ```js
 function partial(fn /*, arg1, arg2 etc */) {
-  var partialArgs = [].slice.call(arguments, 1);
+  let partialArgs = [].slice.call(arguments, 1);
   if (!partialArgs.length) {
     return fn;
   }
   return function () {
-    var argIndex = 0, derivedArgs = [];
-    for (var i = 0; i < partialArgs.length; i++) {
-      var thisPartialArg = partialArgs[i];
+    let argIndex = 0, derivedArgs = [];
+    for (let i = 0; i < partialArgs.length; i++) {
+      let thisPartialArg = partialArgs[i];
       derivedArgs[i] = thisPartialArg === undefined ? arguments[argIndex++] : thisPartialArg;
     }
     return fn.apply(this, derivedArgs);
@@ -1186,9 +1186,9 @@ const cubedRoot = partial(Math.pow, undefined, 1/3);
 cubedRoot(10).toFixed(1); // 56.7
 cubedRoot(35).toFixed(1); // 16.2
 ```
-
+<!--
 ## Testing
 
-<!--
+
 <iframe src="tests/index.html" frameborder="0" style="width:100%;height:480px;"></iframe>
 -->
