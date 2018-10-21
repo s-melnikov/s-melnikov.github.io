@@ -4,11 +4,121 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Markdown Editor</title>
+  <link href="https://fonts.googleapis.com/css?family=Fira+Mono|Open+Sans" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: inherit;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      padding: 0;
+      margin: 0;
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #444444;
+      font-size: 19px;
+      line-height: 1.4;
+      box-sizing: border-box;
+      position: relative;
+    }
+    #editor, #preview {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      bottom: 20px;
+      width: 50%;
+      border: none;
+      background: #ffffff;
+    }
+    #editor {
+      padding: 15px 20px;
+      font-family: 'Fira Mono', 'Fira Code', Consolas, 'Ubuntu Mono', monospace;
+      font-size: 17px;
+      outline: 0;
+      background: #f5f5f5;
+      resize: none;
+    }
+    #editor:focus {
+      background: #ffffff;
+    }
+    #preview {
+      left: 50%;
+      overflow: auto;
+      font-family: 'Open Sans';
+
+    }
+    #editor:focus + #preview {
+      background: #f5f5f5;
+    }
+    #content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    #stat {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: right;
+      font-size: 12px;
+      padding: 3px 20px;
+    }
+    p:focus {
+      outline: 0;
+      background: #fcffcf;
+    }
+    #control {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      text-align: right;
+      font-size: 14px;
+      padding: 5px 20px;
+    }
+    #control a {
+      display: inline-block;
+      margin-left: 20px;
+    }
+    #editor:target, #preview:target {
+      width: 100%;
+      left: 0;
+      z-index: 1;
+    }
+  </style>
 </head>
 <body>
-
+  <textarea id="editor" placeholder="Input your text..."></textarea>
+  <div id="preview">
+    <div id="content"></div>
+  </div>
+  <div id="control">
+    <a href="#editor">Editor</a>
+    <a href="#">Split</a>
+    <a href="#preview">Preview</a>
+  </div>
+  <div id="stat"></div>
+  <script src="https://unpkg.com/marked@0.5.1/marked.min.js"></script>
   <script>
-
+    const $$ = (q, c) => (c || document).querySelectorAll(q);
+    const $ = (q, c) => ($$(q, c)[0] || null);
+    const on = (el, ev, cb) => (el.forEach ? el : [el]).forEach(i => i.addEventListener(ev, cb));
+    const $editor = $('#editor');
+    const $content = $('#content');
+    const $stat = $('#stat');
+    const getStat = el => {
+      return `Text length: ${el.textContent.length}; Paragraphs: ${$$('p', el).length}`;
+    }
+    const parseText = text => {
+      localStorage.md = text;
+      $content.innerHTML = marked(text);
+      $stat.textContent = getStat($content);
+      $$('p', $content).forEach((p, i) => p.setAttribute('tabindex', i + 1));
+    };
+    on($editor, 'input', ev => parseText(ev.target.value));
+    parseText($editor.value = localStorage.md);
   </script>
 </body>
 </html>
