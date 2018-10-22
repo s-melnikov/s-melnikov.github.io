@@ -131,7 +131,7 @@
       $$('p', $content).forEach((p, i) => p.setAttribute('tabindex', i + 1));
     };
     on($editor, 'input', ev => parseText(ev.target.value));
-    parseText($editor.value = localStorage.md);
+    parseText($editor.value = (localStorage.md || ""));
   </script>
 </body>
 </html>
