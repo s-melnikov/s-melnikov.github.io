@@ -5,12 +5,109 @@
   <meta name="viewport" content="width=device-width">
   <title>HyperApp HN</title>
   <link rel="icon" type="image/x-favicon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css?v=2">
+  <style>
+    *, *::before, *::after {
+      box-sizing: inherit;
+      position: relative;
+    }
+    body {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #444;
+      padding: 50px 0;
+      margin: 0;
+      background-color: #f2f3f5;
+      overflow-y: scroll;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
   <div id="root"></div>
-  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
-  <script src="https://unpkg.com/hyperapp@1.2.5/dist/hyperapp.js"></script>
-  <script src="app.js"></script>
+  <script src="https://unpkg.com/hyperapp@1.2.9/dist/hyperapp.js"></script>
+  <script>
+    function Router(app) {
+      return (state, actions, routes, container) => {
+        let currentView = null;
+        let hash = () => location.hash.slice(2);
+        let preparedRoutes = Object.keys(routes).map(path => {
+          let keys = [];
+          let regex = RegExp(path === "*" ? ".*" :
+            "^" + path.replace(/:([\w]+)/g, function(_, key) {
+              keys.push(key.toLowerCase());
+              return "([-\\.%\\w\\(\\)]+)";
+            }) + "$");
+          return { regex, keys, view: routes[path] };
+        });
+        actions.setRoute = path => {
+          if (!path || path.type) {
+            path = location.hash.slice(2) || "/";
+          }
+          let match, params = {};
+          for (let i = 0; i < preparedRoutes.length; i++) {
+            let { regex, keys, view } = preparedRoutes[i];
+            if (match = regex.exec(path)) {
+              keys.map((key, i) => params[key] = match[i + 1] || "");
+              currentView = view;
+              break;
+            }
+          }
+          return { route: { path, params } }
+        };
+        state.route = actions.setRoute().route;
+        let resolve = (state, actions) => (currentView || (() => {}))(state, actions);
+        let main = app(state, actions, resolve, container);
+        window.addEventListener("hashchange", main.setRoute);
+        return main;
+      }
+    }
+  </script>
+  <script>
+    function Logger(app) {
+      return (state, actions, view, container) => {
+        actions = enhance(actions);
+        return app(state, actions, view, container);
+      }
+      function log(prevState, action, nextState) {
+        console.groupCollapsed("%c action", "color: gray", action.name);
+        console.log("%c prev state", "color:#9E9E9E", prevState);
+        console.log("%c data", "color: #03A9F4", action.data);
+        console.log("%c next state", "color:#4CAF50", nextState);
+        console.groupEnd();
+      }
+      function enhance(actions, prefix) {
+        let namespace = prefix ? prefix + "." : ""
+        return Object.keys(actions || {}).reduce((otherActions, name) => {
+          let namedspacedName = namespace + name, action = actions[name];
+          otherActions[name] = typeof action === "function" ? data => (state, actions) => {
+            let result = action(data);
+            result = typeof result === "function" ? result(state, actions) : result;
+            log(state,{ name: namedspacedName, data: data }, result);
+            return result;
+          } : enhance(action, namedspacedName);
+          return otherActions;
+        }, {});
+      }
+    }
+  </script>
+  <script>
+    const CACHE_TTL = 15 * 60 * 1000;
+    const { app, h } = hyperapp;
+    const TOPICS = ["top", "new", "best", "show", "shownew", "ask", "job"];
+    const STATE = {
+      number: 1,
+      foo: 'bar'
+    };
+    const ACTIONS = {
+      increment: (event) => (state) => ({ number: state.number + 1})
+    };
+    const ROUTES = {
+      "/": (state, actions) => h('p', null,
+        h('button', { onclick: actions.increment }, state.number, ' ', state.foo)
+      )
+    }
+    const ROOT = document.querySelector('#root');
+    Router(Logger(app))(STATE, ACTIONS, ROUTES, ROOT);
+  </script>
 </body>
 </html>

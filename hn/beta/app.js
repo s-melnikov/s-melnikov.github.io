@@ -1,9 +1,8 @@
-firebase.initializeApp({
-  databaseURL: "https://hacker-news.firebaseio.com/"
-});
 
-const { app, h } = hyperapp;
-const newsTypes = ["top", "new", "best", "show", "ask", "job"];
+
+
+/*
+
 
 const State = {
   loader: false
