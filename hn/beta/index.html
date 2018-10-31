@@ -20,10 +20,23 @@
       overflow-y: scroll;
       box-sizing: border-box;
     }
+    a {
+      text-decoration: none;
+      color: #2a73ab;
+    }
+    a:hover {
+      color: #3388ca;
+    }
+    .item-title a:visited {
+      color: #555;
+    }
     ul {
       margin: 15px 0;
       padding: 0;
       list-style: none;
+    }
+    .menu {
+      width: 62px;
     }
     .menu a {
       display: block;
@@ -31,6 +44,15 @@
     }
     .flex {
       display: flex;
+    }
+    .item {
+      min-height: 30px;
+      margin-top: 5px;
+    }
+    .item-meta {
+      font-size: 11px;
+      margin-top: 2px;
+      color: #444;
     }
   </style>
 </head>
@@ -58,13 +80,24 @@
     const NavView = () => h('ul', {class: 'menu'},
       TOPICS.map(item => h('li', null, h('a', {href: `#/${item}`}, capitalize(item))))
     );
-    const ItemView = ({id}) => ({items},{getItem}) => h('li', {
-      key: `item-${id}`,
-      oncreate: () => (items[id] || getItem(id))
-    }, h('p', null, items[id] ?
-      h('div', null,
-        h('p', null, items[id].title)
-      ) : 'Loading...'))
+    const ItemView = ({id}) => ({items},{getItem}) => {
+      let item = items[id];
+      return h('li', {
+          key: `item-${id}`,
+          oncreate: () => (item || getItem(id))
+        }, h('div', {class: 'item'},
+          item ?
+          h('div', {class: 'item-inner'},
+            h('div', {class: 'item-title'},
+              h('a', {target: '_blank', href: item.url || '#'}, item.title)
+            ),
+            h('div', {class: 'item-meta'},
+              h('span', null, `by: ${item.by}`)
+            )
+          )
+          : 'Loading...')
+      )
+    };
     const MainView = () => (state, actions) => {
       let {route: {topic}} = state;
       let items = state[`${topic}stories`];
