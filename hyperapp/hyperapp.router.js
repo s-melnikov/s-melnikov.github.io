@@ -27,7 +27,8 @@ function Router(app) {
       return { route: { path, params } }
     };
     state.route = actions.setRoute().route;
-    let main = app(state, actions, (state, actions) => currentView(state, actions), container);
+    let resolve = (state, actions) => (currentView || (() => {}))(state, actions);
+    let main = app(state, actions, resolve, container);
     window.addEventListener("hashchange", main.setRoute);
     return main;
   }

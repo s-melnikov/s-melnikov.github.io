@@ -3,7 +3,6 @@
 
 /*
 
-
 const State = {
   loader: false
 };
