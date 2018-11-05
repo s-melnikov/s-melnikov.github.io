@@ -3,125 +3,73 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>Time Tracker</title>
   <style>
-    html {
-      box-sizing: border-box;
-    }
-    * {
-      position: relative;
+    *, *::before, *::after {
       box-sizing: inherit;
+      position: relative;
     }
     body {
-      font-family: 'Fira Sans', Consolas, monospace;
-      font-size: 11px;
-      background-color: #ffffff;
-      color: #444444;
-    }
-    .btn {
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-family: inherit;
-      color: inherit;
-      font-size: inherit;
-      padding: 0 5px;
-      outline: 0;
-      border: 1px solid #dcdcdc;
-      border-radius: 2px;
-      padding: 7px 10px;
-      margin-left: 5px;
-      display: inline-block;
-    }
-    .btn-sm {
-      padding: 5px 7px;
-    }
-    .btn:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-    .btn-primary {
-      color: blue;
-    }
-    .btn-warning {
-      color: orange;
-    }
-    .btn-success {
-      color: green;
-    }
-    .flex {
-      display: flex;
-    }
-    input {
-      display: block;
-      width: 100%;
-      border: none;
-      background: none;
-      font-family: inherit;
-      font-size: inherit;
-      color: inherit;
-      outline: 0;
-    }
-    .day_title {
-      padding: 20px 7px 10px;
-      font-size: 110%;
-    }
-    .column {
-      padding: 7px;
-    }
-    .column_title {
-      width: 100%;
-      white-space: pre-wrap;
-    }
-    .column_started {
-      text-align: right;
-      width: 110px;
-    }
-    .column_spent {
-      text-align: right;
-      width: 80px;
-    }
-    .column_actions {
-      text-align: right;
-      width: 80px;
-    }
-    .day_tasks {
-      margin: 15px;
-      padding: 5px;
-      border: 1px solid #eee;
-    }
-    .row {
-      margin: 5px 0;
-      border-top: 1px solid #f0f0f0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .current.row {
-      border-color: #add4e6
-    }
-    .days_tasks {
-      max-width: 1100px;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #444;
+      padding: 0 15px;
+      margin: 0;
+      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
+  <div id="root"></div>
   <script src="https://unpkg.com/hyperapp@1.2.8/dist/hyperapp.js"></script>
-  <!-- <script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script> -->
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-database.js"></script>
   <script>
-    // firebase.initializeApp({
-    //   apiKey: 'AIzaSyAYoWsXOGnwLjlzbqR2uokozrDqXQCuuJU',
-    //   databaseURL: 'https://timetracker-2dbde.firebaseio.com'
-    // });
-    // let auth = firebase.auth(),
-    //   uid,
-    //   database,
-    //   ref;
-    // auth.onAuthStateChanged(function(user) {
-    //   if (user) {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyAYoWsXOGnwLjlzbqR2uokozrDqXQCuuJU',
+      databaseURL: 'https://timetracker-2dbde.firebaseio.com'
+    });
+    const auth = firebase.auth();
+    const { h, app } = hyperapp;
+    const State = {
+      user: null
+    };
+    const Actions = {
+      authStateChange: user => ({user}),
+      hashChange: () => ({route: location.hash.slice(2).split('/')})
+    };
+    const Views = {};
 
-    //   }
-    // });
-    // auth.signInAnonymously();
-    // let { h, app } = hyperapp,
-    //   ,
+    Views.Router = (state, actions) => {
+      let {route, user} = state;
+      if (!user) {
+        return Views.Auth(state, actions);
+      }
+      switch (route[0]) {
+        default:
+          return Views.Main(state, actions, route);
+      }
+    }
+    Views.Auth = (state, actions) => h('form', {
+        class: 'aucth-form',
+        onsubmit: event => {
+          event.preventDefault();
+          console.log(event);
+        }
+      },
+      h('p', null, 'Sign up'),
+      h('label', null, 'Enter your email'),
+      h('input'),
+    );
+    Views.Main = (state, actions) => h('div', {class: 'container'}, 'Main');
+
+    let {authStateChange, hashChange} = app(State, Actions, Views.Router, document.querySelector('#root'));
+
+    auth.onAuthStateChanged(authStateChange);
+    addEventListener('hashchange', hashChange);
+    hashChange();
+
     //   ref = database.ref("dashboards/" + dashBoardId),
     //   boardsRef = ref.child("boards"),
     //   tasksRef = ref.child("tasks"),
@@ -132,6 +80,7 @@
     // database = firebase.database(),
     // ref = database.ref("users/" + dashBoardId);
 
+/*
     let
           DEV = location.pathname.indexOf('dev') !== -1,
           STORAGE = 'timetracker' + (DEV ? 'dev' : ''),
@@ -464,6 +413,8 @@
           nextTimestampId = storedData.timestamps[storedData.timestamps.length - 1].id + 1;
         }
         addEventListener('hashchange', updatePath);
+
+        */
   </script>
 </body>
 </html>

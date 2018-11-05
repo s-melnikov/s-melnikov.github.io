@@ -72,16 +72,33 @@
         });
       });
     }
+    const csvParser = str => {
+      let pattern = /(\,|\r?\n|\r|^)(?:"([^"]*(?:""[^"]*)*)"|([^"\,\r\n]*))/gi;
+      let result = [[]];
+      let matches = null;
+      while (matches = pattern.exec(str)) {
+        let strmatch;
+        let delimiter = matches[1];
+        if (delimiter.length && delimiter !== ',') {
+          result.push([]);
+        }
+        if (matches[2]) {
+          strmatch = matches[2].replace(/""/g, '"');
+        } else {
+          strmatch = matches[3];
+        }
+        result[result.length - 1].push(strmatch);
+      }
+      return result;
+    }
     const parse = text => {
       let cell, tr;
       empty(thead);
       empty(tbody);
-      text.split('\n').map((row, i) => {
-        row = row.trim();
-        if (!row) return;
+      csvParser(text).map((row, i) => {
         let r = i ? document.createElement('tr') : thead;
         if (i) tbody.appendChild(r);
-        row && row.split(',').map(t => {
+        row.length && row.map(t => {
           cell = document.createElement(i ? 'td' : 'th');
           cell.textContent = t;
           r.appendChild(cell);
@@ -91,6 +108,7 @@
     }
     input.addEventListener('input', event => parse(localStorage.csv = event.target.value));
     parse(input.value = localStorage.csv);
+
   </script>
 </body>
 </html>
