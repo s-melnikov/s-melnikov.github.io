@@ -17,6 +17,43 @@
       margin: 0;
       box-sizing: border-box;
     }
+    label {
+      display: block;
+      font-size: 80%;
+    }
+    input, button {
+      padding: 5px 7px;
+      font: inherit;
+      color: inherit;
+      border: 1px solid #777;
+      outline: 0;
+    }
+    input {
+      display: block;
+      width: 100%;
+      border-radius: 2px;
+    }
+    button {
+      cursor: pointer;
+      display: inline-block;
+      background: #f0f0f0;
+    }
+    button:hover {
+      background: #f5f5f5;
+    }
+    button:active {
+      background: #eeeeee;
+    }
+    .sign-up {
+      border: 1px solid #dcdcdc;
+      border-radius: 2px;
+      padding: 15px;
+      width: 260px;
+      margin: 30px auto;
+    }
+    .sign-up button {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -44,23 +81,23 @@
     Views.Router = (state, actions) => {
       let {route, user} = state;
       if (!user) {
-        return Views.Auth(state, actions);
+        return h(Views.SignUp);
       }
       switch (route[0]) {
         default:
           return Views.Main(state, actions, route);
       }
     }
-    Views.Auth = (state, actions) => h('form', {
-        class: 'aucth-form',
+    Views.SignUp = () => (state, actions) => h('form', {
+        class: 'sign-up',
         onsubmit: event => {
           event.preventDefault();
           console.log(event);
         }
       },
-      h('p', null, 'Sign up'),
       h('label', null, 'Enter your email'),
       h('input'),
+      h('button', null, 'Sign up')
     );
     Views.Main = (state, actions) => h('div', {class: 'container'}, 'Main');
 
