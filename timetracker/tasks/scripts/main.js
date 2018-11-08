@@ -25,4 +25,4 @@ require(['firebase'], (Firebase) => {
   }
 
   const { h, app } = hyperapp;
-})
+});

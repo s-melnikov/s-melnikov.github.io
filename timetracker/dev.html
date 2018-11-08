@@ -45,11 +45,9 @@
       background: #eeeeee;
     }
     .sign-up {
-      border: 1px solid #dcdcdc;
       border-radius: 2px;
-      padding: 15px;
-      width: 260px;
-      margin: 30px auto;
+      padding: 15px 0;
+      width: 240px;
     }
     .sign-up button {
       margin-top: 10px;
@@ -81,13 +79,18 @@
     Views.Router = (state, actions) => {
       let {route, user} = state;
       if (!user) {
-        return h(Views.SignUp);
+        return h(Views.Auth);
       }
       switch (route[0]) {
         default:
           return Views.Main(state, actions, route);
       }
     }
+    Views.Auth = () => (state, actions) => h('div', {class: 'auth'},
+      h(Views.SignUp),
+      h('span', null, 'or'),
+      h(Views.SignIn),
+    );
     Views.SignUp = () => (state, actions) => h('form', {
         class: 'sign-up',
         onsubmit: event => {
@@ -96,9 +99,14 @@
         }
       },
       h('label', null, 'Enter your email'),
-      h('input'),
+      h('input', {type: 'email', oncreate: el => {console.log(el)}}),
+      h('label', null, 'Password'),
+      h('input', {type: 'password', oncreate: el => {console.log(el)}}),
+      h('label', null, 'Repeat password'),
+      h('input', {type: 'password', oncreate: el => {console.log(el)}}),
       h('button', null, 'Sign up')
     );
+    Views.SignIn = () => (state, actions) => h('div', null, 'SignIn');
     Views.Main = (state, actions) => h('div', {class: 'container'}, 'Main');
 
     let {authStateChange, hashChange} = app(State, Actions, Views.Router, document.querySelector('#root'));
