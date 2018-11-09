@@ -69,9 +69,11 @@
     const auth = firebase.auth();
     const { h, app } = hyperapp;
     const State = {
+      forms: {},
       user: null
     };
     const Actions = {
+      setFormData: () => {},
       authStateChange: user => ({user}),
       hashChange: () => ({route: location.hash.slice(2).split('/')})
     };
@@ -90,9 +92,15 @@
         }
       }, children),
 
-      Input: ({label, type, name, required}) => () => h('div', {class: 'control'},
+      Input: ({label, type, name, required, form}) => ({forms}, {setFormData}) => h('div', {class: 'control'},
         h('label', null, label),
-        h('input', {type, name, required}),
+        h('input', {
+          type,
+          name,
+          required,
+          value: forms[form] && forms[form][name] || '',
+          oninput: event => setFormData(form, name, event.target.value)
+        })
       ),
 
       Router: (state, actions) => {
@@ -116,15 +124,15 @@
           event.preventDefault();
           console.log(data)
         }},
-        h(Views.Input({label: 'Email', type: 'email', name: 'email', required: true})),
-        h(Views.Input({label: 'Password', type: 'password', name: 'pass', required: true})),
-        h(Views.Input({label: 'Repeat password', type: 'password', name: 'repass', required: true})),
+        h(Views.Input, {label: 'Email', type: 'email', form: 'sign-up', name: 'email', required: true}),
+        h(Views.Input, {label: 'Password', type: 'password', form: 'sign-up', name: 'pass', required: true}),
+        h(Views.Input, {label: 'Repeat password', type: 'password', form: 'sign-up', name: 'repass', required: true}),
         h('button', null, 'Sign up')
       ),
 
       SignIn: () => h(Views.Form, {class: 'sign-in', submit: data => console.log(data)},
-        h(Views.Input({label: 'Email', type: 'email', name: 'email', required: true})),
-        h(Views.Input({label: 'Password', type: 'password', name: 'pass', required: true})),
+        h(Views.Input, {label: 'Email', type: 'email', name: 'email', required: true}),
+        h(Views.Input, {label: 'Password', type: 'password', name: 'pass', required: true}),
         h('button', null, 'Sign in'),
       ),
 
