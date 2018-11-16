@@ -119,9 +119,9 @@
         h('button', {onclick: signInAnonymously}, 'Sign in anonymously')
       ),
 
-      SignUp: () => h('form', {class: 'sign-up', name: 'sign-up', onsubmit: data => {console.log(data)}},
+      // SignUp: () => h('form', {class: 'sign-up', name: 'sign-up', onsubmit: data => {console.log(data)}},
 
-      ),
+      // ),
 
       SignUp: () => h(Views.Form, {},
         h(Views.Input, {label: 'Email', type: 'email', form: 'sign-up', name: 'email', required: true}),
