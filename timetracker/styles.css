@@ -16,6 +16,15 @@ body {
 
 #container {
   padding: 15px 5px;
+  max-width: 1120px;
+}
+
+.col {
+  flex: 1;
+}
+
+.text-right {
+  text-align: right
 }
 
 .bar {
@@ -86,10 +95,14 @@ body {
   font-size: 150%;
 }
 
+.day_title small {
+  font-size: 80%;
+}
+
 .task_title {
   width: 100%;
   white-space: pre-wrap;
-  margin-bottom: 10px;
+  font-size: 15px;
 }
 
 .task_title .inner {
@@ -100,25 +113,31 @@ body {
   margin: 15px 0;
 }
 
-.tasks_list {
-  flex-wrap: wrap;
+.task {
+  border: 1px solid #dcdcdc;
 }
 
-.task {
-  width: 16.666%;
-  padding: 10px;
+.task:not(:first-child) {
+  border-top: none;
 }
 
 .task-inner {
-  box-shadow: 0 0 0 1px #f0f0f0;
   padding: 10px;
 }
 
 .task.current {
-  border-color: #add4e6
+  border-color: #f7b386
 }
 
-.task_started, .task_spent {
+.task .meta {
+  width: 120px;
+  margin-top: 7px;
+}
+
+.task_started {
   display: inline-block;
+}
+
+.task_spent {
   margin-left: 10px;
 }

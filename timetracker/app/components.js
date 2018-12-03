@@ -25,28 +25,25 @@ const RootView = ($s, $a) => {
 const TasksListView = ({
   daysTasks
 }, $a) => {
-  return daysTasks ? daysTasks.map((dayTasks, index) => h('div', {
-      class: 'day_tasks'
-    },
-    h('div', {
-        class: 'day_title'
-      },
-      h('div', null, dayTasks.day),
-      h('small', null,
-        ' Start: ',
-        toTimeString(dayTasks.timeStart),
-        '; End: ',
-        toTimeString(dayTasks.timeEnd),
-        '; Spent: ',
-        h(TimeSpent, {
-          timeSpent: dayTasks.timeSpent,
-          active: !index
-        }))
-    ),
-    h('div', {class: 'tasks_list flex'},
-      TasksDayView(dayTasks.tasks, $a)
-    )
-  )) : null;
+  return daysTasks ? daysTasks.map((dayTasks, index) =>
+    h('div', {class: 'day_tasks'},
+      h('div', {class: 'day_title flex'},
+        h('div', {class: 'col'}, dayTasks.day),
+        h('small', {class: 'col text-right'},
+          ' Start: ',
+          toTimeString(dayTasks.timeStart),
+          '; End: ',
+          toTimeString(dayTasks.timeEnd),
+          '; Spent: ',
+          h(TimeSpent, {
+            timeSpent: dayTasks.timeSpent,
+            active: !index
+          }))
+      ),
+      h('div', {class: 'tasks_list'},
+        TasksDayView(dayTasks.tasks, $a)
+      )
+    )) : null;
 };
 
 const TasksDayView = (tasks, $a) => {
@@ -63,7 +60,16 @@ const TasksDayView = (tasks, $a) => {
     return h('div', {
         class: 'task' + (current ? ' current' : '')
       },
-      h('div', {class: 'task-inner'},
+      h('div', {class: 'task-inner flex'},
+        h('div', {class: 'btns'},
+          current ? h('button', {
+            class: 'btn btn-sm btn-link btn-warning',
+            onclick: event => $a.startTask(0)
+          }, 'stop') : h('button', {
+            class: 'btn btn-sm btn-link btn-primary',
+            onclick: event => $a.startTask(id)
+          }, 'start'),
+        ),
         h('div', {
             class: 'task_title',
             title: title,
@@ -81,17 +87,6 @@ const TasksDayView = (tasks, $a) => {
           }) : h('div', {class: 'inner'}, title)
         ),
         h('div', {class: 'meta'},
-          current ? h('button', {
-            class: 'btn btn-sm btn-link btn-warning',
-            onclick: event => $a.startTask(0)
-          }, 'stop') : h('button', {
-            class: 'btn btn-sm btn-link btn-primary',
-            onclick: event => $a.startTask(id)
-          }, 'start'),
-          false && h('button', {
-            class: 'btn btn-sm btn-link btn-success',
-            onclick: () => {}
-          }, 'merge'),
           h('span', {
               class: 'task_started',
               onclick: () => $a.showTaskInfo(id)
