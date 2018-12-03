@@ -15,7 +15,7 @@ body {
 }
 
 #container {
-  padding: 15px 5px;
+  padding: 15px;
   max-width: 1120px;
 }
 
@@ -27,10 +27,6 @@ body {
   text-align: right
 }
 
-.bar {
-  padding: 0 10px;
-}
-
 .btn {
   cursor: pointer;
   border: none;
@@ -40,7 +36,6 @@ body {
   font-size: inherit;
   outline: 0;
   border: 1px solid #dcdcdc;
-  border-radius: 3px;
   padding: 7px 10px;
 }
 
@@ -62,15 +57,15 @@ body {
 }
 
 .btn-primary {
-  color: blue;
+  color: #0056b5;
 }
 
 .btn-warning {
-  color: orange;
+  color: #d67b3e;
 }
 
 .btn-success {
-  color: green;
+  color: #08b300;
 }
 
 .flex {
