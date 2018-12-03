@@ -63,10 +63,10 @@ const TasksDayView = (tasks, $a) => {
       h('div', {class: 'task-inner flex'},
         h('div', {class: 'btns'},
           current ? h('button', {
-            class: 'btn btn-sm btn-link btn-warning',
+            class: 'btn btn-sm btn-warning',
             onclick: event => $a.startTask(0)
           }, 'stop') : h('button', {
-            class: 'btn btn-sm btn-link btn-primary',
+            class: 'btn btn-sm btn-primary',
             onclick: event => $a.startTask(id)
           }, 'start'),
         ),
