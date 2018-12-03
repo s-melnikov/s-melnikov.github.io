@@ -9,16 +9,12 @@ const {
 } = hyperapp;
 
 const RootView = ($s, $a) => {
-  return h('div', {
-      id: 'container'
-    },
-    h('p', {
-        class: 'control'
-      },
+  return h('div', {id: 'container'},
+    h('div', {class: 'bar'},
       h('button', {
-        class: 'btn btn-primary',
+        class: 'btn btn-lg btn-primary',
         onclick: $a.startNewTask
-      }, 'start new task')
+      }, 'New task')
     ),
     h('div', {
       class: 'days_tasks'
@@ -29,14 +25,23 @@ const RootView = ($s, $a) => {
 const TasksListView = ({
   daysTasks
 }, $a) => {
-  return daysTasks ? daysTasks.map(dayTasks => h('div', {
+  return daysTasks ? daysTasks.map((dayTasks, index) => h('div', {
       class: 'day_tasks'
     },
     h('div', {
         class: 'day_title'
       },
-      h('span', null, dayTasks.day),
-      h('small', null, ' Start: ', toTimeString(dayTasks.timeStart), ' / End: ', toTimeString(dayTasks.timeEnd), ' / Spent: ', timeSpetnToString(dayTasks.timeSpent))
+      h('div', null, dayTasks.day),
+      h('small', null,
+        ' Start: ',
+        toTimeString(dayTasks.timeStart),
+        '; End: ',
+        toTimeString(dayTasks.timeEnd),
+        '; Spent: ',
+        h(TimeSpent, {
+          timeSpent: dayTasks.timeSpent,
+          active: !index
+        }))
     ),
     h('div', {class: 'tasks_list flex'},
       TasksDayView(dayTasks.tasks, $a)
@@ -58,56 +63,53 @@ const TasksDayView = (tasks, $a) => {
     return h('div', {
         class: 'task' + (current ? ' current' : '')
       },
-      h('div', {
-          class: 'column column_title',
-          title: title,
-          ondblclick: event => $a.makeTaskEditable(id)
-        },
-        editable ? h('input', {
-          oninput: event => $a.editTitle({
-            id,
-            title: event.target.value
-          }),
-          onkeyup: event => (event.key === "Enter") && $a.saveTitle(id),
-          oncreate: el => el.focus(),
-          value: title
-        }) : title
-      ),
-      h('div', {
-          class: 'column column_started',
-          onclick: () => $a.showTaskInfo(id)
-        },
-        `${toDateString(timeStart)} ${toTimeString(timeStart)}`),
-      h('td', {
-        class: 'column column_spent',
-        onclick: () => $a.showTaskTimestamps(id)
-      }, h(TimeSpent, {
-        timeSpent,
-        active: current
-      })),
-      h('td', {
-          class: 'column column_actions'
-        },
-        current ? h('button', {
-          class: 'btn btn-sm btn-warning',
-          onclick: event => $a.startTask(0)
-        }, 'stop') : h('button', {
-          class: 'btn btn-sm btn-primary',
-          onclick: event => $a.startTask(id)
-        }, 'start'),
-        false && h('button', {
-          class: 'btn btn-sm btn-success',
-          onclick: () => {}
-        }, 'merge')
+      h('div', {class: 'task-inner'},
+        h('div', {
+            class: 'task_title',
+            title: title,
+            ondblclick: event => $a.makeTaskEditable(id)
+          },
+          editable ? h('input', {
+            class: 'input',
+            oninput: event => $a.editTitle({
+              id,
+              title: event.target.value
+            }),
+            onkeyup: event => (event.key === "Enter") && $a.saveTitle(id),
+            oncreate: el => el.focus(),
+            value: title
+          }) : h('div', {class: 'inner'}, title)
+        ),
+        h('div', {class: 'meta'},
+          current ? h('button', {
+            class: 'btn btn-sm btn-link btn-warning',
+            onclick: event => $a.startTask(0)
+          }, 'stop') : h('button', {
+            class: 'btn btn-sm btn-link btn-primary',
+            onclick: event => $a.startTask(id)
+          }, 'start'),
+          false && h('button', {
+            class: 'btn btn-sm btn-link btn-success',
+            onclick: () => {}
+          }, 'merge'),
+          h('span', {
+              class: 'task_started',
+              onclick: () => $a.showTaskInfo(id)
+            }, toTimeString(timeStart)),
+          h('span', {
+            class: 'task_spent',
+            onclick: () => $a.showTaskTimestamps(id)
+          }, h(TimeSpent, {
+            timeSpent,
+            active: current
+          })),
+        )
       )
     );
   }) : null;
 };
 
-const TimeSpent = ({
-  timeSpent,
-  active
-}) => {
+const TimeSpent = ({timeSpent, active}) => {
   return h('span', {
     oncreate: (element) => {
       if (active) TimeSpent.timer(element, timeSpent);
@@ -134,7 +136,7 @@ TimeSpent.timer = (element, time) => {
       time += now - last;
       last = now;
       element.textContent = timeSpetnToString(time);
-    }, 1000);
+    }, 1000 * 60);
   element.$clearInterval = () => clearInterval($interval);
 };
 

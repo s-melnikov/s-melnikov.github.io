@@ -8,10 +8,18 @@ html {
 }
 
 body {
-  font-family: 'Fira Sans', Consolas, monospace;
-  font-size: 11px;
+  font-family: Ubuntu, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
   background-color: #ffffff;
   color: #444444;
+}
+
+#container {
+  padding: 15px 5px;
+}
+
+.bar {
+  padding: 0 10px;
 }
 
 .btn {
@@ -21,15 +29,23 @@ body {
   font-family: inherit;
   color: inherit;
   font-size: inherit;
-  padding: 0 5px;
   outline: 0;
   border: 1px solid #dcdcdc;
-  border-radius: 2px;
+  border-radius: 3px;
   padding: 7px 10px;
 }
 
 .btn-sm {
   padding: 5px 7px;
+}
+
+.btn-lg {
+  padding: 9px 12px;
+  font-size: 15px;
+}
+
+.btn-link {
+  border-color: transparent;
 }
 
 .btn:hover {
@@ -52,50 +68,36 @@ body {
   display: flex;
 }
 
-input {
+.input {
   display: block;
   width: 100%;
-  border: none;
   background: none;
   font-family: inherit;
   font-size: inherit;
   color: inherit;
   outline: 0;
+  border: none;
+  border-bottom: 2px solid #dcdcdc;
+  padding: 5px 7px;
 }
 
 .day_title {
   padding: 20px 7px 10px;
-  font-size: 110%;
+  font-size: 150%;
 }
 
-.column {
-  padding: 7px;
-}
-
-.column_title {
+.task_title {
   width: 100%;
   white-space: pre-wrap;
+  margin-bottom: 10px;
 }
 
-.column_started {
-  text-align: right;
-  width: 110px;
-}
-
-.column_spent {
-  text-align: right;
-  width: 80px;
-}
-
-.column_actions {
-  text-align: right;
-  width: 80px;
+.task_title .inner {
+  padding: 5px 7px 7px 7px;
 }
 
 .day_tasks {
-  margin: 15px;
-  padding: 5px;
-  border: 1px solid #eee;
+  margin: 15px 0;
 }
 
 .tasks_list {
@@ -104,10 +106,19 @@ input {
 
 .task {
   width: 16.666%;
-  margin: 10px 0;
+  padding: 10px;
+}
+
+.task-inner {
   box-shadow: 0 0 0 1px #f0f0f0;
+  padding: 10px;
 }
 
 .task.current {
   border-color: #add4e6
+}
+
+.task_started, .task_spent {
+  display: inline-block;
+  margin-left: 10px;
 }

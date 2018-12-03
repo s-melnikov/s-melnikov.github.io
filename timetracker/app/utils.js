@@ -1,9 +1,9 @@
 function toTimeString(time) {
-  return dateToFormatString(time, 'H:i:s');
+  return dateToFormatString(time, 'H:i');
 }
 
 function toDateString(time) {
-  return dateToFormatString(time, 'Y.m.d');
+  return dateToFormatString(time, 'm.d');
 }
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
@@ -30,13 +30,11 @@ function dateToFormatString(time, format = 'Y.m.d H:i:s') {
 
 function timeSpetnToString(time) {
   time = Math.floor(time / 1000);
-  let s, m, h, d;
-  s = time % 60;
+  let m, h;
   m = ((time = Math.floor(time / 60)) % 60);
   h = (time = Math.floor(time / 60));
   if (m < 10) m = '0' + m;
-  if (s < 10) s = '0' + s;
-  return `${h}h ${m}m ${s}s`;
+  return `${h}h ${m}m`;
 }
 
 export {
