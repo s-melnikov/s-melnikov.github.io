@@ -37,18 +37,30 @@
       list-style: none;
     }
     .menu {
-      width: 62px;
+      padding: 0 15px;
     }
     .menu a {
       display: block;
-      padding: 5px 0;
+      padding: 10px 5px;
     }
     .flex {
       display: flex;
     }
     .item {
-      min-height: 40px;
-      padding: 5px;
+      position: relative;
+      height: 50px;
+      padding: 10px 10px 10px 45px;
+      border-bottom: 1px solid #eee;
+    }
+    .item .points {
+      position: absolute;
+      left: -45px;
+      text-align: center;
+      width: 40px;
+      line-height: 1;
+    }
+    li:first-child .item {
+      border-top: 1px solid #eee;
     }
     .item-meta {
       font-size: 10px;
@@ -67,8 +79,8 @@
   <div id="root"></div>
   <script src="https://unpkg.com/hyperapp@1.2.9/dist/hyperapp.js"></script>
   <script>
-    const CACHE_TTL = 5 * 60 * 1000;
-    const PER_PAGE = 10;
+    const CACHE_TTL = 30 * 60 * 1000;
+    const PER_PAGE = 100;
     const { app, h } = hyperapp;
     const BASE_URL = "https://hacker-news.firebaseio.com/v0/";
     const TOPICS = ["top", "new", "best", "show", "ask", "job"];
@@ -108,11 +120,14 @@
         }, h('div', {class: 'item'},
           item ?
             h('div', {class: 'item-inner'},
+              h('div', {class: 'points'},
+                h('div', null, item.score),
+                h('small', null, 'points')
+              ),
               h('div', {class: 'item-title'},
                 h('a', {target: '_blank', href: item.url || '#'}, item.title)
               ),
               h('div', {class: 'item-meta'},
-                h('span', null, `${item.score} point`),
                 h('span', null, ` by: ${item.by}`),
                 h('span', null, ` ${fromNow(item.time)} ago`),
                 h('span', null, ` (${domain(item.url)})`),

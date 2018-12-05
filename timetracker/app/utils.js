@@ -29,10 +29,11 @@ function dateToFormatString(time, format = 'Y.m.d H:i:s') {
 }
 
 function timeSpetnToString(time) {
-  time = Math.floor(time / 1000);
-  let m, h;
-  m = ((time = Math.floor(time / 60)) % 60);
-  h = (time = Math.floor(time / 60));
+  let t = Math.floor(time / 1000);
+  // let s = t % 60;
+  let m = ((t = Math.floor(t / 60)) % 60);
+  let h = (t = Math.floor(t / 60));
+  // if (s < 10) s = '0' + s;
   if (m < 10) m = '0' + m;
   return `${h}h ${m}m`;
 }

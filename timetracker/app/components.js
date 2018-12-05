@@ -105,33 +105,32 @@ const TasksDayView = (tasks, $a) => {
 };
 
 const TimeSpent = ({timeSpent, active}) => {
+  let check = element => element.$clearInterval && element.$clearInterval();
   return h('span', {
     oncreate: (element) => {
+      check(element);
       if (active) TimeSpent.timer(element, timeSpent);
     },
     onupdate: (element) => {
       if (active && !element.$clearInterval) {
         TimeSpent.timer(element, timeSpent);
-      } else if (!active && element.$clearInterval) {
-        element.$clearInterval();
+      } else if (!active) {
+        check(element);
       }
     },
-    onremove: () => {
-      if (element.$clearInterval) {
-        element.$clearInterval();
-      }
-    },
+    onremove: check,
   }, timeSpetnToString(timeSpent));
 }
 
 TimeSpent.timer = (element, time) => {
+  let uid = Date.now().toString(36);
   let last = Date.now(),
     $interval = setInterval(() => {
       let now = Date.now();
       time += now - last;
       last = now;
       element.textContent = timeSpetnToString(time);
-    }, 1000 * 60);
+    }, 1000);
   element.$clearInterval = () => clearInterval($interval);
 };
 

@@ -5,6 +5,7 @@ import {
 import {
   RootView,
 } from './components.js';
+import Router from './router.js';
 let STORAGE = 'timetracker',
   {
     app,
@@ -282,7 +283,10 @@ let STORAGE = 'timetracker',
     });
     return daysTasks;
   };
-let {init} = app(state, actions, RootView, document.body);
+const routes = {
+  '/': RootView,
+}
+let {init} = Router(app)(state, actions, routes, document.body);
 init();
 if (storedData && storedData.tasks && storedData.timestamps) {
   nextTaskId = storedData.tasks[storedData.tasks.length - 1].id + 1;
