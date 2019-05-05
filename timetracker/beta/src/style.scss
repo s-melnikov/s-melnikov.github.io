@@ -2,6 +2,7 @@ html {
   box-sizing: border-box;
 }
 
+
 * {
   position: relative;
   box-sizing: inherit;
@@ -14,10 +15,30 @@ body {
   color: #444444;
 }
 
+hr {
+  background: none;
+  border-top: 1px solid #dcdcdc;
+  border-bottom: 1px solid #ffffff;
+  border-right: 0;
+  border-left: 0;
+  margin: 15px 0;
+}
+
 #container {
   padding: 15px;
   max-width: 1120px;
   margin: 0 auto;
+}
+
+.bar a {
+  display: inline-block;
+  padding: 0 10px;
+  text-decoration: none;
+  color: #777;
+}
+
+.bar a.active {
+  color: #000;
 }
 
 .col {
@@ -25,7 +46,7 @@ body {
 }
 
 .text-right {
-  text-align: right
+  text-align: right;
 }
 
 .btn {
@@ -123,7 +144,7 @@ body {
 }
 
 .task.current {
-  border-color: #f7b386
+  border-color: #f7b386;
 }
 
 .task .meta {

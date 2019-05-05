@@ -110,7 +110,6 @@ class Provider {
 Provider.DIRECTIVES_SUFFIX = "Directive";
 Provider.CONTROLLERS_SUFFIX = "Controller";
 const provider = new Provider();
-
 class DOMCompiler {
   bootstrap() {
     let root = document.querySelector("[ngl-app]");
@@ -157,6 +156,7 @@ provider.directive("ngl-bind", () => ({
     }
   })
 );
+
 provider.directive("ngl-click", () => ({
     scope: false,
     link(el, scope, exp) {
@@ -167,6 +167,7 @@ provider.directive("ngl-click", () => ({
     }
   })
 );
+
 provider.directive("ngl-model", () => ({
     link(el, scope, exp) {
       el.value = scope[exp];
@@ -178,6 +179,7 @@ provider.directive("ngl-model", () => ({
     }
   })
 );
+
 provider.directive("ngl-controller", () => ({
     scope: true,
     link(el, scope, exp) {
@@ -186,6 +188,7 @@ provider.directive("ngl-controller", () => ({
     }
   })
 );
+
 provider.directive("ngl-repeat", () => ({
     scope: false,
     link(el, scope, exp) {
@@ -219,8 +222,10 @@ provider.directive("ngl-repeat", () => ({
     }
   })
 );
+
 global.ngl = {
   controller: provider.controller.bind(provider),
   bootstrap: domcompiler.bootstrap.bind(domcompiler)
 };
-})(window)
+
+})(window);
