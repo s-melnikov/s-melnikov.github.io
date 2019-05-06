@@ -4,7 +4,7 @@
   const modules = {};
   const get_mod = name => modules[name] && (modules[name].mod || (modules[name].mod = create(modules[name].deps, modules[name].func)));
   const create = (deps, func) => func(...(deps.map(d => get_mod(d))));
-  root.def = (name, deps, func) => (func ? (modules[name] = {deps, func}) : create(name, deps));
+  root.define = (name, deps, func) => (func ? (modules[name] = {deps, func}) : create(name, deps));
 })(window);
 
 def('first', ['second', 'third'], function(second, third) {
