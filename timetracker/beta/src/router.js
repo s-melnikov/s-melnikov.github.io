@@ -98,7 +98,6 @@ def('router', [], () => {
     },
     subscribe(actions) {
       const handleLocationChange = (e) => {
-        console.log({ hash: window.location.hash });
         actions.set({
           hash: window.location.hash,
           previous: e.detail

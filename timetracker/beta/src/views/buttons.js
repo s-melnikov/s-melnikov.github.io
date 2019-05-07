@@ -1,9 +1,12 @@
-import { h } from 'hyperapp';
+def('view/buttons', [], () => {
+  const { h } = hyperapp;
 
-export const Button = (props, children) => (
-  <button class="btn" {...props}>{children}</button>
-);
+  const Button = (props, children) => h('button', { class: 'btn', ...props}, children);
 
-export const ButtonPrimary = (props, children) => (
-  <Button class="btn btn-primary" {...props}>{children}</Button>
-);
+  const ButtonPrimary = (props, children) => h(Button, { class: 'btn btn-primary', ...props }, children);
+
+  return {
+    Button,
+    ButtonPrimary
+  }
+});

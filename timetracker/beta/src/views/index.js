@@ -1,15 +1,21 @@
-import { h } from "hyperapp";
-import { Route, Switch, Redirect } from "../router";
-import TasksListByDays from "./TasksListByDays";
-import NavBar from "./NavBar";
-
-const RootView = () => (state, { startNewTask }) => (
-  <div id="container">
-    <NavBar />
-    <Switch>
-      <Route path="/" render={TasksListByDays} />
-    </Switch>
-  </div>
-);
-
-export default RootView;
+def(
+  'view', [
+    'router',
+    'view/AuthWithEmail',
+    'view/NavBar',
+  ], (
+    { Route, Switch },
+    AuthWithEmail,
+    NavBar,
+  ) => {
+    const { h } = hyperapp;
+    return () => ({ user }) => user ? h('div', { id: 'container' },
+      h(NavBar),
+      h(Switch, null,
+        h(Route, { path: '/', render: () => 'TasksListByDays' }),
+        h(Route, { path: '/activity', render: () => 'TasksListByActivity' }),
+        h(Route, { path: '/date', render: () => 'TasksListByDate' }),
+        h(Route, { path: '/correct', render: () => 'TasksListCorrect' }),
+      ),
+    ) : h(AuthWithEmail)
+  });

@@ -1,18 +1,10 @@
-def('action', ['router'], ({ location }) => {
-  import {
+def('actions', ['router', 'utils'], (
+  { location },
+  {
     dateToFormatString,
     timeSpetnToString,
-  } from './utils';
-
-  let nextTaskId = 1;
-  let nextTimestampId = 1;
-
-  let _tasks, _timestamps;
-
-  if ((_tasks = ls('tasks')) && (_timestamps = ls('timestamps'))) {
-    nextTaskId = _tasks.pop().id + 1;
-    nextTimestampId = _timestamps.pop().id + 1;
-  }
+  },
+) => {
 
   const getLatestDaysTasks = ({ latestTasks, timestamps }) => {
     let daysTasks = [];
@@ -112,7 +104,6 @@ def('action', ['router'], ({ location }) => {
       daysTasks,
     };
   };
-  init, startNewTask, startTask
   const startTask = id => ({ timestamps, latestTasks }, { sync }) => {
     const now = Date.now();
     const newTimestamp = {
@@ -224,17 +215,7 @@ def('action', ['router'], ({ location }) => {
     console.log(taskTimestamps);
   }
 
-  export default {
+  return {
     location: location.actions,
-    init,
-    startNewTask,
-    startTask,
-    getLatestTasks,
-    makeTaskEditable,
-    editTitle,
-    saveTitle,
-    sync,
-    showTaskInfo,
-    showTaskTimestamps,
   };
 });
