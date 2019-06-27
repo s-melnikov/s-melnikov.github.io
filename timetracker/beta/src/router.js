@@ -79,7 +79,7 @@ def('router', [], () => {
     return child;
   };
 
-  const Redirect = (props) => () => {
+  const Redirect = ({ to }) => () => {
     window.location.hash = props.to;
   };
 

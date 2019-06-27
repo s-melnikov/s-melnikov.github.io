@@ -127,8 +127,8 @@ body {
 }
 
 .task .meta {
-  width: 120px;
   margin-top: 7px;
+  white-space: nowrap;
 }
 
 .task_started {

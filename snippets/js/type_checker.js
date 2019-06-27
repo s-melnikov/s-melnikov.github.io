@@ -9,5 +9,6 @@ console.log(
   t(Symbol()),
   t({}),
   t([]),
-  t(()=>{})
+  t(()=>{}),
+  t(function(){}),
 )

@@ -7,6 +7,7 @@ function toDateString(time) {
 }
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function dateToFormatString(time, format = 'Y.m.d H:i:s') {
   let $ = new Date(time);
@@ -25,6 +26,7 @@ function dateToFormatString(time, format = 'Y.m.d H:i:s') {
     .replace('H', H[1] ? H : `0${H}`)
     .replace('i', i[1] ? i : `0${i}`)
     .replace('s', s[1] ? s : `0${s}`)
+    .replace('M', MONTHS[m])
     .replace('D', DAYS[D]);
 }
 

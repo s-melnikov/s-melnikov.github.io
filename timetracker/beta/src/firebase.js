@@ -5,10 +5,14 @@ def('firebase', [], () => {
     projectId: "timetracker-47f14",
   });
   const auth = firebase.auth();
-  const signIn = (email) => {
-    auth
+  const getLocation = () => {
+    const { protocol, host, pathname } = location;
+    return `${protocol}//${host}${pathname}`;
+  }
+  const signInWithEmail = (email) => {
+    return auth
       .sendSignInLinkToEmail(email, {
-        url: location.href,
+        url: `${getLocation()}signin_with_email`,
         handleCodeInApp: true,
       })
       .then(() => localStorage.setItem('emailForSignIn', email))
@@ -17,21 +21,23 @@ def('firebase', [], () => {
 
   if (auth.isSignInWithEmailLink(location.href)) {
     let email = localStorage.getItem('emailForSignIn');
-    if (!email) email = window.prompt('Please provide your email for confirmation');
+    if (!email) {
+      email = window.prompt('Please provide your email for confirmation');
+    }
     auth
       .signInWithEmailLink(email, location.href)
       .then(() => {
         localStorage.removeItem('emailForSignIn');
-        location.replace(location.href.split('?')[0]);
+        location.replace(getLocation());
       })
       .catch(error => {
         console.warn('signInWithEmailLink()', error);
-        location.replace(location.href.split('?')[0]);
+        location.replace(getLocation());
       });
   }
 
   return {
-    signIn,
+    signInWithEmail,
     onAuthStateChanged: auth.onAuthStateChanged.bind(auth),
     db: firebase.firestore(),
   };

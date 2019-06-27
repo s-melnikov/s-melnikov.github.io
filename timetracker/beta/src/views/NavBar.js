@@ -1,4 +1,4 @@
-def('view/NavBar', ['router', 'view/buttons'], ({ Link }, { ButtonPrimary }) => {
+def('view/NavBar', ['router'], ({ Link }) => {
   const { h } = hyperapp;
   return () => (state, { startNewTask }) => h('div', { class: 'navbar' },
     h(Link, { to: '/' }, 'By Days'),
@@ -6,6 +6,9 @@ def('view/NavBar', ['router', 'view/buttons'], ({ Link }, { ButtonPrimary }) => 
     h(Link, { to: '/date' }, 'By Date'),
     h(Link, { to: '/correct' }, 'Correcting'),
     h('hr'),
-    h(ButtonPrimary, { onclick: startNewTask }, 'New task'),
+    h('button', {
+      class: 'btn btn-primary',
+      onclick: startNewTask,
+    }, 'New task'),
   );
 });

@@ -1,16 +1,34 @@
 import {
   toTimeString,
   toDateString,
-  timeSpetnToString
+  timeSpetnToString,
+  dateToFormatString,
 } from './utils.js';
 
 const {
   h
 } = hyperapp;
 
-const RootView = ($s, $a) => {
-  return h('div', {id: 'container'},
-    h('div', {class: 'bar'},
+const DaysTasksListView = ({ tasks, timestamps }, $a) => {
+  const days = getDays({ tasks, timestamps, from: 31 * 24 * 60 * 60 * 1000 });
+  return days.map((day, index) =>
+    h('div', { class: 'day_tasks' },
+      h('div', { class: 'day_title flex' },
+        h('div', { class: 'col' }, day.date),
+        h('small', { class: 'col text-right' },
+          h(TimeSpent, { timeSpent: day.spent, active: !index }),
+          ' (', toTimeString(day.start), '-', toTimeString(day.end), ')',
+        )
+      ),
+      h('div', {class: 'tasks_list'},
+        TasksDayView(day.tasks, $a)
+      )
+    ));
+};
+
+const DaysTasks = ($s, $a) => {
+  return h('div', { id: 'container' },
+    h('div', { class: 'bar' },
       h('button', {
         class: 'btn btn-lg btn-primary',
         onclick: $a.startNewTask
@@ -18,50 +36,25 @@ const RootView = ($s, $a) => {
     ),
     h('div', {
       class: 'days_tasks'
-    }, TasksListView($s, $a))
+    }, DaysTasksListView($s, $a))
   )
 };
 
-const TasksListView = ({
-  daysTasks
-}, $a) => {
-  return daysTasks ? daysTasks.map((dayTasks, index) =>
-    h('div', {class: 'day_tasks'},
-      h('div', {class: 'day_title flex'},
-        h('div', {class: 'col'}, dayTasks.day),
-        h('small', {class: 'col text-right'},
-          ' Start: ',
-          toTimeString(dayTasks.timeStart),
-          '; End: ',
-          toTimeString(dayTasks.timeEnd),
-          '; Spent: ',
-          h(TimeSpent, {
-            timeSpent: dayTasks.timeSpent,
-            active: !index
-          }))
-      ),
-      h('div', {class: 'tasks_list'},
-        TasksDayView(dayTasks.tasks, $a)
-      )
-    )) : null;
-};
-
-const TasksDayView = (tasks, $a) => {
-  return tasks ? tasks.map(({
-    id,
-    title,
-    timeStart,
-    timeSpent,
-    current,
-    editable
-  }) => {
+const TasksDayView = (tasks = [], $a) => {
+  return tasks.map((task) => {
+    const {
+      id,
+      title,
+      start,
+      end,
+      spent,
+      current,
+      editable
+    } = task;
     if (!id) return null;
-    timeStart = new Date(timeStart);
-    return h('div', {
-        class: 'task' + (current ? ' current' : '')
-      },
-      h('div', {class: 'task-inner flex'},
-        h('div', {class: 'btns'},
+    return h('div', { class: 'task' + (current ? ' current' : '') },
+      h('div', { class: 'task-inner flex' },
+        h('div', { class: 'btns' },
           current ? h('button', {
             class: 'btn btn-sm btn-warning',
             onclick: event => $a.startTask(0)
@@ -86,23 +79,55 @@ const TasksDayView = (tasks, $a) => {
             value: title
           }) : h('div', {class: 'inner'}, title)
         ),
-        h('div', {class: 'meta'},
-          h('span', {
-              class: 'task_started',
-              onclick: () => $a.showTaskInfo(id)
-            }, toTimeString(timeStart)),
-          h('span', {
-            class: 'task_spent',
-            onclick: () => $a.showTaskTimestamps(id)
-          }, h(TimeSpent, {
-            timeSpent,
+        h('div', { class: 'meta' },
+          h(TimeSpent, {
+            timeSpent: spent,
             active: current
-          })),
+          }),
+          ' (', toTimeString(start), '-', toTimeString(end), ')',
         )
       )
     );
-  }) : null;
+  });
 };
+
+const RootView = ($s, $a) => {
+  return h('div', {id: 'container'},
+    h('div', {class: 'bar'},
+      h('button', {
+        class: 'btn btn-lg btn-primary',
+        onclick: $a.startNewTask
+      }, 'New task')
+    ),
+    h('div', {
+      class: 'days_tasks'
+    }, TasksListView($s, $a))
+  )
+};
+
+const TasksListView = ({ daysTasks, tasks, timestamps }, $a) => {
+  return daysTasks ? daysTasks.map((dayTasks, index) =>
+    h('div', {class: 'day_tasks'},
+      h('div', {class: 'day_title flex'},
+        h('div', {class: 'col'}, dayTasks.day),
+        h('small', {class: 'col text-right'},
+          ' Start: ',
+          toTimeString(dayTasks.timeStart),
+          '; End: ',
+          toTimeString(dayTasks.timeEnd),
+          '; Spent: ',
+          h(TimeSpent, {
+            timeSpent: dayTasks.timeSpent,
+            active: !index
+          }))
+      ),
+      h('div', {class: 'tasks_list'},
+        TasksDayView(dayTasks.tasks, $a)
+      )
+    )) : null;
+};
+
+
 
 const TimeSpent = ({timeSpent, active}) => {
   let clear = element => element.$clearInterval && element.$clearInterval();
@@ -133,7 +158,45 @@ TimeSpent.timer = (element, time) => {
   element.$clearInterval = () => clearInterval($interval);
 };
 
+function getDays({ tasks, timestamps, from }) {
+  from = Date.now() - from;
+  return timestamps
+    .filter(({ timestamp }) => timestamp > from)
+    .map((item, i, items) => {
+      const next = items[i + 1];
+      const spent = next ? (next.timestamp - item.timestamp) : 0;
+      return {
+        id: item.id,
+        task: item.task,
+        start: item.timestamp,
+        end: next ? next.timestamp : null,
+        spent,
+      }
+    })
+    .reduce((days, item) => {
+      if (!item.task) return days;
+      const time = new Date(item.start);
+      const date = dateToFormatString(time, 'D M d');
+      let day = days.find(day => day.date === date);
+      if (!day) {
+        day = {
+          date,
+          spent: 0,
+          tasks: [],
+          start: item.start,
+        };
+        days.push(day);
+      }
+      const task = tasks.find(task => task.id === item.task);
+      day.spent += item.spent;
+      day.end = item.end;
+      day.tasks.push({ ...item, title: task.title });
+      return days;
+    }, []);
+}
+
 export {
   RootView,
   TimeSpent,
+  DaysTasks,
 };
