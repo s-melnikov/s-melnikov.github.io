@@ -1,48 +1,33 @@
-function toTimeString(time) {
-  return dateToFormatString(time, 'H:i');
-}
-
-function toDateString(time) {
-  return dateToFormatString(time, 'm.d');
-}
-
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'];
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const WORK_DAY_LENGTH = 8;
 
-function dateToFormatString(time, format = 'Y.m.d H:i:s') {
-  let $ = new Date(time);
-  if (isNaN($)) return $;
-  let Y = `${$.getFullYear()}`;
-  let m = `${$.getMonth() + 1}`;
-  let d = `${$.getDate()}`;
-  let H = `${$.getHours()}`;
-  let i = `${$.getMinutes()}`;
-  let s = `${$.getSeconds()}`;
-  let D = `${$.getDay()}`;
-  return format
-    .replace('Y', Y)
-    .replace('m', m[1] ? m : `0${m}`)
-    .replace('d', d[1] ? d : `0${d}`)
-    .replace('H', H[1] ? H : `0${H}`)
-    .replace('i', i[1] ? i : `0${i}`)
-    .replace('s', s[1] ? s : `0${s}`)
-    .replace('M', MONTHS[m])
-    .replace('D', DAYS[D]);
-}
+const timeFormat = (time, format = 'Y.m.d H:i:s') => {
+  const d = new Date(time);
+  return isNaN(d) ? d : format
+    .replace('Y', () => d.getFullYear())
+    .replace('m', () => `${d.getMonth() + 1}`.padStart(2, 0))
+    .replace('d', () => `${d.getDate()}`.padStart(2, 0))
+    .replace('H', () => `${d.getHours()}`.padStart(2, 0))
+    .replace('i', () => `${d.getMinutes()}`.padStart(2, 0))
+    .replace('s', () => `${d.getSeconds()}`.padStart(2, 0))
+    .replace('M', () => MONTHS[d.getMonth()])
+    .replace('D', () => DAYS[d.getDay()]);
+};
 
-function timeSpetnToString(time) {
+const timeSpent = (time, withDays) => {
   let t = Math.floor(time / 1000);
-  // let s = t % 60;
-  let m = ((t = Math.floor(t / 60)) % 60);
-  let h = (t = Math.floor(t / 60));
-  // if (s < 10) s = '0' + s;
-  if (m < 10) m = '0' + m;
-  return `${h}h ${m}m`;
-}
+  const m = `${((t = Math.floor(t / 60)) % 60)}`.padStart(2, 0);
+  if (!withDays) {
+    const h = `${Math.floor(t / 60)}`.padStart(2, 0);
+    return `${h}h ${m}m`;
+  }
+  const h = `${(t = Math.floor(t / 60)) % WORK_DAY_LENGTH}`.padStart(2, 0); 
+  const d = `${Math.floor(t / WORK_DAY_LENGTH)}`; 
+  return `${d}d ${h}h ${m}m`;
+};
 
 export {
-  toTimeString,
-  toDateString,
-  timeSpetnToString,
-  dateToFormatString,
+  timeFormat,
+  timeSpent,
 };

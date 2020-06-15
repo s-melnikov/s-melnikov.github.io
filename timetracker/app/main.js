@@ -1,274 +1,185 @@
-import { dateToFormatString, timeSpetnToString } from './utils.js';
-import { RootView, DaysTasks } from './components.js';
-import Router from './router.js';
+import { TasksByDays } from "./components.js";
+import Router from "./Router.js";
+
 const { app, h } = hyperapp;
-let STORAGE = 'timetracker';
-let nextTaskId = 1;
-let nextTimestampId = 1;
-let storedData = JSON.parse(localStorage[STORAGE] || "{}");
-const main = Router(app)({
-  tasks: storedData.tasks || [{
-    id: 0,
-    title: '[Ignored task]'
-  }],
-  timestamps: storedData.timestamps || [{
-    id: 0,
-    task: 0,
-    timestamp: 0
-  }],
-  latestTasks: [],
-  daysTasks: []
-}, {
-  init,
-  startNewTask,
-  startTask,
-  getLatestTasks,
-  makeTaskEditable,
-  editTitle,
-  saveTitle,
-  sync,
-  showTaskInfo,
-  showTaskTimestamps,
-}, {
-  '/': DaysTasks,
-},
-document.body);
-main.init();
-if (storedData && storedData.tasks && storedData.timestamps) {
-  nextTaskId = storedData.tasks[storedData.tasks.length - 1].id + 1;
-  nextTimestampId = storedData.timestamps[storedData.timestamps.length - 1].id + 1;
-}
-
-/* Actions */
-function init() {
-  return ($s, { getLatestTasks }) => {
-    getLatestTasks();
-  };
-}
-function startNewTask() {
-  return ({ tasks, mps, latestTasks }, { sync }) => {
-    let now = Date.now();
-    let newTask = {
-      id: nextTaskId,
-      title: `New task #${nextTaskId++}`
-    };
-    let newTimestamp = {
-      id: nextTimestampId++,
-      task: newTask.id,
-      timestamp: now
-    };
-    latestTasks.map((task, i) => {
-      if (task.current) {
-        task.timeSpent += (now - task.lastTimestamp);
-        delete task.current;
-      }
-    });
-    requestIdleCallback(sync);
-    tasks = [...tasks, newTask];
-    timestamps = [...timestamps, newTimestamp];
-    latestTasks = [...latestTasks, Object.assign({
-      timeStart: now,
-      timeSpent: 0,
-      lastTimestamp: now,
-      current: true
-    }, newTask)];
-    let daysTasks = getLatestDaysTasks({
-      latestTasks,
-      timestamps
-    });
+const STORAGE = "timetracker";
+const { tasks = [], points = [] } = JSON.parse(localStorage[STORAGE] || "{}");
+const state = { tasks, points };
+const getNextItemId = (items) => (items.reduce((max, { id }) => (id > max ? id : max), 0) + 1);
+const actions = {
+  addTask: () => ({ tasks, points }) => {
+    const taskId = getNextItemId(tasks);
     return {
-      tasks,
-      timestamps,
-      latestTasks,
-      daysTasks
-    };
-  };
-}
-function startTask(id) {
-  return ({ timestamps, latestTasks }, { sync }) => {
-    let now = Date.now();
-    let newTimestamp = {
-      id: nextTimestampId++,
-      task: id,
-      timestamp: now
-    };
-    let targetTask = latestTasks.find(task => task.id === id);
-    latestTasks.splice(latestTasks.indexOf(targetTask), 1);
-    latestTasks.forEach(task => {
-      if (task.current) {
-        task.timeSpent += (now - task.lastTimestamp);
-        delete task.current;
-      }
-      return task;
-    });
-    targetTask.current = true;
-    targetTask.lastTimestamp = now;
-    timestamps = [...timestamps, newTimestamp];
-    latestTasks = [...latestTasks, targetTask];
-    let daysTasks = getLatestDaysTasks({
-      latestTasks,
-      timestamps
-    });
-    requestIdleCallback(sync);
-    return {
-      timestamps,
-      latestTasks,
-      daysTasks
-    };
-  };
-}
-function getLatestTasks() {
-  return ({ tasks, timestamps }) => {
-    let now = Date.now();
-    let oldest = now - 14 * 24 * 60 * 60 * 1000;
-    let lastTimestamps = timestamps.filter(timestamp => timestamp.timestamp > oldest || !timestamp.task);
-    let latestTasks = [];
-    lastTimestamps.forEach((timestamp, i) => {
-      let nextTimestamp = lastTimestamps[i + 1];
-      let task = latestTasks.find(_task => _task.id === timestamp.task);
-      if (task) {
-        latestTasks.splice(latestTasks.indexOf(task), 1);
-      } else {
-        task = Object.assign({
-          timeStart: timestamp.timestamp,
-          timeSpent: 0
-        }, tasks.find(_task => _task.id === timestamp.task));
-      }
-      latestTasks.push(task);
-      if (nextTimestamp) {
-        task.timeSpent += (nextTimestamp.timestamp - timestamp.timestamp);
-        task.lastTimestamp = timestamp.timestamp;
-      } else {
-        task.timeSpent += (now - timestamp.timestamp);
-        task.lastTimestamp = now;
-        task.current = true;
-      }
-    });
-    let daysTasks = getLatestDaysTasks({
-      latestTasks,
-      timestamps
-    });
-    return {
-      latestTasks,
-      daysTasks
-    };
-  };
-}
-function makeTaskEditable(id) {
-  return ({ latestTasks }) => {
-    let task = latestTasks.find(task => task.id === id);
-    task.editable = true;
-    return { latestTasks };
-  };
-}
-function editTitle({ id, title }) {
-  return ({ latestTasks }) => {
-    let task = latestTasks.find(task => task.id === id);
-    task.title = title;
-    return { latestTasks };
-  };
-}
-function saveTitle(id) {
-  return ({ tasks, latestTasks }, { sync }) => {
-    let task = latestTasks.find(task => task.id === id);
-    task.editable = false;
-    let _task = tasks.find(task => task.id === id);
-    _task.title = task.title;
-    requestIdleCallback(sync);
-    return {
-      latestTasks
-    };
-  };
-}
-function sync() {
-  return ({ tasks, timestamps }) => {
-    localStorage[STORAGE] = JSON.stringify({ tasks, timestamps });
-  };
-}
-function showTaskInfo(id) {
-  return ({ latestTasks }) => {
-    let task = Object.assign({}, latestTasks.find(t => t.id === id));
-    task.lastTimestamp = new Date(task.lastTimestamp).toUTCString();
-    task.timeStart = new Date(task.timeStart).toUTCString();
-    task.timeSpent = timeSpetnToString(task.timeSpent);
-    console.log(task);
-  }
-}
-function showTaskTimestamps(id) {
-  return ({ timestamps }) => {
-    const taskTimestamps = timestamps
-      .filter(timestamp => timestamp.task === id)
-      .map(timestamp => Object.assign({}, timestamp, {
-        timestamp: new Date(timestamp.timestamp).toUTCString()
-      }));
-  }
-}
-
-/* Utils */
-function cloneArray(array) {
-  return array.slice().map(item => Object.assign({}, item));
-}
-function intervalIdleCallback(cb, interval) {
-  requestIdleCallback(() => {
-    let tick = () => {
-      cb();
-      setTimeout(() => requestIdleCallback(tick), interval);
-    };
-    requestIdleCallback(tick);
-  })
-}
-function getLatestDaysTasks({ latestTasks, timestamps }) {
-  let daysTasks = [];
-  latestTasks.slice().reverse().forEach(task => {
-    if (task.id === 0) return;
-    task = Object.assign(task);
-    let date = new Date(task.lastTimestamp);
-    let day = dateToFormatString(date, 'd.m D');
-    let dayTasks = daysTasks.find(_dayTasks => _dayTasks.day === day);
-    if (!dayTasks) {
-      dayTasks = { day, tasks: [] };
-      daysTasks.push(dayTasks);
-    }
-    dayTasks.tasks.push(task);
-    dayTasks.lastTimestamp = task.lastTimestamp;
-  });
-  daysTasks.forEach(dayTasks => {
-    let now = Date.now();
-    let date = new Date(dayTasks.lastTimestamp);
-    let fromTime, toTime;
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    fromTime = date.getTime();
-    date.setHours(23);
-    date.setMinutes(59);
-    date.setSeconds(59);
-    toTime = date.getTime();
-    let dayTimestamps = timestamps.filter(({
-      timestamp
-    }) => (timestamp > fromTime && timestamp < toTime));
-    if (now > fromTime && now < toTime) {
-      dayTasks.current = true;
-    }
-    dayTasks.timeStart = 0;
-    dayTasks.timeSpent = 0;
-    dayTimestamps.map((timestamp, i) => {
-      let skiped = timestamp.task === 0;
-      let nextTimestamp = dayTimestamps[i + 1];
-      if (!skiped && dayTasks.timeStart === 0) {
-        dayTasks.timeStart = timestamp.timestamp;
-      }
-      if (nextTimestamp) {
-        if (!skiped) {
-          dayTasks.timeSpent += nextTimestamp.timestamp - timestamp.timestamp;
+      tasks: [
+        ...tasks, 
+        {
+          id: taskId,
+          title: `Task #${taskId}`
         }
-      } else {
-        dayTasks.timeEnd = timestamp.timestamp;
-        if (dayTasks.current && !skiped) {
-          dayTasks.timeSpent += now - timestamp.timestamp
+      ],
+      points: [
+        ...points, 
+        {
+          id: getNextItemId(points),
+          task: taskId,
+          time: Date.now()
         }
-      }
+      ],
+    };
+  },
+  startTask: (task) => ({ points }, { sync }) => ({
+    points: [
+      ...points, 
+      {
+        id: getNextItemId(points),
+        task,
+        time: Date.now()
+      },
+    ],
+  }),
+  updateTask: ({ id, data }) => ({ tasks }) => ({
+    tasks: tasks.map((task) => (task.id === id ? { ...task, ...data } : task)),
+  }),
+  sync: () => ({ tasks, points }) => {
+    localStorage[STORAGE] = JSON.stringify({ tasks, points });
+  },
+  handleNewTaskClick: () => (state, { addTask, sync }) => {
+    addTask();
+    sync();
+  },
+  handleStartTaskClick: (taskId) => (state, { startTask, sync }) => {
+    startTask(taskId);
+    sync();
+  },
+  handleTitleChange: (editedTitle) => ({ editedTitle }),
+  handleValueClick: ({ id: pointId, name }) => ({ tasks, points }) => {
+    const point = points.find(({ id }) => id === pointId);
+    const task = tasks.find(({ id }) => id === point.task);
+    const pointIndex = points.indexOf(point);
+    const nextPoint = points[pointIndex + 1];    
+    return {
+      editedPointId: pointId,
+      editedTaskId: task.id,
+      editedTitle: task.title,
+      editedStart: point.time,
+      editedEnd: nextPoint && nextPoint.time,
+      clickedInput: name
+    };
+  },
+  handlePressEnter: () => (state, { sync, updateTask }) => {
+    const {
+      editedTaskId,
+      editedTitle,
+    } = state;
+    updateTask({ 
+      id: editedTaskId, 
+      data: { 
+        title: editedTitle
+      } 
     });
-  });
-  return daysTasks;
-}
+    sync();
+    return {
+      editedPointId: null,
+      editedTaskId: null,
+      editedTitle: null,
+      editedStart: null,
+      editedEnd: null
+    };
+  }
+};
+const routes = { "/": TasksByDays };
+const main = Router(app)(state, actions, routes, document.getElementById("root"));
+
+// function getLatestTasks() {
+//   return ({ tasks, points }) => {
+//     let now = Date.now();
+//     let oldest = now - 14 * 24 * 60 * 60 * 1000;
+//     let lastpoints = points.filter(timestamp => timestamp.timestamp > oldest || !timestamp.task);
+//     let latestTasks = [];
+//     lastpoints.forEach((timestamp, i) => {
+//       let nextTimestamp = lastpoints[i + 1];
+//       let task = latestTasks.find(_task => _task.id === timestamp.task);
+//       if (task) {
+//         latestTasks.splice(latestTasks.indexOf(task), 1);
+//       } else {
+//         task = Object.assign({
+//           timeStart: timestamp.timestamp,
+//           timeSpent: 0
+//         }, tasks.find(_task => _task.id === timestamp.task));
+//       }
+//       latestTasks.push(task);
+//       if (nextTimestamp) {
+//         task.timeSpent += (nextTimestamp.timestamp - timestamp.timestamp);
+//         task.lastTimestamp = timestamp.timestamp;
+//       } else {
+//         task.timeSpent += (now - timestamp.timestamp);
+//         task.lastTimestamp = now;
+//         task.current = true;
+//       }
+//     });
+//     let daysTasks = getLatestDaysTasks({
+//       latestTasks,
+//       points
+//     });
+//     return {
+//       latestTasks,
+//       daysTasks
+//     };
+//   };
+// }
+
+// function getLatestDaysTasks({ latestTasks, points }) {
+//   let daysTasks = [];
+//   latestTasks.slice().reverse().forEach(task => {
+//     if (task.id === 0) return;
+//     task = Object.assign(task);
+//     let date = new Date(task.lastTimestamp);
+//     let day = dateToFormatString(date, "d.m D");
+//     let dayTasks = daysTasks.find(_dayTasks => _dayTasks.day === day);
+//     if (!dayTasks) {
+//       dayTasks = { day, tasks: [] };
+//       daysTasks.push(dayTasks);
+//     }
+//     dayTasks.tasks.push(task);
+//     dayTasks.lastTimestamp = task.lastTimestamp;
+//   });
+//   daysTasks.forEach(dayTasks => {
+//     let now = Date.now();
+//     let date = new Date(dayTasks.lastTimestamp);
+//     let fromTime, toTime;
+//     date.setHours(0);
+//     date.setMinutes(0);
+//     date.setSeconds(0);
+//     fromTime = date.getTime();
+//     date.setHours(23);
+//     date.setMinutes(59);
+//     date.setSeconds(59);
+//     toTime = date.getTime();
+//     let daypoints = points.filter(({
+//       timestamp
+//     }) => (timestamp > fromTime && timestamp < toTime));
+//     if (now > fromTime && now < toTime) {
+//       dayTasks.current = true;
+//     }
+//     dayTasks.timeStart = 0;
+//     dayTasks.timeSpent = 0;
+//     daypoints.map((timestamp, i) => {
+//       let skiped = timestamp.task === 0;
+//       let nextTimestamp = daypoints[i + 1];
+//       if (!skiped && dayTasks.timeStart === 0) {
+//         dayTasks.timeStart = timestamp.timestamp;
+//       }
+//       if (nextTimestamp) {
+//         if (!skiped) {
+//           dayTasks.timeSpent += nextTimestamp.timestamp - timestamp.timestamp;
+//         }
+//       } else {
+//         dayTasks.timeEnd = timestamp.timestamp;
+//         if (dayTasks.current && !skiped) {
+//           dayTasks.timeSpent += now - timestamp.timestamp
+//         }
+//       }
+//     });
+//   });
+//   return daysTasks;
+// }
