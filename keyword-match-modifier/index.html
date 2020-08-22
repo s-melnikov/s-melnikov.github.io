@@ -165,6 +165,7 @@
       output1.value = rows.map((row) => `[${row}]`).join(EOL);
       output2.value = rows.map((row) => `"${row}"`).join(EOL);
       output3.value = rows.map((row) => `[${row}]${EOL}"${row}"`).join(EOL);
+      output4.value = rows.map((row) => row.trim().split(/ +/).map((s) => `+${s}`).join(" ")).join(EOL);
     };
     input.addEventListener("input", inputChangeHandler);
     lowercase.addEventListener("change", inputChangeHandler);
