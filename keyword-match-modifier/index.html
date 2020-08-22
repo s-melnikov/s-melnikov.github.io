@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Модифікатор відповідності ключових слів</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      box-sizing: inherit;
+      outline: none;
+      user-select: inherit;
+    }
+    body {
+      font-family: Ubuntu, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      max-width: 1144px;
+      padding: 0 16px;
+      margin: 0 auto;
+      font-size: 18px;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+      color: #2c3e50;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 300;
+    }
+    .row {
+      display: flex;
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+    .row .col {      
+      padding-left: 8px;
+      padding-right: 8px;
+      flex-basis: 33.33333333%;
+      max-width: 33.33333333%;
+      margin-bottom: 16px;
+    }
+    textarea {
+      border: 2px solid #777;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 8px;
+      width: 100%;
+      resize: vertical;
+      min-height: 180px;
+      display: block;
+    }
+    .label {
+      font-size: 16px;
+      text-transform: uppercase;
+      color: #333;
+      padding-bottom: 4px;
+      font-weight: 400;
+    }
+    .flex-column-end {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .checkbox input[type=checkbox] {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+    button {
+      font-family: inherit;
+      font-size: 16px;
+      border: 1px solid #dcdcdc;
+      border-radius: 4px;
+      padding: 12px 24px;
+      background-color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      transition: box-shadow .2s, background-color .2s;
+    }    
+    button:hover {
+      background-color: #f5f5f5;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);      
+    }
+    button:active {
+      transition: none;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);      
+    }
+  </style>
+</head>
+<body>
+  <h1>МОДИФІКАТОР ВІДПОВІДНОСТЕЙ КЛЮЧОВИХ СЛІВ</h1>
+  <div class="row">
+    <div class="col">
+      <div class="label">Ключові слова</div>
+      <textarea id="input"></textarea>
+    </div>
+    <div class="col">
+      <div class="label">[Точна]</div>
+      <textarea id="output-1"></textarea>
+    </div>
+    <div class="col">
+      <div class="label">"Фразова"</div>
+      <textarea id="output-2"></textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="label">"Фразова", [Точна]</div>
+      <textarea id="output-3"></textarea>
+    </div>
+    <div class="col">
+      <div class="label">+Модифікато +Широкої</div>
+      <textarea id="output-4"></textarea>
+    </div>
+    <div class="col flex-column-end">
+      <div class="checkbox">
+        <input type="checkbox" id="lowercase">
+        <span></span>
+        В нижній регістр
+      </div>
+      <div class="checkbox">
+        <input type="checkbox" id="remove_numbers">
+        <span></span>
+        Видалити цифри
+      </div>
+      <div>        
+        <button id="reset">Очистити всі</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const EOL = "\n";
+    const input = document.querySelector("#input");
+    const output1 = document.querySelector("#output-1");
+    const output2 = document.querySelector("#output-2");
+    const output3 = document.querySelector("#output-3");
+    const output4 = document.querySelector("#output-4");
+    const lowercase = document.querySelector("#lowercase");
+    const remove_numbers = document.querySelector("#remove_numbers");
+    const reset = document.querySelector("#reset");
+    const inputChangeHandler = () => {
+      let { value } = input;
+      localStorage.__string__ = JSON.stringify({
+        value,
+        lowercase: lowercase.checked,
+        remove_numbers: remove_numbers.checked,
+      });
+      if (lowercase.checked) {
+        value = value.toLocaleLowerCase();
+      }
+      if (remove_numbers.checked) {
+        value = value.replace(/\d/g, "");
+      }
+      value = value.trim().replace(/ {2,}/g, " ");
+      const rows = value.split(EOL).filter((row) => row);
+      output1.value = rows.map((row) => `[${row}]`).join(EOL);
+      output2.value = rows.map((row) => `"${row}"`).join(EOL);
+      output3.value = rows.map((row) => `[${row}]${EOL}"${row}"`).join(EOL);
+    };
+    input.addEventListener("input", inputChangeHandler);
+    lowercase.addEventListener("change", inputChangeHandler);
+    remove_numbers.addEventListener("change", inputChangeHandler);
+    reset.addEventListener("click", () => {
+      input.value = "";
+      inputChangeHandler();
+    });
+    if (localStorage.__string__) {
+      try {
+        const stored = JSON.parse(localStorage.__string__);
+        input.value = stored.value;
+        lowercase.checked = stored.lowercase;
+        remove_numbers.checked = stored.remove_numbers;
+      inputChangeHandler();
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+  </script>
+</body>
+</html>
