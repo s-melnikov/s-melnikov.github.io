@@ -218,8 +218,8 @@
       document.execCommand("copy");
       document.body.removeChild(textarea);
     };
-    const copiIconClickHandler = ({ target }) => {
-      const { value } = target.parentElement.parentElement.querySelector("textarea");
+    const copiIconClickHandler = ({ currentTarget }) => {
+      const { value } = currentTarget.parentElement.parentElement.querySelector("textarea");
       copyToClipboard(value);
     };
     document.querySelectorAll(".icon.copy").forEach((el) => el.addEventListener("click", copiIconClickHandler));
