@@ -59,6 +59,8 @@
       color: #333;
       padding-bottom: 4px;
       font-weight: 400;
+      display: flex;
+      justify-content: space-between;
     }
     .flex-column-end {
       display: flex;
@@ -94,9 +96,30 @@
       transition: none;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);      
     }
+    .icon {
+      display: inline-block;
+      width: 21px;
+      height: 21px;
+      cursor: pointer;
+      opacity: 0.75;
+    }
+    .icon:hover {
+      opacity: 1;
+    }
+    .icon:active {
+      opacity: 0.5;
+    }
+    /*[hint] {
+      position: relative;
+    } 
+    [hint]::after {
+      position: absolute;
+      content: attr(hint);
+    }*/
   </style>
 </head>
 <body>
+  <div style="display:none"><svg viewBox="0 0 21 21" id="copy-icon" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1 0 0 1 18 3)"><path d="m9.5.5h-7c-1.1045695 0-2 .8954305-2 2v7c0 1.1045695.8954305 2 2 2h7c1.1045695 0 2-.8954305 2-2v-7c0-1.1045695-.8954305-2-2-2z" transform="matrix(0 1 -1 0 12 0)"/><path d="m11.5 15.5h2c1.1045695 0 2-.8954305 2-2v-7c0-1.1045695-.8954305-2-2-2h-7c-1.1045695 0-2 .8954305-2 2v2" transform="matrix(0 1 -1 0 20 0)"/></g></svg></div>  
   <h1>МОДИФІКАТОР ВІДПОВІДНОСТЕЙ КЛЮЧОВИХ СЛІВ</h1>
   <div class="row">
     <div class="col">
@@ -104,21 +127,33 @@
       <textarea id="input"></textarea>
     </div>
     <div class="col">
-      <div class="label">[Точна]</div>
+      <div class="label">
+        <span>[Точна]</span>
+        <svg class="icon copy" title="Скопіювати"><use xlink:href="#copy-icon"></use></svg>
+      </div>
       <textarea id="output-1"></textarea>
     </div>
     <div class="col">
-      <div class="label">"Фразова"</div>
+      <div class="label">
+        <span>"Фразова"</span>
+        <svg class="icon copy" title="Скопіювати"><use xlink:href="#copy-icon"></use></svg>
+      </div>
       <textarea id="output-2"></textarea>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <div class="label">"Фразова", [Точна]</div>
+      <div class="label">
+        <span>"Фразова", [Точна]</span>
+        <svg class="icon copy" title="Скопіювати"><use xlink:href="#copy-icon"></use></svg>
+      </div>
       <textarea id="output-3"></textarea>
     </div>
     <div class="col">
-      <div class="label">+Модифікато +Широкої</div>
+      <div class="label">
+        <span>+Модифікато +Широкої</span>
+        <svg class="icon copy" title="Скопіювати"><use xlink:href="#copy-icon"></use></svg>
+      </div>
       <textarea id="output-4"></textarea>
     </div>
     <div class="col flex-column-end">
@@ -174,6 +209,20 @@
       input.value = "";
       inputChangeHandler();
     });
+    const copyToClipboard = (value) => {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "absolute";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    };
+    const copiIconClickHandler = ({ target }) => {
+      const { value } = target.parentElement.parentElement.querySelector("textarea");
+      copyToClipboard(value);
+    };
+    document.querySelectorAll(".icon.copy").forEach((el) => el.addEventListener("click", copiIconClickHandler));
     if (localStorage.__string__) {
       try {
         const stored = JSON.parse(localStorage.__string__);
