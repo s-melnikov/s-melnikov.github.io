@@ -1,1 +1,0 @@
-(this["webpackJsonplogistics-system"]=this["webpackJsonplogistics-system"]||[]).push([[5],{57:function(e,t,s){"use strict";s.r(t);var n=s(0),a=s.n(n);class c extends n.PureComponent{render(){return a.a.createElement("div",{className:"u-container"},a.a.createElement("div",{className:"u-text-center u-font-xxl u-font-bold"},"Page not found"))}}t.default=c}}]);
