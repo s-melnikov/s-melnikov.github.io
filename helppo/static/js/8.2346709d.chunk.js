@@ -1,1 +1,0 @@
-(this["webpackJsonplogistics-system"]=this["webpackJsonplogistics-system"]||[]).push([[8],{63:function(e,s,t){"use strict";t.r(s);var n=t(0),a=t.n(n);class c extends n.PureComponent{render(){return a.a.createElement("div",{className:"u-padded"},a.a.createElement("h3",null,"Bin"))}}s.default=c}}]);
