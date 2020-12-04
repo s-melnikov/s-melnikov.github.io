@@ -20,6 +20,13 @@
       display: block;
       width: 100%;
       border: 1px solid #dcdcdc;
+      resize: vertical;
+      border-radius: 4px;
+      outline: none;
+      padding: 8px;
+    }
+    textarea:focus {
+      border-color: #00adff;
     }
     table {
       white-space: pre;
@@ -76,6 +83,7 @@
       let pattern = /(\,|\r?\n|\r|^)(?:"([^"]*(?:""[^"]*)*)"|([^"\,\r\n]*))/gi;
       let result = [[]];
       let matches = null;
+      if (!str) return result;
       while (matches = pattern.exec(str)) {
         let strmatch;
         let delimiter = matches[1];
@@ -95,6 +103,7 @@
       let cell, tr;
       empty(thead);
       empty(tbody);
+      csvParser(text);      
       csvParser(text).map((row, i) => {
         let r = i ? document.createElement('tr') : thead;
         if (i) tbody.appendChild(r);
@@ -106,9 +115,11 @@
       });
       sortable();
     }
-    input.addEventListener('input', event => parse(localStorage.csv = event.target.value));
-    parse(input.value = localStorage.csv);
-
+    input.addEventListener('input', ({ target: { value } }) => {
+      localStorage.csv = value;
+      parse(value);
+    });
+    parse(input.value = (localStorage.csv || ""));
   </script>
 </body>
 </html>
