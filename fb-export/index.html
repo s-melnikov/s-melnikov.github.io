@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script>    
+    function convert(xml) {
+      const parser = new DOMParser();
+      const dom = parser.parseFromString(xml, "application/xml");
+      if (dom.documentElement.nodeName == "parsererror") {
+        console.warn("error while parsing");
+      }
+      console.log(dom.documentElement);
+    }
+    fetch("./fb-export/example.xml")
+      .then(resp => resp.text())
+      .then(xml => {
+        const json = convert(xml);
+      });
+  </script>  
+</body>
+</html>

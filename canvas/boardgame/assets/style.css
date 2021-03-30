@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+#table {
+  position: relative;
+  background: url(images/overlay.png) #777;
+}
+
+.card {
+  border: 1px solid #222;
+  border-radius: 10px;
+  position: absolute;
+  background-color: #222;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.card:active {
+  box-shadow: 0 0 0 2px #a7852ed1;
+  cursor: drag;  
+  cursor: grabbing;
+}
+
+.card canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

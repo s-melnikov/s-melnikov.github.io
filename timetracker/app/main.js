@@ -6,6 +6,7 @@ const STORAGE = "timetracker";
 const { tasks = [], points = [] } = JSON.parse(localStorage[STORAGE] || "{}");
 const state = { tasks, points };
 const getNextItemId = (items) => (items.reduce((max, { id }) => (id > max ? id : max), 0) + 1);
+
 const actions = {
   addTask: () => ({ tasks, points }) => {
     const taskId = getNextItemId(tasks);

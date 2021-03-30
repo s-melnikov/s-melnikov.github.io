@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style type="text/css">
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<canvas></canvas>
+<script>
+
+class Scene {
+  constructor({ points, trngls }) {
+    this.canvas = document.querySelector("canvas");
+    this.context = this.canvas.getContext("2d");
+    this.context.lineJoin = "round";
+    this.perspective = 400;
+    this.rotateZ = 0;
+    // this.rotateY = 0;
+    this.strafe = 0;
+    this.points = points;
+    this.trngls = trngls;
+    this.keys = {};
+    window.addEventListener("resize", this.handleResize.bind(this));
+    window.addEventListener("mousedown", this.handleMouseDown.bind(this));
+    window.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    window.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    window.addEventListener("keydown", this.handleKeyDown.bind(this));
+    window.addEventListener("keyup", this.handleKeyUp.bind(this));
+    this.handleResize();    
+  }
+
+  handleKeyDown(event) {
+    this.keys[event.code] = true;
+  }
+
+  handleKeyUp() {
+    this.keys[event.code] = false;
+  }
+
+  handleMouseDown(event) {
+    this.dragged = true;
+    this.dragStartX = event.clientX;
+    // this.dragStartY = event.clientY;
+    this.rotateZStart = this.rotateZ;
+    // this.rotateYStart = this.rotateY;
+  }
+
+  handleMouseUp() {
+    this.dragged = false;
+  }
+
+  handleMouseMove(event) {
+    if (!this.dragged) return;
+    this.rotateZ = this.rotateZStart + this.dragStartX - event.clientX;
+    // this.rotateY = this.rotateYStart + event.clientY - this.dragStartY;
+  }
+
+  handleResize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.halfWidth = this.canvas.width / 2;
+    this.halfHeight = this.canvas.height / 2;
+  }
+
+  update() {
+    const rotateZ = this.rotateZ;
+    const ang = rotateZ / 500;
+    const s = Math.sin(ang); 
+    const c = Math.cos(ang);
+    if (this.keys.KeyD) {
+      this.strafe -= 20;
+    }
+    if (this.keys.KeyA) {
+      this.strafe += 20;
+    }
+    const mat = [
+      c, 0, -s, this.strafe / 200,
+      0, 1, 0, 0,
+      s, 0, c, Math.sin(rotateZ / 820),
+    ];
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);   
+    this.draw(mat);
+    window.requestAnimationFrame(this.update.bind(this));
+  }
+
+  draw(m) {
+    const ps = this.points;
+    const ts = this.trngls;
+    for (let i = 0; i < ts.length; i += 3) {
+      const p0 = ts[i] * 3; 
+      const p1 = ts[i + 1] * 3; 
+      const p2 = ts[i + 2] * 3;
+      const a = this.vertexShader(ps[p0], ps[p0 + 1], ps[p0 + 2], m);
+      const b = this.vertexShader(ps[p1], ps[p1 + 1], ps[p1 + 2], m);
+      const c = this.vertexShader(ps[p2], ps[p2 + 1], ps[p2 + 2], m);
+      this.fragmentShader(a, b, c);
+    }
+  }
+
+  vertexShader(x, y, z, m) {
+    const x0 = m[0] * x + m[1] * y + m[2] * z + m[3];
+    const y0 = m[4] * x + m[5] * y + m[6] * z + m[7];
+    const z0 = m[8] * x + m[9] * y + m[10] * z + m[11];
+    return [x0, y0, z0];
+  }
+
+  fragmentShader(a, b, c) {
+    const mz = Math.min(a[2], b[2], c[2]);  
+    if (mz < 1) return;
+    const x0 = this.halfWidth + this.perspective * a[0] / a[2];
+    const y0 = this.halfHeight + this.perspective * a[1] / a[2];  
+    const x1 = this.halfWidth + this.perspective * b[0] / b[2];
+    const y1 = this.halfHeight + this.perspective * b[1] / b[2]; 
+    const x2 = this.halfWidth + this.perspective * c[0] / c[2]; 
+    const y2 = this.halfHeight + this.perspective * c[1] / c[2];
+    this.context.beginPath();  
+    this.context.lineWidth = 5 / mz;
+    this.context.moveTo(x0, y0);  
+    this.context.lineTo(x1, y1);  
+    this.context.lineTo(x2, y2);  
+    this.context.lineTo(x0, y0);
+    this.context.stroke();  
+    //this.context.fill();
+  }
+}
+
+const points = [];
+const trngls = [];
+for (let i = 0; i < 100; i++) {
+  const v = [
+    -1, -1, -1,   
+     1, -1, -1,   
+     1, -1,  1,  
+    -1, -1,  1,
+    -1,  1, -1,
+     1,  1, -1,
+     1,  1,  1,
+    -1,  1,  1, 
+  ];
+  var t = [
+    0, 1, 2,  
+    2, 3, 0,  
+    4, 5, 6, 
+    6, 7, 4,
+    0, 1, 4,
+    1, 4, 5,
+    1, 2, 5,
+    2, 5, 6,
+    2, 3, 6,
+    3, 6, 7,
+    3, 0, 7,
+    0, 7, 4,
+  ];
+  const dx = -25 + 5 * (i / 10);
+  const dy = -3 + Math.random() * 6;
+  const dz = -25 + 5 * (i % 10);
+  for (let j = 0; j < v.length; j += 3) {
+    points.push(dx + v[j], dy + v[j + 1], dz + v[j + 2]);
+  }
+  for (let j = 0; j < t.length; j++) {
+    trngls.push(i * 8 + t[j]);
+  }
+}
+const scene = new Scene({ points, trngls });
+scene.update();
+
+</script>  
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards</title>
+  <style>
+    body { margin: 0; padding: 0; background: #332f30; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+  <script>
+    const Utils = {
+      loadImage(src) {
+        return new Promise((resolve) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.src = src;
+        });
+      }
+    };
+
+    class Scene {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.context = this.canvas.getContext("2d");
+        this.context.lineJoin = "round";
+        this.keys = {};
+        this.items = [];
+
+        this.handleResize = this.handleResize.bind(this);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.update = this.update.bind(this);
+
+        window.addEventListener("resize", this.handleResize);
+        window.addEventListener("mousedown", this.handleMouseDown);
+        window.addEventListener("mouseup", this.handleMouseUp);
+        window.addEventListener("mousemove", this.handleMouseMove);
+        window.addEventListener("keydown", this.handleKeyDown);
+        window.addEventListener("keyup", this.handleKeyUp);
+
+        this.handleResize();    
+      }
+
+      handleKeyDown(event) {
+        this.keys[event.code] = true;
+      }
+
+      handleKeyUp() {
+        this.keys[event.code] = false;
+      }
+
+      handleMouseDown(event) {
+        this.dragged = true;
+        this.dragStartX = event.clientX;
+        this.dragStartY = event.clientY;
+      }
+
+      handleMouseUp() {
+        this.dragged = false;
+      }
+
+      handleMouseMove(event) {
+        const { clientX: x, clientY: y } = event;
+        this.handleHover(x, y);
+        if (!this.dragged) return;
+      }
+
+      handleResize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.halfWidth = this.canvas.width / 2;
+        this.halfHeight = this.canvas.height / 2;
+      }    
+
+      handleHover(x, y) {
+        let i = this.items.length;
+        while (i--) this.items[i].hovered = false;
+        i = this.items.length;
+        while (i--) {
+          const item = this.items[i];
+          if (x < item.x || x > (item.x + item.width) || y < item.y || y > (item.y + item.height)) continue;
+          item.hovered = true;
+          return;
+        }
+      }
+
+      update() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);   
+        if (this.bgImage) {
+          const { width: w, height: h } = this.bgImage;
+          for (let i = 0; i < this.canvas.width; i += w) {
+            for (let j = 0; j < this.canvas.height; j += h) {
+              this.context.drawImage(this.bgImage, i, j);
+            }
+          }          
+        }
+        this.drawItems();
+        window.requestAnimationFrame(this.update);
+      }
+
+      drawItems() {
+        this.items.forEach((item) => {
+          item.draw(this.context);
+          if (item.hovered) item.onHover(this.context);
+        });
+      }
+
+      addItem(item) {
+        this.items.push(item);
+      }
+    }
+
+    class Rect {
+      constructor({ width, height, x, y, bg }) {
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.bg = bg;
+      }
+
+      draw(context) {
+        context.fillStyle = this.bg;
+        context.fillRect(
+          this.x, 
+          this.y, 
+          this.width, 
+          this.height,
+        );
+      }
+
+      onHover(context) {
+        context.strokeStyle = "#f00";
+        context.lineWidth = 2;
+        context.stroke();
+      }
+    }
+
+    class RoundedRect extends Rect {
+      constructor({ radius, ...props }) {
+        super(props);
+        this.radius = radius;
+      }
+
+      draw(context) {
+        const radiansInCircle = 2 * Math.PI;
+        const halfRadians = (2 * Math.PI) / 2;
+        const quarterRadians = (2 * Math.PI) / 4;
+        const { radius, x, y, width, height } = this;
+        context.beginPath();
+        context.arc(radius + x, radius + y, radius, -quarterRadians, halfRadians, true);      
+        context.lineTo(x, y + height - radius);
+        context.arc(radius + x, height - radius + y, radius, halfRadians, quarterRadians, true);
+        context.lineTo(x + width - radius, y + height);
+        context.arc(x + width - radius, y + height - radius, radius, quarterRadians, 0, true);
+        context.lineTo(x + width, y + radius);
+        context.arc(x + width - radius, y + radius, radius, 0, -quarterRadians, true);
+        context.lineTo(x + radius, y);
+        context.fillStyle = this.bg;
+        context.strokeStyle = "#000";
+        context.lineWidth = 2;
+        context.stroke();
+        context.fill("evenodd");
+      }
+    }
+
+    const scene = new Scene(document.querySelector("canvas"));
+
+    for (let i = 0; i < 10; i++) {
+      scene.addItem(
+        new RoundedRect({
+          width: 180,
+          height: 240,
+          radius: 10,
+          x: rnd(0, 1000),
+          y: rnd(0, 700),
+          bg: "#fff",
+        }) 
+      );
+    }
+
+    Utils.loadImage("./overlay.png").then((img) => {
+      scene.bgImage = img;
+    });
+
+    scene.update();
+
+    /* --- */
+
+    function rndInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    function rnd(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+  </script>
+</body>
+</html> 
