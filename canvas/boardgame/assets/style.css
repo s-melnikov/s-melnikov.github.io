@@ -6,20 +6,61 @@ body {
   overflow: hidden;
 }
 
-#table {
-  position: relative;
-  background: url(images/overlay.png) #777;
-  border-radius: 10px;
+#loading {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #222;  
+  transition: opacity .3s;
+}
+
+#loading::before,
+#loading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48px;
+  height: 48px;
+  border: 2px solid;
+  border-color: #fff transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: loading 0.9s infinite linear;
+}
+
+#loading::after {
+  animation: loading 0.7s infinite reverse linear;  
+}
+
+@keyframes loading {
+  to {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+}
+
+#loading::after {  
+  width: 36px;
+  height: 36px;
 }
 
 #container {
   position: absolute;
-  left: 24px;
-  top: 24px;
-  right: 24px;
-  bottom: 24px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#table {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background-image: url(images/overlay.png), radial-gradient(#44476b, #222731);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 13px rgb(0 0 0 / 10%);
 }
 
 #selection {
@@ -31,27 +72,23 @@ body {
   display: none;
 }
 
-.card {
-  border: 1px solid #222;
-  border-radius: 10px;
+.item {
   position: absolute;
-  background-color: #222;
-  overflow: hidden;
+  border: 1px solid #222; 
+  overflow: hidden; 
   cursor: grab;
 }
 
-.card:hover {
-  box-shadow: 0 0 0 2px #f44336;
+.item:hover {
+  box-shadow: 0 0 0 2px #8a231c;
 }
 
-.card:active {  
-  box-shadow: 0 0 0 1px #8a231c;
+.item:active {  
+  box-shadow: 0 0 0 2px #8a231c, 10px 10px 5px #000;
   cursor: grabbing;
 }
 
-.card canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
+.card {
+  border: 1px solid #222;
+  border-radius: 10px;
 }
