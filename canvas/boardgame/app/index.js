@@ -11,15 +11,18 @@ const TYPE_LOCATION = 3;
 const TYPE_HEROE = 4;
 
 class Item {
-  constructor({ width, height, face, back }) {
+  constructor({ width, height, face, className }) {
     this.width = width;
     this.height = height;
     this.face = face;
-    this.back = back;
     this.x = 0;
     this.y = 0;
+    this.angle = 0;
     this.el = document.createElement("div");
     this.el.classList.add("item");
+    if (className) {
+      this.el.classList.add(className);      
+    }
     this.el.style.width = `${width}px`;
     this.el.style.height = `${height}px`;
     this.el.__instance__ = this;
@@ -36,17 +39,17 @@ class Item {
     this.x = x;
     this.y = y;
     this.el.style.transform = 
-      `translate3d(${x}px, ${y}px, 0) rotate(${this.deg}deg)`;
+      `translate3d(${x}px, ${y}px, 0) rotate(${this.angle}deg)`;
   }
 
   rotate(deg) {
-    this.deg = deg;
+    this.angle = angle;
     this.el.style.transform = 
-      `translate3d(${this.x}px, ${this.y}px, 0) rotate(${this.deg}deg)`;
+      `translate3d(${this.x}px, ${this.y}px, 0) rotate(${this.angle}deg)`;
   }
 }
 
-class Card extends Item {
+class CardAdventure extends Item {
   constructor({ index, sprite }) {
     super({ 
       width: 210,
@@ -56,35 +59,75 @@ class Card extends Item {
     });    
     this.el.classList.add("card");
   }
+
+  renderBg() {
+    const { url, x, y } = this.face;
+    this.el.style.backgroundImage = `url(${url})`;
+    this.el.style.backgroundPosition = `-${x}px -${y}px`;
+  }
 }
 
 const table = new Table({ 
-  width: 4200,
-  height: 3600,
+  width: 1600,
+  height: 1200,
 });
 
 Promise.all([
   Utils.loadImage("assets/images/asset1.jpg"),
-  // Utils.loadImage("assets/images/asset2.jpg"),
   // Utils.loadJson("assets/assets.json"),
 ]).then(([asset1, asset2, json]) => {
   hideLoading();
+
+  const item1 = new Item({
+    width: 96,
+    height: 96,
+    face: {
+      url: "assets/images/asset1.jpg",
+      x: 3362,
+      y: 4160,
+    },
+    className: "token",
+  });
+  const item2 = new Item({
+    width: 96,
+    height: 96,
+    face: {
+      url: "assets/images/asset1.jpg",
+      x: 3462,
+      y: 4160,
+    },
+    className: "token",
+  }); 
+  const item3 = new Item({
+    width: 96,
+    height: 96,
+    face: {
+      url: "assets/images/asset1.jpg",
+      x: 3562,
+      y: 4160,
+    },
+    className: "token",
+  });
+  item1.moveTo(100, 100);
+  item2.moveTo(200, 100);
+  item3.moveTo(200, 100);
+  table.addItem(item1); 
+  table.addItem(item2);  
+  table.addItem(item3);  
   table.addItem(
     new Item({
-      width: 420,
-      height: 594,
+      width: 96,
+      height: 96,
       face: {
         url: "assets/images/asset1.jpg",
-        x: 0,
-        y: 0,
+        x: 3662,
+        y: 4160,
       },
-      back: {
-        url: "assets/images/asset1.jpg",
-        x: 3 * 420,
-        y: 7 * 594,
-      }
+      className: "token",
     })
-  );  
+  ); 
+
+
 });
 
 
@@ -109,23 +152,6 @@ Promise.all([
   //     case TYPE_HEROE:
   //       return heroes.push(card);
   //   }
-  // });
-
-  // adventures.forEach((card) => {
-  //   table.addItem(card);
-  //   card.moveTo(20, 20);
-  // }); 
-  // quests.forEach((card) => {
-  //   table.addItem(card);
-  //   card.moveTo(250, 20);
-  // });
-  // locations.forEach((card) => {
-  //   table.addItem(card);
-  //   card.moveTo(480, 20);
-  // });
-  // heroes.forEach((card) => {
-  //   table.addItem(card);
-  //   card.moveTo(710, 20);
   // });
 
   function hideLoading() {

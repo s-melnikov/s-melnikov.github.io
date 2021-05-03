@@ -74,7 +74,6 @@ body {
 
 .item {
   position: absolute;
-  border: 1px solid #222; 
   overflow: hidden; 
   cursor: grab;
 }
@@ -86,6 +85,11 @@ body {
 .item:active {  
   box-shadow: 0 0 0 2px #8a231c, 10px 10px 5px #000;
   cursor: grabbing;
+}
+
+.token {
+  border-radius: 50%;
+  border: 2px solid #222;
 }
 
 .card {

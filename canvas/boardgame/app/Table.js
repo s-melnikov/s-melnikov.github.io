@@ -24,7 +24,7 @@ class Table {
     const scaleX = innerWidth / width * 0.96;
     const scaleY = innerHeight / height * 0.96;
     const scale = Math.min(scaleX, scaleY);
-    this.scale = scale;
+    this.scale = Math.max(1, scale);
     this.x = -1 * this.width / 2;
     this.y = -1 * this.height / 2;
     this.setTransform();
