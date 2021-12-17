@@ -1,9 +1,22 @@
-const env = parseQueryString(window.location.search);
+// переменные запроса (имя базыб фильтраб сортировка)
+// пример:
+// ?db=kxa7ol8j&sortBy=userName&order=desc&country=France&offset=10&imit=5
+// где:
+// имя базы данных (db) - kxa7ol8j
+// сортировать по (sortBy) - userName
+// порядок сортировки (order) - обратный (desc)
+// фильтр - страна (country) Франция (France)
+// сдвиг (offset) - 10 записей
+// лимит (limit) - 5 записей
+const ENV = parseQueryString(window.location.search);
 
+const saveButton = document.querySelector("#saveResult");
+
+// узнаем, какие бызы данных существуют в локальном хранилище
 handleStorageChange();
 
-if (env.db && localStorage[env.db]) {
-  openDb(env.db);
+if (ENV.db && localStorage[ENV.db]) {
+  openDb(ENV.db);
 }
 
 function handleCreateNewBDClick() {
@@ -20,29 +33,29 @@ function openDb(name) {
   let data = JSON.parse(localStorage[name]);
   const keys = Object.keys(data[0]);
 
-  if (env.sortBy) {
-    let k = env.sortBy;
+  if (ENV.sortBy) {
+    let k = ENV.sortBy;
     data = data.sort((a, b) => {
-      if (a[k] < b[k]) return (env.order === "desc") ? 1 : -1;
-      if (a[k] > b[k]) return (env.order === "desc") ? -1 : 1;
+      if (a[k] < b[k]) return (ENV.order === "desc") ? 1 : -1;
+      if (a[k] > b[k]) return (ENV.order === "desc") ? -1 : 1;
       return 0;
     });
   }
 
   keys.forEach((key) => {
-    if (env[key]) {
+    if (ENV[key]) {
       data = data.filter((item) => {
-        return item[key] === env[key];
+        return item[key] === ENV[key];
       });
     }
   });
 
-  if (env.offset) {
-    data = data.slice(Number(env.offset));
+  if (ENV.offset) {
+    data = data.slice(Number(ENV.offset));
   }
 
-  if (env.limit) {
-    data = data.slice(0, Number(env.limit));
+  if (ENV.limit) {
+    data = data.slice(0, Number(ENV.limit));
   }
 
   table.innerHTML = ` 
@@ -63,12 +76,22 @@ function openDb(name) {
       </tbody>
     </table>
   `;
+
+  saveButton.style.display = "block";
+  saveButton.addEventListener("click", () => {    
+    downloadFile({
+      blob: new Blob([JSON.stringify(data)], {
+        type: "application/json;charset=utf-8"
+      }),
+      filename: `${name}_${new Date().toISOString()}.json`,
+    });
+  });
 }
 
 function handleStorageChange() {
   const database = Object.keys(localStorage);
   document.querySelector("#dbList").innerHTML = 
-    database.map((name) => `<a ${(name === env.db) ? "" : `href="?db=${name}"`}>${name}</a>`).join("");
+    database.map((name) => `<a ${(name === ENV.db) ? "" : `href="?db=${name}"`}>${name}</a>`).join("");
 }
 
 function shuffle(array) {
@@ -105,4 +128,12 @@ function parseQueryString(query) {
       });
   }
   return vars;
-};
+}
+
+function downloadFile({ blob, filename }) {
+  const urlBlob = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = urlBlob;
+  a.download = filename;
+  a.click();
+}
