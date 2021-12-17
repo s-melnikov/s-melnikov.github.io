@@ -1,18 +1,33 @@
-#dbList {
-  display: flex;
-  margin-top: 8px;
+body {
+  font-family: system-ui, "Segoe UI", Tahoma;
+  font-size: 14px;
 }
-#dbList span {
+button {
+  font: inherit;
+  background: #f0f0f0;
+  border: 1px solid #dcdcdc;
+  border-radius: 3px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+a {
+  color: #444;
+}
+.flex, 
+.flex-cy {
+  display: flex;
+}
+.flex-cy {
+  align-items: center;
+}
+#dbList a {
   display: block;
   padding: 4px 12px;
-  border:  1px solid #cdcdcd;
-  border-radius: 3px;
   cursor: pointer;
   font-family: monospace;
   font-size: 12px;
-  margin-right: 8px;
+  margin-left: 8px;
 }
-
 table {
   display: block;
   width: 100%;
