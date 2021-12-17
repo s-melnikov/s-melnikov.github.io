@@ -1,0 +1,2359 @@
+{
+  "cards": [
+    {
+      "chain": [
+        "bread"
+      ],
+      "price": 21,
+      "points": 5,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 4
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "food",
+      "id": 0,
+      "sprite": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "price": 17,
+      "points": 5,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 4
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "food",
+      "chain": [
+        "bread"
+      ],
+      "id": 1,
+      "sprite": {
+        "x": 160,
+        "y": 0
+      }
+    },
+    {
+      "price": 19,
+      "points": 5,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "ore",
+          "count": 3
+        }
+      ],
+      "produces": "food",
+      "chain": [
+        "bread"
+      ],
+      "id": 2,
+      "sprite": {
+        "x": 320,
+        "y": 0
+      }
+    },
+    {
+      "price": 12,
+      "points": 4,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 4
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "shoes",
+      "chain": [
+        "skin"
+      ],
+      "hasSun": true,
+      "id": 3,
+      "sprite": {
+        "x": 480,
+        "y": 0
+      }
+    },
+    {
+      "price": 12,
+      "points": 4,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 4
+        }
+      ],
+      "produces": "shoes",
+      "chain": [
+        "skin"
+      ],
+      "id": 4,
+      "sprite": {
+        "x": 640,
+        "y": 0
+      }
+    },
+    {
+      "resource": "grain",
+      "price": 15,
+      "points": 4,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "wood",
+          "count": 3
+        }
+      ],
+      "produces": "shoes",
+      "chain": [
+        "skin"
+      ],
+      "hasSun": true,
+      "id": 5,
+      "sprite": {
+        "x": 800,
+        "y": 0
+      }
+    },
+    {
+      "price": 9,
+      "points": 3,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "bread",
+      "chain": [
+        "flour",
+        "charcoal"
+      ],
+      "hasSun": true,
+      "id": 6,
+      "sprite": {
+        "x": 960,
+        "y": 0
+      }
+    },
+    {
+      "chain": [
+        "charcoal",
+        "flour"
+      ],
+      "produces": "bread",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 3
+        }
+      ],
+      "resource": "grain",
+      "points": 3,
+      "price": 12,
+      "hasSun": true,
+      "id": 7,
+      "sprite": {
+        "x": 1120,
+        "y": 0
+      }
+    },
+    {
+      "price": 9,
+      "points": 3,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 3
+        }
+      ],
+      "produces": "bread",
+      "chain": [
+        "flour",
+        "charcoal"
+      ],
+      "hasSun": true,
+      "id": 8,
+      "sprite": {
+        "x": 1280,
+        "y": 0
+      }
+    },
+    {
+      "price": 11,
+      "points": 3,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 0
+        },
+        {
+          "name": "wood",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 3
+        }
+      ],
+      "hasSun": true,
+      "produces": "bread",
+      "chain": [
+        "flour",
+        "charcoal"
+      ],
+      "id": 9,
+      "sprite": {
+        "x": 1440,
+        "y": 0
+      }
+    },
+    {
+      "price": 9,
+      "points": 3,
+      "resource": "grain",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "bread",
+      "chain": [
+        "flour",
+        "charcoal"
+      ],
+      "id": 10,
+      "sprite": {
+        "x": 0,
+        "y": 256
+      }
+    },
+    {
+      "price": 4,
+      "points": 2,
+      "resource": "grain",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 2
+        }
+      ],
+      "produces": "flour",
+      "chain": [
+        "grain"
+      ],
+      "id": 11,
+      "sprite": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "grain",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "flour",
+      "chain": [
+        "grain"
+      ],
+      "id": 12,
+      "sprite": {
+        "x": 320,
+        "y": 256
+      }
+    },
+    {
+      "price": 4,
+      "points": 2,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 1
+        }
+      ],
+      "produces": "flour",
+      "chain": [
+        "grain"
+      ],
+      "id": 13,
+      "sprite": {
+        "x": 480,
+        "y": 256
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "grain",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "wood",
+          "count": 1
+        }
+      ],
+      "produces": "flour",
+      "chain": [
+        "grain"
+      ],
+      "id": 14,
+      "sprite": {
+        "x": 640,
+        "y": 256
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "flour",
+      "chain": [
+        "grain"
+      ],
+      "id": 15,
+      "sprite": {
+        "x": 800,
+        "y": 256
+      }
+    },
+    {
+      "price": 2,
+      "points": 2,
+      "resource": "grain",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 1
+        }
+      ],
+      "produces": "flour",
+      "chain": [
+        "grain"
+      ],
+      "id": 16,
+      "sprite": {
+        "x": 960,
+        "y": 256
+      }
+    },
+    {
+      "price": 12,
+      "points": 4,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 4
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "meat",
+      "chain": [
+        "cattle"
+      ],
+      "id": 17,
+      "sprite": {
+        "x": 1120,
+        "y": 256
+      }
+    },
+    {
+      "price": 15,
+      "points": 4,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "wood",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "meat",
+      "chain": [
+        "cattle"
+      ],
+      "id": 18,
+      "sprite": {
+        "x": 1280,
+        "y": 256
+      }
+    },
+    {
+      "price": 16,
+      "points": 4,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 4
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "meat",
+      "chain": [
+        "cattle"
+      ],
+      "id": 19,
+      "sprite": {
+        "x": 1440,
+        "y": 256
+      }
+    },
+    {
+      "price": 7,
+      "points": 3,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "clothes",
+      "chain": [
+        "cloth",
+        "charcoal"
+      ],
+      "id": 20,
+      "sprite": {
+        "x": 0,
+        "y": 512
+      }
+    },
+    {
+      "price": 7,
+      "points": 3,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 3
+        }
+      ],
+      "produces": "clothes",
+      "chain": [
+        "charcoal",
+        "cloth"
+      ],
+      "id": 21,
+      "sprite": {
+        "x": 160,
+        "y": 512
+      }
+    },
+    {
+      "price": 7,
+      "points": 3,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "clay",
+          "count": 3
+        },
+        {
+          "name": "ore",
+          "count": 2
+        }
+      ],
+      "produces": "clothes",
+      "chain": [
+        "cloth",
+        "charcoal"
+      ],
+      "id": 22,
+      "sprite": {
+        "x": 320,
+        "y": 512
+      }
+    },
+    {
+      "price": 7,
+      "points": 3,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "clothes",
+      "chain": [
+        "charcoal",
+        "cloth"
+      ],
+      "id": 23,
+      "sprite": {
+        "x": 480,
+        "y": 512
+      }
+    },
+    {
+      "price": 6,
+      "points": 3,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 1
+        },
+        {
+          "name": "clay",
+          "count": 4
+        }
+      ],
+      "produces": "clothes",
+      "chain": [
+        "cloth",
+        "charcoal"
+      ],
+      "id": 24,
+      "sprite": {
+        "x": 640,
+        "y": 512
+      }
+    },
+    {
+      "price": 10,
+      "points": 3,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 0
+        },
+        {
+          "name": "wood",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "clothes",
+      "chain": [
+        "charcoal",
+        "cloth"
+      ],
+      "id": 25,
+      "sprite": {
+        "x": 800,
+        "y": 512
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 26,
+      "sprite": {
+        "x": 960,
+        "y": 512
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 2
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 27,
+      "sprite": {
+        "x": 1120,
+        "y": 512
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 2
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 28,
+      "sprite": {
+        "x": 1280,
+        "y": 512
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 29,
+      "sprite": {
+        "x": 1440,
+        "y": 512
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 30,
+      "sprite": {
+        "x": 0,
+        "y": 768
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "whool",
+      "requires": [
+        {
+          "name": "clay",
+          "count": 1
+        },
+        {
+          "name": "whool",
+          "count": 3
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 31,
+      "sprite": {
+        "x": 160,
+        "y": 768
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 3
+        },
+        {
+          "name": "grain",
+          "count": 1
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 32,
+      "sprite": {
+        "x": 320,
+        "y": 768
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "whool",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 1
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "cloth",
+      "chain": [
+        "whool"
+      ],
+      "id": 33,
+      "sprite": {
+        "x": 480,
+        "y": 768
+      }
+    },
+    {
+      "price": 15,
+      "points": 4,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "tools",
+      "chain": [
+        "charcoal",
+        "iron"
+      ],
+      "id": 34,
+      "sprite": {
+        "x": 640,
+        "y": 768
+      }
+    },
+    {
+      "price": 17,
+      "points": 4,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 0
+        },
+        {
+          "name": "wood",
+          "count": 3
+        }
+      ],
+      "produces": "tools",
+      "chain": [
+        "iron",
+        "charcoal"
+      ],
+      "id": 35,
+      "sprite": {
+        "x": 800,
+        "y": 768
+      }
+    },
+    {
+      "price": 17,
+      "points": 4,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "wood",
+          "count": 4
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "tools",
+      "chain": [
+        "charcoal",
+        "iron"
+      ],
+      "id": 36,
+      "sprite": {
+        "x": 960,
+        "y": 768
+      }
+    },
+    {
+      "price": 17,
+      "points": 4,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "wood",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 3
+        }
+      ],
+      "produces": "tools",
+      "chain": [
+        "iron",
+        "charcoal"
+      ],
+      "id": 37,
+      "sprite": {
+        "x": 1120,
+        "y": 768
+      }
+    },
+    {
+      "price": 2,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 1
+        }
+      ],
+      "produces": "lumber",
+      "chain": [
+        "wood"
+      ],
+      "id": 38,
+      "sprite": {
+        "x": 1280,
+        "y": 768
+      }
+    },
+    {
+      "price": 2,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 1
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "lumber",
+      "chain": [
+        "wood"
+      ],
+      "id": 39,
+      "sprite": {
+        "x": 1440,
+        "y": 768
+      }
+    },
+    {
+      "price": 4,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "lumber",
+      "chain": [
+        "wood"
+      ],
+      "id": 40,
+      "sprite": {
+        "x": 0,
+        "y": 1024
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "lumber",
+      "chain": [
+        "wood"
+      ],
+      "id": 41,
+      "sprite": {
+        "x": 160,
+        "y": 1024
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "lumber",
+      "chain": [
+        "wood"
+      ],
+      "id": 42,
+      "sprite": {
+        "x": 320,
+        "y": 1024
+      }
+    },
+    {
+      "price": 9,
+      "points": 3,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "windows",
+      "chain": [
+        "lumber",
+        "glass"
+      ],
+      "id": 43,
+      "sprite": {
+        "x": 480,
+        "y": 1024
+      }
+    },
+    {
+      "price": 9,
+      "points": 3,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "windows",
+      "chain": [
+        "glass",
+        "lumber"
+      ],
+      "id": 44,
+      "sprite": {
+        "x": 640,
+        "y": 1024
+      }
+    },
+    {
+      "price": 7,
+      "points": 3,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 1
+        },
+        {
+          "name": "grain",
+          "count": 4
+        }
+      ],
+      "produces": "windows",
+      "chain": [
+        "lumber",
+        "glass"
+      ],
+      "id": 45,
+      "sprite": {
+        "x": 800,
+        "y": 1024
+      }
+    },
+    {
+      "price": 11,
+      "points": 3,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "clay",
+          "count": 3
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "barrels",
+      "chain": [
+        "lumber"
+      ],
+      "id": 46,
+      "sprite": {
+        "x": 960,
+        "y": 1024
+      }
+    },
+    {
+      "price": 11,
+      "points": 3,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "barrels",
+      "chain": [
+        "lumber"
+      ],
+      "id": 47,
+      "sprite": {
+        "x": 1120,
+        "y": 1024
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "any",
+          "count": 11
+        }
+      ],
+      "produces": "glass",
+      "id": 48,
+      "sprite": {
+        "x": 1280,
+        "y": 1024
+      }
+    },
+    {
+      "price": 11,
+      "points": 3,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "barrels",
+      "chain": [
+        "lumber"
+      ],
+      "id": 49,
+      "sprite": {
+        "x": 1440,
+        "y": 1024
+      }
+    },
+    {
+      "price": 11,
+      "points": 3,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "clay",
+          "count": 3
+        },
+        {
+          "name": "ore",
+          "count": 2
+        }
+      ],
+      "produces": "barrels",
+      "chain": [
+        "lumber"
+      ],
+      "id": 50,
+      "sprite": {
+        "x": 0,
+        "y": 1280
+      }
+    },
+    {
+      "price": 2,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "any",
+          "count": 12
+        }
+      ],
+      "produces": "glass",
+      "id": 51,
+      "sprite": {
+        "x": 160,
+        "y": 1280
+      }
+    },
+    {
+      "price": 2,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "any",
+          "count": 12
+        }
+      ],
+      "produces": "glass",
+      "id": 52,
+      "sprite": {
+        "x": 320,
+        "y": 1280
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "any",
+          "count": 11
+        }
+      ],
+      "produces": "glass",
+      "id": 53,
+      "sprite": {
+        "x": 480,
+        "y": 1280
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "iron",
+      "chain": [
+        "charcoal",
+        "ore"
+      ],
+      "id": 54,
+      "sprite": {
+        "x": 640,
+        "y": 1280
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "clay",
+          "count": 2
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "iron",
+      "chain": [
+        "ore",
+        "charcoal"
+      ],
+      "id": 55,
+      "sprite": {
+        "x": 800,
+        "y": 1280
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "iron",
+      "chain": [
+        "charcoal",
+        "ore"
+      ],
+      "id": 56,
+      "sprite": {
+        "x": 960,
+        "y": 1280
+      }
+    },
+    {
+      "price": 9,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "wood",
+          "count": 2
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "iron",
+      "chain": [
+        "ore",
+        "charcoal"
+      ],
+      "id": 57,
+      "sprite": {
+        "x": 1120,
+        "y": 1280
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "wood",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "whool",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 1
+        }
+      ],
+      "produces": "iron",
+      "chain": [
+        "charcoal",
+        "ore"
+      ],
+      "id": 58,
+      "sprite": {
+        "x": 1280,
+        "y": 1280
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "wood",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 1
+        },
+        {
+          "name": "clay",
+          "count": 3
+        }
+      ],
+      "produces": "iron",
+      "chain": [
+        "ore",
+        "charcoal"
+      ],
+      "id": 59,
+      "sprite": {
+        "x": 1440,
+        "y": 1280
+      }
+    },
+    {
+      "price": 13,
+      "points": 3,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "skin",
+      "chain": [
+        "cattle"
+      ],
+      "id": 60,
+      "sprite": {
+        "x": 0,
+        "y": 1536
+      }
+    },
+    {
+      "price": 15,
+      "points": 3,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 3
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "skin",
+      "chain": [
+        "cattle"
+      ],
+      "id": 61,
+      "sprite": {
+        "x": 160,
+        "y": 1536
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "cattle",
+      "chain": [
+        "grain"
+      ],
+      "id": 62,
+      "sprite": {
+        "x": 320,
+        "y": 1536
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "clay",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "cattle",
+      "chain": [
+        "grain"
+      ],
+      "id": 63,
+      "sprite": {
+        "x": 480,
+        "y": 1536
+      }
+    },
+    {
+      "price": 15,
+      "points": 3,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 3
+        }
+      ],
+      "produces": "skin",
+      "chain": [
+        "cattle"
+      ],
+      "id": 64,
+      "sprite": {
+        "x": 640,
+        "y": 1536
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 2
+        }
+      ],
+      "produces": "cattle",
+      "chain": [
+        "grain"
+      ],
+      "id": 65,
+      "sprite": {
+        "x": 800,
+        "y": 1536
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "cattle",
+      "chain": [
+        "grain"
+      ],
+      "id": 66,
+      "sprite": {
+        "x": 960,
+        "y": 1536
+      }
+    },
+    {
+      "price": 8,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 2
+        }
+      ],
+      "produces": "cattle",
+      "chain": [
+        "grain"
+      ],
+      "id": 67,
+      "sprite": {
+        "x": 1120,
+        "y": 1536
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "grain",
+          "count": 2
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "charcoal",
+        "clay"
+      ],
+      "id": 68,
+      "sprite": {
+        "x": 1280,
+        "y": 1536
+      }
+    },
+    {
+      "price": 2,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 3
+        },
+        {
+          "name": "clay",
+          "count": 1
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "clay",
+        "charcoal"
+      ],
+      "id": 69,
+      "sprite": {
+        "x": 1440,
+        "y": 1536
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 2
+        },
+        {
+          "name": "ore",
+          "count": 2
+        }
+      ],
+      "produces": "cattle",
+      "chain": [
+        "grain"
+      ],
+      "id": 70,
+      "sprite": {
+        "x": 0,
+        "y": 1792
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "clay",
+          "count": 2
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "clay",
+        "charcoal"
+      ],
+      "id": 71,
+      "sprite": {
+        "x": 160,
+        "y": 1792
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "whool",
+          "count": 1
+        },
+        {
+          "name": "wood",
+          "count": 3
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "charcoal",
+        "clay"
+      ],
+      "id": 72,
+      "sprite": {
+        "x": 320,
+        "y": 1792
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "ore",
+          "count": 1
+        },
+        {
+          "name": "wood",
+          "count": 3
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "clay",
+        "charcoal"
+      ],
+      "id": 73,
+      "sprite": {
+        "x": 480,
+        "y": 1792
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 2
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "charcoal",
+        "clay"
+      ],
+      "id": 74,
+      "sprite": {
+        "x": 640,
+        "y": 1792
+      }
+    },
+    {
+      "price": 3,
+      "points": 2,
+      "resource": "clay",
+      "hasSun": true,
+      "requires": [
+        {
+          "name": "whool",
+          "count": 2
+        },
+        {
+          "name": "ore",
+          "count": 2
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "clay",
+        "charcoal"
+      ],
+      "id": 75,
+      "sprite": {
+        "x": 800,
+        "y": 1792
+      }
+    },
+    {
+      "price": 5,
+      "points": 2,
+      "resource": "clay",
+      "requires": [
+        {
+          "name": "wood",
+          "count": 2
+        },
+        {
+          "name": "whool",
+          "count": 2
+        }
+      ],
+      "produces": "bricks",
+      "chain": [
+        "charcoal",
+        "clay"
+      ],
+      "id": 76,
+      "sprite": {
+        "x": 960,
+        "y": 1792
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 77,
+      "sprite": {
+        "x": 1120,
+        "y": 1792
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 78,
+      "sprite": {
+        "x": 1280,
+        "y": 1792
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 79,
+      "sprite": {
+        "x": 1440,
+        "y": 1792
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 80,
+      "sprite": {
+        "x": 0,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 81,
+      "sprite": {
+        "x": 160,
+        "y": 2048
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 82,
+      "sprite": {
+        "x": 320,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 83,
+      "sprite": {
+        "x": 480,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 84,
+      "sprite": {
+        "x": 640,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 85,
+      "sprite": {
+        "x": 800,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 86,
+      "sprite": {
+        "x": 960,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 87,
+      "sprite": {
+        "x": 1120,
+        "y": 2048
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "ore",
+      "id": 88,
+      "sprite": {
+        "x": 1280,
+        "y": 2048
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 89,
+      "sprite": {
+        "x": 1440,
+        "y": 2048
+      }
+    },
+    {
+      "price": 6,
+      "points": 2,
+      "resource": "ore",
+      "id": 90,
+      "sprite": {
+        "x": 0,
+        "y": 2304
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 91,
+      "sprite": {
+        "x": 160,
+        "y": 2304
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "id": 92,
+      "sprite": {
+        "x": 320,
+        "y": 2304
+      }
+    },
+    {
+      "price": 8,
+      "points": 3,
+      "resource": "ore",
+      "hasSun": true,
+      "id": 93,
+      "sprite": {
+        "x": 480,
+        "y": 2304
+      }
+    },
+    {
+      "resource": "",
+      "requires": [
+        {
+          "name": "clay",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 1
+        }
+      ],
+      "produces": "charcoal",
+      "chain": [
+        "wood"
+      ],
+      "id": 94,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 640,
+        "y": 2304
+      }
+    },
+    {
+      "requires": [
+        {
+          "name": "whool",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 1
+        }
+      ],
+      "produces": "charcoal",
+      "chain": [
+        "wood"
+      ],
+      "id": 95,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 800,
+        "y": 2304
+      }
+    },
+    {
+      "requires": [
+        {
+          "name": "grain",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 1
+        }
+      ],
+      "produces": "charcoal",
+      "chain": [
+        "wood"
+      ],
+      "id": 96,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 960,
+        "y": 2304
+      }
+    },
+    {
+      "requires": [
+        {
+          "name": "ore",
+          "count": 2
+        },
+        {
+          "name": "wood",
+          "count": 1
+        }
+      ],
+      "produces": "charcoal",
+      "chain": [
+        "wood"
+      ],
+      "id": 97,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 1120,
+        "y": 2304
+      }
+    },
+    {
+      "id": 98,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 1280,
+        "y": 2304
+      }
+    },
+    {
+      "id": 99,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 1440,
+        "y": 2304
+      }
+    },
+    {
+      "id": 100,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 0,
+        "y": 2560
+      }
+    },
+    {
+      "id": 101,
+      "price": null,
+      "points": null,
+      "sprite": {
+        "x": 160,
+        "y": 2560
+      }
+    },
+    {
+      "price": 4,
+      "id": 102,
+      "points": null,
+      "sprite": {
+        "x": 320,
+        "y": 2560
+      }
+    },
+    {
+      "price": 2,
+      "id": 103,
+      "points": null,
+      "sprite": {
+        "x": 480,
+        "y": 2560
+      }
+    },
+    {
+      "price": 4,
+      "id": 104,
+      "points": null,
+      "sprite": {
+        "x": 640,
+        "y": 2560
+      }
+    },
+    {
+      "price": 2,
+      "id": 105,
+      "points": null,
+      "sprite": {
+        "x": 800,
+        "y": 2560
+      }
+    },
+    {
+      "price": 2,
+      "id": 106,
+      "points": null,
+      "sprite": {
+        "x": 960,
+        "y": 2560
+      }
+    },
+    {
+      "price": 6,
+      "id": 107,
+      "points": null,
+      "sprite": {
+        "x": 1120,
+        "y": 2560
+      }
+    },
+    {
+      "price": 6,
+      "id": 108,
+      "points": null,
+      "sprite": {
+        "x": 1280,
+        "y": 2560
+      }
+    },
+    {
+      "price": 6,
+      "id": 109,
+      "points": null,
+      "sprite": {
+        "x": 1440,
+        "y": 2560
+      }
+    },
+    {
+      "price": 2,
+      "id": 110,
+      "points": null,
+      "sprite": {
+        "x": 0,
+        "y": 2816
+      }
+    },
+    {
+      "price": 4,
+      "id": 111,
+      "points": null,
+      "sprite": {
+        "x": 160,
+        "y": 2816
+      }
+    },
+    {
+      "price": 2,
+      "id": 112,
+      "points": null,
+      "sprite": {
+        "x": 320,
+        "y": 2816
+      }
+    },
+    {
+      "price": 4,
+      "id": 113,
+      "points": null,
+      "sprite": {
+        "x": 480,
+        "y": 2816
+      }
+    },
+    {
+      "price": 2,
+      "id": 114,
+      "points": null,
+      "sprite": {
+        "x": 640,
+        "y": 2816
+      }
+    },
+    {
+      "price": 4,
+      "id": 115,
+      "points": null,
+      "sprite": {
+        "x": 800,
+        "y": 2816
+      }
+    },
+    {
+      "price": 4,
+      "id": 116,
+      "points": null,
+      "sprite": {
+        "x": 960,
+        "y": 2816
+      }
+    },
+    {
+      "price": 2,
+      "id": 117,
+      "points": null,
+      "sprite": {
+        "x": 1120,
+        "y": 2816
+      }
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: Consolas, monospace;
+    }
+    #card {
+      width: 160px;
+      height: 256px;
+      background-image: url(images/sprite_all_hq.jpg);      
+    }
+    .flex, .flex-c {
+      display: flex;
+    }
+    .flex-c {
+      align-items: center;
+    }
+    .col {
+      padding: 16px;
+    }
+    button {
+      margin: 0;
+      font-family: inherit;
+    }
+    .control {
+      margin-bottom: 4px;
+      margin-right: 4px;
+      display: block;
+    }
+    label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+    input:not([type="radio"]):not([type="checkbox"]) {
+      border: 1px solid #e0e0e0;
+      height: 20px;
+      border-radius: 4px;
+      width: 48px;
+      font-family: inherit;
+    }
+    input[type="radio"], input[type="checkbox"] {
+      margin: 2px 4px 2px 0;
+    }
+    .requires .flex-c {
+      margin-bottom: 4px;
+    }
+    .requires button {
+      margin: 1px 4px 1px 0;
+    }
+  </style>
+</head>
+<body>  
+  <div class="flex">
+    <div class="col">
+      <div id="card"></div>
+      <button onclick="prev()">Prev</button>
+      <button onclick="next()">Next</button>
+    </div>
+    <div id="ui" class="col"></div>
+  </div>
+  <script>
+    const RESOURCES = ["grain", "whool", "wood", "clay", "ore"];
+    const PRODUCES = ["food", "shoes", "bread", "flour", "meat", "clothes", "cloth", "tools", "lumber", "windows", "barrels", "glass", "iron", "skin", "cattle", "bricks", "charcoal"];
+    const stored = localStorage.cards;
+    const storedIndex = localStorage.index;
+    const cards = stored ? JSON.parse(stored) : [];
+    let i = storedIndex ? Number(storedIndex) : 0;
+    let state = {};
+    const handleChange = () => {
+      if (event.target.type === "checkbox") {
+        state[event.target.name] = state[event.target.name] ? undefined : true;
+      } else {
+        state[event.target.name] = event.target.value; 
+      }
+      localStorage.cards = JSON.stringify(cards);
+    };
+
+    const handleChainChange = () => {
+      const value = event.target.value;
+      if (!state.chain) state.chain = [value];
+      else if (state.chain.includes(value)) {
+        state.chain = state.chain.filter((el) => el !== value);
+      } else {
+        state.chain.push(value);
+      }
+      localStorage.cards = JSON.stringify(cards);
+    };
+
+    const updateCount = (el, c) => {
+      if (!state.requires) state.requires = [];
+      const item = state.requires.find((it) => it.name === el);
+      if (!item) {
+        state.requires.push({ name: el, count: c });
+      } else {
+        item.count += c;        
+      }  
+      localStorage.cards = JSON.stringify(cards);
+      renderUi();
+    } 
+
+    const renderUi = () => {
+      ui.innerHTML = template();
+    };
+
+    const download = () => {
+      const data = cards.map((card, index) => {
+        const { price, points } = card;
+        return {
+          ...card,
+          id: index,
+          price: +price, 
+          points: +points,
+          sprite: { 
+            x: index % 10 * 160, 
+            y: Math.floor(index / 10) * 256, 
+          }
+        };
+      });
+      const blob = new Blob(
+        [JSON.stringify(data, null, 2)],
+        { type: "application/json" },
+      )
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cards-${Date.now().toString(36)}.json`;
+      a.click();
+    };
+
+    const template = () => {
+      const {
+        price = 0,
+        points = 0,
+        resource,
+        requires = [],
+        produces,
+        chain = [],
+        hasSun
+      } = state;
+      return `
+        <div>Index: #${i} <button onclick="download()">download</botton></div>
+        <div class="control">
+          <label>Cost</label>
+          <input value="${price}" type="number" name="price" oninput="handleChange()" autocomplete="off" />
+        </div>
+        <div class="control">
+          <label>Points</label>
+          <input value="${points}" type="number" name="points" oninput="handleChange()" autocomplete="off" />
+        </div>
+        <div class="control" onchange="handleChange()">
+          <label>Resource</label>          
+          <div class="flex">
+            ${RESOURCES.map((el) => `<label><input type="radio" value=${el} name="resource" ${(el === resource) ? "checked" : ""}>${el}</input></label>`).join("")}
+            <label><input type="radio" value="" name="resource" ${!resource ? "checked" : ""}>null</input></label>
+          </div>
+        </div>
+        <label onchange="handleChange()"><input type="checkbox" name="hasSun" ${hasSun ? "checked" : ""}></input>Has sun</label>        
+          <div class="flex">             
+            <div class="control requires">
+              <label>Requires</label>   
+              ${[...RESOURCES, "any"].map((el) => {
+                const item = requires.find((it) => it.name === el);
+                return `<div class="flex-c" style="opacity: ${item?.count ? "1" : "0.4"}">
+                  <button onclick="updateCount('${el}', -1)">-</button>
+                  <button onclick="updateCount('${el}', 1)">+</button>
+                  <label>${item?.count || 0} - ${el}</label>
+                </div>`;
+              }).join("")}
+            </div>            
+            <div class="control" onchange="handleChange()">     
+              <label>Produces</label> 
+              ${PRODUCES.map((el) => `<label><input type="radio" value="${el}" name="produces" ${(el === produces) ? "checked" : ""}>${el}</input></label>`).join("")}
+            </div>            
+            <div class="control" onchange="handleChainChange()">  
+              <label>Chain</label>    
+              ${[ ...RESOURCES, ...PRODUCES].map((el) => `<label><input type="checkbox" value="${el}" name="chain" ${chain.includes(el) ? "checked" : ""}>${el}</input></label>`).join("")}
+          </div>
+        </div>
+      `;
+    };
+
+    const render = () => {
+      card.style.backgroundPosition = `-${i % 10 * 160}px -${Math.floor(i / 10) * 256}px`;
+      localStorage.index = i;
+      if (!cards[i]) cards[i] = {};
+      state = cards[i];
+      localStorage.cards = JSON.stringify(cards);
+      renderUi();
+    };
+
+    const prev = () => {
+      i--;      
+      render();
+    };
+
+    const next = () => {
+      i++;
+      render();
+    };
+
+    render();
+
+    window.addEventListener("keydown", ({ keyCode }) => {
+      if (keyCode === 39) next();
+      if (keyCode === 37) prev();
+    })
+  </script>
+</body>
+</html>
