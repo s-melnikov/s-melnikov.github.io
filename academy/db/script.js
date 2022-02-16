@@ -10,29 +10,34 @@
 // лимит (limit) - 5 записей
 const ENV = parseQueryString(window.location.search);
 
+// ссылка на кнопку для сохранения результата
 const saveButton = document.querySelector("#saveResult");
 
 // узнаем, какие бызы данных существуют в локальном хранилище
-handleStorageChange();
+findDatabases();
 
+// проверяем, есть ли имя БД в запросе исуществкет ли БД с таким именем
 if (ENV.db && localStorage[ENV.db]) {
   openDb(ENV.db);
 }
 
+// слушатель нажатия кнопки "Создать базу данных"
 function handleCreateNewBDClick() {
   fetch("Users.json").then((r) => r.json()).then((response) => {
     localStorage[Date.now().toString(36)] = JSON.stringify(
       shuffle(response).map((item, index) => ({ ...item, id: index }))
     );
-    handleStorageChange();
+    findDatabases();
   });  
 }
 
+// ф-ция открытия базы данных (отображении ее на странице)
 function openDb(name) {
   const table = document.querySelector("#dbTable");
   let data = JSON.parse(localStorage[name]);
   const keys = Object.keys(data[0]);
 
+  // сортировка данных
   if (ENV.sortBy) {
     let k = ENV.sortBy;
     data = data.sort((a, b) => {
@@ -42,6 +47,7 @@ function openDb(name) {
     });
   }
 
+  // фильтрация
   keys.forEach((key) => {
     if (ENV[key]) {
       data = data.filter((item) => {
@@ -50,14 +56,17 @@ function openDb(name) {
     }
   });
 
+  // сдвиг
   if (ENV.offset) {
     data = data.slice(Number(ENV.offset));
   }
 
+  // лимит
   if (ENV.limit) {
     data = data.slice(0, Number(ENV.limit));
   }
 
+  // строим таблицу и выводим ее
   table.innerHTML = ` 
     <table>
       <thead>
@@ -77,8 +86,12 @@ function openDb(name) {
     </table>
   `;
 
+  // показываем кнопку "Сохранить результат"
   saveButton.style.display = "block";
+
+  // добавляем слушатель события нажатия на кнопку
   saveButton.addEventListener("click", () => {    
+    // при нажатии скачиваем файл с результатом, который на экране
     downloadFile({
       blob: new Blob([JSON.stringify(data)], {
         type: "application/json;charset=utf-8"
@@ -88,12 +101,14 @@ function openDb(name) {
   });
 }
 
-function handleStorageChange() {
+// поиск существующих таблиц
+function findDatabases() {
   const database = Object.keys(localStorage);
   document.querySelector("#dbList").innerHTML = 
     database.map((name) => `<a ${(name === ENV.db) ? "" : `href="?db=${name}"`}>${name}</a>`).join("");
 }
 
+// ф-ция случайного перемешивания массива
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
   while (currentIndex != 0) {
@@ -105,17 +120,12 @@ function shuffle(array) {
   return array;
 }
 
+// экранирование специальных символов в строке
 function encode(str) {
   return window.encodeURIComponent(str);
 }
 
-function objectToQueryString(params) {
-  return Object.entries(params)
-    .filter(([prop, val]) => prop && val)
-    .map(([prop, val]) => `${encode(prop)}=${encode(val)}`)
-    .join("&");
-}  
-
+// разбор строки запроса и добавление всех переменных в объект
 function parseQueryString(query) {
   const vars = {};
   if (query) {
@@ -130,6 +140,7 @@ function parseQueryString(query) {
   return vars;
 }
 
+// скачивание файла
 function downloadFile({ blob, filename }) {
   const urlBlob = URL.createObjectURL(blob);
   const a = document.createElement("a");
