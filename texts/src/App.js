@@ -61,7 +61,22 @@ function App() {
   }, []);
 
   const handleDownloadClick = useCallback((event) => {
-    const blob = new Blob([JSON.stringify(changes, null, 2)], { type: "application/json" });
+    const result = {};
+    Object.keys(changes).forEach((section) => {
+      result[section] = {};
+      Object.keys(changes[section])
+        .sort((keyA, keyB) => {
+          const keyALower = keyA.toLocaleLowerCase();
+          const keyBLower = keyB.toLocaleLowerCase();
+          if (keyALower < keyBLower) return -1;
+          if (keyALower > keyBLower) return 1;
+          return 0;
+        })
+        .forEach((key) => {
+          result[section][key] = changes[section][key];
+        });
+    });
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type: "application/json" });
     downloadFile({ blob, filename: `${state.langCode}.json` });
   }, [state.langCode, changes]);
 
@@ -96,7 +111,7 @@ function App() {
                 <tr>
                   <td colSpan={3}><div className={Css.title}>{section}</div></td>
                 </tr>
-                {keys.map((key) => {
+                {keys.filter((key) => !Array.isArray(source[section][key])).map((key) => {
                   return (
                     <tr key={key}>
                       <td><div className={Css.key}>{key}</div></td>
