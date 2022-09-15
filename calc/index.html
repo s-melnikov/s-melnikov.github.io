@@ -78,7 +78,7 @@ function h(e,t){for(var n,r=[],a=[],o=arguments.length;o-- >2;)r[r.length]=argum
         h("h2", null, "Введите данные займа"),
         h("form", null,
           h("label", null,
-            h("span", null, "Сумма кредита ($):"),
+            h("span", null, "Сумма кредита:"),
             h("input", { oninput: e => actions.amount(e.target.value) })
           ),
           h("label", null,
@@ -94,15 +94,15 @@ function h(e,t){for(var n,r=[],a=[],o=arguments.length;o-- >2;)r[r.length]=argum
         h("div", null,
           h("div", { class: "total" },
             h("div", null, "Ежемесячный платеж:"),
-            h("div", null, "$" + (monthly).toFixed(2))
+            h("div", null, (monthly).toFixed(2))
           ),
           h("div", { class: "total" },
             h("div", null, "Общая сумма платежей:"),
-            h("div", null, "$" + (monthly * payments || 0).toFixed(2))
+            h("div", null, (monthly * payments || 0).toFixed(2))
           ),
           h("div", { class: "total" },
             h("div", null, "Общая сумма переплаты:"),
-            h("div", null, "$" + ((monthly*payments)-principal || 0).toFixed(2))
+            h("div", null, ((monthly*payments)-principal || 0).toFixed(2))
           )
         ),
         h("canvas", {
