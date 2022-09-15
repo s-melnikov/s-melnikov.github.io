@@ -41,12 +41,11 @@ var api = {
       articlesLength = articles.length
     function loop() {
       var channel = channels[index],
-        query = encodeURIComponent('select * from xml where url="' + channel.src + '"'),
         passed = new Date() - new Date(channel.lastUpdate || 0)
       log('api:checkUpdates() channel:', channel.src, 'passed:', Math.floor(passed / 1000 / 60), 'm')
       if (passed > 60 * 60 * 1000) {
         channel.lastUpdate = new Date()
-        api.get(settings.proxy + query + '&format=json', function(response) {
+        api.get(channel.src, function(response) {
           progress(index / (channels.length - 1))
           var data = null
           try {
