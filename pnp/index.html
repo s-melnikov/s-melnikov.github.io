@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cutter</title>
+  <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+  <div id="settings">
+    <label>width:</label>
+    <input type="number" name="width">
+    <label>height:</label>
+    <input type="number" name="height">
+    <label>margin x:</label>
+    <input type="number" name="marginX">
+    <label>margin y:</label>
+    <input type="number" name="marginY">
+    <label>from:</label>
+    <input type="number" name="from">
+    <label>to:</label>
+    <input type="number" name="to">
+    <label>stroke:</label>
+    <input type="text" name="strokeStyle">
+    <button onclick="save()">save</button>
+  </div>
+  <canvas></canvas>
+  <script src="./jszip.min.js"></script>
+  <script src="./saver.min.js"></script>
+  <script src="./script.js" type="module"></script>
+</body>
+</html>
