@@ -96,12 +96,14 @@ function App() {
   return (
     <div className={Css.editor}>
       <div className={Css.header}>
-        <input type="checkbox" checked={onlyUntranslated} onChange={handleCheckboxChange} /> Only untranslated
+        <input type="checkbox" checked={onlyUntranslated} onChange={handleCheckboxChange} />
+        <span>Only untranslated</span>
         <button onClick={handleDownloadClick}>Download</button>
       </div>
       <table>
         <tbody>
           {sections.filter((section) => section !== "introScenarios").map((section) => {
+            console.log(`Section: ${section}`);
             const keys = Object.keys(source[section]).filter((key) => !onlyUntranslated || !target[section][key]);
 
             if (!keys.length) return null;
