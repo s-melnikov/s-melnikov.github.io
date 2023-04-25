@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+<script>
+	const SOUNDS = {
+		witch_ship: "audio/witch_ship.mp3",
+    boarded_ship: "audio/boarded_ship.mp3",
+    clear_sea: "audio/open_sea.mp3",
+    whales: "audio/clear_sea.mp3",
+    creatures_of_the_deep: "audio/creatures_of_the_deep.mp3",
+    cursed_waters: "audio/cursed_waters.mp3",
+    devastated_town: "audio/devastated_town.mp3",
+    enchanted_sea: "audio/enchanted_sea.mp3",
+    enormous_beast: "audio/enormous_beast.mp3",
+    forest: "audio/forest.mp3",
+    ghost_ship: "audio/ghost_ship.mp3",
+    haunted_ruins: "audio/haunted_ruins.mp3",
+    highlands: "audio/highlands.mp3",
+    jungle: "audio/jungle.mp3",
+    kracken: "audio/kracken.mp3",
+    leviathan: "audio/leviathan.mp3",
+    marsh: "audio/marsh.mp3",
+    megalodon: "audio/megalodon.mp3",
+    open_sea: "audio/open_sea.mp3",
+    pirate_paradise: "audio/pirate_paradise.mp3",
+    port: "audio/port.mp3",
+    rough_sea: "audio/rough_sea.mp3",
+    sandy_beach: "audio/sandy_beach.mp3",
+    shadow_monster: "audio/shadow_monster.mp3",
+    ship: "audio/ship.mp3",
+    tortoalo_island: "audio/tortoalo_island.mp3",
+    underwater: "audio/underwater.mp3",
+    volcanic_springs: "audio/volcanic_springs.mp3",
+    volcano_village: "audio/volcano_village.mp3",
+	};
+  const h = (name, props, ...rest) => {
+    const childrens = rest.flat(3).filter((child) => child !== false && child !== null);
+    if (typeof component === "string") {
+      const el = document.createElement(name);
+      for (let key in props) el[key] = props[key];
+      childrens.forEach((child) => el.append(child));
+      return el;
+    }
+    return name({ ...props, childrens: childrens });    
+  };
+</script>	
+</body>
+</html>

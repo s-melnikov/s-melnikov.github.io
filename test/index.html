@@ -6,8 +6,74 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="preact.min.js"></script>
-  <script src="index.js"></script>
+<script>
+
+/*
+{
+  "0": "18.75",
+  "+1": "12.50",
+  "-1": "18.75",
+  "-2": "12.50",
+  "SIGN": "6.25",
+  "TABLE": "6.25",
+  "SKULL": "12.50",
+  "CULTIST": "6.25",
+  "KTULHU": "6.25"
+}
+
+{
+  "0": "17.65",
+  "+1": "11.76",
+  "-1": "17.65",
+  "-2": "11.76",
+  "SIGN": "8.82",
+  "TABLE": "5.88",
+  "SKULL": "11.76",
+  "CULTIST": "5.89",
+  "KTULHU": "8.81",
+}
+
+{
+  "0": "20.01",
+  "+1": "14.99",
+  "-1": "20.01",
+  "-2": "10.00",
+  "SIGN": "7.49",
+  "TABLE": "5.00",
+  "SKULL": "10.00",
+  "KTULHU": "7.50",
+  "CULTIST": "5.00"
+}
+*/
+
+(() => {
+  const ITERATIONS = 10000000;
+
+  const rand = (max) => Math.floor(Math.random() * max);
+
+  const EASY_MODE = "+1,+1,+1,0,0,0,0,-1,-1,-1,-1,-2,-2,SKULL,SKULL,CULTIST,TABLE,KTULHU,SIGN".split(",");
+
+  const RESETS = ["SIGN", "KTULHU"];
+
+  const results = {};
+
+  let BAG = [...EASY_MODE];
+
+  for (let i = 0; i < ITERATIONS; i++) {
+    const [el] = BAG.splice(rand(BAG.length), 1);
+
+    results[el] = (results[el] || 0) + 1;
+
+    if (RESETS.includes(el)) BAG = [...EASY_MODE];
+  }
+
+  for (let p in results) {
+    results[p] = (results[p] / ITERATIONS * 100).toFixed(2);
+  }
+
+  console.log(JSON.stringify(results, null, 2));
+})();
+
+</script>
 </body>
 </html>
