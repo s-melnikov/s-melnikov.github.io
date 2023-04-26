@@ -1,5 +1,5 @@
 import { TasksByDays } from "./components.js";
-import Router from "./Router.js";
+import Router from "./router.js";
 
 const { app, h } = hyperapp;
 const STORAGE = "timetracker";
