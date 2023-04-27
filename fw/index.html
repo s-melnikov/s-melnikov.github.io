@@ -7,12 +7,83 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">  
+  <style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;  
+  padding: 16px;
+  font-family: Vollkorn, serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f2f2f2;  
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: Vollkorn, serif;
+  font-weight: 600;
+}
+.section {
+  width: 960px;
+  margin: 16px auto;
+  padding: 16px 0;
+  background: url(images/bg.png) center; 
+  page-break-after: always; 
+}
+.entries {
+  columns: 2;
+}
+img {
+  margin: 8px auto;
+  display: block;
+  max-width: 100%;
+}
+.banner {
+  display: block;
+  margin: 16px auto;
+  page-break-after: always;
+}
+.entry {
+  padding: 8px 16px;
+}
+.title {
+  text-align: center;
+}
+b {
+  font-weight: 600;
+}
+img.icon {
+  display: inline;
+  height: 1em;
+  margin: 0 0.3em;
+  vertical-align: middle;
+}
+ul {
+  margin: 0;
+  padding: 0 0 0 16px;
+  list-style: number;
+}
+.large {
+  font-size: 2.5rem;
+}
+.large .list {
+  text-align: center;
+}
+.large .list img {  
+  margin-right: 0;
+}
+@media print {
+  .section {
+    background: url(images/bg.png) center;
+  }
+}
+</style>  
 </head>
 <body>
-  <div id="outlet"></div> 
-  <script src="source.js"></script>  
-  <script src="script.js"></script>
+<div id="outlet">
+  {$}
+</div> 
 </body>
 </html>
