@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      margin: 0;
+    }
+    input {
+      display: block;
+      width: 100%;
+      max-width: 20rem;
+      margin: 0 auto;
+      border: 1px solid #dcdcdc;
+      height: 2rem;
+      font: inherit;
+      color: inherit;
+    }
+    input + input {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <input />
+  <input />
+  <div id="output">0</div>
+  <script>
+    function compareTwoStrings(first, second) {
+      first = first.replace(/\s+/g, "");
+      second = second.replace(/\s+/g, "");
+
+      if (first === second) return 1; // identical or empty
+      if (first.length < 2 || second.length < 2) return 0; // if either is a 0-letter or 1-letter string
+
+      let firstBigrams = new Map();
+      for (let i = 0; i < first.length - 1; i++) {
+        const bigram = first.substring(i, i + 2);
+        const count = firstBigrams.has(bigram) ? firstBigrams.get(bigram) + 1 : 1;
+
+        firstBigrams.set(bigram, count);
+      }
+
+      let intersectionSize = 0;
+      for (let i = 0; i < second.length - 1; i++) {
+        const bigram = second.substring(i, i + 2);
+        const count = firstBigrams.has(bigram) ? firstBigrams.get(bigram) : 0;
+
+        if (count > 0) {
+          firstBigrams.set(bigram, count - 1);
+          intersectionSize++;
+        }
+      }
+
+      return (2.0 * intersectionSize) / (first.length + second.length - 2);
+    }
+
+    const inputs = document.querySelectorAll("input");
+    const output = document.querySelector("#output");
+
+    const handleInputChange = (event) => {
+      const values = [...inputs].map((input) => input.value);
+      if (values[0] && values[1]) {
+        output.textContent = compareTwoStrings(values[0], values[1]);
+      } else {
+        output.textContent = "0";
+      }
+    };
+
+    inputs.forEach((node) => {
+      node.addEventListener("change", handleInputChange);
+    });
+  </script>
+</body>
+</html>
