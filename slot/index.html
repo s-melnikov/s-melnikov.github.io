@@ -13,14 +13,14 @@
   <button onclick="setLines(-1)">-</button>
   <button onclick="setLines(1)">+</button>
   Auto:
-  <button onclick="auto(1000)">play</button>
+  <button onclick="auto(300)">play</button>
   <button onclick="stop()">stop</button>
-  <button onclick="spin()">SPIN</button>
+  <button onclick="spin(true)">SPIN</button>
   <pre id="outlet"></pre>
   <script>
   console.clear()
   const REELS_COUNT = 5
-  const ROWS_COUNT = 3
+  const ROWS_COUNT = 3  
   const SYMBOLS_COUNT = [
     6, // x apple
     5, // x grape
@@ -128,34 +128,45 @@
 
   function display(win, winLines) {
     let symbols = displayedSymbols
-    let symbols_names = ["apple", "grape", "lemon", "cherr", "banan", "water", "orang", " BAR "]
+    let symbols_names = ["🍏", "🍇", "🍋", "🍒", "🍌", "🍉", "🍊", "💎"]
     // console.clear()
     let str = "Money: $" + money + " | Bet: $" + bet + " x " +
       playing_lines_count + " lines\n"
-    str += "┌──" + Array(REELS_COUNT).join("────────") + "───┐\n"
+    str += "┌" + Array(REELS_COUNT).join("────") + "┐\n"
     for (let row = 0; row < ROWS_COUNT; row++) {
-      str += "│"
+      str += " "
       for (let reel = 0; reel < REELS_COUNT; reel++) {
-        str += "  " + symbols_names[symbols[reel][row]]
+        str += " " + symbols_names[symbols[reel][row]]
       }
-      str += "  │\n"
+      str += " \n"
     }
-    str += "└──" + Array(REELS_COUNT).join("────────") + "───┘\n"
-    if (win !== undefined) {
+    str += "└" + Array(REELS_COUNT).join("────") + "┘\n"
+    if (win === undefined) {
+      str += "Lines:\n"
+      for (let line = 0; line < playing_lines_count; line++ ) {
+        for (let row = 0; row < ROWS_COUNT; row++ ) {
+          str+= " "
+          for (let reel = 0; reel < REELS_COUNT; reel++) {
+            str += (LINES[line][reel] === row ? " * " : " - ")
+          }
+          str += "\n"
+        }
+        str += "\n"
+      }
+    } else {
       str += "Win: $" + win + "\n"
       if (winLines.length) {
         str += "Lines: \n"
         str += winLines.map(function(data) {
-        let s = "factor: " + data.factor +
-          ", line: \n"
+        let s = "x" + data.factor + "\n"
           for (let row = 0; row < ROWS_COUNT; row++ ) {
-          s+= "   "
-          for (let reel = 0; reel < REELS_COUNT; reel++) {
-            s += data.line[reel] === row ? " " +
-            (reel >= data.count ? "xxxxx" : symbols_names[data.symbol])
-            : " -----"
-          }
-          s += "\n"
+            s+= " "
+            for (let reel = 0; reel < REELS_COUNT; reel++) {
+              s += data.line[reel] === row ? " " +
+              (reel >= data.count ? " x" : symbols_names[data.symbol])
+              : "  -"
+            }
+            s += "\n"
           }
         return s
         }).join("\n")
@@ -164,7 +175,8 @@
     outlet.textContent = str
   }
 
-  function spin() {
+  function spin(manual) {
+    if (manual) clearTimeout(intervalId)
     let symbols = getRandomSymbols()
     let winLines = checkWinLines(symbols)
     let win = 0
