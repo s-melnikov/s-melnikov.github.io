@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Modules</title>
+  </head>
+  <body>
+    <script src="modules.js"></script>
+    <script>
+      (async() => {
+        require(["app/counter"], (counter) => {
+          console.log("#1", counter.getValue());
+          counter.increment();
+          console.log("#1", counter.getValue());
+          counter.increment();
+          console.log("#1", counter.getValue());
+        });
+        require(["app/counter"], (counter) => {
+          console.log("#2", counter.getValue());
+          counter.decrement();
+          console.log("#2", counter.getValue());
+          counter.decrement();
+          console.log("#2", counter.getValue());
+        });
+      })();
+    </script>
+  </body>
+</html>
