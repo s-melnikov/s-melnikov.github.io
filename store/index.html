@@ -2,104 +2,26 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Mongo like database</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    body {
+      background: #272822;
+      color: #fff;
+      padding: 0;
+      margin: 0;
+    }
+    pre {
+      margin: 0;
+    }
+  </style>
 </head>
-<pre>
-<code>
-let dbname = "mydatabase"
-
-database(dbname).drop();
-
-let db = database(dbname)
-
-assert(db.$name, dbname, "db.$name !== '${dbname}'")
-
-let tasks = database(dbname).collection("tasks")
-
-let newTask = database(dbname)
-  .collection("tasks")
-  .push({ id: 1, text: "Task #1", completed: false }, result => {
-    console.log(result.$key)
-  })
-
-let newTasks = database(dbname)
-  .collection("tasks")
-  .pushMany([
-    { id: 2, text: "Task #2", completed: false },
-    { id: 3, text: "Task #3", completed: true },
-    { id: 4, text: "Task #4", completed: false },
-    { id: 5, text: "Task #5", completed: true }
-  ], result => {
-    console.log(result.length)
-  })
-
-database(dbname).collection("tasks").find().then(result => {
-  console.log(result.data().length)
-})
-
-database(dbname).collection("tasks").find().then(result => {
-  console.log(result.first().$key.length)
-})
-
-database(dbname).collection("tasks").find({ completed: true })
-  .then(result => {
-    console.log(result.data().length)
-  })
-
-database(dbname).collection("tasks").find({ completed: false })
-  .then(result => {
-    console.log(result.data().length)
-  })
-
-database(dbname).collection("tasks").find({ completed: false, id: 1 })
-  .then(result => {
-    console.log(result.data().length)
-  })
-
-database(dbname).collection("tasks").find({ completed: true, id: 1 })
-  .then(result => {
-    assert(result.data().length, 0)
-    done()
-  })
-
-database(dbname).collection("tasks").find({ completed: false, id: 1 })
-  .then(result => {
-    console.log(result.first().$key.length)
-  })
-
-database(dbname).collection("tasks")
-  .find({ completed: false, id: 1 }).then(result => {
-    let updated = result.first().update({ completed: true }, entry => {
-      console.log(updated.$key)
-    })
-  })
-
-let collection = database(dbname).collection("tasks")
-
-collection.find({ id: 1 }).then(result => {
-  result.first().delete().then(() => {
-    collection.find().then(result => {
-      console.log(result.data().length)
-    })
-  })
-})
-
-collection.truncate().then(() => {
-  collection.find().then(result => {
-    console.log(result.data().length)
-  })
-})
-
-database(dbname).drop()
-
-console.log(localStorage.mydatabase)
-</code>
-</pre>
 <body>
+  <pre><code id="output"></code></pre>
   <script src="database.js"></script>
   <script src="test_runner.js"></script>
-  <script>
-
+  <script name="main">
     let dbname = "mydatabase"
 
     database(dbname).drop()
@@ -107,102 +29,77 @@ console.log(localStorage.mydatabase)
     describe("Database test", (it, assert) => {
 
       it("can ceate database", done => {
-        let db = database(dbname)
-        assert(db.$name, dbname, "db.$name !== '${dbname}'")
-        done()
-      })
+        const db = database(dbname);
+        assert(db.name, dbname, "db.name === '${dbname}'");
+        done();
+      });
 
       it("can get collection", done => {
-        let tasks = database(dbname).collection("tasks")
-        assert(tasks.$name, "tasks")
-        done()
-      })
+        const tasks = database(dbname).get("tasks");
+        assert(tasks.name, "tasks");
+        done();
+      });
 
       it("can push entry", done => {
-        let newTask = database(dbname)
-          .collection("tasks")
-          .push({ id: 1, text: "Task #1", completed: false }, result => {
-            assert(newTask.$key, result.$key)
-            done()
-          })
-      })
+        const newTask = { text: "Task #1", completed: false };
+        const result = database(dbname).get("tasks").push(newTask);
+        assert(newTask.text, result.text);
+        done();
+      });
 
       it("can push entries", done => {
-        let newTasks = database(dbname)
-          .collection("tasks")
-          .pushMany([
-            { id: 2, text: "Task #2", completed: false },
-            { id: 3, text: "Task #3", completed: true },
-            { id: 4, text: "Task #4", completed: false },
-            { id: 5, text: "Task #5", completed: true }
-          ], result => {
-            assert(newTasks.length, result.length)
-            done()
-          })
-      })
+        const newTasks = [
+          { text: "Task #2", completed: false },
+          { text: "Task #3", completed: true },
+          { text: "Task #4", completed: false },
+          { text: "Task #5", completed: true }
+        ];
+        const result = database(dbname).get("tasks").pushMany(newTasks);
+        assert(result.length, newTasks.length);
+        done();
+      });
 
       it("can find entries", done => {
-        database(dbname).collection("tasks").find().then(result => {
-          assert(result.data().length, 5)
-          done()
-        })
-      })
+        const found = database(dbname).get("tasks").find();
+        assert(found.length, 5);
+        done();
+      });
 
       it("can find one entry", done => {
-        database(dbname).collection("tasks").find().then(result => {
-          assert(result.first().$key.length, 16)
-          done()
-        })
-      })
+        const result = database(dbname).get("tasks").findOne();
+        assert(result.$id.length, 16);
+        done();
+      });
 
       it("can find entries with condition #1", done => {
-        database(dbname).collection("tasks").find({ completed: true })
-          .then(result => {
-            assert(result.data().length, 2)
-            done()
-          })
-      })
+        const result = database(dbname).get("tasks").find({ completed: true });
+        assert(result.length, 2);
+        done();
+      });
 
       it("can find entries with condition #2", done => {
-        database(dbname).collection("tasks").find({ completed: false })
-          .then(result => {
-            assert(result.data().length, 3)
-            done()
-          })
-      })
+        const result = database(dbname).get("tasks").find({ completed: false })
+        assert(result.length, 3);
+        done();
+      });
 
       it("can find entries with condition #3", done => {
-        database(dbname).collection("tasks").find({ completed: false, id: 1 })
-          .then(result => {
-            assert(result.data().length, 1)
-            done()
-          })
-      })
+        const result = database(dbname).get("tasks").find({ completed: false, text: "Task #1" })
+        assert(result.length, 1);
+        done();
+      });
 
       it("can find entries with condition #4", done => {
-        database(dbname).collection("tasks").find({ completed: true, id: 1 })
-          .then(result => {
-            assert(result.data().length, 0)
-            done()
-          })
-      })
-
-      it("can find one entry with condition", done => {
-        database(dbname).collection("tasks").find({ completed: false, id: 1 })
-          .then(result => {
-            assert(result.first().$key.length, 16)
-            done()
-          })
-      })
+        const result = database(dbname).get("tasks").find({ completed: true, text: "Task #1" })
+        assert(result.length, 0);
+        done();
+      });
 
       it("can update entry", done => {
-        database(dbname).collection("tasks")
-          .find({ completed: false, id: 1 }).then(result => {
-            let updated = result.first().update({ completed: true }, entry => {
-              assert(updated.$key, entry.$key)
-              done()
-            })
-          })
+        const result = database(dbname).get("tasks").find({ completed: false });
+
+        assert(result);
+        done();
       })
 
       it("can delete entry", done => {
@@ -233,7 +130,12 @@ console.log(localStorage.mydatabase)
         done()
       })
 
-    })      
+    })
   </script>
+  <script>
+    const output = document.querySelector("#output");
+    output.textContent = document.querySelector("script[name=main]").textContent;
+  </script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
