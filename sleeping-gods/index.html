@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=contain">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#f5f6f8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gabriela&display=swap" rel="stylesheet">
+  </head>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html {
+      height: 100%;
+      background-color: #040d0a;
+      background-image: url(bg.jpg);
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    body {
+      padding: 0.5rem;
+      margin: 0;
+      font-family: "Gabriela", serif;
+      font-weight: 400;
+      font-style: normal;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: flex;
+      height: 100%;
+    }
+    input, button {
+      font: inherit;
+    }
+    input {
+      font-size: 3rem;
+      text-align: center;
+      padding: 0.5rem;
+      width: 9rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: #ffffffc9;
+      box-shadow: inset 4px 4px 16px #00000078;
+    }
+    button {
+      margin-top: 1rem;
+      border-radius: 0.5rem;
+      font-size: 1.5rem;
+      border: none;
+      background-color: #5f4035;
+      padding: 0.75rem 1.5rem;
+      box-shadow: inset 1px 1px 4px #ffffff6e, inset -1px -1px 4px #000000;
+      color: #fff;
+    }
+    button:active {
+      box-shadow: inset -1px -1px 4px #ffffff6e, inset 1px 1px 4px #000000;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      margin: auto;
+    }
+    .text {
+      color: #fff;
+      white-space: pre;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      text-shadow: 2px 2px 1px #000;
+      min-height: 5.75rem;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="text"></div>
+      <input placeholder="000" />
+      <button>Перевірити</button>
+    </div>
+    <script>
+      const LOCATIONS = {
+        "104": "Печеря в пустелі",
+        "146": "Святилище терену",
+        "181": "Святилище Риб'ячої Кістки",
+        "217": "Кораловий храм",
+        "92": "Фортеця Калдера",
+        "52": "Криваві руїни",
+      };
+      const text = document.querySelector(".text");
+      const input = document.querySelector("input");
+      const button = document.querySelector("button");
+
+      input.addEventListener("input", function() {
+        text.textContent = "";
+      });
+
+      button.addEventListener("click", function(event) {
+        const value = input.value.trim();
+
+        if (!value) {
+          text.textContent = "Введіть номер локації";
+        } else if (LOCATIONS[value]) {
+          text.textContent = ["Так!\n", "В локації", value, "є підземелля ", "\n\"", LOCATIONS[value], "\""].join(" ");
+        } else {
+          text.textContent = ["Нажаль, В локації", value, "нема підземелля"].join(" ");
+        }
+      });
+    </script>
+  </body>
+</html>
