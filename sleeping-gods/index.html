@@ -67,7 +67,6 @@
     }
     .text {
       color: #fff;
-      white-space: pre;
       font-size: 1.5rem;
       margin-bottom: 1rem;
       text-align: center;
@@ -104,9 +103,9 @@
         if (!value) {
           text.textContent = "Введіть номер локації";
         } else if (LOCATIONS[value]) {
-          text.textContent = ["Так!\n", "В локації", value, "є підземелля ", "\n\"", LOCATIONS[value], "\""].join(" ");
+          text.textContent = "Так!\nВ локації " + value + " є підземелля\n\"" + LOCATIONS[value] + "\"";
         } else {
-          text.textContent = ["Нажаль, В локації", value, "нема підземелля"].join(" ");
+          text.textContent = "Нажаль, в локації " + value + " нема підземелля";
         }
       });
     </script>
