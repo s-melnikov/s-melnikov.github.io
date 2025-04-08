@@ -2,12 +2,12 @@ async function loadImage(path) {
   return new Promise((resolve) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.src = path;
+    image.src = "/games/royal-goods/" + path;
   });
 }
 
 async function loadJSON(path) {
-  const resp = await fetch(path);
+  const resp = await fetch("/games/royal-goods/" + path);
   return resp.json();
 }
 
@@ -26,7 +26,7 @@ async function loadingAssets(assets) {
   entries.forEach(([key], index) => {
     assets[key] = result[index];
   });
-  return assets;  
+  return assets;
 }
 
 async function init() {
@@ -35,7 +35,7 @@ async function init() {
   const assets = await loadingAssets({
     image: { path: "images/sprite_all_hq.jpg", type: "image" },
     data: { path: "assets.json", type: "json" },
-  });    
+  });
 
   const game = new Game({ el: document.querySelector("#root") });
 
@@ -62,13 +62,13 @@ class Game {
     this.el.style.width = "2000px";
     this.el.style.height = "2000px";
     const stored = localStorage.gameTransform;
-    this.transform = stored 
+    this.transform = stored
       ? JSON.parse(stored)
-      : { 
-        x: -500, 
-        y: -500, 
-        z: 0, 
-        scale: 0.5, 
+      : {
+        x: -500,
+        y: -500,
+        z: 0,
+        scale: 0.5,
         rotateX: 10
       };
 
@@ -94,9 +94,9 @@ class Game {
   applyTransfrom() {
     const { x, y, scale, rotateX } = this.transform;
     this.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    document.body.style.transform 
+    document.body.style.transform
       = `rotateX(${rotateX}deg) scale(${scale})`;
-    localStorage.gameTransform = JSON.stringify(this.transform);    
+    localStorage.gameTransform = JSON.stringify(this.transform);
   }
 
   add(el) {
@@ -107,7 +107,7 @@ class Game {
   select(el) {
     if (!this.selected.includes(el)) {
       el.onSelect();
-      this.selected.push(el);      
+      this.selected.push(el);
     }
   }
 
@@ -130,30 +130,30 @@ class Game {
   handleWindowMouseDown(event) {
     const { clientX: x, clientY: y, which } = event;
     this.dragStart = { x, y };
-    this.isRightMouse = which === 3; 
+    this.isRightMouse = which === 3;
   }
 
   handleWindowMouseUp() {
-    this.dragStart = null;    
+    this.dragStart = null;
     this.isRightMouse = null;
   }
 
   handleWindowMouseOut() {
     if (event.target === event.currentTarget) {
-      this.dragStart = null;  
-      this.isRightMouse = null;    
-    }  
+      this.dragStart = null;
+      this.isRightMouse = null;
+    }
   }
 
   handleWindowMouseMove(event) {
     if (this.dragStart) {
-      const { 
-        scale, 
-        rotateX: prevRotateX, 
-        rotateZ: prevRotateZ, 
+      const {
+        scale,
+        rotateX: prevRotateX,
+        rotateZ: prevRotateZ,
       } = this.transform;
       const { x, y } = this.dragStart;
-      const { clientX, clientY } = event; 
+      const { clientX, clientY } = event;
       const deltaX = clientX - x;
       const deltaY = clientY - y;
       if (this.isRightMouse) {
@@ -163,7 +163,7 @@ class Game {
         this.transform.rotateZ = rotateZ;
       } else {
         this.transform.x += deltaX / scale;
-        this.transform.y += deltaY / scale;        
+        this.transform.y += deltaY / scale;
       }
       this.applyTransfrom();
       this.dragStart = { x: clientX, y: clientY };

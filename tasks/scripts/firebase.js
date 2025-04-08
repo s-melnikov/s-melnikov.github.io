@@ -1,5 +1,4 @@
-define('firebase-auth', [], () => {
-
+define('firebase', [], () => {
   firebase.initializeApp({
     apiKey: 'AIzaSyAYoWsXOGnwLjlzbqR2uokozrDqXQCuuJU',
     databaseURL: 'https://timetracker-2dbde.firebaseio.com'
@@ -28,6 +27,7 @@ define('firebase-auth', [], () => {
   }
 
   return {
+    auth,
     signIn,
     signOut,
   }

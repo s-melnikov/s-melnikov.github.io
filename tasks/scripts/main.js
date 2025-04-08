@@ -1,5 +1,4 @@
-require(['firebase'], (Firebase) => {
-
+require(['firebase'], ({ auth }) => {
   auth.onAuthStateChanged(user => {
     if (user) {
       console.log(user)
@@ -23,6 +22,8 @@ require(['firebase'], (Firebase) => {
       console.log('error: email for confirmation is empty');
     }
   }
+
+  console.log(1);
 
   const { h, app } = hyperapp;
 });

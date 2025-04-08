@@ -13,7 +13,7 @@ button {
 a {
   color: #444;
 }
-.flex, 
+.flex,
 .flex-cy {
   display: flex;
 }
@@ -40,7 +40,10 @@ table {
 table th,
 table td {
   padding: 8px;
-  font-size: 14px;
+  font-size: 13px;
   text-align: left;
   border-bottom: 1px solid #dcdcdc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

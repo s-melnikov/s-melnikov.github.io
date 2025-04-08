@@ -8,6 +8,7 @@
     body {
       padding: 0;
       margin: 0;
+      background-color: #111;
     }
     canvas {
       display: block;
@@ -36,7 +37,7 @@ class Scene {
     window.addEventListener("mousemove", this.handleMouseMove.bind(this));
     window.addEventListener("keydown", this.handleKeyDown.bind(this));
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
-    this.handleResize();    
+    this.handleResize();
   }
 
   handleKeyDown(event) {
@@ -75,7 +76,7 @@ class Scene {
   update() {
     const rotateZ = this.rotateZ;
     const ang = rotateZ / 500;
-    const s = Math.sin(ang); 
+    const s = Math.sin(ang);
     const c = Math.cos(ang);
     if (this.keys.KeyD) {
       this.strafe -= 20;
@@ -88,7 +89,7 @@ class Scene {
       0, 1, 0, 0,
       s, 0, c, Math.sin(rotateZ / 820),
     ];
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);   
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.draw(mat);
     window.requestAnimationFrame(this.update.bind(this));
   }
@@ -97,8 +98,8 @@ class Scene {
     const ps = this.points;
     const ts = this.trngls;
     for (let i = 0; i < ts.length; i += 3) {
-      const p0 = ts[i] * 3; 
-      const p1 = ts[i + 1] * 3; 
+      const p0 = ts[i] * 3;
+      const p1 = ts[i + 1] * 3;
       const p2 = ts[i + 2] * 3;
       const a = this.vertexShader(ps[p0], ps[p0 + 1], ps[p0 + 2], m);
       const b = this.vertexShader(ps[p1], ps[p1 + 1], ps[p1 + 2], m);
@@ -115,22 +116,24 @@ class Scene {
   }
 
   fragmentShader(a, b, c) {
-    const mz = Math.min(a[2], b[2], c[2]);  
+    const mz = Math.min(a[2], b[2], c[2]);
     if (mz < 1) return;
     const x0 = this.halfWidth + this.perspective * a[0] / a[2];
-    const y0 = this.halfHeight + this.perspective * a[1] / a[2];  
+    const y0 = this.halfHeight + this.perspective * a[1] / a[2];
     const x1 = this.halfWidth + this.perspective * b[0] / b[2];
-    const y1 = this.halfHeight + this.perspective * b[1] / b[2]; 
-    const x2 = this.halfWidth + this.perspective * c[0] / c[2]; 
+    const y1 = this.halfHeight + this.perspective * b[1] / b[2];
+    const x2 = this.halfWidth + this.perspective * c[0] / c[2];
     const y2 = this.halfHeight + this.perspective * c[1] / c[2];
-    this.context.beginPath();  
-    this.context.lineWidth = 5 / mz;
-    this.context.moveTo(x0, y0);  
-    this.context.lineTo(x1, y1);  
-    this.context.lineTo(x2, y2);  
+    this.context.beginPath();
+    this.context.lineWidth = 4 / mz;
+    this.context.strokeStyle = "#f00";
+    this.context.fillStyle = "rgba(255,255,255,0.1)";
+    this.context.moveTo(x0, y0);
+    this.context.lineTo(x1, y1);
+    this.context.lineTo(x2, y2);
     this.context.lineTo(x0, y0);
-    this.context.stroke();  
-    //this.context.fill();
+    this.context.stroke();
+    this.context.fill();
   }
 }
 
@@ -138,19 +141,19 @@ const points = [];
 const trngls = [];
 for (let i = 0; i < 100; i++) {
   const v = [
-    -1, -1, -1,   
-     1, -1, -1,   
-     1, -1,  1,  
+    -1, -1, -1,
+     1, -1, -1,
+     1, -1,  1,
     -1, -1,  1,
     -1,  1, -1,
      1,  1, -1,
      1,  1,  1,
-    -1,  1,  1, 
+    -1,  1,  1,
   ];
   var t = [
-    0, 1, 2,  
-    2, 3, 0,  
-    4, 5, 6, 
+    0, 1, 2,
+    2, 3, 0,
+    4, 5, 6,
     6, 7, 4,
     0, 1, 4,
     1, 4, 5,
@@ -174,6 +177,6 @@ for (let i = 0; i < 100; i++) {
 const scene = new Scene({ points, trngls });
 scene.update();
 
-</script>  
+</script>
 </body>
 </html>

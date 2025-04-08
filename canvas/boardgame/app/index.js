@@ -21,7 +21,7 @@ class Item {
     this.el = document.createElement("div");
     this.el.classList.add("item");
     if (className) {
-      this.el.classList.add(className);      
+      this.el.classList.add(className);
     }
     this.el.style.width = `${width}px`;
     this.el.style.height = `${height}px`;
@@ -34,29 +34,29 @@ class Item {
     this.el.style.backgroundImage = `url(${url})`;
     this.el.style.backgroundPosition = `-${x}px -${y}px`;
   }
-  
+
   moveTo(x, y) {
     this.x = x;
     this.y = y;
-    this.el.style.transform = 
+    this.el.style.transform =
       `translate3d(${x}px, ${y}px, 0) rotate(${this.angle}deg)`;
   }
 
   rotate(deg) {
     this.angle = angle;
-    this.el.style.transform = 
+    this.el.style.transform =
       `translate3d(${this.x}px, ${this.y}px, 0) rotate(${this.angle}deg)`;
   }
 }
 
 class CardAdventure extends Item {
   constructor({ index, sprite }) {
-    super({ 
+    super({
       width: 210,
       height: 297,
       sprite,
       index,
-    });    
+    });
     this.el.classList.add("card");
   }
 
@@ -67,13 +67,13 @@ class CardAdventure extends Item {
   }
 }
 
-const table = new Table({ 
+const table = new Table({
   width: 1600,
   height: 1200,
 });
 
 Promise.all([
-  Utils.loadImage("assets/images/asset1.jpg"),
+  Utils.loadImage("/canvas/boardgame/assets/images/asset1.jpg"),
   // Utils.loadJson("assets/assets.json"),
 ]).then(([asset1, asset2, json]) => {
   hideLoading();
@@ -82,7 +82,7 @@ Promise.all([
     width: 96,
     height: 96,
     face: {
-      url: "assets/images/asset1.jpg",
+      url: "/canvas/boardgame/assets/images/asset1.jpg",
       x: 3362,
       y: 4160,
     },
@@ -92,17 +92,17 @@ Promise.all([
     width: 96,
     height: 96,
     face: {
-      url: "assets/images/asset1.jpg",
+      url: "/canvas/boardgame/assets/images/asset1.jpg",
       x: 3462,
       y: 4160,
     },
     className: "token",
-  }); 
+  });
   const item3 = new Item({
     width: 96,
     height: 96,
     face: {
-      url: "assets/images/asset1.jpg",
+      url: "/canvas/boardgame/assets/images/asset1.jpg",
       x: 3562,
       y: 4160,
     },
@@ -111,21 +111,21 @@ Promise.all([
   item1.moveTo(100, 100);
   item2.moveTo(200, 100);
   item3.moveTo(200, 100);
-  table.addItem(item1); 
-  table.addItem(item2);  
-  table.addItem(item3);  
+  table.addItem(item1);
+  table.addItem(item2);
+  table.addItem(item3);
   table.addItem(
     new Item({
       width: 96,
       height: 96,
       face: {
-        url: "assets/images/asset1.jpg",
+        url: "/canvas/boardgame/assets/images/asset1.jpg",
         x: 3662,
         y: 4160,
       },
       className: "token",
     })
-  ); 
+  );
 
 
 });

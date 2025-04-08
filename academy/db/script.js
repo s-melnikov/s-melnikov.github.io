@@ -23,12 +23,12 @@ if (ENV.db && localStorage[ENV.db]) {
 
 // слушатель нажатия кнопки "Создать базу данных"
 function handleCreateNewBDClick() {
-  fetch("Users.json").then((r) => r.json()).then((response) => {
+  fetch("/academy/db/Users.json").then((r) => r.json()).then((response) => {
     localStorage[Date.now().toString(36)] = JSON.stringify(
       shuffle(response).map((item, index) => ({ ...item, id: index }))
     );
     findDatabases();
-  });  
+  });
 }
 
 // ф-ция открытия базы данных (отображении ее на странице)
@@ -67,13 +67,13 @@ function openDb(name) {
   }
 
   // строим таблицу и выводим ее
-  table.innerHTML = ` 
+  table.innerHTML = `
     <table>
       <thead>
         <tr>
           <th>#</th>
           ${keys.map((key) => `<th>${key}</th>`).join("")}
-        </tr> 
+        </tr>
       </thead>
       <tbody>
         ${data.map((row, index) => `
@@ -81,7 +81,7 @@ function openDb(name) {
             <td>${index + 1}.</td>
             ${keys.map((key) => `<td>${row[key]}</td>`).join("")}
           </tr>
-        `).join("")}         
+        `).join("")}
       </tbody>
     </table>
   `;
@@ -90,7 +90,7 @@ function openDb(name) {
   saveButton.style.display = "block";
 
   // добавляем слушатель события нажатия на кнопку
-  saveButton.addEventListener("click", () => {    
+  saveButton.addEventListener("click", () => {
     // при нажатии скачиваем файл с результатом, который на экране
     downloadFile({
       blob: new Blob([JSON.stringify(data)], {
@@ -104,7 +104,7 @@ function openDb(name) {
 // поиск существующих таблиц
 function findDatabases() {
   const database = Object.keys(localStorage);
-  document.querySelector("#dbList").innerHTML = 
+  document.querySelector("#dbList").innerHTML =
     database.map((name) => `<a ${(name === ENV.db) ? "" : `href="?db=${name}"`}>${name}</a>`).join("");
 }
 

@@ -80,7 +80,7 @@
     } else {
       recordref = fbref.push()
       location.hash = recordref.key()
-      get('assets/default.html', function(r) {
+      get('/fiddle/assets/default.html', function(r) {
         doc.setValue(r)
       })
     }

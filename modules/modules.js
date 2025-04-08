@@ -1,5 +1,6 @@
 ((global) => {
   const MODULES = {};
+  const BASE = document.querySelector("script[base]")?.getAttribute("base") || "/";
   global.require = async(moduleNames, func) => {
     const scriptName = document.currentScript.dataset.name;
     try {
@@ -16,7 +17,7 @@
             MODULES[moduleName] = { pending: true, resolvers: [{ moduleName, resolve }] };
             const script = document.createElement("script");
             script.dataset.name = moduleName;
-            script.src = `/${moduleName}.js`;
+            script.src = `${BASE}${moduleName}.js`;
             document.head.append(script);
           }
         });

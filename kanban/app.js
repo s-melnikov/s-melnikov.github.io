@@ -319,7 +319,7 @@ let main = app(state, actions, Layout, document.body)
 ref.on("value", snapshot => {
   let data = snapshot.val()
   if (data == null) {
-    fetch("mock.json").then(resp => resp.json()).then(({ boards, types, tasks }) => {
+    fetch("/kanban/mock.json").then(resp => resp.json()).then(({ boards, types, tasks }) => {
       boards.map(board => boardsRef.push(board))
       types.map(type => typesRef.push(type))
       tasks.map(task => {

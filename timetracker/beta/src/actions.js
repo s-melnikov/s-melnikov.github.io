@@ -6,7 +6,6 @@ def('actions', ['router', 'firebase'], ({ location: { actions } }, { signInWithE
 
   return {
     location: actions,
-    signIn,
-    changeEmail,
+    signIn
   };
 });

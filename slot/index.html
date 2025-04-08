@@ -20,7 +20,7 @@
   <script>
   console.clear()
   const REELS_COUNT = 5
-  const ROWS_COUNT = 3  
+  const ROWS_COUNT = 3
   const SYMBOLS_COUNT = [
     6, // x apple
     5, // x grape
@@ -145,9 +145,8 @@
       str += "Lines:\n"
       for (let line = 0; line < playing_lines_count; line++ ) {
         for (let row = 0; row < ROWS_COUNT; row++ ) {
-          str+= " "
           for (let reel = 0; reel < REELS_COUNT; reel++) {
-            str += (LINES[line][reel] === row ? " * " : " - ")
+            str += (LINES[line][reel] === row ? "* " : "- ")
           }
           str += "\n"
         }

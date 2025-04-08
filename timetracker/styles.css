@@ -123,7 +123,8 @@ input:focus {
 }
 .task .meta .value,
 .task .meta input {
-  width: 52px;
+  text-align: center;
+  width: 60px;
 }
 .task_started {
   display: inline-block;
