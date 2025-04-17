@@ -1,0 +1,124 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 42px 16px 16px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: "Noto Serif", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  background-image: url(ezra-and-nehemiah/images/bg.png);
+  background-size: cover;
+  background-attachment: fixed;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+h1, h2, h3, h4, h5 {
+  padding: 0;
+  margin: 0 0 0.75em;
+  font-weight: 500;
+}
+h1 { font-size: 22px; }
+h2 { font-size: 18px; }
+h3 { font-size: 16px; }
+h4 { font-size: 14px; }
+h5 { font-size: 13px; }
+p {
+  margin: 0 0 1em;
+}
+blockquote {
+  display: block;
+  background-color: #fff9;
+  padding: 1em 0.5em 1px 1em;
+  margin: 0 0 1em;
+  font-style: italic;
+}
+ul, ol {
+  padding: 0 0 0 1.5em;
+  margin: 0;
+}
+button {
+  border: 1px solid #dcdcdc;
+  border-radius: 2px;
+  background-color: #fff;
+  font-family: inherit;
+  padding: 6px 8px;
+  display: flex;
+}
+#header {
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 6px;
+}
+#menu {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 40px;
+  right: -280px;
+  width: 280px;
+  bottom: 0;
+  visibility: hidden;
+  opacity: 0;
+  padding: 1em 0.5em;
+  background-color: #fbfbfb;
+  transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+  overflow: auto;
+}
+#menu a {
+  font-size: 14px; 
+  padding: 4px 8px; 
+  border-bottom: 1px solid #dcdcdc;
+}
+#menu a:first-child {
+  border-top: 1px solid #dcdcdc;
+}
+#menu a.H1 {
+  font-size: 15px;
+}
+#menu a.H2 {
+  margin-left: 1em;
+}
+#menu a.H3 {
+  margin-left: 2em;
+  font-size: 13px;
+}
+#menu a.H4 {
+  margin-left: 3em;
+  font-size: 12px;
+}
+#menu a.H5 {
+  margin-left: 4em;
+  font-size: 11px;
+}
+#menu.opened {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-100%, 0);
+}
+#outlet {
+  margin-top: 16px;
+}
+.burger {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: linear-gradient(to bottom, #777 0, #777 2px, #fff 2px, #fff);
+  background-size: 100% 6px;
+}

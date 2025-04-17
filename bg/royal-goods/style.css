@@ -11,6 +11,7 @@ body {
   background-color: #f0f0f0;
   overflow: hidden;
   height: 100%;
+  perspective: 2000px;
   background: #4b397e url(images/overlay.png);
 }
 #root {

@@ -1,5 +1,4 @@
 class List {
-
   constructor() {
     this.memory = []
     this.length = 0

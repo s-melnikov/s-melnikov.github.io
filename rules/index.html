@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=contain">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#f5f6f8">
+    <title>Правила</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&family=Gabriela&display=swap" rel="stylesheet">
+    <style>
+      *, *::after, *::before {
+        box-sizing: border-box;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        padding: 0;
+        margin: 0;
+        font-size: 2rem;
+        font-family: "Gabriela", serif;
+        font-weight: 400;
+        font-style: normal;
+        background-image: url(/rules/so-white.png);
+      }
+      #links {
+        margin: auto;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="links"></div>
+    <script>
+      const LINKS = [
+        {
+          name: "Езра та Неємія",
+          path: "ezra-and-nehemiah",
+        }
+      ];
+      const links = document.querySelector("#links");
+      LINKS.forEach(({ name, path }) => {
+        const link = document.createElement("a");
+        link.href = `${location.pathname}/${path}`;
+        link.textContent = name;
+        links.appendChild(link);
+      });
+    </script>
+  </body>
+</html>
