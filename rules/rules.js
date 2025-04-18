@@ -31,7 +31,7 @@ const init = async() => {
 
 	render({ meta, content });	
 
-	if (location.hostname === '127.0.0.1') {
+	/*if (location.hostname === '127.0.0.1') {
 		CACHE.text = text;
 
 		let intervalId = runDev();
@@ -43,7 +43,7 @@ const init = async() => {
 				intervalId = runDev();
 			}
 		});
-	}
+	}*/
 };
 
 function runDev() {
@@ -58,8 +58,7 @@ function runDev() {
 
 async function getRules() {
 	const [,, folder] = location.pathname.split('/');
-	const resp = await fetch(`/rules/${folder}/rules.md`);	
-	const text = await resp.text();
+	const text = document.querySelector('script[type="text/markdown"]').textContent;
 	const [, metaText, content] = text.split('---').map((t) => t.trim());
 	const meta = Object.fromEntries(metaText.split('\n').map((t) => t.split(':').map((t) => t.trim())));
 	return { text, meta, content };
