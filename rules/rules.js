@@ -58,7 +58,7 @@ function runDev() {
 
 async function getRules() {
 	const [,, folder] = location.pathname.split('/');
-	const resp = await fetch(`./${folder}/rules.md`);	
+	const resp = await fetch(`/rules/${folder}/rules.md`);	
 	const text = await resp.text();
 	const [, metaText, content] = text.split('---').map((t) => t.trim());
 	const meta = Object.fromEntries(metaText.split('\n').map((t) => t.split(':').map((t) => t.trim())));
