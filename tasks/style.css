@@ -1,0 +1,49 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  background-color: #313036;
+  color: #fbfbfb;
+  line-height: 1.4;
+}
+.list {
+  margin-left: 1em;
+}
+.task {
+  display: flex;
+}
+.task .wrapper {
+  position: relative;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.task textarea,
+.task input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  resize: none;
+  overflow: hidden;
+}
+.task .text {
+  opacity: 0.4;
+  outline: 1px solid red;
+  white-space: pre-wrap;
+  min-width: 2em;
+  padding-right: 1em;
+  min-height: 1.4em;
+}
+.task.completed {
+  color: #aaa;
+}

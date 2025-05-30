@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=contain">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#f5f6f8">
+    <title>Automa</title>
+    <style media="screen">
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        position: relative;
+        background-image: url(/automa/assets/ep_naturalwhite.webp);
+        font-family: sans-serif;
+        font-size: 1rem;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .content {
+        padding: 1rem;
+      }
+      .decks {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
+      }
+      .deck {
+        position: relative;
+        width: 224px;
+        height: 348px;
+      }
+      .deck::after {
+        content: "";
+        position: absolute;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        left: -4px;
+        top: -4px;
+        width: 232px;
+        height: 356px;
+        border-radius: 10px;
+      }
+      .draw {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translate(0, -100%);
+        margin-top: -32px;
+      }
+      .display .card {
+        display: none;
+      }
+      .card {
+        width: 224px;
+        height: 348px;
+        background: url(/automa/assets/forrest_shuffle_card_bg.jpg);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .card .info {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        background: #ffffffbb;
+        border-top-left-radius: 8px;
+        color: #3e0808;
+        color: #222;
+        display: flex;
+        flex-direction: column;
+        padding: 0.5em 1em 0.75em;
+      }
+      .card .info .top {
+        font-size: 5rem;
+        display: flex;
+        align-items: center;
+      }
+      .card .info .top .sign {
+        text-align: center;
+        width: 0.625em;
+        margin-right: 0.125em;
+      }
+      .card .info .top .arrow {
+        margin-left: 0.25em;
+        width: 0.5em;
+      }
+      .card .info .top .arrow.left {
+        border-style: solid;
+        border-color: transparent transparent transparent #222;
+        border-width: 0.25em 0 0.25em 0.5em;
+      }
+      .card .info .top .arrow.right {
+        border-style: solid;
+        border-color: transparent #222 transparent transparent;
+        border-width: 0.25em 0.5em 0.25em 0;
+      }
+      .card .info .bottom {
+        font-size: 2rem;
+        display: none;
+      }
+      .card .info .bottom .minicard {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        width: 1em;
+        height: 1.55em;
+        margin: 0 auto;
+      }
+      .card .info .bottom .minicard .remove {
+        position: absolute;
+        right: -0.25em;
+        bottom: -0.25em;
+        width: 0.625em;
+        height: 0.625em;
+        background-color: #000;
+        border-radius: 50%;
+      }
+      .card .info .bottom .minicard .remove::after,
+      .card .info .bottom .minicard .remove::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background-color: #fff;
+        width: 0.0625em;
+        height: 0.375em;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+      .card .info .bottom .minicard .remove::before {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+      .buttons {
+        margin-top: 1em;
+        display: flex;
+        gap: 1em;
+        font-size: 1.5rem;
+      }
+      .buttons button {
+        flex: auto;
+        font: inherit;
+        color: inherit;
+        background-color: #fff;
+        border: 2px solid #fff;
+        padding: 0.5em 1em;
+        border-radius: 4px;
+        border: 1px solid #dcdcdc;
+        box-shadow: 0 3px 0 #dcdcdc;
+        transition: box-shadow 0.1s, transform 0.1s;
+      }
+      .buttons button:active {
+        box-shadow: 0 0 0 #dcdcdc;
+        transform: translate(0, 2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="decks">
+        <div class="deck draw">
+          <div class="card"></div>
+        </div>
+        <div class="deck display">
+          <div class="card">
+            <div class="info">
+              <div class="top">
+                <div class="sign"></div>
+                <div class="number">0</div>
+                <div class="arrow"></div>
+              </div>
+              <div class="bottom">
+                <div class="minicard">
+                  <div class="number"></div>
+                  <div class="remove"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="buttons">
+        <button type="button" class="button">Draw</button>
+      </div>
+    </div>
+    <script>
+      const CARDS = [
+        { "number": -4 },
+        { "number": 4 },
+        { "number": 2 },
+        { "number": -2, "side": "right" },
+        { "number": -4, "side": "right" },
+        { "number": 4, "side": "left" },
+        { "number": 2, "side": "left" },
+        { "number": -2, "side": "right" },
+        { "number": -3, "side": "left" },
+        { "number": 3, "side": "left" },
+        { "number": -2, "side": "left" },
+        { "number": -1, "discard": 1 },
+        { "number": -3, "side": "right" },
+        { "number": 3, "side": "left" },
+        { "number": -2, "side": "left" },
+        { "number": -1, "discard": 1 },
+        { "number": -1, "side": "right", "discard": 1 },
+        { "number": -1, "side": "right", "discard": 1 },
+        { "number": 1, "discard": 1 },
+        { "number": 1, "discard": 1 }
+      ];
+      let deck = [];
+      let [hash, turn = 0] = location.hash.slice(1)
+        ? location.hash.slice(1).split(":").map((n) => +n)
+        : [location.hash = Date.now(), 0];
+      const random = createRandom(hash);
+      const drawNode = document.querySelector(".draw");
+      const displayNode = document.querySelector(".display");
+      const button = document.querySelector(".button");
+      for (let i = 0; i < turn; i++) { getCard(); }
+      button.addEventListener("click", () => {
+        showCard();
+        turn++;
+      });
+      function init() {
+        showCard(turn);
+      }
+      function showCard(t) {
+        const currentCard = getCard();
+        const { number = 0, side = "left", discard = 0 } = CARDS[currentCard];
+        console.log({ number, side, discard });
+      }
+      function getDeck() {
+        return CARDS.map((c, i) => i);
+      }
+      function getCard() {
+        if (!deck.length) {
+          deck = getDeck();
+        }
+        const i = randIntRange(0, deck.length - 1, random());
+        const r = deck[i];
+        deck.splice(i, 1);
+        return r;
+      }
+      function createRandom(value) {
+    		return () => {
+    	    value ^= value << 13;
+    	    value ^= value >> 17;
+    	    value ^= value << 5;
+    	    return (value >>> 0) / 4294967296;
+    	  }
+    	}
+      function randIntRange(min, max, r) {
+    		return Math.floor(min + (max - min + 1) * r);
+    	}
+      init();
+    </script>
+  </body>
+</html>
