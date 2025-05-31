@@ -96,12 +96,12 @@
         margin-left: 0.25em;
         width: 0.5em;
       }
-      .card .info .top .arrow.left {
+      .card .info .top .arrow.right {
         border-style: solid;
         border-color: transparent transparent transparent #222;
         border-width: 0.25em 0 0.25em 0.5em;
       }
-      .card .info .top .arrow.right {
+      .card .info .top .arrow.left  {
         border-style: solid;
         border-color: transparent #222 transparent transparent;
         border-width: 0.25em 0.5em 0.25em 0;
@@ -225,21 +225,31 @@
         ? location.hash.slice(1).split(":").map((n) => +n)
         : [location.hash = Date.now(), 0];
       const random = createRandom(hash);
-      const drawNode = document.querySelector(".draw");
-      const displayNode = document.querySelector(".display");
+      const draw = document.querySelector(".draw");
+      const display = document.querySelector(".display");
       const button = document.querySelector(".button");
       for (let i = 0; i < turn; i++) { getCard(); }
       button.addEventListener("click", () => {
         showCard();
         turn++;
+        location.hash = hash + ":" + turn;
       });
       function init() {
-        showCard(turn);
+        if (turn > 0) showCard();
       }
-      function showCard(t) {
+      function showCard() {
         const currentCard = getCard();
         const { number = 0, side = "left", discard = 0 } = CARDS[currentCard];
         console.log({ number, side, discard });
+        display.querySelector(".card").style.display = "block";
+        display.querySelector(".sign").textContent = number < 0 ? '-' : '+';
+        display.querySelector(".number").textContent = Math.abs(number);
+        display.querySelector(".arrow").classList.remove("left", "right");
+        if (number < 0) {
+          display.querySelector(".arrow").classList.add(side);
+        }
+        display.querySelector(".bottom").style.display = discard ? "block" : "none";
+        display.querySelector(".minicard .number").textContent = discard;
       }
       function getDeck() {
         return CARDS.map((c, i) => i);
