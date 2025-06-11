@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/dummy-data/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <fieldset>
+            <legend>Company</legend>
+            <input class="company" value="">
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <fieldset>
+            <legend>Amount</legend>
+            <div class="row">
+              <div class="col">
+                <input class="amount-from" value="">
+              </div>
+              <div class="col">
+                <input class="amount-to" value="">
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <fieldset>
+          <legend>Date</legend>
+          <div class="row">
+            <div class="col">
+              <input type="date" class="date-from" value="">
+            </div>
+            <div class="col">
+              <input type="date" class="date-to" value="">
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <!-- <div class="row">
+        <div class="col">
+          <textarea class="contacts"></textarea>
+        </div>
+      </div> -->
+      <table class="my-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Document</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="buttons">
+        <button class="qbo">QBO.csv</button>
+        <button class="xero">XERO.csv</button>
+      </div>
+    </div>
+
+    <div class="invoice-wrapper"></div>
+    <script type="text/template" class="template">
+      <div class="invoice-header">
+          <div class="company-info">
+              <h1>{%= from.name %}</h1>
+              <p>{%= from.address %}<br>
+              {%= from.city %}<br>
+              {%= from.country %}</p>
+          </div>
+          <div class="invoice-title">
+              <h2>INVOICE</h2>
+              <p><strong>Invoice #:</strong> {%= num %}</p>
+              <p><strong>Date:</strong> {%= date %}</p>
+          </div>
+      </div>
+
+      <div class="invoice-details">
+          <div class="bill-to">
+              <h3>Bill To:</h3>
+              <p><strong>{%= to.name %}</strong><br>
+                {%= to.address %}<br>
+                {%= to.city %}<br>
+                {%= to.country %}</p>
+          </div>
+          <div class="invoice-info">
+              <h3>Invoice Information:</h3>
+              <p><strong>Due Date:</strong> {%= dueDate %}</p>
+              <p><strong>Payment Terms:</strong> Net 30</p>
+          </div>
+      </div>
+
+      <table class="invoice-table">
+          <thead>
+              <tr>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Rate</th>
+                  <th class="text-right">Amount</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>{%= description %}/td>
+                  <td>{%= quantity %}</td>
+                  <td>${%= Math.abs(Math.round(amount / quantity * 100) / 100).toFixed(2) %}</td>
+                  <td class="text-right">${%= Math.abs(amount).toFixed(2) %}</td>
+              </tr>
+          </tbody>
+      </table>
+
+      <div class="invoice-summary">
+          <div class="summary-row">
+              <span>Subtotal:</span>
+              <span>${%= Math.abs(amount).toFixed(2) %}</span>
+          </div>
+          <div class="summary-row">
+              <span>Total:</span>
+              <span>${%= Math.abs(amount).toFixed(2) %}</span>
+          </div>
+      </div>
+
+      <div class="invoice-footer">
+          <p><strong>Payment Instructions:</strong><br>
+          Please make payment via bank transfer or check within 30 days.<br>
+          Account: 123-456-789 | Routing: 987-654-321</p>
+      </div>
+    </script>
+    <script src="/dummy-data/html2pdf.bundle.min.js"></script>
+    <script src="/dummy-data/script.js"></script>
+  </body>
+</html>
