@@ -18,6 +18,7 @@ html {
   height: 100%;
 }
 body {
+  display: flex;
   padding: 0;
   margin: 0;
   background-color: #282c34;
@@ -105,7 +106,7 @@ table.my-table td:nth-child(3) {
   background: #fff;
   color: #222;
   width: 720px;
-  height: 1020px;
+  height: 1011px;
   padding: 2rem 4rem;
   display: none;
 }
@@ -128,6 +129,7 @@ table.my-table td:nth-child(3) {
 }
 .invoice-title {
     text-align: right;
+    white-space: nowrap;
 }
 .invoice-title h2 {
     color: #e74c3c;

@@ -227,7 +227,7 @@ function getRandomTransactions() {
 
 function loadCsv(platform, tsx) {
   const csv = [
-    `${platform === 'xero' ? '*Date,*Amount,Description' : 'Date,Description,Amount'}`,
+    `${platform === 'xero' ? '*Date,Description,*Amount' : 'Date,Description,Amount'}`,
     ...tsx.map(([date, desc, amount]) => {
       return [date, `"${desc}"`, amount].join(",")
     })
@@ -237,13 +237,15 @@ function loadCsv(platform, tsx) {
 }
 
 async function handleDownloadDocClick(index) {
+  const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
   const [date, description, amount] = TSX[index];
   const element = q('.invoice-wrapper');
   const company = DATA.company.split(";");
   const typeInvoice = amount > 0;
   const contact = getRandomArrayItem(typeInvoice ? clients : vendors);
   const today = new Date();
-  const dueDate = formatDate(new Date(+parseDate(date) + 14 * 24 * 60 * 60 * 1000));
+  const issueDate = new Date(+parseDate(date) - getRandomInt(0, TWO_WEEKS));
+  const dueDate = formatDate(new Date(+issueDate + TWO_WEEKS));
   const companyData = {
     name: company[0],
     country: company[1],
@@ -261,7 +263,7 @@ async function handleDownloadDocClick(index) {
     num: `INV-${(today.getMonth() + 1).toString().padStart(2, 0)}-${today.getDate()}-${getRandomInt(0, 1000000).toString(36).toUpperCase()}`,
     from: typeInvoice ? companyData : contactData,
     to: typeInvoice ? contactData : companyData,
-    date,
+    date: formatDate(issueDate),
     dueDate,
     description,
     amount,
