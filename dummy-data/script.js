@@ -226,10 +226,11 @@ function getRandomTransactions() {
 }
 
 function loadCsv(platform, tsx) {
+  const xeroPlatform = platform === 'xero';
   const csv = [
-    `${platform === 'xero' ? '*Date,Description,*Amount' : 'Date,Description,Amount'}`,
+    `${xeroPlatform ? '*Date,*Amount,Payee,Description,Reference,Check Number' : 'Date,Description,Amount'}`,
     ...tsx.map(([date, desc, amount]) => {
-      return [date, `"${desc}"`, amount].join(",")
+      return xeroPlatform ? [date, amount, "", `"${desc}"`, "", ""] : [date, `"${desc}"`, amount].join(",")
     })
   ].join('\n');
 
