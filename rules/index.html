@@ -31,11 +31,15 @@
         background-image: url(/rules/so-white.png);
       }
       #links {
+        display: flex;
+        flex-direction: column;
         margin: auto;
       }
       a {
         text-decoration: none;
         color: inherit;
+        padding: 8px 16px;
+        text-align: center;
       }
     </style>
   </head>
@@ -46,12 +50,16 @@
         {
           name: "Езра та Неємія",
           path: "ezra-and-nehemiah",
+        },
+        {
+          name: "Скара Брає",
+          path: "skara-brae",
         }
       ];
       const links = document.querySelector("#links");
       LINKS.forEach(({ name, path }) => {
         const link = document.createElement("a");
-        link.href = `${location.pathname}/${path}`;
+        link.href = `${location.pathname.replace(/\/$/, "")}/${path}`;
         link.textContent = name;
         links.appendChild(link);
       });
