@@ -1,0 +1,427 @@
+{
+  "company": {
+    "name": "Doc Pairing Test",
+    "description": "Business process automation and integration for e-commerce companies",
+    "phone": "+420 777 654 321",
+    "email": "info@techflow.cz",
+    "vatId": "CZ87654321"
+  },
+  "invoices": {
+    "outgoing": [
+      {
+        "id": "TF-OUT-101",
+        "date": "2025-08-10",
+        "to": {
+          "name": "ShopifyBoost GmbH",
+          "address": "Alexanderplatz 3, Berlin, Germany",
+          "email": "finance@shopifyboost.de"
+        },
+        "items": [
+          {
+            "description": "Custom API integration for Shopify",
+            "quantity": 2,
+            "unitPrice": 750.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Monthly maintenance plan",
+            "quantity": 1,
+            "unitPrice": 250.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-102",
+        "date": "2025-09-15",
+        "to": {
+          "name": "Ecomify Ltd.",
+          "address": "12 King Street, London, UK",
+          "email": "billing@ecomify.co.uk"
+        },
+        "items": [
+          {
+            "description": "Automation script for product feed synchronization",
+            "quantity": 1,
+            "unitPrice": 420.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Consulting session (2 hours)",
+            "quantity": 2,
+            "unitPrice": 90.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-103",
+        "date": "2025-09-22",
+        "to": {
+          "name": "NovaTech Online",
+          "address": "Warszawska 22, Kraków, Poland",
+          "email": "finance@novatech.pl"
+        },
+        "items": [
+          {
+            "description": "E-commerce backend optimization",
+            "quantity": 1,
+            "unitPrice": 600.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Server monitoring setup",
+            "quantity": 1,
+            "unitPrice": 250.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-104",
+        "date": "2025-09-25",
+        "to": {
+          "name": "QuickShop EU",
+          "address": "Rue de Commerce 10, Brussels, Belgium",
+          "email": "accounts@quickshop.eu"
+        },
+        "items": [
+          {
+            "description": "Integration with payment gateway (Stripe)",
+            "quantity": 1,
+            "unitPrice": 480.0,
+            "taxRate": 10
+          },
+          {
+            "description": "API documentation package",
+            "quantity": 1,
+            "unitPrice": 100.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-105",
+        "date": "2025-09-30",
+        "to": {
+          "name": "ClickCart Solutions",
+          "address": "Helsinki 21, Finland",
+          "email": "billing@clickcart.fi"
+        },
+        "items": [
+          {
+            "description": "Automation setup for order processing",
+            "quantity": 1,
+            "unitPrice": 700.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Technical support (1 month)",
+            "quantity": 1,
+            "unitPrice": 180.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-106",
+        "date": "2025-10-01",
+        "to": {
+          "name": "BlueTag Digital",
+          "address": "Ljubljana 8, Slovenia",
+          "email": "info@bluetag.si"
+        },
+        "items": [
+          {
+            "description": "Marketing data API connector",
+            "quantity": 1,
+            "unitPrice": 520.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Support hours (5h)",
+            "quantity": 5,
+            "unitPrice": 60.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-107",
+        "date": "2025-10-02",
+        "to": {
+          "name": "DataBridge OÜ",
+          "address": "Tallinn 14, Estonia",
+          "email": "accounting@databridge.ee"
+        },
+        "items": [
+          {
+            "description": "System integration between CRM and inventory",
+            "quantity": 1,
+            "unitPrice": 950.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-108",
+        "date": "2025-10-03",
+        "to": {
+          "name": "RetailMaster Sp. z o.o.",
+          "address": "Poznańska 7, Warsaw, Poland",
+          "email": "finance@retailmaster.pl"
+        },
+        "items": [
+          {
+            "description": "Custom dashboard development",
+            "quantity": 1,
+            "unitPrice": 780.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Bug fixing package",
+            "quantity": 1,
+            "unitPrice": 120.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-109",
+        "date": "2025-10-05",
+        "to": {
+          "name": "ShopPilot GmbH",
+          "address": "Hamburg 45, Germany",
+          "email": "billing@shoppilot.de"
+        },
+        "items": [
+          {
+            "description": "Database performance audit",
+            "quantity": 1,
+            "unitPrice": 450.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Optimization report",
+            "quantity": 1,
+            "unitPrice": 90.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-OUT-110",
+        "date": "2025-10-09",
+        "to": {
+          "name": "MegaStore SE",
+          "address": "Vienna 12, Austria",
+          "email": "office@megastore.at"
+        },
+        "items": [
+          {
+            "description": "E-commerce automation consulting",
+            "quantity": 1,
+            "unitPrice": 850.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Monthly support plan",
+            "quantity": 1,
+            "unitPrice": 150.0,
+            "taxRate": 10
+          }
+        ]
+      }
+    ],
+    "incoming": [
+      {
+        "id": "TF-IN-101",
+        "date": "2025-09-02",
+        "from": {
+          "name": "CloudHost.cz",
+          "address": "Karlovo náměstí 3, Praha 2, Czech Republic",
+          "email": "billing@cloudhost.cz"
+        },
+        "items": [
+          {
+            "description": "VPS server (1 month)",
+            "quantity": 1,
+            "unitPrice": 280.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Backup storage (100GB)",
+            "quantity": 1,
+            "unitPrice": 30.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-102",
+        "date": "2025-09-05",
+        "from": {
+          "name": "CZ Telecom a.s.",
+          "address": "Revoluční 25, Praha 1",
+          "email": "invoices@cztelecom.cz"
+        },
+        "items": [
+          {
+            "description": "Internet connection (September)",
+            "quantity": 1,
+            "unitPrice": 45.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-103",
+        "date": "2025-09-08",
+        "from": {
+          "name": "OfficeSupplies24",
+          "address": "Jungmannova 12, Praha 1",
+          "email": "sales@officesupplies24.cz"
+        },
+        "items": [
+          {
+            "description": "Printer paper A4 (500 sheets)",
+            "quantity": 2,
+            "unitPrice": 6.5,
+            "taxRate": 10
+          },
+          {
+            "description": "Black ink cartridge",
+            "quantity": 1,
+            "unitPrice": 28.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-104",
+        "date": "2025-09-10",
+        "from": {
+          "name": "WorkSpace Hub",
+          "address": "Smíchov 45, Praha 5",
+          "email": "accounts@workspacehub.cz"
+        },
+        "items": [
+          {
+            "description": "Coworking desk rental (September)",
+            "quantity": 1,
+            "unitPrice": 320.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-105",
+        "date": "2025-09-12",
+        "from": {
+          "name": "Google Ireland Ltd.",
+          "address": "Dublin, Ireland",
+          "email": "ads@google.com"
+        },
+        "items": [
+          {
+            "description": "Google Ads spend",
+            "quantity": 1,
+            "unitPrice": 400.0,
+            "taxRate": 0
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-106",
+        "date": "2025-09-14",
+        "from": {
+          "name": "Adobe Systems Inc.",
+          "address": "San Jose, USA",
+          "email": "billing@adobe.com"
+        },
+        "items": [
+          {
+            "description": "Adobe Creative Cloud subscription",
+            "quantity": 1,
+            "unitPrice": 59.0,
+            "taxRate": 0
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-107",
+        "date": "2025-09-18",
+        "from": {
+          "name": "Slack Technologies",
+          "address": "Dublin, Ireland",
+          "email": "finance@slack.com"
+        },
+        "items": [
+          {
+            "description": "Slack Pro plan (5 users)",
+            "quantity": 1,
+            "unitPrice": 40.0,
+            "taxRate": 0
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-108",
+        "date": "2025-09-20",
+        "from": {
+          "name": "JetBrains s.r.o.",
+          "address": "Na Hřebenech II 1718/8, Praha 4",
+          "email": "sales@jetbrains.com"
+        },
+        "items": [
+          {
+            "description": "WebStorm yearly license",
+            "quantity": 1,
+            "unitPrice": 129.0,
+            "taxRate": 10
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-109",
+        "date": "2025-09-25",
+        "from": {
+          "name": "AWS Europe",
+          "address": "Luxembourg",
+          "email": "aws-billing@amazon.com"
+        },
+        "items": [
+          {
+            "description": "AWS compute usage",
+            "quantity": 1,
+            "unitPrice": 210.0,
+            "taxRate": 0
+          }
+        ]
+      },
+      {
+        "id": "TF-IN-110",
+        "date": "2025-09-28",
+        "from": {
+          "name": "CZ PrintHouse",
+          "address": "Letenská 10, Praha 7",
+          "email": "orders@czprinthouse.cz"
+        },
+        "items": [
+          {
+            "description": "Marketing flyers printing (500 pcs)",
+            "quantity": 1,
+            "unitPrice": 95.0,
+            "taxRate": 10
+          },
+          {
+            "description": "Business card printing (100 pcs)",
+            "quantity": 1,
+            "unitPrice": 35.0,
+            "taxRate": 10
+          }
+        ]
+      }
+    ]
+  }
+}

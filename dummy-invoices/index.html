@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Dummy Invoices</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/dummy-invoices/style.css">
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <h1>Invoice Generator</h1>
+        <p class="subtitle">Loads structured data from <code>DATA.json</code> and prepares ready-to-download PDF invoices.</p>
+        <div class="actions">
+          <button type="button" class="refresh" data-role="refresh">Reload data</button>
+          <button type="button" class="download-all" data-role="download-all">Download all (ZIP)</button>
+        </div>
+      </header>
+
+      <section class="status" data-role="status">Loading invoices…</section>
+
+      <section class="table-wrapper">
+        <table class="invoice-list">
+          <thead>
+            <tr>
+              <th scope="col">Invoice #</th>
+              <th scope="col">Issue Date</th>
+              <th scope="col">Client</th>
+              <th scope="col">Total</th>
+              <th scope="col" class="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody data-role="invoice-rows"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <div class="invoice-wrapper" data-role="invoice-wrapper"></div>
+
+    <script src="../dummy-data/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="/dummy-invoices/script.js" type="module"></script>
+  </body>
+</html>

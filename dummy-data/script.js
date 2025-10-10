@@ -121,6 +121,7 @@ const dateFromInput = q('.date-from');
 const dateToInput = q('.date-to');
 const qboButton = q('.qbo');
 const xeroButton = q('.xero');
+const biDocButton = q('.big');
 const templateScript = q('.template');
 // const contactsInput = q('.contacts');
 
@@ -149,6 +150,7 @@ contacts.forEach((c) => {
 
 qboButton.addEventListener('click', () => loadCsv('qbo', TSX));
 xeroButton.addEventListener('click', () => loadCsv('xero', TSX));
+templateScript.addEventListener('click', () => handleDownloadBigDocClick());
 
 document.querySelectorAll('input').forEach((el) => {
   el.addEventListener('input', handleInputChange);
@@ -238,6 +240,42 @@ function loadCsv(platform, tsx) {
 }
 
 async function handleDownloadDocClick(index) {
+  const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
+  const [date, description, amount] = TSX[index];
+  const element = q('.invoice-wrapper');
+  const company = DATA.company.split(";");
+  const typeInvoice = amount > 0;
+  const contact = getRandomArrayItem(typeInvoice ? clients : vendors);
+  const today = new Date();
+  const issueDate = new Date(+parseDate(date) - getRandomInt(0, TWO_WEEKS));
+  const dueDate = formatDate(new Date(+issueDate + TWO_WEEKS));
+  const companyData = {
+    name: company[0],
+    country: company[1],
+    city: company[2],
+    address: company[3],
+  };
+  const contactData = {
+    name: contact[0],
+    country: contact[1],
+    city: contact[2],
+    address: contact[3],
+  };
+
+  element.innerHTML = invoiceTemplate({
+    num: `INV-${(today.getMonth() + 1).toString().padStart(2, 0)}-${today.getDate()}-${getRandomInt(0, 1000000).toString(36).toUpperCase()}`,
+    from: typeInvoice ? companyData : contactData,
+    to: typeInvoice ? contactData : companyData,
+    date: formatDate(issueDate),
+    dueDate,
+    description,
+    amount,
+    quantity: getRandomArrayItem([1,2,10])
+  });
+  element.style.display = "block";
+  html2pdf().from(element).save(`${(new Date()).toISOString()}.pdf`);
+}
+async function handleDownloadBigDocClick(index) {
   const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000;
   const [date, description, amount] = TSX[index];
   const element = q('.invoice-wrapper');

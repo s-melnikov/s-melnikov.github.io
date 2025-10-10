@@ -80,6 +80,7 @@ function render({ meta, content }) {
 		link.href = '#' + el.id;
 		link.textContent = el.textContent;
 		link.className = el.tagName;
+		// link.addEventListener('click', )
 		menu.appendChild(link);
 	});
 }
