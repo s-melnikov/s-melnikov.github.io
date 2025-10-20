@@ -6,422 +6,514 @@
     "email": "info@techflow.cz",
     "vatId": "CZ87654321"
   },
-  "invoices": {
-    "outgoing": [
-      {
-        "id": "TF-OUT-101",
-        "date": "2025-08-10",
-        "to": {
-          "name": "ShopifyBoost GmbH",
-          "address": "Alexanderplatz 3, Berlin, Germany",
-          "email": "finance@shopifyboost.de"
-        },
-        "items": [
-          {
-            "description": "Custom API integration for Shopify",
-            "quantity": 2,
-            "unitPrice": 750.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Monthly maintenance plan",
-            "quantity": 1,
-            "unitPrice": 250.0,
-            "taxRate": 10
-          }
-        ]
+  "invoices": [
+    {
+      "id": "GDS-OUT-2025-001",
+      "date": "2025-10-01",
+      "to": {
+        "name": "EcomPulse BV",
+        "address": "Keizersgracht 450, 1017 EK Amsterdam, Netherlands",
+        "email": "accounts@ecompulse.nl"
       },
-      {
-        "id": "TF-OUT-102",
-        "date": "2025-09-15",
-        "to": {
-          "name": "Ecomify Ltd.",
-          "address": "12 King Street, London, UK",
-          "email": "billing@ecomify.co.uk"
+      "items": [
+        {
+          "description": "Phase 1 - Backend API Development",
+          "quantity": 40.0,
+          "unitPrice": 125.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Automation script for product feed synchronization",
-            "quantity": 1,
-            "unitPrice": 420.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Consulting session (2 hours)",
-            "quantity": 2,
-            "unitPrice": 90.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Project Management Hours",
+          "quantity": 10.0,
+          "unitPrice": 95.0,
+          "taxRate": 0
+        },
+        {
+          "description": "Standard Support Contract (1 Month)",
+          "quantity": 1,
+          "unitPrice": 450.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-002",
+      "date": "2025-10-05",
+      "to": {
+        "name": "Alpha Manufacturing Inc.",
+        "address": "100 Industrial Way, New York, NY 10001, USA",
+        "email": "billing@alphamanufacturing.com"
       },
-      {
-        "id": "TF-OUT-103",
-        "date": "2025-09-22",
-        "to": {
-          "name": "NovaTech Online",
-          "address": "Warszawska 22, Kraków, Poland",
-          "email": "finance@novatech.pl"
+      "items": [
+        {
+          "description": "Database Migration Service",
+          "quantity": 1,
+          "unitPrice": 980.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "E-commerce backend optimization",
-            "quantity": 1,
-            "unitPrice": 600.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Server monitoring setup",
-            "quantity": 1,
-            "unitPrice": 250.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "On-site Consultation (8 hours)",
+          "quantity": 1.0,
+          "unitPrice": 1500.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-003",
+      "date": "2025-10-10",
+      "to": {
+        "name": "Retail Innovations S.A.",
+        "address": "Avenida Diagonal 601, 08028 Barcelona, Spain",
+        "email": "payments@retail-innovations.es"
       },
-      {
-        "id": "TF-OUT-104",
-        "date": "2025-09-25",
-        "to": {
-          "name": "QuickShop EU",
-          "address": "Rue de Commerce 10, Brussels, Belgium",
-          "email": "accounts@quickshop.eu"
+      "items": [
+        {
+          "description": "Custom Reporting Module Development",
+          "quantity": 60.0,
+          "unitPrice": 75.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Integration with payment gateway (Stripe)",
-            "quantity": 1,
-            "unitPrice": 480.0,
-            "taxRate": 10
-          },
-          {
-            "description": "API documentation package",
-            "quantity": 1,
-            "unitPrice": 100.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Software License Fee (Q4 2025)",
+          "quantity": 1,
+          "unitPrice": 1200.0,
+          "taxRate": 0
+        },
+        {
+          "description": "User Training Session",
+          "quantity": 1,
+          "unitPrice": 350.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-004",
+      "date": "2025-10-12",
+      "to": {
+        "name": "FinTech Solutions AG",
+        "address": "Bahnhofstrasse 1, 8001 Zürich, Switzerland",
+        "email": "finance@fintech-ag.ch"
       },
-      {
-        "id": "TF-OUT-105",
-        "date": "2025-09-30",
-        "to": {
-          "name": "ClickCart Solutions",
-          "address": "Helsinki 21, Finland",
-          "email": "billing@clickcart.fi"
+      "items": [
+        {
+          "description": "Security Audit and Penetration Testing",
+          "quantity": 1,
+          "unitPrice": 1450.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Automation setup for order processing",
-            "quantity": 1,
-            "unitPrice": 700.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Technical support (1 month)",
-            "quantity": 1,
-            "unitPrice": 180.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Risk Assessment Report",
+          "quantity": 1,
+          "unitPrice": 850.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-005",
+      "date": "2025-10-15",
+      "to": {
+        "name": "Logistics Pro Kft.",
+        "address": "Váci út 76, 1133 Budapest, Hungary",
+        "email": "billing@logisticspro.hu"
       },
-      {
-        "id": "TF-OUT-106",
-        "date": "2025-10-01",
-        "to": {
-          "name": "BlueTag Digital",
-          "address": "Ljubljana 8, Slovenia",
-          "email": "info@bluetag.si"
+      "items": [
+        {
+          "description": "IoT Device Integration Service",
+          "quantity": 25.0,
+          "unitPrice": 110.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Marketing data API connector",
-            "quantity": 1,
-            "unitPrice": 520.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Support hours (5h)",
-            "quantity": 5,
-            "unitPrice": 60.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Consulting on Workflow Optimization",
+          "quantity": 8.5,
+          "unitPrice": 130.0,
+          "taxRate": 0
+        },
+        {
+          "description": "Documentation Service Fee",
+          "quantity": 1,
+          "unitPrice": 220.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-006",
+      "date": "2025-10-18",
+      "to": {
+        "name": "MediCorp Systems",
+        "address": "12 Health Drive, Boston, MA 02114, USA",
+        "email": "accounts@medicorpsystems.com"
       },
-      {
-        "id": "TF-OUT-107",
-        "date": "2025-10-02",
-        "to": {
-          "name": "DataBridge OÜ",
-          "address": "Tallinn 14, Estonia",
-          "email": "accounting@databridge.ee"
+      "items": [
+        {
+          "description": "HIPAA Compliance Review (Software)",
+          "quantity": 1,
+          "unitPrice": 1350.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "System integration between CRM and inventory",
-            "quantity": 1,
-            "unitPrice": 950.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Custom User Interface Design",
+          "quantity": 30.0,
+          "unitPrice": 90.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-007",
+      "date": "2025-10-20",
+      "to": {
+        "name": "Global Marketing Solutions",
+        "address": "Rue du Commerce 1, 1000 Brussels, Belgium",
+        "email": "invoices@globalmarketing.be"
       },
-      {
-        "id": "TF-OUT-108",
-        "date": "2025-10-03",
-        "to": {
-          "name": "RetailMaster Sp. z o.o.",
-          "address": "Poznańska 7, Warsaw, Poland",
-          "email": "finance@retailmaster.pl"
+      "items": [
+        {
+          "description": "Cloud Infrastructure Setup (AWS)",
+          "quantity": 1,
+          "unitPrice": 750.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Custom dashboard development",
-            "quantity": 1,
-            "unitPrice": 780.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Bug fixing package",
-            "quantity": 1,
-            "unitPrice": 120.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Continuous Integration Implementation",
+          "quantity": 15.0,
+          "unitPrice": 105.0,
+          "taxRate": 0
+        },
+        {
+          "description": "Monthly Server Monitoring Fee",
+          "quantity": 1,
+          "unitPrice": 180.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-008",
+      "date": "2025-10-23",
+      "to": {
+        "name": "EduTech Learning Ltd.",
+        "address": "22 Queen Street, Edinburgh, EH2 1NT, UK",
+        "email": "payments@edutech.co.uk"
       },
-      {
-        "id": "TF-OUT-109",
-        "date": "2025-10-05",
-        "to": {
-          "name": "ShopPilot GmbH",
-          "address": "Hamburg 45, Germany",
-          "email": "billing@shoppilot.de"
+      "items": [
+        {
+          "description": "Mobile Application Development (iOS/Android)",
+          "quantity": 80.0,
+          "unitPrice": 115.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Database performance audit",
-            "quantity": 1,
-            "unitPrice": 450.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Optimization report",
-            "quantity": 1,
-            "unitPrice": 90.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "App Store Submission Assistance",
+          "quantity": 1,
+          "unitPrice": 550.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-009",
+      "date": "2025-10-26",
+      "to": {
+        "name": "PowerGrid Energy AG",
+        "address": "Hauptstrasse 88, 5400 Baden, Switzerland",
+        "email": "billing@powergrid-ag.ch"
       },
-      {
-        "id": "TF-OUT-110",
-        "date": "2025-10-09",
-        "to": {
-          "name": "MegaStore SE",
-          "address": "Vienna 12, Austria",
-          "email": "office@megastore.at"
+      "items": [
+        {
+          "description": "System Upgrade Consultancy",
+          "quantity": 12.0,
+          "unitPrice": 140.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "E-commerce automation consulting",
-            "quantity": 1,
-            "unitPrice": 850.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Monthly support plan",
-            "quantity": 1,
-            "unitPrice": 150.0,
-            "taxRate": 10
-          }
-        ]
-      }
-    ],
-    "incoming": [
-      {
-        "id": "TF-IN-101",
-        "date": "2025-09-02",
-        "from": {
-          "name": "CloudHost.cz",
-          "address": "Karlovo náměstí 3, Praha 2, Czech Republic",
-          "email": "billing@cloudhost.cz"
+        {
+          "description": "Legacy System Code Review",
+          "quantity": 1,
+          "unitPrice": 1100.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "VPS server (1 month)",
-            "quantity": 1,
-            "unitPrice": 280.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Backup storage (100GB)",
-            "quantity": 1,
-            "unitPrice": 30.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Technical Documentation Update",
+          "quantity": 1,
+          "unitPrice": 300.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-OUT-2025-010",
+      "date": "2025-10-30",
+      "to": {
+        "name": "TravelPlanner A/S",
+        "address": "Østerbrogade 100, 2100 Copenhagen, Denmark",
+        "email": "accounts@travelplanner.dk"
       },
-      {
-        "id": "TF-IN-102",
-        "date": "2025-09-05",
-        "from": {
-          "name": "CZ Telecom a.s.",
-          "address": "Revoluční 25, Praha 1",
-          "email": "invoices@cztelecom.cz"
+      "items": [
+        {
+          "description": "Booking System API Integration",
+          "quantity": 55.0,
+          "unitPrice": 98.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Internet connection (September)",
-            "quantity": 1,
-            "unitPrice": 45.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Post-launch Support (30 days)",
+          "quantity": 1,
+          "unitPrice": 780.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-101",
+      "date": "2025-10-01",
+      "from": {
+        "name": "CloudNine Hosting Solutions",
+        "address": "15 Tech Park Road, Dublin 2, Ireland",
+        "email": "invoices@cloudnine.ie"
       },
-      {
-        "id": "TF-IN-103",
-        "date": "2025-09-08",
-        "from": {
-          "name": "OfficeSupplies24",
-          "address": "Jungmannova 12, Praha 1",
-          "email": "sales@officesupplies24.cz"
+      "items": [
+        {
+          "description": "Dedicated Server Rental (October 2025)",
+          "quantity": 1,
+          "unitPrice": 250.0,
+          "taxRate": 10
         },
-        "items": [
-          {
-            "description": "Printer paper A4 (500 sheets)",
-            "quantity": 2,
-            "unitPrice": 6.5,
-            "taxRate": 10
-          },
-          {
-            "description": "Black ink cartridge",
-            "quantity": 1,
-            "unitPrice": 28.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Premium DDoS Protection",
+          "quantity": 1,
+          "unitPrice": 45.0,
+          "taxRate": 10
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-102",
+      "date": "2025-10-03",
+      "from": {
+        "name": "Office Supplies Direct Ltd.",
+        "address": "4 The Business Hub, Manchester, M1 1AA, UK",
+        "email": "sales@officedirect.co.uk"
       },
-      {
-        "id": "TF-IN-104",
-        "date": "2025-09-10",
-        "from": {
-          "name": "WorkSpace Hub",
-          "address": "Smíchov 45, Praha 5",
-          "email": "accounts@workspacehub.cz"
+      "items": [
+        {
+          "description": "A4 Laser Printer Cartridges (Black)",
+          "quantity": 5,
+          "unitPrice": 45.0,
+          "taxRate": 10
         },
-        "items": [
-          {
-            "description": "Coworking desk rental (September)",
-            "quantity": 1,
-            "unitPrice": 320.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Ergonomic Office Chairs",
+          "quantity": 2,
+          "unitPrice": 150.0,
+          "taxRate": 10
+        },
+        {
+          "description": "Paper Reams (500 sheets)",
+          "quantity": 10,
+          "unitPrice": 8.5,
+          "taxRate": 10
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-103",
+      "date": "2025-10-07",
+      "from": {
+        "name": "Software Tools Inc.",
+        "address": "33 Main Street, Wilmington, DE 19801, USA",
+        "email": "licensing@softwaretools.com"
       },
-      {
-        "id": "TF-IN-105",
-        "date": "2025-09-12",
-        "from": {
-          "name": "Google Ireland Ltd.",
-          "address": "Dublin, Ireland",
-          "email": "ads@google.com"
+      "items": [
+        {
+          "description": "Development IDE Annual Subscription",
+          "quantity": 5,
+          "unitPrice": 150.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Google Ads spend",
-            "quantity": 1,
-            "unitPrice": 400.0,
-            "taxRate": 0
-          }
-        ]
+        {
+          "description": "Code Repository Service (Monthly)",
+          "quantity": 1,
+          "unitPrice": 65.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-104",
+      "date": "2025-10-10",
+      "from": {
+        "name": "Virtual Meetings GmbH",
+        "address": "Frankfurter Ring 193, 80807 München, Germany",
+        "email": "billing@virtualmeetings.de"
       },
-      {
-        "id": "TF-IN-106",
-        "date": "2025-09-14",
-        "from": {
-          "name": "Adobe Systems Inc.",
-          "address": "San Jose, USA",
-          "email": "billing@adobe.com"
+      "items": [
+        {
+          "description": "Video Conferencing Platform (Enterprise Plan)",
+          "quantity": 1,
+          "unitPrice": 120.0,
+          "taxRate": 10
         },
-        "items": [
-          {
-            "description": "Adobe Creative Cloud subscription",
-            "quantity": 1,
-            "unitPrice": 59.0,
-            "taxRate": 0
-          }
-        ]
+        {
+          "description": "Extra User Licenses",
+          "quantity": 15,
+          "unitPrice": 5.0,
+          "taxRate": 10
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-105",
+      "date": "2025-10-14",
+      "from": {
+        "name": "Consulting Experts S.A.",
+        "address": "Calle de Serrano 88, 28006 Madrid, Spain",
+        "email": "finance@consultingexperts.es"
       },
-      {
-        "id": "TF-IN-107",
-        "date": "2025-09-18",
-        "from": {
-          "name": "Slack Technologies",
-          "address": "Dublin, Ireland",
-          "email": "finance@slack.com"
+      "items": [
+        {
+          "description": "Legal Consultation Fee (GDPR)",
+          "quantity": 4.5,
+          "unitPrice": 350.0,
+          "taxRate": 0
         },
-        "items": [
-          {
-            "description": "Slack Pro plan (5 users)",
-            "quantity": 1,
-            "unitPrice": 40.0,
-            "taxRate": 0
-          }
-        ]
+        {
+          "description": "Travel Expenses Reimbursement",
+          "quantity": 1,
+          "unitPrice": 120.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-106",
+      "date": "2025-10-17",
+      "from": {
+        "name": "Training Academy UK",
+        "address": "The Innovation Centre, Cambridge, CB1 1AH, UK",
+        "email": "accounts@trainingacademy.co.uk"
       },
-      {
-        "id": "TF-IN-108",
-        "date": "2025-09-20",
-        "from": {
-          "name": "JetBrains s.r.o.",
-          "address": "Na Hřebenech II 1718/8, Praha 4",
-          "email": "sales@jetbrains.com"
+      "items": [
+        {
+          "description": "Advanced Python Development Course (5 employees)",
+          "quantity": 5,
+          "unitPrice": 220.0,
+          "taxRate": 10
         },
-        "items": [
-          {
-            "description": "WebStorm yearly license",
-            "quantity": 1,
-            "unitPrice": 129.0,
-            "taxRate": 10
-          }
-        ]
+        {
+          "description": "Course Materials Fee",
+          "quantity": 5,
+          "unitPrice": 25.0,
+          "taxRate": 10
+        },
+        {
+          "description": "Certification Exam Vouchers",
+          "quantity": 5,
+          "unitPrice": 50.0,
+          "taxRate": 10
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-107",
+      "date": "2025-10-21",
+      "from": {
+        "name": "Digital Marketing Pro",
+        "address": "45 Park Lane, London, W1K 7TP, UK",
+        "email": "invoicing@digitalmarket.co.uk"
       },
-      {
-        "id": "TF-IN-109",
-        "date": "2025-09-25",
-        "from": {
-          "name": "AWS Europe",
-          "address": "Luxembourg",
-          "email": "aws-billing@amazon.com"
+      "items": [
+        {
+          "description": "SEO Optimization Service (Monthly retainer)",
+          "quantity": 1,
+          "unitPrice": 650.0,
+          "taxRate": 10
         },
-        "items": [
-          {
-            "description": "AWS compute usage",
-            "quantity": 1,
-            "unitPrice": 210.0,
-            "taxRate": 0
-          }
-        ]
+        {
+          "description": "PPC Campaign Management Fee",
+          "quantity": 1,
+          "unitPrice": 480.0,
+          "taxRate": 10
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-108",
+      "date": "2025-10-24",
+      "from": {
+        "name": "Hardware Solutions B.V.",
+        "address": "Spuistraat 100, 1012 BZ Amsterdam, Netherlands",
+        "email": "billing@hardware-solutions.nl"
       },
-      {
-        "id": "TF-IN-110",
-        "date": "2025-09-28",
-        "from": {
-          "name": "CZ PrintHouse",
-          "address": "Letenská 10, Praha 7",
-          "email": "orders@czprinthouse.cz"
+      "items": [
+        {
+          "description": "New Laptop Docking Stations",
+          "quantity": 3,
+          "unitPrice": 110.0,
+          "taxRate": 10
         },
-        "items": [
-          {
-            "description": "Marketing flyers printing (500 pcs)",
-            "quantity": 1,
-            "unitPrice": 95.0,
-            "taxRate": 10
-          },
-          {
-            "description": "Business card printing (100 pcs)",
-            "quantity": 1,
-            "unitPrice": 35.0,
-            "taxRate": 10
-          }
-        ]
-      }
-    ]
-  }
+        {
+          "description": "External SSD Drives (1TB)",
+          "quantity": 5,
+          "unitPrice": 85.0,
+          "taxRate": 10
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-109",
+      "date": "2025-10-27",
+      "from": {
+        "name": "Design Studio Creative",
+        "address": "Via della Conciliazione 44, 00193 Roma, Italy",
+        "email": "accounts@designstudio.it"
+      },
+      "items": [
+        {
+          "description": "Website Redesign Mockups",
+          "quantity": 1,
+          "unitPrice": 900.0,
+          "taxRate": 0
+        },
+        {
+          "description": "Brand Style Guide Update",
+          "quantity": 1,
+          "unitPrice": 400.0,
+          "taxRate": 0
+        },
+        {
+          "description": "Logo Variation Design",
+          "quantity": 3.0,
+          "unitPrice": 75.0,
+          "taxRate": 0
+        }
+      ]
+    },
+    {
+      "id": "GDS-IN-2025-110",
+      "date": "2025-10-31",
+      "from": {
+        "name": "Courier Express Worldwide",
+        "address": "15 Airport Road, Heathrow, UB7 0ET, UK",
+        "email": "payments@courierexpress.co.uk"
+      },
+      "items": [
+        {
+          "description": "Express Document Delivery (UK)",
+          "quantity": 5,
+          "unitPrice": 22.0,
+          "taxRate": 10
+        },
+        {
+          "description": "International Parcel Shipping (Germany)",
+          "quantity": 2,
+          "unitPrice": 48.0,
+          "taxRate": 10
+        }
+      ]
+    }
+  ]
 }

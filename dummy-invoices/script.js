@@ -25,15 +25,24 @@ async function loadInvoices({ force = false } = {}) {
   setStatus('Loading invoices…');
 
   try {
-    const response = await fetch('DATA.json', {
-      cache: force ? 'reload' : 'no-store'
-    });
+    let payload;
 
-    if (!response.ok) {
-      throw new Error(`Failed to load DATA.json (${response.status})`);
+    try {
+      payload = JSON.parse(localStorage.dummy_invoices);
+    } catch(e) {}
+
+    if (!payload) {
+      const response = await fetch('DATA.json', {
+        cache: force ? 'reload' : 'no-store'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to load DATA.json (${response.status})`);
+      }
+
+      payload = await response.json();
     }
-
-    const payload = await response.json();
+    
     const { company, invoices } = normalizePayload(payload);
 
     state.company = company;
@@ -101,7 +110,7 @@ function renderTable(invoices) {
     tr.appendChild(createCell(invoice.id || '—'));
     tr.appendChild(createCell(formatDate(invoice.date)));
     tr.appendChild(createCell(invoice.to?.name || invoice.from?.name || '—'));
-    tr.appendChild(createCell(formatCurrency(invoice.totals.total, invoice.currency)));
+    tr.appendChild(createCell(formatCurrency(invoice.totals.total, state.company?.currency)));
 
     const actionsCell = createCell('');
     actionsCell.classList.add('actions-cell');
@@ -140,11 +149,13 @@ function normalizeInvoice(invoice, index, fallbackCompany = {}) {
 
   const totals = calculateTotals(items);
 
+
+
   return {
     id: invoice.id ?? `INV-AUTO-${index + 1}`,
     date: invoice.date ?? new Date().toISOString().slice(0, 10),
     dueDate: invoice.dueDate ?? invoice.date ?? new Date().toISOString().slice(0, 10),
-    currency: invoice.currency ?? 'EUR',
+    currency: invoice.currency || fallbackCompany.currency || 'USD',
     from: invoice.from ? { ...invoice.from } : { ...fallbackCompany },
     to: invoice.to ? { ...invoice.to } : { ...fallbackCompany },
     items,
@@ -245,7 +256,7 @@ function buildInvoiceDocument(invoice) {
         <span><strong>Invoice #:</strong> ${escapeHtml(invoice.id)}</span>
         <span><strong>Date:</strong> ${escapeHtml(formatDate(invoice.date))}</span>
         <span><strong>Due Date:</strong> ${escapeHtml(formatDate(invoice.dueDate))}</span>
-        <span><strong>Currency:</strong> ${escapeHtml(invoice.currency)}</span>
+        <span><strong>Currency:</strong> ${escapeHtml(invoice.currency || state.company?.currency)}</span>
       </div>
     </header>
     <table class="invoice-items">
@@ -347,7 +358,7 @@ function formatNumber(value) {
   return number.toLocaleString('en-US', { maximumFractionDigits: 2 });
 }
 
-function formatCurrency(value, currency = 'EUR') {
+function formatCurrency(value, currency = 'USD') {
   const number = Number(value);
   if (!Number.isFinite(number)) {
     return `${currency} 0.00`;
@@ -443,4 +454,9 @@ function downloadBlob(blob, filename) {
   anchor.click();
   anchor.remove();
   setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+
+function setData(data) {
+  localStorage.dummy_invoices = JSON.stringify(data);
 }
