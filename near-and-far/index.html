@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Пригоди Близько і Далеко</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/near-and-far/style.css">
+</head>
+<body>
+	<div class="container">
+		<div class="content">
+			<section name="main" hidden>
+				<div class="title">Введіть номер історії</div>
+				<div class="entry-display"></div>
+				<div class="keyboard"></div>
+			</section>
+			<section name="not-found" hidden>
+				<div class="title">Такої історії не існує</div>
+				<button>Повернутися</button>
+			</section>
+			<section name="story" hidden>
+				<div class="title"></div>
+				<div class="text"></div>
+				<div class="choices">
+					<div class="variant">
+						<div class="requirenment"></div>
+						<div class="title"></div>
+						<div class="hidden">
+							<div class="text"></div>
+							<div class="results">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</div>
+					<div class="variant">
+						<div class="requirenment"></div>
+						<div class="title"></div>
+						<div class="hidden">
+							<div class="text"></div>
+							<div class="results">
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button>Повернутися</button>
+			</section>
+		</div>
+	</div>	
+	<script name="entry" type="text/html">
+		<h1>Близько і Далеко</h1>
+		<img src="/near-and-far/images/5.png" alt="">
+
+		<p>Спустошеними землями Арзіуму, у глибинах прихованих володінь, лежить <b>Остання Руїна</b>: місто, що, за легендами, містить артефакт, який виконує найпотаємніші бажання серця.</p>
+
+		<img src="/near-and-far/images/4.png" alt="">
+
+		<p>Втрачене кохання, спокута, визнання, слава, возз'єднання родини — ось ті вогні, що ведуть тих, хто шукає приховане місто. Вісім мандрівників вирушили в путь, долаючи великі відстані, шукаючи підказки, що приведуть до стародавніх руїн. Але чи зможуть вони подолати власну жадібність і внутрішніх демонів на своєму шляху?</p>
+
+		<img src="/near-and-far/images/3.png" alt="">
+
+		<p>У цьому прикордонні, сповненому руїн мертвої цивілізації, мандрівники змушені покладатися на тих, хто оселився тут і навчився виживати. <b>Кочівники</b> торгують і знають найбезпечніші шляхи. <b>Вигнанці</b> шукають втрачені скарби й за потреби застосовують смертоносну силу. <b>Містики</b> збирають стародавні знання і зцілюють глибокі рани. А <b>люди-ящери</b> будують і лагодять зламані машини, будучи найдавнішими мешканцями цих земель.</p>	
+	</script>
+	<script src="/near-and-far/js-yaml.min.js"></script>
+	<script src="/near-and-far/script.js"></script>
+</body>
+</html>
