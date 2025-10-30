@@ -120,9 +120,6 @@ button:active {
 	border-color: transparent #222 transparent transparent;
 	transform: translate(-50%, -50%);
 }
-section[name=main] h1 {
-	margin: 0 0 1rem;
-} 
 section[name=not-found] button,	 
 section[name=story] button {	 
 	margin: auto;
@@ -130,12 +127,13 @@ section[name=story] button {
 section[name=story] button {
 	margin-bottom: 2rem;
 }
-section[name=story] h2 {
-	margin-bottom: 1rem;
-	text-align: center;
-}
 section[name=story] .text {
 	margin-bottom: 1rem;
+	background-color: var(--color-bg-light);
+	padding: 4px 8px;
+	border-radius: var(--border-radius);
+	font-size: var(--font-size-small);
+	box-shadow: inset 0 2px 0 #75583a;
 }
 section[name=story] .requirenment {
 	font-weight: bold;
@@ -146,6 +144,9 @@ section[name=story] .variant {
 	border-radius: 8px;
 	padding: 4px 8px;
 	cursor: pointer;
+	box-shadow: inset 0 0 0 2px #727685, 0 3px 0 #616374;
+	color: var(--font-color-light-secondary);
+	background-color: #838796;
 }
 section[name=story] .variant .title {}
 section[name=story] .variant .text {
