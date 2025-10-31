@@ -1,0 +1,273 @@
+*, *::after, *::before {
+	box-sizing: border-box;
+}
+html {
+	height: 100%;
+}
+body {
+	padding: 0;
+	margin: 0;
+	display: flex;
+	background-color: #3f7cb6;
+	font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+	padding: 16px;
+	color: #f2eee7;
+	min-height: 100%;
+	font-smooth: always;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+img {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	height: auto;
+}
+button {
+	position: relative;
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #838796;
+	font-family: inherit;
+	display: block;
+	min-width: 3rem;
+	height: 3rem;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	padding: 0 8px;
+	border: 2px solid #9b9dad;
+	box-shadow: inset 0 0 0 2px #727685, 0 2px 0 #616374;
+	color: #f2eee7;
+	transition: all 0.2s ease;
+}
+.hidden {
+	display: none;
+}
+.fade-in {
+	animation: fade-in 0.2s ease forwards;
+}
+.fade-out {
+	animation: fade-out 0.2s ease forwards;
+}
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+.block-a {
+	background-color: #97714b;
+	color: #f2eee7;
+	transition: all 0.2s ease;
+	padding: 16px;
+	border-radius: 8px;
+	box-shadow: 0 0 1px 2px #886644, inset 0 0 1px 2px #b7916b;
+}
+.block-a .block-inner {
+	background-color: #d3bf8f;
+	border-radius: 8px;
+	box-shadow: inset 0 2px 1px 0 #876542;
+	color: #595447;
+	padding: 8px;
+}
+.block-b {
+	background-color: #838796;
+	color: #f2eee7;
+	transition: all 0.2s ease;
+	padding: 16px;
+	border-radius: 8px;
+	box-shadow: 0 0 1px 2px #616374, inset 0 0 1px 2px #9b9dad;
+}
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+	max-width: 560px;
+	width: 100%;
+	margin: 0 auto;
+}
+.title {
+	font-size: 24px;
+	font-weight: 500;
+	text-align: center;
+}
+button:active {
+	background-color: #616374;
+	transform: translateY(1px);
+	box-shadow: inset 0 0 1px 2px #727685, 0 0 1px 2px #9b9dad, 0 1px 1px 2px #616374;
+}
+section {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+section[name="entry"] {
+	padding: 16px 12px;
+}
+section[name="entry"] p {
+	padding-left: 8px;
+	padding-right: 8px;
+	font-style: italic;
+}
+section[name="entry"] button {
+	min-width: 10rem;
+	margin: auto;
+}
+section[name="main"] .entry-display {
+	font-size: 2.5rem;
+	width: 9rem;
+	text-align: center;
+	margin: auto;
+	height: 3.5rem;
+	font-weight: 500;
+	border-radius: 4px;
+	padding: 0 8px;
+}
+section[name="main"] .keyboard {
+	max-width: 13rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: auto;
+	gap: 16px 24px;
+}
+section[name="main"] .keyboard.letters {
+	max-width: 18rem;
+	gap: 12px;
+}
+section[name="main"] > button,
+section[name="not-found"] > button,
+section[name="story"] > button {
+	min-width: 10rem;
+	margin: auto;
+}
+section[name="story"] .variants {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+section[name="story"] .variants .variant {
+	text-align: left;
+	padding: 8px;
+	height: auto;
+	font-size: 14px;	
+}
+section[name="story"] .variants .variant .requirement {
+	font-weight: bold;
+}
+section[name="results"] .title {
+	font-size: 16px;
+	text-align: left;
+}
+section[name="results"] .results-title {
+	font-weight: 500;
+	font-style: italic;
+	font-size: 16px;
+}
+section[name="results"] .results {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-weight: 500;
+}
+/* 
+.content {
+	background-color: var(--color-bg-dark);
+	padding: var(--indent);
+	border-radius: var(--border-radius);
+	border: 2px solid var(--color-border-primary);
+	box-shadow: inset 0 0 0 2px var(--color-border-primary-light);
+}
+.title {
+	font-size: var(--font-size-large);
+	color: var(--font-color-light);
+	text-align: center;
+	margin-bottom: var(--indent);
+}
+p {
+	text-align: justify;
+}
+
+.keyboard {
+	
+}
+
+button:hover {
+	background-color: #707381;
+}
+button:active {
+	box-shadow: inset 1px 1px 4px #ddd, inset -1px -1px 3px #fff;
+}
+.keyboard button[value=" "]:after {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	content: "";
+	border-style: solid;
+	border-width: 8px 16px 8px 0;
+	border-color: transparent #222 transparent transparent;
+	transform: translate(-50%, -50%);
+}
+section[name=not-found] button,	 
+section[name=story] button {	 
+	margin: auto;
+}
+section[name=story] button {
+	margin-bottom: 2rem;
+}
+section[name=story] .text {
+	margin-bottom: 1rem;
+	background-color: var(--color-bg-light);
+	padding: 4px 8px;
+	border-radius: var(--border-radius);
+	font-size: var(--font-size-small);
+	box-shadow: inset 0 2px 0 #75583a;
+}
+section[name=story] .requirenment {
+	font-weight: bold;
+}
+section[name=story] .variant {
+	margin-bottom: 1rem;
+	border: 2px solid #444;
+	border-radius: 8px;
+	padding: 4px 8px;
+	cursor: pointer;
+	box-shadow: inset 0 0 0 2px #727685, 0 3px 0 #616374;
+	color: var(--font-color-light-secondary);
+	background-color: #838796;
+}
+section[name=story] .variant .title {}
+section[name=story] .variant .text {
+	margin-bottom: 0;
+}
+section[name=story] .variant .results {
+	font-weight: bold;
+}
+section[name=story] .variant .hidden {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.6s;
+}
+section[name=story] .variant.opened .hidden {
+	max-height: 600px;
+} */
+
+
+
+
+
