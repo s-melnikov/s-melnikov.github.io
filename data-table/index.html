@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Data Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #151515;
+            --card-bg: #212121;
+            --primary-color: #0c63e4;
+            --primary-hover: #0b5ed7;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333333;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent body scroll */
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h1::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .input-pane {
+            width: 40%; /* Initial width */
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        .gutter {
+            width: 10px;
+            background-color: var(--bg-color);
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            cursor: col-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background-color 0.2s;
+            z-index: 10;
+        }
+
+        .gutter:hover, .gutter.dragging {
+            background-color: var(--primary-color);
+        }
+        
+        .gutter::after {
+            content: '';
+            width: 2px;
+            height: 20px;
+            background-color: #555;
+            border-radius: 1px;
+        }
+
+        .output-pane {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+
+        .pane-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            flex-shrink: 0;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* CodeMirror Customization */
+        .CodeMirror {
+            height: 100% !important;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            background-color: var(--bg-color) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .cm-s-dracula.CodeMirror {
+            background-color: var(--bg-color) !important;
+        }
+        
+        .CodeMirror-gutters {
+            background-color: var(--bg-color) !important;
+            border-right: 1px solid var(--border-color) !important;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            background-color: rgba(244, 67, 54, 0.1);
+            border-bottom: 1px solid var(--error-color);
+            display: none;
+        }
+
+        .table-container {
+            flex: 1;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background-color: var(--card-bg);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        th:hover {
+            color: var(--text-primary);
+            background-color: #2a2a2a;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:hover td {
+            background-color: #1a1a1a;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 5px;
+            border: 2px solid var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>JSON Data Visualizer</h1>
+        <div class="header-actions">
+            <!-- Placeholder for future actions -->
+        </div>
+    </header>
+
+    <div class="main-content" id="mainContent">
+        <div class="input-pane" id="inputPane">
+            <div class="pane-header">
+                <span>Input JSON</span>
+                <button class="btn" id="renderBtn">Visualize</button>
+            </div>
+            <div class="error-message" id="errorMessage">Invalid JSON</div>
+            <div class="editor-container">
+                <textarea id="jsonInput" spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <div class="gutter" id="gutter"></div>
+
+        <div class="output-pane" id="outputPane">
+            <div class="pane-header">
+                <span>Data Table</span>
+                <span id="rowCount" style="font-weight: normal; font-size: 0.8em; opacity: 0.7;"></span>
+            </div>
+            <div class="table-container" id="tableContainer">
+                <div class="empty-state">
+                    <p>Enter JSON data and click Visualize to see the table.</p>
+                </div>
+                <table id="dataTable" style="display: none;">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/lint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/lint/json-lint.min.js"></script>
+
+<script>
+    // Initialize CodeMirror
+    const editor = CodeMirror.fromTextArea(document.getElementById('jsonInput'), {
+        mode: "application/json",
+        theme: "dracula",
+        lineNumbers: true,
+        autoCloseBrackets: true,
+        lineWrapping: true,
+        tabSize: 2,
+    });
+
+    // Set initial value
+    editor.setValue(`[
+  {
+    "name": "Alice",
+    "role": "Engineer",
+    "status": "Active"
+  },
+  {
+    "name": "Bob",
+    "role": "Designer",
+    "status": "Away"
+  }
+]`);
+
+    const renderBtn = document.getElementById('renderBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const tableContainer = document.getElementById('tableContainer');
+    const dataTable = document.getElementById('dataTable');
+    const emptyState = document.querySelector('.empty-state');
+    const rowCount = document.getElementById('rowCount');
+    const tableHead = dataTable.querySelector('thead');
+    const tableBody = dataTable.querySelector('tbody');
+
+    // Resizable Pane Logic
+    const gutter = document.getElementById('gutter');
+    const inputPane = document.getElementById('inputPane');
+    const mainContent = document.getElementById('mainContent');
+    let isDragging = false;
+
+    gutter.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        gutter.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        e.preventDefault(); // Prevent text selection
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const containerRect = mainContent.getBoundingClientRect();
+        const newWidth = e.clientX - containerRect.left;
+        
+        // Min/Max constraints
+        const minWidth = 200;
+        const maxWidth = containerRect.width - 200;
+
+        if (newWidth >= minWidth && newWidth <= maxWidth) {
+            const percentage = (newWidth / containerRect.width) * 100;
+            inputPane.style.width = `${percentage}%`;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            gutter.classList.remove('dragging');
+            document.body.style.cursor = 'default';
+            // Refresh CodeMirror layout after resize
+            editor.refresh();
+        }
+    });
+
+    // Window resize handler to ensure editor refreshes
+    window.addEventListener('resize', () => {
+        editor.refresh();
+    });
+
+    let currentData = [];
+    let sortCol = null;
+    let sortAsc = true;
+
+    renderBtn.addEventListener('click', () => {
+        const rawValue = editor.getValue().trim();
+        
+        if (!rawValue) {
+            showError("Please enter some JSON data.");
+            return;
+        }
+
+        try {
+            const parsedData = JSON.parse(rawValue);
+            
+            if (!Array.isArray(parsedData)) {
+                showError("Input must be a JSON Array (start with '[' and end with ']').");
+                return;
+            }
+
+            if (parsedData.length === 0) {
+                showError("Array is empty.");
+                return;
+            }
+
+            // Normalize data: find all unique keys
+            const allKeys = new Set();
+            parsedData.forEach(item => {
+                if (typeof item === 'object' && item !== null) {
+                    Object.keys(item).forEach(k => allKeys.add(k));
+                }
+            });
+
+            if (allKeys.size === 0) {
+                showError("No valid objects found in the array.");
+                return;
+            }
+
+            currentData = parsedData;
+            errorMessage.style.display = 'none';
+            emptyState.style.display = 'none';
+            dataTable.style.display = 'table';
+            rowCount.textContent = `${currentData.length} records`;
+            
+            renderTable(Array.from(allKeys));
+
+        } catch (e) {
+            showError("Invalid JSON: " + e.message);
+        }
+    });
+
+    function showError(msg) {
+        errorMessage.textContent = msg;
+        errorMessage.style.display = 'block';
+    }
+
+    function renderTable(keys) {
+        // Clear existing
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+
+        // Create Header
+        const headerRow = document.createElement('tr');
+        keys.forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            th.dataset.key = key;
+            
+            // Sort Icon
+            const icon = document.createElement('span');
+            icon.className = 'sort-icon';
+            icon.innerHTML = '&#8693;'; // Up/Down arrow
+            th.appendChild(icon);
+
+            th.addEventListener('click', () => handleSort(key, keys));
+            headerRow.appendChild(th);
+        });
+        tableHead.appendChild(headerRow);
+
+        renderRows(keys);
+    }
+
+    function renderRows(keys) {
+        tableBody.innerHTML = '';
+        currentData.forEach(item => {
+            const tr = document.createElement('tr');
+            keys.forEach(key => {
+                const td = document.createElement('td');
+                const val = item[key];
+                
+                if (val === null) {
+                    td.textContent = 'null';
+                    td.style.fontStyle = 'italic';
+                    td.style.opacity = '0.5';
+                } else if (typeof val === 'object') {
+                    td.textContent = JSON.stringify(val);
+                    td.style.fontFamily = 'monospace';
+                    td.style.fontSize = '0.85em';
+                } else {
+                    td.textContent = String(val);
+                }
+                
+                tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function handleSort(key, keys) {
+        if (sortCol === key) {
+            sortAsc = !sortAsc;
+        } else {
+            sortCol = key;
+            sortAsc = true;
+        }
+
+        // Update Icons
+        const ths = tableHead.querySelectorAll('th');
+        ths.forEach(th => {
+            const icon = th.querySelector('.sort-icon');
+            if (th.dataset.key === key) {
+                icon.innerHTML = sortAsc ? '&#8593;' : '&#8595;'; // Up or Down arrow
+                icon.style.color = 'var(--primary-color)';
+            } else {
+                icon.innerHTML = '&#8693;';
+                icon.style.color = '';
+            }
+        });
+
+        // Sort Data
+        currentData.sort((a, b) => {
+            const valA = a[key];
+            const valB = b[key];
+
+            if (valA === valB) return 0;
+            if (valA === null || valA === undefined) return 1;
+            if (valB === null || valB === undefined) return -1;
+
+            if (typeof valA === 'number' && typeof valB === 'number') {
+                return sortAsc ? valA - valB : valB - valA;
+            }
+
+            const strA = String(valA).toLowerCase();
+            const strB = String(valB).toLowerCase();
+
+            if (strA < strB) return sortAsc ? -1 : 1;
+            if (strA > strB) return sortAsc ? 1 : -1;
+            return 0;
+        });
+
+        renderRows(keys);
+    }
+</script>
+
+</body>
+</html>
