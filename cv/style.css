@@ -1,0 +1,245 @@
+/* Base Variables */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --accent-color: #3498db;
+  --text-color: #333;
+  --bg-color: #fdfdfd;
+  --sidebar-bg: #f4f6f7;
+  --border-color: #e0e0e0;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  /* background-color: #eaeaea; */
+  /* Contrast background for the "paper" look on web */
+  color: var(--text-color);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Page "Paper" Container */
+.cv-container {
+  max-width: 210mm;
+  /* A4 width */
+  margin: 40px auto;
+  background-color: var(--bg-color);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  /* Left sidebar, Right content */
+  min-height: 297mm;
+  /* A4 heightish */
+}
+
+/* Sidebar (Left Column) */
+aside {
+  /* background-color: var(--sidebar-bg); */
+  padding: 40px 30px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Main Content (Right Column) */
+main {
+  padding: 40px 40px;
+}
+
+/* Typography */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0 0 5px 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.job-title {
+  font-size: 16px;
+  color: var(--accent-color);
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--secondary-color);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0 0 2px 0;
+}
+
+.company-meta {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  font-style: italic;
+  display: flex;
+  justify-content: space-between;
+}
+
+.company-description {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+p,
+li {
+  font-size: 13px;
+  color: #444;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+/* Contact Info Section */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-item svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--secondary-color);
+}
+
+/* Skills Section in Sidebar */
+.skill-category {
+  margin-bottom: 20px;
+}
+
+.skill-category h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 8px;
+}
+
+.skill-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.skill-list li {
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #444;
+}
+
+/* Responsive (Mobile) */
+@media screen and (max-width: 768px) {
+  .cv-container {
+    grid-template-columns: 1fr;
+    margin: 0;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  aside {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 30px 20px;
+  }
+
+  main {
+    padding: 30px 20px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 0;
+    size: A4;
+  }
+
+  body {
+    background-color: white;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cv-container {
+    margin: 0;
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    /* Maintain grid for print */
+  }
+
+  aside {
+    /* background-color: #f7f9fa !important; */
+    /* Force light grey background */
+    -webkit-print-color-adjust: exact;
+    padding-top: 30px;
+    height: 100%;
+    /* Fill height */
+  }
+
+  main {
+    padding-top: 30px;
+  }
+
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+
+  .no-break {
+    page-break-inside: avoid;
+  }
+}

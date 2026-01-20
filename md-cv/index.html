@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown CV Generator</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:wght@400;700&family=Fira+Code:wght@400;600&family=Outfit:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --accent-color: #007bff;
+            --sidebar-width: 50%;
+            --header-height: 60px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            height: var(--header-height);
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        button.print-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button.print-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Main Layout */
+        main {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - var(--header-height));
+        }
+
+        .editor-pane, .preview-pane {
+            width: 50%;
+            height: 100%;
+            overflow: auto;
+            position: relative;
+        }
+
+        .editor-pane {
+            border-right: 1px solid #ddd;
+            background: #282c34;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            padding: 20px;
+            background: #282c34;
+            color: #abb2bf;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .preview-pane {
+            padding: 40px;
+            background: white;
+        }
+
+        .cv-content {
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+            min-height: 100%;
+        }
+
+        /* Themes */
+        
+        /* 1. Modern (Default) */
+        .theme-modern .cv-content {
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        .theme-modern h1, .theme-modern h2, .theme-modern h3 {
+            color: #111;
+            margin-bottom: 0.5em;
+        }
+        .theme-modern h1 { border-bottom: 2px solid #007bff; padding-bottom: 0.3em; margin-bottom: 0.8em; }
+        .theme-modern h2 { color: #555; margin-top: 1.5em; border-bottom: 1px solid #eee; }
+        .theme-modern ul { padding-left: 1.5em; }
+        .theme-modern a { color: #007bff; text-decoration: none; }
+
+        /* 2. Classic */
+        .theme-classic .cv-content {
+            font-family: 'Merriweather', serif;
+            color: #000;
+        }
+        .theme-classic h1 { text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #000; padding-bottom: 10px; }
+        .theme-classic h2 { margin-top: 1.5em; font-style: italic; border-bottom: 1px solid #ccc; }
+        .theme-classic ul { list-style: circle; }
+
+        /* 3. Dark */
+        .theme-dark {
+            background-color: #1a1a1a !important; 
+        }
+        .theme-dark .cv-content {
+            font-family: 'Inter', sans-serif;
+            color: #e0e0e0;
+        }
+        .theme-dark h1, .theme-dark h2 { color: #fff; }
+        .theme-dark h1 { color: #61dafb; border-bottom: 2px solid #61dafb; }
+        .theme-dark a { color: #61dafb; }
+        /* Fix preview background for dark mode */
+        body.mode-dark .preview-pane { background-color: #1a1a1a; }
+
+        /* 4. Minimal */
+        .theme-minimal .cv-content {
+            font-family: 'Inter', sans-serif;
+            color: #444;
+            max-width: 180mm;
+        }
+        .theme-minimal h1 { font-weight: 400; font-size: 2.5em; letter-spacing: -1px; margin-bottom: 1rem; }
+        .theme-minimal h2 { font-weight: 600; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 2rem; border-bottom: 2px solid #333; display: inline-block; padding-bottom: 2px; }
+        .theme-minimal p { margin-bottom: 0.8em; }
+
+        /* 5. Creative */
+        .theme-creative .cv-content {
+            font-family: 'Outfit', sans-serif;
+        }
+        .theme-creative h1 { color: #da2c4d; font-size: 3em; line-height: 1; margin-bottom: 20px; }
+        .theme-creative h2 { color: #2c3e50; font-size: 1.5em; background: #f0f0f0; padding: 5px 10px; border-left: 5px solid #da2c4d; margin-top: 1.5em; border-radius: 0 4px 4px 0; }
+        .theme-creative a { color: #da2c4d; font-weight: 600; }
+        .theme-creative strong { color: #da2c4d; }
+
+        /* Print Styles */
+        @media print {
+            body {
+                height: auto;
+                overflow: visible;
+                display: block;
+                background: white;
+            }
+            header,
+            .editor-pane {
+                display: none !important;
+            }
+            main {
+                display: block;
+                height: auto;
+            }
+            .preview-pane {
+                width: 100%;
+                padding: 0;
+                overflow: visible;
+                background: white !important;
+            }
+            .cv-content {
+                max-width: none;
+                width: 100%;
+                margin: 0;
+                color: black !important; /* Force black text for some themes unless user assumes color print */
+            }
+            /* Adjusting Dark theme for print to save ink, or keep it if they want. 
+               Usually better to force light background. */
+            .theme-dark .cv-content {
+                color: black;
+            }
+            /* Reset body background for dark theme */
+            body { background-color: white !important; }
+            .preview-pane { background-color: white !important; }
+        }
+    </style>
+</head>
+<body class="mode-modern">
+    <header>
+        <h1>MD-CV Generator</h1>
+        <div class="controls">
+            <select id="themeSelector">
+                <option value="theme-modern">Modern</option>
+                <option value="theme-classic">Classic</option>
+                <option value="theme-dark">Dark</option>
+                <option value="theme-minimal">Minimal</option>
+                <option value="theme-creative">Creative</option>
+            </select>
+            <button class="print-btn" onclick="window.print()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M6 9V2h12v7"></path>
+                    <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path>
+                    <path d="M6 14h12v8H6z"></path>
+                </svg>
+                Print
+            </button>
+        </div>
+    </header>
+    <main>
+        <div class="editor-pane">
+            <textarea id="editor" placeholder="Type your Markdown here...
+
+# John Doe
+## Software Engineer
+
+- Expert in **Markdown**
+- Loves **Clean Code**
+            "></textarea>
+        </div>
+        <div class="preview-pane" id="previewContainer">
+            <div id="preview" class="cv-content"></div>
+        </div>
+    </main>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const themeSelector = document.getElementById('themeSelector');
+        const previewContainer = document.getElementById('previewContainer');
+        const body = document.body;
+
+        // Default Markdown
+        const defaultMarkdown = `# Your Name
+## Job Title / Tagline
+
+[email@example.com](mailto:email@example.com) • [LinkedIn](https://linkedin.com) • [GitHub](https://github.com)
+
+---
+
+### Profile
+Passionate developer with expertise in building scalable web applications. Loves clean code, modern UI/UX, and continuous learning.
+
+### Experience
+
+**Senior Frontend Developer** | *Tech Corp*
+*2020 - Present*
+- Led a team of 5 developers to rebuild the core functionality of the legacy app.
+- Improved performance by 40% using React and Next.js.
+- Implemented a design system used across 3 different products.
+
+**Web Developer** | *Creative Agency*
+*2018 - 2020*
+- Built responsive websites for over 20 clients.
+- Collaborated with designers to ensure pixel-perfect implementation.
+- Optimized SEO and accessibility scores.
+
+### Skills
+- **Languages**: JavaScript, TypeScript, HTML, CSS, Python
+- **Frameworks**: React, Vue, Next.js, Node.js
+- **Tools**: Git, Docker, AWS, Figma
+
+### Education
+**B.S. in Computer Science** | *University of Technology*
+*2014 - 2018*`;
+
+        // Set initial value if empty
+        if (!editor.value.trim()) {
+            editor.value = defaultMarkdown;
+        }
+
+        // Render function
+        function render() {
+            const markdownText = editor.value;
+            preview.innerHTML = marked.parse(markdownText);
+        }
+
+        // Event Listeners
+        editor.addEventListener('input', render);
+
+        themeSelector.addEventListener('change', (e) => {
+            const theme = e.target.value;
+            // Remove all theme classes from preview container
+            previewContainer.className = 'preview-pane'; 
+            previewContainer.classList.add(theme); // Assuming we might want specific styling on container too
+            
+            // Actually, we are applying the class to the preview wrapper or body to cascade styles
+            // The CSS uses .theme-name .cv-content
+            // Let's apply to the preview container wrapper so it scopes correctly
+            previewContainer.className = 'preview-pane ' + theme;
+            
+            // Special handling for Dark Theme to change body background if needed?
+            // The Print Style overrides this.
+            if (theme === 'theme-dark') {
+                body.classList.add('mode-dark');
+            } else {
+                body.classList.remove('mode-dark');
+            }
+        });
+
+        // Initialize
+        previewContainer.classList.add('theme-modern');
+        render();
+    </script>
+</body>
+</html>

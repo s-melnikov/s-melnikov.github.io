@@ -1,110 +1,429 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-		<title>Sergey Melnikov</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<style>
-			* {
-				box-sizing: border-box;
-			}
-			body, html {
-				height: 100%;
-			}
-			body {
-			  font-family: Ubuntu, "Segoe UI", Helvetica, Arial, sans-serif;
-			  line-height: 1.4;
-			  font-size: 16px;
-			  color: #fff;
-			  margin: 0;
-			  padding: 0;
-			  text-align: center;
-				background-color: #1f292e;
-			}
-			h1 {
-				font-size: 56px;
-			  color: #ffffff;
-			  margin-top: 0;
-			  font-weight: 400;
-			}
-			a {
-			  color: #bbb;
-			  text-decoration: none;
-			}
-			a:hover  {
-			  color: #fff;
-			}
-			nav {
-				display: block;
-			}
-			nav a {
-				display: inline-block;
-			  padding: 5px;
-			  border: 1px solid rgba(255, 255, 255, 0.3);
-			  text-align: center;
-			  width: 90px;
-			}
-			nav a:hover {
-			  border: 1px solid rgba(255, 255, 255, 0.7);
-			}
-			.secondary {
-				width: 380px;
-				margin: 24px auto 0;
-			}
-			.secondary a {
-				border: none;
-				width: auto;
-				padding: 4px 8px;
-				font-size: 13px;
-			}
-			.secondary a:hover {
-				border: none;
-			}
-			.container {
-				padding: 15px;
-				position: absolute;
-				width: 100%;
-				top: 50%;
-				margin-top: -180px;
-			}
-			footer {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 100%;
-				padding: 10px;
-				border-top: 1px solid rgba(255, 255, 255, 0.05);
-				font-size: 12px;
-				color: rgba(255, 255, 255, 0.5);
-			}
-			footer .wrap {
-				max-width: 720px;
-				margin: auto;
-			}
-			footer a {
-				display: inline-block;
-				color: rgba(255, 255, 255, 0.75);
-				margin: 3px 10px 0;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<h1>Serhii Melnykov</h1>
-			<p>Web Developer</p>
-			<div class="secondary">
-				<a href="/hn">Hacker News (hyperapp)</a>
-				<a href="/kanban">Kanban (firebase + hyperapp)</a>
-				<a href="/fiddle">Fiddle (firebase)</a>
-			</div>
-		</div>
-		<footer>
-			<div class="wrap">
-				<a href="/hash">SHA-2</a>
-				<a href="/csv">CSV parser</a>
-				<a href="/utils-js">Utils</a>
-				<a href="/automa">Automa</a>
-			</div>
-		</footer>
-	</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serhii Melnykov | Senior Full-Stack JavaScript Developer</title>
+  <meta name="description" content="Senior Full-Stack JavaScript Developer with 10+ years of experience building scalable web applications. Expert in React, Node.js, TypeScript, and modern web technologies.">
+  <meta name="keywords" content="Full-Stack Developer, JavaScript, React, Node.js, TypeScript, Software Engineer">
+  <meta name="author" content="Serhii Melnykov">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Serhii Melnykov | Senior Full-Stack JavaScript Developer">
+  <meta property="og:description" content="Building exceptional digital experiences with modern web technologies.">
+  <meta property="og:type" content="website">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-gradient"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-logo"></div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <!-- <a href="#projects">Projects</a> -->
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Available for new opportunities
+      </div>
+      <h1 class="hero-title">
+        Hi, I'm <span class="gradient-text">Serhii</span><br>
+        Full-Stack Developer
+      </h1>
+      <p class="hero-subtitle">
+        Senior Software Engineer crafting high-performance web applications 
+        with modern JavaScript technologies for over 10 years.
+      </p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Get in Touch
+        </a>
+        <a href="https://github.com/s-melnikov" target="_blank" rel="noopener" class="btn btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          View GitHub
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container">
+      <span class="section-label">About Me</span>
+      <h2 class="section-title reveal">Turning Ideas Into Reality</h2>
+      <p class="section-description reveal">
+        Passionate about building products that make a difference.
+      </p>
+      
+      <div class="about-grid">
+        <div class="about-image reveal">
+          <div class="about-image-wrapper">
+            <div class="code-avatar">
+              <div class="line"><span class="keyword">const</span> <span class="function">developer</span> <span class="bracket">=</span> <span class="bracket">{</span></div>
+              <div class="line">&nbsp;&nbsp;<span class="property">name</span>: <span class="string">"Serhii Melnykov"</span>,</div>
+              <div class="line">&nbsp;&nbsp;<span class="property">title</span>: <span class="string">"Senior Full-Stack Dev"</span>,</div>
+              <div class="line">&nbsp;&nbsp;<span class="property">experience</span>: <span class="string">"10+ years"</span>,</div>
+              <div class="line">&nbsp;&nbsp;<span class="property">passion</span>: <span class="string">"Clean Code"</span>,</div>
+              <div class="line">&nbsp;&nbsp;<span class="property">focus</span>: <span class="bracket">[</span></div>
+              <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Performance"</span>,</div>
+              <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"User Experience"</span>,</div>
+              <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Scalability"</span></div>
+              <div class="line">&nbsp;&nbsp;<span class="bracket">]</span></div>
+              <div class="line"><span class="bracket">}</span>;</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="about-content reveal">
+          <h3>Building the Future of Web</h3>
+          <p>
+            I'm a Senior Full-Stack JavaScript Developer with a decade of experience 
+            creating robust, scalable, and user-centric web applications. My journey 
+            in software development has taken me through startups to enterprise solutions.
+          </p>
+          <p>
+            I specialize in the JavaScript ecosystem, from crafting pixel-perfect 
+            frontends with React to architecting efficient backend services with Node.js. 
+            I'm passionate about clean code, performance optimization, and delivering 
+            exceptional user experiences.
+          </p>
+          
+          <!-- <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-number" data-target="10">0+</div>
+              <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" data-target="50">0+</div>
+              <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" data-target="30">0+</div>
+              <div class="stat-label">Happy Clients</div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="skills" id="skills">
+    <div class="container">
+      <span class="section-label">Expertise</span>
+      <h2 class="section-title reveal">Technical Skills</h2>
+      <p class="section-description reveal">
+        Technologies and tools I use to bring ideas to life.
+      </p>
+      
+      <div class="skills-grid">
+        <div class="skill-card reveal">
+          <div class="skill-icon">⚛️</div>
+          <h3>Frontend Development</h3>
+          <p>Creating responsive, performant, and accessible user interfaces with modern frameworks.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Vue.js</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Next.js</span>
+            <span class="skill-tag">HTML5/CSS3</span>
+          </div>
+        </div>
+        
+        <div class="skill-card reveal">
+          <div class="skill-icon">🚀</div>
+          <h3>Backend Development</h3>
+          <p>Building scalable APIs and server-side applications with robust architectures.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Express</span>
+            <span class="skill-tag">NestJS</span>
+            <span class="skill-tag">GraphQL</span>
+            <span class="skill-tag">REST APIs</span>
+          </div>
+        </div>
+        
+        <div class="skill-card reveal">
+          <div class="skill-icon">🗄️</div>
+          <h3>Database & Storage</h3>
+          <p>Designing efficient data models and working with various database systems.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">PostgreSQL</span>
+            <span class="skill-tag">MongoDB</span>
+            <span class="skill-tag">Redis</span>
+            <span class="skill-tag">Firebase</span>
+            <span class="skill-tag">SQL</span>
+          </div>
+        </div>
+        
+        <div class="skill-card reveal">
+          <div class="skill-icon">☁️</div>
+          <h3>DevOps & Cloud</h3>
+          <p>Deploying and maintaining applications in cloud environments.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">AWS</span>
+            <span class="skill-tag">Docker</span>
+            <span class="skill-tag">CI/CD</span>
+            <span class="skill-tag">Linux</span>
+          </div>
+        </div>
+        
+        <div class="skill-card reveal">
+          <div class="skill-icon">🛠️</div>
+          <h3>Tools & Practices</h3>
+          <p>Following best practices and using modern development tools.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">Webpack</span>
+            <span class="skill-tag">Agile</span>
+            <span class="skill-tag">Code Review</span>
+          </div>
+        </div>
+        
+        <div class="skill-card reveal">
+          <div class="skill-icon">🎨</div>
+          <h3>UI/UX Design</h3>
+          <p>Translating designs into pixel-perfect implementations.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Responsive</span>
+            <span class="skill-tag">Animation</span>
+            <span class="skill-tag">A11y</span>
+            <span class="skill-tag">Performance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <!-- <section class="projects" id="projects">
+    <div class="container">
+      <span class="section-label">Portfolio</span>
+      <h2 class="section-title reveal">Featured Projects</h2>
+      <p class="section-description reveal">
+        A selection of projects I've worked on.
+      </p>
+      
+      <div class="projects-grid">
+        <div class="project-card reveal">
+          <div class="project-image">📊</div>
+          <div class="project-content">
+            <h3>Data Table SPA</h3>
+            <p>Interactive data visualization tool with JSON parsing, dynamic table rendering, and column sorting.</p>
+            <a href="/data-table" class="project-link">
+              View Project 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="project-card reveal">
+          <div class="project-image">📋</div>
+          <div class="project-content">
+            <h3>Kanban Board</h3>
+            <p>Real-time collaborative kanban board built with Firebase and Hyperapp framework.</p>
+            <a href="/kanban" class="project-link">
+              View Project 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="project-card reveal">
+          <div class="project-image">📰</div>
+          <div class="project-content">
+            <h3>Hacker News Clone</h3>
+            <p>Modern Hacker News client built with Hyperapp, featuring clean UI and fast navigation.</p>
+            <a href="/hn" class="project-link">
+              View Project 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="project-card reveal">
+          <div class="project-image">🔧</div>
+          <div class="project-content">
+            <h3>JS Utilities</h3>
+            <p>Collection of useful JavaScript utilities and helper functions for everyday development.</p>
+            <a href="/utils-js" class="project-link">
+              View Project 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="project-card reveal">
+          <div class="project-image">🔐</div>
+          <div class="project-content">
+            <h3>SHA-2 Hash Generator</h3>
+            <p>Cryptographic hash generator supporting multiple SHA-2 variants for secure hashing.</p>
+            <a href="/hash" class="project-link">
+              View Project 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="project-card reveal">
+          <div class="project-image">💻</div>
+          <div class="project-content">
+            <h3>Code Fiddle</h3>
+            <p>Online code editor with real-time preview, supporting HTML, CSS, and JavaScript.</p>
+            <a href="/fiddle" class="project-link">
+              View Project 
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <span class="section-label">Contact</span>
+      <h2 class="section-title reveal">Let's Work Together</h2>
+      <p class="section-description reveal">
+        I'm always interested in new opportunities and collaborations.
+      </p>
+      
+      <div class="contact-wrapper">
+        <div class="contact-info reveal">
+          <h3>Get In Touch</h3>
+          <p>
+            Whether you have a project in mind, a job opportunity, or just want to 
+            connect, I'd love to hear from you. Let's create something amazing together.
+          </p>
+          
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/mlnkv" target="_blank" rel="noopener" class="social-link" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <a href="https://github.com/s-melnikov" target="_blank" rel="noopener" class="social-link" title="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="contact-card reveal">
+          <h4>Quick Info</h4>
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="contact-item-text">
+              <div class="contact-item-label">Name</div>
+              <div class="contact-item-value">Serhii Melnykov</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <div class="contact-item-text">
+              <div class="contact-item-label">Role</div>
+              <div class="contact-item-value">Senior Full-Stack Developer</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div class="contact-item-text">
+              <div class="contact-item-label">Location</div>
+              <div class="contact-item-value">Czech Republic</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="contact-item-text">
+              <div class="contact-item-label">Availability</div>
+              <div class="contact-item-value">Open to Opportunities</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-text">
+        © 2025 Serhii Melnykov. Built with ❤️ and JavaScript.
+      </div>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/serhii-melnykov/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/s-melnikov" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
 </html>
