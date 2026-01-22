@@ -2,18 +2,13 @@
 
 **Senior Full-Stack JavaScript Developer**
 
-Remote / Czech Republic
 Email: [melnykov.webdev@gmail.com](mailto:melnykov.webdev@gmail.com)
-GitHub: github.com/s-melnikov
-LinkedIn: linkedin.com/in/mlnkv
 
----
+LinkedIn: linkedin.com/in/mlnkv
 
 ## **PROFESSIONAL SUMMARY**
 
 Senior Full-Stack JavaScript Developer with 13+ years of experience in web development, spanning frontend-heavy products, SaaS platforms, and AI-driven systems. Strong expertise in HTML, CSS, JavaScript, and React, with a deep focus on mobile-first and responsive applications. Solid backend experience with Node.js, Express, NestJS, MongoDB and Redis. Actively applying AI-driven development practices, including LLM integrations, prompt engineering, and AI-assisted planning and code review workflows.
-
----
 
 ## **CORE SKILLS**
 
@@ -28,15 +23,11 @@ Senior Full-Stack JavaScript Developer with 13+ years of experience in web devel
 
 * Node.js, Express.js, NestJS
 * REST APIs
-* Authentication & Authorization
-* Background Jobs & Queues (Bull)
 
 **Databases & Storage**
 
 * MongoDB
 * Redis
-* Vector Databases (Qdrant)
-* MySQL
 * Firebase
 
 **AI & Automation**
@@ -54,7 +45,7 @@ Senior Full-Stack JavaScript Developer with 13+ years of experience in web devel
 * Git, GitHub, GitLab, GitBucket
 * API Integration & Optimization
 
----
+<div class="page-break"></div>
 
 ## **PROFESSIONAL EXPERIENCE**
 
@@ -70,13 +61,11 @@ Booke.ai is a SaaS platform automating categorization of banking transactions fo
 * Extended backend functionality using Node.js, Express, and NestJS
 * Implemented and optimized background job processing using Bull and Redis
 * Worked with MongoDB for data modeling and performance optimization
-* Integrated AI model providers (Groq, Fireworks) for transaction categorization
+* Integrated AI model providers (Groq, Fireworks) for automation user workflows
 * Designed prompts and workflows for reliable LLM-based automation
 * Actively applied AI-assisted development tools for planning, implementation, and validation
 
----
-
-### **Senior Frontend / Full-Stack Developer — Choice**
+### **Senior Frontend Developer — Choice**
 
 *2020 – 2022*
 
@@ -86,8 +75,6 @@ Choice is a digital ordering platform for cafés and restaurants.
 * Developed an admin panel for restaurant and café owners
 * Implemented real-time interactions and API integrations
 * Ensured high performance and usability on mobile devices
-
----
 
 ### **Senior Frontend Developer — Davinci TS**
 
@@ -100,8 +87,6 @@ SaaS solution in the tourism industry.
 * Ensured visual consistency and improved maintainability across products
 * Continued development and expansion of the platform’s functionality
 
----
-
 ### **JavaScript Developer — Comodo (ITSM)**
 
 *2016 – 2017*
@@ -109,8 +94,6 @@ SaaS solution in the tourism industry.
 * Extended functionality of a SaaS ITSM platform
 * Worked with AngularJS in a production environment
 * Collaborated with backend and product teams
-
----
 
 ### **JavaScript Developer / Frontend Developer — Casino Platform**
 
@@ -122,16 +105,22 @@ SaaS solution in the tourism industry.
 * Developed a mobile-focused web application for the casino platform
 * Worked in a multi-developer team on long-term product evolution
 
----
+<div class="page-break"></div>
+
+## **EDUCATION**
+
+**Odessa National Telecommunications Academy**
+
+Bachelor’s degree, Computer Software Engineering
+
+*2018 – 2022*
 
 ## **LANGUAGES**
 
 * Ukrainian — Native
 * Russian — Native
-* English — Upper-Intermediate (B2)
+* English — Intermediate (B1)
 * Czech — Basic (A1)
-
----
 
 ## **ADDITIONAL NOTES**
 
