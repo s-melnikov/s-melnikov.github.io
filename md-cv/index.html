@@ -33,6 +33,7 @@
       background: var(--bg-color);
       color: var(--text-color);
       overflow: hidden;
+      font-size: 13px;
     }
 
     /* Header */
@@ -129,7 +130,7 @@
     /* 1. Modern (Default) */
     .theme-modern .cv-content {
       font-family: 'Inter', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       color: #333;
       line-height: 1.6;
     }
@@ -147,25 +148,26 @@
     }
     .theme-modern h2 { 
       color: #555; 
-      margin-top: 1.5em; 
+      margin-top: 1em; 
       border-bottom: 1px solid #eee; 
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
     .theme-modern h3 { 
       color: #555; 
-      margin-top: 1.5em; 
+      margin-top: 1em; 
       font-size: 1rem;
     }
     .theme-modern ul { 
       padding-left: 1.5em; 
+      margin-bottom: 0.5em;
     }
     .theme-modern a { 
       color: #007bff; 
       text-decoration: none; 
     }
     .theme-modern hr { 
-      border: 1px solid #eee; 
-      margin: 1em 0; 
+      visibility: hidden;
+      break-after: page; 
     }
 
     /* 2. Classic */
@@ -288,7 +290,7 @@
     const body = document.body;
 
     // Default Markdown
-    const defaultMarkdown = `# **SERHII MELNYKOV**
+    const defaultMarkdown = `# Serhii Melnykov
 
 **Senior Full-Stack JavaScript Developer**
 
@@ -296,11 +298,11 @@ Email: [serhii.melnykov@proton.me](mailto:serhii.melnykov@proton.me)
 
 LinkedIn: linkedin.com/in/mlnkv
 
-## **PROFESSIONAL SUMMARY**
+## Professional Summary
 
 Senior Full-Stack JavaScript Developer with 13+ years of experience in web development, spanning frontend-heavy products, SaaS platforms, and AI-driven systems. Strong expertise in HTML, CSS, JavaScript, and React, with a deep focus on mobile-first and responsive applications. Solid backend experience with Node.js, Express, NestJS, MongoDB and Redis. Actively applying AI-driven development practices, including LLM integrations, prompt engineering, and AI-assisted planning and code review workflows.
 
-## **CORE SKILLS**
+## Core Skills
 
 **Frontend**
 
@@ -311,14 +313,11 @@ Senior Full-Stack JavaScript Developer with 13+ years of experience in web devel
 
 **Backend**
 
-* Node.js, Express.js, NestJS
-* REST APIs
+* Node.js, Express.js, NestJS, REST APIs
 
 **Databases & Storage**
 
-* MongoDB
-* Redis
-* Firebase
+* MongoDB, Redis, Firebase
 
 **AI & Automation**
 
@@ -330,16 +329,12 @@ Senior Full-Stack JavaScript Developer with 13+ years of experience in web devel
 
 **DevOps & Tools**
 
-* Docker, Docker Compose
-* CI/CD basics
-* Git, GitHub, GitLab, GitBucket
+* Docker, Docker Compose, CI/CD basics, Git
 * API Integration & Optimization
 
-<div class="page-break"></div>
+## Professional Experience
 
-## **PROFESSIONAL EXPERIENCE**
-
-### **Senior Full-Stack JavaScript Developer — Booke.ai**
+### Senior Full-Stack JavaScript Developer | Booke.ai
 
 *2022 – Present*
 
@@ -355,7 +350,9 @@ Booke.ai is a SaaS platform automating categorization of banking transactions fo
 * Designed prompts and workflows for reliable LLM-based automation
 * Actively applied AI-assisted development tools for planning, implementation, and validation
 
-### **Senior Frontend Developer — Choice**
+---
+
+### Senior Frontend Developer | Choice
 
 *2020 – 2022*
 
@@ -366,7 +363,7 @@ Choice is a digital ordering platform for cafés and restaurants.
 * Implemented real-time interactions and API integrations
 * Ensured high performance and usability on mobile devices
 
-### **Senior Frontend Developer — Davinci TS**
+### Senior Frontend Developer | Davinci TS
 
 *2017 – 2020*
 
@@ -377,7 +374,7 @@ SaaS solution in the tourism industry.
 * Ensured visual consistency and improved maintainability across products
 * Continued development and expansion of the platform’s functionality
 
-### **JavaScript Developer — Comodo (ITSM)**
+### JavaScript Developer | Comodo (ITSM)
 
 *2016 – 2017*
 
@@ -385,19 +382,17 @@ SaaS solution in the tourism industry.
 * Worked with AngularJS in a production environment
 * Collaborated with backend and product teams
 
-### **JavaScript Developer / Frontend Developer — Casino Platform**
+### JavaScript Developer - Frontend Developer | Gambling Platform
 
 *2010 – 2016*
 
 * Started as HTML/CSS developer with PHP for landing pages
 * Promoted to JavaScript Developer after ~1 year
 * Migrated casino games from Adobe Flash to HTML5 (Canvas, JS)
-* Developed a mobile-focused web application for the casino platform
+* Developed a mobile-focused web application for the gambling platform
 * Worked in a multi-developer team on long-term product evolution
 
-<div class="page-break"></div>
-
-## **EDUCATION**
+## Education
 
 **Odessa National Telecommunications Academy**
 
@@ -405,14 +400,14 @@ Bachelor’s degree, Computer Software Engineering
 
 *2018 – 2022*
 
-## **LANGUAGES**
+## Languages
 
-* Ukrainian — Native
-* Russian — Native
-* English — Intermediate (B1)
-* Czech — Basic (A1)
+* Ukrainian - Native
+* Russian - Native
+* English - Intermediate (B1)
+* Czech - Basic (A1)
 
-## **ADDITIONAL NOTES**
+## Additional Notes
 
 * Strong focus on mobile-first UX and frontend architecture
 * Comfortable working end-to-end: from UI to backend and AI integrations
