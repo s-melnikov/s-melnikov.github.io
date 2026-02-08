@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowCRM — Pitch Deck</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       CSS RESET & BASE
+       ============================================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #1a1a2e;
+      background: #fafbfc;
+      line-height: 1.7;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================================
+       ЦВЕТОВЫЕ ПЕРЕМЕННЫЕ
+       ============================================================ */
+    :root {
+      --color-bg: #fafbfc;
+      --color-text: #1a1a2e;
+      --color-text-secondary: #4a4a68;
+      --color-accent: #6c5ce7;
+      --color-accent-light: #a29bfe;
+      --color-accent-bg: #f0eeff;
+      --color-card-bg: #ffffff;
+      --color-border: #e8e8f0;
+      --color-placeholder: #9ca3af;
+      --color-placeholder-border: #d1d5db;
+      --radius-card: 20px;
+      --radius-btn: 12px;
+      --shadow-card: 0 4px 24px rgba(108, 92, 231, 0.07);
+      --shadow-card-hover: 0 8px 32px rgba(108, 92, 231, 0.12);
+      --max-width: 960px;
+    }
+
+    /* ============================================================
+       СЛАЙДЫ (СЕКЦИИ)
+       ============================================================ */
+    .slide {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      position: relative;
+    }
+
+    .slide:nth-child(even) {
+      background: #f4f3ff;
+    }
+
+    .slide-content {
+      max-width: var(--max-width);
+      width: 100%;
+    }
+
+    /* ============================================================
+       ТИПОГРАФИКА
+       ============================================================ */
+    h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--color-accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .slide-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-accent);
+      background: var(--color-accent-bg);
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+
+    .text-block {
+      margin-bottom: 1.5rem;
+    }
+
+    .text-block p {
+      margin-bottom: 0.85rem;
+      color: var(--color-text-secondary);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .text-block p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ============================================================
+       СПИСКИ (БУЛЛЕТЫ)
+       ============================================================ */
+    .bullet-list {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 1.75rem;
+      margin-bottom: 0.65rem;
+      color: var(--color-text-secondary);
+      font-size: 1rem;
+    }
+
+    .bullet-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 8px;
+      height: 8px;
+      background: var(--color-accent);
+      border-radius: 50%;
+    }
+
+    /* ============================================================
+       КАРТОЧКИ
+       ============================================================ */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .card {
+      background: var(--color-card-bg);
+      border-radius: var(--radius-card);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .card-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-accent);
+      margin-bottom: 0.35rem;
+      line-height: 1.1;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       PLACEHOLDER (ВИЗУАЛ)
+       ============================================================ */
+    .placeholder {
+      border: 2px dashed var(--color-placeholder-border);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--color-placeholder);
+      font-size: 0.9rem;
+      margin: 1.75rem 0;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+
+    .placeholders-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .placeholders-row .placeholder {
+      margin: 0;
+    }
+
+    /* ============================================================
+       CTA-КНОПКИ
+       ============================================================ */
+    .btn-primary {
+      display: inline-block;
+      background: var(--color-accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #5a4bd4;
+      box-shadow: 0 6px 24px rgba(108, 92, 231, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--color-accent);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 2.5rem;
+      border: 2px solid var(--color-accent);
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+      margin-left: 0.75rem;
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      align-items: center;
+    }
+
+    .cta-group .btn-secondary {
+      margin-left: 0;
+    }
+
+    /* ============================================================
+       ПРОГРЕСС-ИНДИКАТОР (НАВИГАЦИЯ — ТОЧКИ)
+       ============================================================ */
+    .progress-nav {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1000;
+    }
+
+    .progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--color-accent-light);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+      outline: none;
+    }
+
+    .progress-dot:hover {
+      background: var(--color-accent-light);
+    }
+
+    .progress-dot.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      width: 14px;
+      height: 14px;
+      box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.18);
+    }
+
+    .progress-dot:focus-visible {
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.4);
+    }
+
+    /* ============================================================
+       АНИМАЦИИ ПОЯВЛЕНИЯ
+       ============================================================ */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Скрываем элементы до появления */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .slide.visible .animate-in {
+      animation: fadeSlideUp 0.7s ease forwards;
+    }
+
+    /* Staggered delays для дочерних элементов */
+    .slide.visible .animate-in:nth-child(1) { animation-delay: 0.05s; }
+    .slide.visible .animate-in:nth-child(2) { animation-delay: 0.15s; }
+    .slide.visible .animate-in:nth-child(3) { animation-delay: 0.25s; }
+    .slide.visible .animate-in:nth-child(4) { animation-delay: 0.35s; }
+    .slide.visible .animate-in:nth-child(5) { animation-delay: 0.45s; }
+    .slide.visible .animate-in:nth-child(6) { animation-delay: 0.55s; }
+    .slide.visible .animate-in:nth-child(7) { animation-delay: 0.65s; }
+
+    /* ============================================================
+       СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ СЛАЙДА 1 (HERO)
+       ============================================================ */
+    .hero-slide h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+    }
+
+    .hero-slide .subtitle {
+      font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    }
+
+    /* ============================================================
+       TEAM GRID
+       ============================================================ */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+    }
+
+    .team-card {
+      background: var(--color-card-bg);
+      border-radius: var(--radius-card);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .team-avatar {
+      width: 48px;
+      height: 48px;
+      background: var(--color-accent-bg);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--color-accent);
+      font-size: 1.1rem;
+    }
+
+    .team-info .team-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .team-info .team-role {
+      font-size: 0.85rem;
+      color: var(--color-accent);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .team-info .team-bio {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       ASK-БЛОК
+       ============================================================ */
+    .ask-block {
+      background: var(--color-accent);
+      color: #fff;
+      border-radius: var(--radius-card);
+      padding: 2.5rem;
+      margin: 2rem 0;
+    }
+
+    .ask-block h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .ask-block p {
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+    }
+
+    .ask-block .bullet-list li {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .ask-block .bullet-list li::before {
+      background: rgba(255,255,255,0.8);
+    }
+
+    .ask-block .btn-primary {
+      background: #fff;
+      color: var(--color-accent);
+    }
+
+    .ask-block .btn-primary:hover {
+      background: #f0eeff;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    }
+
+    .ask-block .btn-secondary {
+      border-color: rgba(255,255,255,0.6);
+      color: #fff;
+    }
+
+    .ask-block .btn-secondary:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: #fff;
+    }
+
+    /* ============================================================
+       АДАПТИВНОСТЬ
+       ============================================================ */
+    @media (max-width: 768px) {
+      .slide {
+        padding: 3rem 1.25rem;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .placeholders-row {
+        grid-template-columns: 1fr;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-nav {
+        right: 0.75rem;
+        gap: 8px;
+      }
+
+      .progress-dot {
+        width: 10px;
+        height: 10px;
+      }
+
+      .progress-dot.active {
+        width: 12px;
+        height: 12px;
+      }
+
+      .cta-group {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       НАВИГАЦИЯ — ПРОГРЕСС-ИНДИКАТОР (ТОЧКИ)
+       ============================================================ -->
+  <nav class="progress-nav" role="navigation" aria-label="Навигация по слайдам">
+    <button class="progress-dot active" data-index="0" aria-label="Слайд 1: FlowCRM" aria-current="true"></button>
+    <button class="progress-dot" data-index="1" aria-label="Слайд 2: Проблема"></button>
+    <button class="progress-dot" data-index="2" aria-label="Слайд 3: Почему сейчас"></button>
+    <button class="progress-dot" data-index="3" aria-label="Слайд 4: Решение"></button>
+    <button class="progress-dot" data-index="4" aria-label="Слайд 5: Продукт"></button>
+    <button class="progress-dot" data-index="5" aria-label="Слайд 6: Рынок"></button>
+    <button class="progress-dot" data-index="6" aria-label="Слайд 7: Валидация и модель"></button>
+    <button class="progress-dot" data-index="7" aria-label="Слайд 8: Команда и запрос"></button>
+  </nav>
+
+
+  <!-- ============================================================
+       СЛАЙД 1 — TITLE / ONE-LINER
+       ============================================================ -->
+  <section class="slide hero-slide" id="slide-0" aria-label="FlowCRM — заголовок">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Pitch Deck 2026</span>
+      <h1 class="animate-in">FlowCRM</h1>
+      <p class="subtitle animate-in">Простая CRM для малого бизнеса, которая превращает хаос в&nbsp;повторяемые продажи.</p>
+
+      <div class="text-block animate-in">
+        <p>FlowCRM — это единое пространство, где малый бизнес ведёт клиентов, задачи и сделки. Не таблицы, не блокноты, не пять мессенджеров. Одна система, которая понятна за 10 минут и не требует консультанта для внедрения.</p>
+        <p>Мы создаём FlowCRM для сервисных компаний, локальных бизнесов, агентств и небольших команд, у которых нет выделенного отдела продаж, но есть потребность контролировать поток клиентов. Основатель, менеджер или администратор — каждый видит полную картину и ничего не теряет.</p>
+        <p>Наш главный приоритет — простота. Пользователь не «настраивает систему» неделями, а начинает работать с первого дня. Импортируй контакты, создай воронку, назначь задачи — и FlowCRM сама напомнит, кому пора перезвонить, какая сделка буксует и где деньги.</p>
+      </div>
+
+      <div class="cards animate-in">
+        <div class="card">
+          <div class="card-number">10 мин</div>
+          <div class="card-desc">на старт — без внедрения и обучения</div>
+        </div>
+        <div class="card">
+          <div class="card-number">1</div>
+          <div class="card-desc">рабочее пространство для всей команды</div>
+        </div>
+        <div class="card">
+          <div class="card-number">&infin;</div>
+          <div class="card-desc">напоминания + контроль + повторные продажи</div>
+        </div>
+      </div>
+
+      <div class="cta-group animate-in">
+        <a href="#slide-7" class="btn-primary">Request demo</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 2 — PROBLEM
+       ============================================================ -->
+  <section class="slide" id="slide-1" aria-label="Проблема">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Problem</span>
+      <h1 class="animate-in">Малый бизнес теряет клиентов не&nbsp;из-за качества, а&nbsp;из-за беспорядка</h1>
+
+      <div class="text-block animate-in">
+        <p>Типичная реальность малого бизнеса: заявки приходят из WhatsApp, Telegram, Instagram, почты и по телефону. Данные о клиентах живут в Excel-файлах, головах менеджеров и разрозненных чатах. Нет единого списка, нет статуса сделки, нет понимания, кто за что отвечает.</p>
+        <p>Последствия предсказуемы. Забытые перезвоны — клиент уходит к конкуренту. Пропущенные лиды — бизнес не знает, сколько заявок «утекло». Нет истории общения — каждый новый разговор начинается с нуля. Менеджеры работают «как получится», а владелец не понимает, почему при хорошем продукте продажи не растут.</p>
+      </div>
+
+      <ul class="bullet-list animate-in">
+        <li>Лиды «утекают» между каналами — WhatsApp, почта, звонки, Instagram</li>
+        <li>Нет единого списка клиентов и актуальных статусов сделок</li>
+        <li>Контроль и отчётность появляются слишком поздно — когда клиент уже потерян</li>
+        <li>Менеджеры работают в «ручном режиме» без прозрачности для руководителя</li>
+      </ul>
+
+      <div class="placeholder animate-in">
+        <div class="placeholder-icon">&#128247;</div>
+        Storyboard: WhatsApp + Excel + missed call — типичный день менеджера по продажам в SMB
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 3 — WHY NOW
+       ============================================================ -->
+  <section class="slide" id="slide-2" aria-label="Почему сейчас">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Why Now</span>
+      <h1 class="animate-in">Сейчас момент, когда SMB готовы платить за&nbsp;простоту</h1>
+
+      <div class="text-block animate-in">
+        <p>За последние 3-4 года произошёл фундаментальный сдвиг. Количество digital-каналов, по которым приходят заявки, выросло в разы. Если раньше клиент звонил — теперь он пишет в мессенджер, заполняет форму на сайте, оставляет заявку в Instagram. Малый бизнес вынужден жонглировать 5-7 каналами одновременно.</p>
+        <p>Клиент ожидает быстрой реакции: исследования говорят, что ответ в первые 5 минут повышает конверсию в 10 раз. В условиях растущей конкуренции малый бизнес больше не может позволить себе «ответим завтра». Давление на скорость и качество отклика стало критическим.</p>
+      </div>
+
+      <ul class="bullet-list animate-in">
+        <li>Взрывной рост количества каналов обращений (мессенджеры, соцсети, формы)</li>
+        <li>Давление на скорость ответа — клиент ждёт реакции за минуты, не часы</li>
+        <li>Доступность AI-автоматизации для компаний любого размера</li>
+      </ul>
+
+      <div class="placeholder animate-in">
+        <div class="placeholder-icon">&#128200;</div>
+        Trend chart placeholder — рост каналов обращений и ожиданий по скорости ответа (2020–2026)
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 4 — SOLUTION
+       ============================================================ -->
+  <section class="slide" id="slide-3" aria-label="Решение">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Solution</span>
+      <h1 class="animate-in">FlowCRM — CRM, которая работает «из&nbsp;коробки»</h1>
+
+      <div class="text-block animate-in">
+        <p>FlowCRM решает проблему хаоса через три простых принципа: единый список клиентов, прозрачная воронка продаж и автоматические задачи. Пользователь загружает контакты, создаёт 3–5 стадий воронки — и система начинает работать. Ежедневные задачи, напоминания о follow-up, контроль сделок — всё в одном месте.</p>
+        <p>Главное отличие FlowCRM от существующих решений — минимальное внедрение. Интерфейс лишён «корпоративной сложности»: никаких десятков вкладок, конфигураций и ролевых моделей. Вместо этого — готовые сценарии для SMB: воронка для услуг, воронка для агентства, воронка для локального бизнеса. Пользователь не «настраивает систему» — он выбирает шаблон и начинает работать.</p>
+      </div>
+
+      <div class="cards animate-in">
+        <div class="card">
+          <div class="card-title">Единый inbox</div>
+          <div class="card-desc">Все заявки из всех каналов — в одном списке с приоритетами и статусами</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Простая воронка</div>
+          <div class="card-desc">3–5 стадий, drag-and-drop, наглядный прогресс каждой сделки</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Автозадачи</div>
+          <div class="card-desc">Автоматические follow-ups, напоминания и контроль «остывающих» лидов</div>
+        </div>
+      </div>
+
+      <div class="placeholder animate-in">
+        <div class="placeholder-icon">&#128187;</div>
+        Mockup: Clean dashboard — главный экран FlowCRM с воронкой и задачами на день
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 5 — PRODUCT
+       ============================================================ -->
+  <section class="slide" id="slide-4" aria-label="Продукт">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Product</span>
+      <h1 class="animate-in">Как пользователь получает результат за&nbsp;1&nbsp;день</h1>
+
+      <div class="text-block animate-in">
+        <p>Путь пользователя до первого результата максимально короткий. Регистрация, импорт контактов из Excel или Google Contacts, создание первых сделок, назначение ответственного — всё это занимает один рабочий день. Не нужно приглашать интегратора, читать документацию или проходить обучение.</p>
+        <p>Интерфейс FlowCRM спроектирован с одержимостью по UX: минимум кликов для любого действия, быстрый поиск по всей базе, история общения с клиентом на одном экране, шаблоны сообщений для типовых ситуаций. Менеджер открывает FlowCRM утром — и сразу видит, что делать.</p>
+      </div>
+
+      <ul class="bullet-list animate-in">
+        <li>Карточка клиента + полная история взаимодействий</li>
+        <li>Задачи и напоминания с привязкой к сделкам</li>
+        <li>Быстрые шаблоны сообщений для типовых ситуаций</li>
+        <li>Weekly summary для владельца — отчёт без усилий</li>
+      </ul>
+
+      <div class="placeholders-row animate-in">
+        <div class="placeholder">
+          <div class="placeholder-icon">&#128100;</div>
+          Mockup: Client card — карточка клиента с историей, задачами и заметками
+        </div>
+        <div class="placeholder">
+          <div class="placeholder-icon">&#128202;</div>
+          Mockup: Pipeline — визуальная воронка продаж с drag-and-drop
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 6 — MARKET
+       ============================================================ -->
+  <section class="slide" id="slide-5" aria-label="Рынок">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Market</span>
+      <h1 class="animate-in">Огромный рынок, сфокусированный ICP</h1>
+
+      <div class="text-block animate-in">
+        <p>Рынок CRM для малого бизнеса — один из крупнейших в B2B SaaS. Миллионы компаний в Европе и СНГ с 1–30 сотрудниками ежедневно работают с клиентами, но при этом не имеют адекватного инструмента управления продажами. Часть из них уже платит за SaaS-решения, но остаётся недовольна сложностью и перегруженностью существующих CRM.</p>
+        <p>Наш ICP (Ideal Customer Profile) чётко определён: компании 1–30 человек, где 1–5 сотрудников занимаются продажами. Заявки приходят из 3–6 каналов, нет отдела IT или внедрения. Это сервисные компании, маркетинговые агентства, юридические и консалтинговые бюро, клиники, образовательные центры, локальные B2B-бизнесы.</p>
+      </div>
+
+      <div class="cards animate-in">
+        <div class="card">
+          <div class="card-title">ICP</div>
+          <div class="card-desc">Сервисы, агентства, локальные компании (1–30 человек, 1–5 продавцов)</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Ключевая боль</div>
+          <div class="card-desc">Продавцы без отдела внедрения, которым нужен инструмент «из коробки»</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Готовность платить</div>
+          <div class="card-desc">SMB готовы платить за «простоту и контроль» — не за «ещё одну платформу»</div>
+        </div>
+      </div>
+
+      <div class="placeholder animate-in">
+        <div class="placeholder-icon">&#127760;</div>
+        Market sizing diagram placeholder — TAM / SAM / SOM для CRM в сегменте SMB (DACH + EE)
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 7 — TRACTION / VALIDATION + BUSINESS MODEL
+       ============================================================ -->
+  <section class="slide" id="slide-6" aria-label="Валидация и бизнес-модель">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Traction & Business Model</span>
+      <h1 class="animate-in">Понятная монетизация и&nbsp;быстрый путь к&nbsp;проверке спроса</h1>
+
+      <div class="text-block animate-in">
+        <p>FlowCRM на стадии концепта, и мы это не скрываем — мы честно строим план валидации. Первый шаг: landing page с описанием продукта и формой предзаказа. Параллельно — MVP с базовой воронкой и задачами, который мы запускаем на 10–15 пилотных компаний из нашего ICP. Обратная связь от пилотов формирует roadmap.</p>
+        <p>Модель монетизации — подписка. Два подхода, которые мы тестируем: per-seat (за пользователя) и per-company (фиксированная цена за команду). Три тарифных пакета: Basic (воронка + задачи), Pro (автоматизации + AI-подсказки) и Teams (командная работа + отчётность). Upsell — на продвинутые AI-автоматизации, шаблоны и интеграции.</p>
+      </div>
+
+      <div class="cards animate-in">
+        <div class="card">
+          <div class="card-number">14 дней</div>
+          <div class="card-desc">бесплатный trial — без карты, полный функционал</div>
+        </div>
+        <div class="card">
+          <div class="card-number">3 плана</div>
+          <div class="card-desc">Basic / Pro / Teams — рост с командой клиента</div>
+        </div>
+        <div class="card">
+          <div class="card-number">+доход</div>
+          <div class="card-desc">AI-автоматизации, шаблоны, интеграции — upsell</div>
+        </div>
+      </div>
+
+      <div class="placeholders-row animate-in">
+        <div class="placeholder">
+          <div class="placeholder-icon">&#128176;</div>
+          Pricing table placeholder — Basic / Pro / Teams с ценами и фичами
+        </div>
+        <div class="placeholder">
+          <div class="placeholder-icon">&#128640;</div>
+          Pilot funnel placeholder — путь от landing → trial → pilot → paid
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       СЛАЙД 8 — TEAM & ASK
+       ============================================================ -->
+  <section class="slide" id="slide-7" aria-label="Команда и запрос инвестиций">
+    <div class="slide-content">
+      <span class="slide-label animate-in">Team & Ask</span>
+      <h1 class="animate-in">Команда + запрос</h1>
+
+      <div class="text-block animate-in">
+        <p>Мы — команда из трёх со-основателей с опытом в продуктовой разработке, growth-маркетинге и B2B-продажах в сегменте SMB. Мы знаем этот рынок не по отчётам — мы работали с малым бизнесом, видели боль изнутри и понимаем, что нужно конечному пользователю.</p>
+      </div>
+
+      <div class="team-grid animate-in">
+        <div class="team-card">
+          <div class="team-avatar">KD</div>
+          <div class="team-info">
+            <div class="team-name">Karl Gardner</div>
+            <div class="team-role">CEO / Product</div>
+            <div class="team-bio">8 лет в продуктовой разработке, ex-PM в SaaS-стартапе (B2B).</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">JW</div>
+          <div class="team-info">
+            <div class="team-name">Jason White</div>
+            <div class="team-role">CTO / Engineering</div>
+            <div class="team-bio">10 лет в разработке, full-stack, опыт построения SaaS-платформ с нуля.</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">MA</div>
+          <div class="team-info">
+            <div class="team-name">Mark Anderson</div>
+            <div class="team-role">Growth / Sales</div>
+            <div class="team-bio">6 лет в B2B-маркетинге и продажах.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ask-block animate-in">
+        <h2>Запрос инвестиций</h2>
+        <p>Мы привлекаем <strong>€300K – €600K</strong> на раунде pre-seed. Средства направлены на три ключевых блока: разработка MVP, запуск пилотов с 50 компаниями и go-to-market в DACH-регионе.</p>
+
+        <ul class="bullet-list">
+          <li><strong>Сумма:</strong> €300K – €600K pre-seed</li>
+          <li><strong>На что:</strong> MVP → пилоты (50 компаний) → GTM в DACH</li>
+          <li><strong>KPI на 12 месяцев:</strong> 50 пилотов, €10K+ MRR, retention > 80%</li>
+        </ul>
+
+        <p><strong>Milestones:</strong></p>
+        <ul class="bullet-list">
+          <li><strong>Месяц 1–3:</strong> MVP, первые 10 пилотных компаний, итерация по фидбеку</li>
+          <li><strong>Месяц 4–6:</strong> Публичный beta-запуск, 30 компаний, первые платящие клиенты</li>
+          <li><strong>Месяц 7–12:</strong> GTM в DACH, 50+ компаний, устойчивый MRR, подготовка к seed</li>
+        </ul>
+
+        <div class="cta-group">
+          <a href="mailto:hello@flowcrm.io" class="btn-primary">Let's talk</a>
+          <a href="#" class="btn-secondary">Book a call</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — НАВИГАЦИЯ, АНИМАЦИИ, ДОСТУПНОСТЬ
+       ============================================================ -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* --------------------------------------------------------
+         ЭЛЕМЕНТЫ
+         -------------------------------------------------------- */
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.progress-dot');
+      const totalSlides = slides.length;
+      let currentSlide = 0;
+
+      /* --------------------------------------------------------
+         INTERSECTION OBSERVER — отслеживание видимого слайда
+         -------------------------------------------------------- */
+      const observerOptions = {
+        root: null,
+        threshold: 0.5
+      };
+
+      const slideObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            // Добавляем класс visible для анимации
+            entry.target.classList.add('visible');
+
+            // Определяем индекс текущего слайда
+            const index = Array.from(slides).indexOf(entry.target);
+            if (index !== -1) {
+              currentSlide = index;
+              updateDots(index);
+            }
+          }
+        });
+      }, observerOptions);
+
+      // Наблюдаем за каждым слайдом
+      slides.forEach(function (slide) {
+        slideObserver.observe(slide);
+      });
+
+      /* --------------------------------------------------------
+         ОБНОВЛЕНИЕ ТОЧЕК ПРОГРЕССА
+         -------------------------------------------------------- */
+      function updateDots(activeIndex) {
+        dots.forEach(function (dot, i) {
+          if (i === activeIndex) {
+            dot.classList.add('active');
+            dot.setAttribute('aria-current', 'true');
+          } else {
+            dot.classList.remove('active');
+            dot.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      /* --------------------------------------------------------
+         СКРОЛЛ К СЛАЙДУ
+         -------------------------------------------------------- */
+      function scrollToSlide(index) {
+        if (index < 0 || index >= totalSlides) return;
+        currentSlide = index;
+        slides[index].scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /* --------------------------------------------------------
+         НАВИГАЦИЯ ПО КЛАВИШАМ
+         -------------------------------------------------------- */
+      document.addEventListener('keydown', function (e) {
+        switch (e.key) {
+          case 'ArrowDown':
+          case 'PageDown':
+            e.preventDefault();
+            scrollToSlide(currentSlide + 1);
+            break;
+
+          case 'ArrowUp':
+          case 'PageUp':
+            e.preventDefault();
+            scrollToSlide(currentSlide - 1);
+            break;
+
+          case 'Home':
+            e.preventDefault();
+            scrollToSlide(0);
+            break;
+
+          case 'End':
+            e.preventDefault();
+            scrollToSlide(totalSlides - 1);
+            break;
+        }
+      });
+
+      /* --------------------------------------------------------
+         КЛИК ПО ТОЧКАМ
+         -------------------------------------------------------- */
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          var index = parseInt(this.getAttribute('data-index'), 10);
+          scrollToSlide(index);
+        });
+      });
+
+      /* --------------------------------------------------------
+         ПЕРВЫЙ СЛАЙД — ПОКАЗАТЬ СРАЗУ
+         -------------------------------------------------------- */
+      if (slides[0]) {
+        slides[0].classList.add('visible');
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
