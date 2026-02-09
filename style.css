@@ -367,14 +367,14 @@ section {
 
 .about-image-wrapper {
   position: relative;
-  border-radius: 24px;
+  border-radius: 20px;
   overflow: hidden;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  aspect-ratio: 1.5;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px;
 }
 
 .about-image-wrapper::before {
@@ -399,11 +399,11 @@ section {
   font-size: 0.9rem;
   color: var(--text-secondary);
   text-align: left;
-  padding: 40px;
+  padding: 24px 32px;
   background: var(--bg-primary);
   border-radius: 16px;
-  width: calc(100% - 8px);
-  height: calc(100% - 8px);
+  width: calc(100%);
+  height: calc(100%);
 }
 
 .code-avatar .line {
@@ -540,7 +540,7 @@ section {
 
 .skill-card p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 15px;
   margin-bottom: 20px;
 }
 
@@ -558,6 +558,93 @@ section {
   font-size: 0.8rem;
   color: var(--accent-primary);
   font-weight: 500;
+}
+
+/* ========================================
+   Experience Section
+======================================== */
+.experience {
+  background: var(--bg-primary);
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 60px;
+}
+
+.experience-card {
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  transition: var(--transition-medium);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.experience-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  background: var(--bg-card-hover);
+}
+
+.experience-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.experience-header a {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  align-self: center;
+}
+
+.experience-header a img[src*="booke.svg"] {
+  width: 96px;
+}
+
+.experience-header a img[src*="choice.svg"] {
+  width: 121px;
+}
+
+.experience-header a img[src*="davincits.svg"] {
+  width: 121px;
+}
+
+.experience-logo {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  font-size: 1.5rem;
+}
+
+.experience-title-group h3 {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.experience-role {
+  font-size: 0.9rem;
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.experience-desc {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 24px;
+  line-height: 24px;
+  min-height: 144px;
 }
 
 /* ========================================
@@ -619,7 +706,7 @@ section {
 
 .project-content p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 15px;
   margin-bottom: 16px;
 }
 
