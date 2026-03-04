@@ -113,6 +113,10 @@
       font-size: 12px;
       line-height: 1.6;
     }
+    
+    p {
+      margin-bottom: 0.5em;      
+    }
 
     .preview-pane {
       padding: 40px;
@@ -129,10 +133,10 @@
     
     /* 1. Modern (Default) */
     .theme-modern .cv-content {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Roboto', sans-serif;
       font-size: 13px;
       color: #333;
-      line-height: 1.6;
+      line-height: 1.4;
     }
     .theme-modern h1, 
     .theme-modern h2, 
@@ -141,8 +145,6 @@
       margin-bottom: 0.5em;
     }
     .theme-modern h1 { 
-      border-bottom: 2px solid #007bff; 
-      padding-bottom: 0.3em; 
       margin-bottom: 0.8em; 
       font-size: 1.5rem;
     }
@@ -164,10 +166,6 @@
     .theme-modern a { 
       color: #007bff; 
       text-decoration: none; 
-    }
-    .theme-modern hr { 
-      visibility: hidden;
-      break-after: page; 
     }
 
     /* 2. Classic */
@@ -211,9 +209,16 @@
     .theme-creative h2 { color: #2c3e50; font-size: 1.5em; background: #f0f0f0; padding: 5px 10px; border-left: 5px solid #da2c4d; margin-top: 1.5em; border-radius: 0 4px 4px 0; }
     .theme-creative a { color: #da2c4d; font-weight: 600; }
     .theme-creative strong { color: #da2c4d; }
+    
+    hr { 
+      visibility: hidden;
+    }
 
     /* Print Styles */
-    @media print {
+    @media print {      
+      hr { 
+        break-after: page; 
+      }
       body {
         height: auto;
         overflow: visible;
@@ -292,105 +297,159 @@
     // Default Markdown
     const defaultMarkdown = `# Serhii Melnykov
 
-**Senior Full-Stack JavaScript Developer**
+**Senior Full-Stack JavaScript Engineer**
 
 Email: [serhii.melnykov@proton.me](mailto:serhii.melnykov@proton.me)
 
-LinkedIn: linkedin.com/in/mlnkv
+LinkedIn: https://www.linkedin.com/in/mlnkv/
+
+GitHub: https://github.com/s-melnikov/
 
 ## Professional Summary
 
-Senior Full-Stack JavaScript Developer with 13+ years of experience in web development, spanning frontend-heavy products, SaaS platforms, and AI-driven systems. Strong expertise in HTML, CSS, JavaScript, and React, with a deep focus on mobile-first and responsive applications. Solid backend experience with Node.js, Express, NestJS, MongoDB and Redis. Actively applying AI-driven development practices, including LLM integrations, prompt engineering, and AI-assisted planning and code review workflows.
+Senior JavaScript Engineer with 13+ years of experience building scalable web applications and SaaS platforms. Strong expertise in React, modern frontend architecture, design systems, and mobile-first development.
+
+Experienced in developing complex user interfaces, modernizing legacy codebases, and building greenfield products. Recently expanded into backend development with Node.js, working with MongoDB, Redis, and background job processing.
+
+Also experienced in integrating AI services and LLM providers into production SaaS platforms.
 
 ## Core Skills
 
-**Frontend**
+**Frontend Technologies**
 
-* HTML5, CSS3, Responsive & Mobile-First Development
-* JavaScript (ES6+), TypeScript
-* React, Component Libraries, Design Systems
-* Canvas, Real-time UI, WebSockets
+React, JavaScript (ES6+), TypeScript, HTML5, CSS3, Responsive Design, Mobile-First Development, Component Libraries, Design Systems
 
-**Backend**
+**State Management & Data Layer**
 
-* Node.js, Express.js, NestJS, REST APIs
+Redux Toolkit, Zustand, GraphQL, REST APIs, WebSockets
 
-**Databases & Storage**
+**Backend Technologies**
 
-* MongoDB, Redis, Firebase
+Node.js, Express.js, NestJS, MongoDB, Redis, Vector Databases (Qdrant)
 
-**AI & Automation**
+**AI & LLM Integration**
 
-* LLM Providers APIs (Groq, Fireworks)
-* Prompt Engineering
-* AI-driven Development Workflows
-* Cursor, OpenAI Codex, Claude, Gemini
-* Multi-model validation (ChatGPT, Claude, Gemini)
+LLM APIs, AI-powered features, Prompt Engineering, AI development workflows
 
-**DevOps & Tools**
+**Tools & Build Systems**
 
-* Docker, Docker Compose, CI/CD basics, Git
-* API Integration & Optimization
+Git, Docker, npm, Vite, Webpack, CI/CD, Vercel
 
 ## Professional Experience
 
-### Senior Full-Stack JavaScript Developer | Booke.ai
+### Senior Frontend / Fullstack Developer — Booke.ai
 
-*2022 – Present*
+*2022 – Present (Full-time, Remote)*
 
-Booke.ai is a SaaS platform automating categorization of banking transactions for accountants using AI.
+Tech stack: React, TypeScript, Node.js, NestJS, MongoDB, Redis, Bull, Docker
 
-* Led a full frontend redesign, rebuilding the UI according to a new design system
-* Developed complex, mobile-friendly React interfaces with a strong focus on usability
-* Gradually transitioned into backend development after frontend stabilization
+Booke.ai is a SaaS platform that automates categorization of banking transactions for accountants using AI.
+
+Frontend Leadership & Platform Modernization
+
+* Led a complete frontend redesign, rebuilding the UI according to a new design system
+* Introduced and implemented a custom component system used across the platform
+* Developed complex React interfaces with a strong focus on usability and mobile responsiveness
+* Migrated the entire frontend codebase from class components to modern React functional components with Hooks
+* Built a dedicated mobile-friendly version of the application to improve usability on smaller screens
+* Implemented multiple complex product features supporting accounting workflows and financial data management
+* Developed a marketing website using Next.js, adapting desktop designs for mobile devices
+
+Backend & Infrastructure Contributions
+
+* Gradually expanded responsibilities into backend development after stabilizing the frontend architecture
 * Extended backend functionality using Node.js, Express, and NestJS
 * Implemented and optimized background job processing using Bull and Redis
-* Worked with MongoDB for data modeling and performance optimization
-* Integrated AI model providers (Groq, Fireworks) for automation user workflows
-* Designed prompts and workflows for reliable LLM-based automation
-* Actively applied AI-assisted development tools for planning, implementation, and validation
+* Worked with MongoDB on data modeling and performance optimization
+* Integrated external AI model providers (Groq, Fireworks) into the platform
 
----
+Worked on a production SaaS platform used by accounting professionals, focusing on performance, reliability, and scalable architecture.
 
-### Senior Frontend Developer | Choice
+### Senior Frontend Developer — Choice
 
-*2020 – 2022*
+*2020 – 2022 (Full-time, Remote)*
+
+Tech stack: React, TypeScript, REST APIs
 
 Choice is a digital ordering platform for cafés and restaurants.
 
-* Built the client-side application from scratch, focused on mobile users
-* Developed an admin panel for restaurant and café owners
-* Implemented real-time interactions and API integrations
-* Ensured high performance and usability on mobile devices
+Developed the client-side applications from scratch, focusing on fast and seamless ordering experiences for mobile users while also supporting desktop environments.
 
-### Senior Frontend Developer | Davinci TS
+Key Contributions:
 
-*2017 – 2020*
+* Built the customer-facing ordering application from the ground up with a strong focus on mobile usability and performance
+* Developed a web-based admin panel for restaurant and café owners to manage menus, orders, and business settings
+* Implemented REST API integrations in close collaboration with the backend team
+* Optimized frontend performance and responsiveness for mobile devices
+* Designed reusable UI components and scalable frontend architecture
+* Implemented real-time interactions to improve ordering experience and operational workflows
+
+Delivered a responsive and performant application that supported both customer ordering flows and operational tools for restaurant staff.
+
+### Senior Frontend Developer — Davinci TS
+
+*2017 – 2020 (Full-time, Remote)*
+
+Tech stack: React, Redux, GraphQL
 
 SaaS solution in the tourism industry.
 
-* Designed and developed a unified React component library
-* Migrated multiple existing applications to the new design system
-* Ensured visual consistency and improved maintainability across products
-* Continued development and expansion of the platform’s functionality
+Contributed to the modernization of a large-scale web platform, focusing on UI redesign, architecture improvements, and frontend performance.
 
-### JavaScript Developer | Comodo (ITSM)
+Key Contributions:
 
-*2016 – 2017*
+* Led partial UI redesign implementation based on a new design system
+* Built a reusable component library aligned with the new design language and published it as a separate npm package
+* Rolled out the component library across multiple frontend products within the company to ensure UI consistency and faster feature delivery
+* Developed new business features using React
+* Migrated frontend data layer from REST API to GraphQL, improving flexibility and reducing over-fetching
+* Refactored large parts of the application from class-based components to functional components with Hooks
+* Improved state management architecture by fixing incorrect Redux patterns and simplifying store structure
+* Increased maintainability and reduced technical debt through systematic refactoring
 
-* Extended functionality of a SaaS ITSM platform
-* Worked with AngularJS in a production environment
-* Collaborated with backend and product teams
+Worked in a distributed team environment, collaborating with backend engineers, designers, and Product Owner.
 
-### JavaScript Developer - Frontend Developer | Gambling Platform
+---
+### Frontend Developer - Comodo
 
-*2010 – 2016*
+*2016 – 2017, Odesa, Ukraine (Full-time, On-site)*
 
-* Started as HTML/CSS developer with PHP for landing pages
-* Promoted to JavaScript Developer after ~1 year
-* Migrated casino games from Adobe Flash to HTML5 (Canvas, JS)
-* Developed a mobile-focused web application for the gambling platform
-* Worked in a multi-developer team on long-term product evolution
+ITSM platform for remote device management.
+
+Worked as part of a frontend team developing a complex web-based administrative platform. 
+
+Responsibilities & Contributions:
+
+* Developed and maintained application features using AngularJS (1.x)
+* Implemented reusable UI components and business logic modules
+* Contributed to a large-scale single-page application with complex state management
+* Collaborated closely with backend engineers and QA within an Agile (Scrum) environment
+* Actively used Jira for sprint planning, task tracking, and backlog management
+* Participated in code reviews and team discussions to maintain code quality and architectural consistency
+
+### Frontend Developer - Spetskodservice
+
+*2010 – 2016, Odesa, Ukraine (Full-time, On-site)*
+
+Started as a Frontend Developer focused on building high-conversion promotional landing pages based on provided Photoshop designs.
+
+Responsibilities & Achievements:
+
+* Developed responsive marketing landing pages using HTML, CSS, JavaScript
+* Implemented backend integrations in PHP (tracking, statistics, basic analytics logic)
+* Translated pixel-perfect UI designs from Photoshop into production-ready web pages
+* Ensured cross-browser compatibility and layout stability
+
+After ~1 year, became one of the first engineers in the newly established HTML5 department, focused on replacing legacy Flash-based interactive products.
+
+HTML5 / Interactive Projects:
+
+* Migrated complex interactive browser-based products from Adobe Flash to HTML5 (Canvas API)
+* Implemented animation-heavy UI using CSS3 animations and transitions
+* Built performance-optimized JavaScript logic for mobile-first environments
+* Optimized rendering performance and reduced memory usage on low-power mobile devices
+* Improved loading times through asset optimization and efficient client-side architecture
+* Worked on high-traffic interactive entertainment platforms with a strong focus on performance, animation quality, and smooth mobile user experience.
 
 ## Education
 
@@ -402,16 +461,7 @@ Bachelor’s degree, Computer Software Engineering
 
 ## Languages
 
-* Ukrainian - Native
-* Russian - Native
-* English - Intermediate (B1)
-* Czech - Basic (A1)
-
-## Additional Notes
-
-* Strong focus on mobile-first UX and frontend architecture
-* Comfortable working end-to-end: from UI to backend and AI integrations
-* Continuously tracking and adopting AI-driven development practices
+Ukrainian — native, Russian — native, English — B2
 `;
 
     // Set initial value if empty
