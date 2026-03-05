@@ -42,7 +42,7 @@ Git, Docker, npm, Vite, Webpack, CI/CD, Vercel
 
 ### Senior Frontend / Fullstack Developer — Booke.ai
 
-*2022 – Present (Full-time, Remote)*
+*2022 – 2026 (Full-time, Remote)*
 
 Tech stack: React, TypeScript, Node.js, NestJS, MongoDB, Redis, Bull, Docker
 
