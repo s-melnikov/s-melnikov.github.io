@@ -129,7 +129,7 @@ Responsibilities & Contributions:
 * Actively used Jira for sprint planning, task tracking, and backlog management
 * Participated in code reviews and team discussions to maintain code quality and architectural consistency
 
-### Frontend Developer - Spetskodservice
+### Frontend Developer - Spetskodservice, LLC
 
 *2010 – 2016, Odesa, Ukraine (Full-time, On-site)*
 
