@@ -1,166 +1,144 @@
 # Serhii Melnykov
+**Senior Full-Stack JavaScript Engineer | React | Node.js | TypeScript**
 
-**Senior Full-Stack JavaScript Engineer**
-
-Email: [serhii.melnykov@proton.me](mailto:serhii.melnykov@proton.me)
-
-LinkedIn: https://www.linkedin.com/in/mlnkv/
-
+Email: serhii.melnykov@proton.me  
+LinkedIn: https://www.linkedin.com/in/mlnkv/  
 GitHub: https://github.com/s-melnikov/
 
 ## Professional Summary
 
-Senior JavaScript Engineer with 13+ years of experience building scalable web applications and SaaS platforms. Strong expertise in React, modern frontend architecture, design systems, and mobile-first development.
+Senior Full-Stack JavaScript Engineer with 13+ years of experience building scalable SaaS platforms and high-traffic web applications.
 
-Experienced in developing complex user interfaces, modernizing legacy codebases, and building greenfield products. Recently expanded into backend development with Node.js, working with MongoDB, Redis, and background job processing.
+Strong expertise in React, TypeScript, modern frontend architecture, and design systems, with recent experience developing backend services using Node.js, NestJS, MongoDB, and Redis.
 
-Also experienced in integrating AI services and LLM providers into production SaaS platforms.
+Experienced in building complex user interfaces, modernizing legacy systems, designing scalable APIs, and integrating AI/LLM services into production applications.
 
-## Core Skills
+Comfortable working in Agile distributed teams, contributing to product architecture, performance optimization, and full product lifecycle development.
 
-**Frontend Technologies**
+## Technical Skills
 
-React, JavaScript (ES6+), TypeScript, HTML5, CSS3, Responsive Design, Mobile-First Development, Component Libraries, Design Systems
+**Programming Languages**: JavaScript (TypeScript)
 
-**State Management & Data Layer**
+**Frontend**: React, Responsive Design, Mobile-First Development, Component Libraries, Design Systems, Redux Toolkit, Zustand
 
-Redux Toolkit, Zustand, GraphQL, REST APIs, WebSockets
+**APIs & Data**: REST APIs, GraphQL, WebSockets, API Integration
 
-**Backend Technologies**
+**Backend**: Node.js, Express.js, NestJS, MongoDB, Redis, Vector Databases (Qdrant)
 
-Node.js, Express.js, NestJS, MongoDB, Redis, Vector Databases (Qdrant)
+**AI / LLM Integration**: LLM APIs, Prompt Engineering, AI-powered features, AI integrations
 
-**AI & LLM Integration**
+**Tools & DevOps**: Git, Docker, CI/CD, npm, Vite, Webpack, Vercel
 
-LLM APIs, AI-powered features, Prompt Engineering, AI development workflows
-
-**Tools & Build Systems**
-
-Git, Docker, npm, Vite, Webpack, CI/CD, Vercel
+**Methodologies**: Agile, Scrum, Code Reviews, Distributed Teams
 
 ## Professional Experience
 
-### Senior Frontend / Fullstack Developer — Booke.ai
-
-*2022 – 2026 (Full-time, Remote)*
+### Senior Frontend / Full-Stack Developer  
+**Booke.ai** — Remote  
+2022 – 2026  
 
 Tech stack: React, TypeScript, Node.js, NestJS, MongoDB, Redis, Bull, Docker
 
-Booke.ai is a SaaS platform that automates categorization of banking transactions for accountants using AI.
+Booke.ai is an AI-powered SaaS platform that automates financial document and transaction categorization for accounting professionals.
 
-Frontend Leadership & Platform Modernization
+**Key Contributions**
 
-* Led a complete frontend redesign, rebuilding the UI according to a new design system
-* Introduced and implemented a custom component system used across the platform
-* Developed complex React interfaces with a strong focus on usability and mobile responsiveness
-* Migrated the entire frontend codebase from class components to modern React functional components with Hooks
-* Built a dedicated mobile-friendly version of the application to improve usability on smaller screens
-* Implemented multiple complex product features supporting accounting workflows and financial data management
-* Developed a marketing website using Next.js, adapting desktop designs for mobile devices
+**Frontend Architecture & Platform Modernization**
 
-Backend & Infrastructure Contributions
+- Led a complete frontend redesign, implementing a scalable design system and component architecture
+- Migrated the codebase from React class components to modern functional components with Hooks
+- Built complex React interfaces focused on usability, responsiveness, and mobile performance
+- Developed a mobile-friendly version of the platform to improve usability for accountants working on smaller devices
+- Implemented multiple complex financial workflow features supporting accounting automation
+- Built a Next.js marketing website, optimizing responsive layouts and performance
 
-* Gradually expanded responsibilities into backend development after stabilizing the frontend architecture
-* Extended backend functionality using Node.js, Express, and NestJS
-* Implemented and optimized background job processing using Bull and Redis
-* Worked with MongoDB on data modeling and performance optimization
-* Integrated external AI model providers (Groq, Fireworks) into the platform
+**Backend & Infrastructure Contributions**
+
+- Expanded responsibilities into full-stack development
+- Developed backend features using Node.js, Express, and NestJS
+- Implemented background job processing using Bull and Redis
+- Worked with MongoDB data modeling and query optimization
+- Integrated AI/LLM providers (Groq, Fireworks) to power automation features
 
 Worked on a production SaaS platform used by accounting professionals, focusing on performance, reliability, and scalable architecture.
 
-### Senior Frontend Developer — Choice
-
-*2020 – 2022 (Full-time, Remote)*
+### Senior Frontend Developer  
+**Choice** — Remote  
+2020 – 2022  
 
 Tech stack: React, TypeScript, REST APIs
 
-Choice is a digital ordering platform for cafés and restaurants.
+Choice is a digital ordering SaaS platform for cafés and restaurants.
 
-Developed the client-side applications from scratch, focusing on fast and seamless ordering experiences for mobile users while also supporting desktop environments.
+**Key Contributions**
 
-Key Contributions:
+- Built the customer ordering application from scratch using React and TypeScript
+- Developed an admin dashboard for restaurant owners to manage menus, orders, and settings
+- Implemented REST API integrations with backend services
+- Optimized frontend performance and mobile responsiveness
+- Designed reusable UI components and scalable frontend architecture
+- Implemented real-time interactions improving ordering workflows
 
-* Built the customer-facing ordering application from the ground up with a strong focus on mobile usability and performance
-* Developed a web-based admin panel for restaurant and café owners to manage menus, orders, and business settings
-* Implemented REST API integrations in close collaboration with the backend team
-* Optimized frontend performance and responsiveness for mobile devices
-* Designed reusable UI components and scalable frontend architecture
-* Implemented real-time interactions to improve ordering experience and operational workflows
+Delivered a responsive high-performance web application used by restaurants and cafés.
 
-Delivered a responsive and performant application that supported both customer ordering flows and operational tools for restaurant staff.
-
-### Senior Frontend Developer — Davinci TS
-
-*2017 – 2020 (Full-time, Remote)*
+### Senior Frontend Developer  
+**Davinci TS** — Remote  
+2017 – 2020  
 
 Tech stack: React, Redux, GraphQL
 
-SaaS solution in the tourism industry.
+SaaS platform in the tourism industry.
 
-Contributed to the modernization of a large-scale web platform, focusing on UI redesign, architecture improvements, and frontend performance.
+**Key Contributions**
 
-Key Contributions:
+- Implemented a UI redesign based on a new design system
+- Built a reusable component library published as an internal npm package
+- Rolled out the component system across multiple frontend products
+- Developed new product features using React and Redux
+- Migrated data layer from REST API to GraphQL
+- Refactored legacy code from class components to modern React Hooks
+- Improved state management architecture and reduced technical debt
 
-* Led partial UI redesign implementation based on a new design system
-* Built a reusable component library aligned with the new design language and published it as a separate npm package
-* Rolled out the component library across multiple frontend products within the company to ensure UI consistency and faster feature delivery
-* Developed new business features using React
-* Migrated frontend data layer from REST API to GraphQL, improving flexibility and reducing over-fetching
-* Refactored large parts of the application from class-based components to functional components with Hooks
-* Improved state management architecture by fixing incorrect Redux patterns and simplifying store structure
-* Increased maintainability and reduced technical debt through systematic refactoring
+### Frontend Developer  
+**Comodo** — Odesa, Ukraine  
+2016 – 2017  
 
-Worked in a distributed team environment, collaborating with backend engineers, designers, and Product Owner.
+Tech stack: AngularJS
 
-### Frontend Developer - Comodo
+Worked on a large-scale ITSM platform for remote device management.
 
-*2016 – 2017, Odesa, Ukraine (Full-time, On-site)*
+- Developed application features using AngularJS
+- Implemented reusable UI components and business modules
+- Contributed to a complex single-page application
+- Collaborated with backend engineers and QA in Agile Scrum environment
+- Participated in code reviews and sprint planning
 
-ITSM platform for remote device management.
+---
 
-Worked as part of a frontend team developing a complex web-based administrative platform. 
+### Frontend Developer  
+**Spetskodservice LLC** — Odesa, Ukraine  
+2010 – 2016  
 
-Responsibilities & Contributions:
+**Key Contributions**
 
-* Developed and maintained application features using AngularJS (1.x)
-* Implemented reusable UI components and business logic modules
-* Contributed to a large-scale single-page application with complex state management
-* Collaborated closely with backend engineers and QA within an Agile (Scrum) environment
-* Actively used Jira for sprint planning, task tracking, and backlog management
-* Participated in code reviews and team discussions to maintain code quality and architectural consistency
+- Developed responsive landing pages from Photoshop designs using HTML, CSS, JavaScript
+- Implemented backend integrations using PHP
+- Ensured cross-browser compatibility
+- Migrated Flash-based products to HTML5 (Canvas API)
+- Implemented CSS3 animations and interactive UI
+- Optimized mobile performance and rendering efficiency
 
-### Frontend Developer - Spetskodservice, LLC
-
-*2010 – 2016, Odesa, Ukraine (Full-time, On-site)*
-
-Started as a Frontend Developer focused on building high-conversion promotional landing pages based on provided Photoshop designs.
-
-Responsibilities & Achievements:
-
-* Developed responsive marketing landing pages using HTML, CSS, JavaScript
-* Implemented backend integrations in PHP (tracking, statistics, basic analytics logic)
-* Translated pixel-perfect UI designs from Photoshop into production-ready web pages
-* Ensured cross-browser compatibility and layout stability
-
-After ~1 year, became one of the first engineers in the newly established HTML5 department, focused on replacing legacy Flash-based interactive products.
-
-HTML5 / Interactive Projects:
-
-* Migrated complex interactive browser-based products from Adobe Flash to HTML5 (Canvas API)
-* Implemented animation-heavy UI using CSS3 animations and transitions
-* Built performance-optimized JavaScript logic for mobile-first environments
-* Optimized rendering performance and reduced memory usage on low-power mobile devices
-* Improved loading times through asset optimization and efficient client-side architecture
-* Worked on high-traffic interactive entertainment platforms with a strong focus on performance, animation quality, and smooth mobile user experience.
+Worked on high-traffic interactive platforms with heavy animations and mobile-first requirements.
 
 ## Education
 
 **Odessa National Telecommunications Academy**
 
-Bachelor’s degree, Computer Software Engineering
-
-*2018 – 2022*
+Bachelor’s Degree — Computer Software Engineering  
+2018 – 2022
 
 ## Languages
 
-Ukrainian — native, Russian — native, English — B2
+Ukrainian — Native  
+Russian — Native  
+English — B2
