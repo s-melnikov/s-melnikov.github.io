@@ -4,6 +4,7 @@
 Email: serhii.melnykov@proton.me  
 LinkedIn: https://www.linkedin.com/in/mlnkv/  
 GitHub: https://github.com/s-melnikov/
+Phone: +420 723 53 53 92
 
 ## Professional Summary
 
@@ -35,7 +36,7 @@ Comfortable working in Agile distributed teams, contributing to product architec
 
 ### Senior Frontend / Full-Stack Developer  
 **Booke.ai** — Remote  
-2022 – 2026  
+Dec 2021 – Feb 2026  
 
 Tech stack: React, TypeScript, Node.js, NestJS, MongoDB, Redis, Bull, Docker
 
@@ -64,7 +65,7 @@ Worked on a production SaaS platform used by accounting professionals, focusing 
 
 ### Senior Frontend Developer  
 **Choice** — Remote  
-2020 – 2022  
+Sep 2020 – Nov 2021  
 
 Tech stack: React, TypeScript, REST APIs
 
@@ -83,7 +84,7 @@ Delivered a responsive high-performance web application used by restaurants and 
 
 ### Senior Frontend Developer  
 **Davinci TS** — Remote  
-2017 – 2020  
+Jan 2019 – Nov 2021  
 
 Tech stack: React, Redux, GraphQL
 
@@ -101,7 +102,7 @@ SaaS platform in the tourism industry.
 
 ### Frontend Developer  
 **Comodo** — Odesa, Ukraine  
-2016 – 2017  
+Aug 2018 – Jan 2019  
 
 Tech stack: AngularJS
 
@@ -117,7 +118,7 @@ Worked on a large-scale ITSM platform for remote device management.
 
 ### Frontend Developer  
 **Spetskodservice LLC** — Odesa, Ukraine  
-2010 – 2016  
+Aug 2013 – Aug 2018  
 
 **Key Contributions**
 
