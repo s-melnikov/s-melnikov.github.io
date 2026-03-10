@@ -3,7 +3,7 @@
 
 Email: serhii.melnykov@proton.me  
 LinkedIn: https://www.linkedin.com/in/mlnkv/  
-GitHub: https://github.com/s-melnikov/
+GitHub: https://github.com/s-melnikov/   
 Phone: +420 723 53 53 92
 
 ## Professional Summary
@@ -140,6 +140,6 @@ Bachelor’s Degree — Computer Software Engineering
 
 ## Languages
 
+English — B2  
 Ukrainian — Native  
 Russian — Native  
-English — B2
