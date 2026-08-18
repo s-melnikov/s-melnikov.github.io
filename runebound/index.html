@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#14100d" />
+    <title>Runebound — личный виртуальный стол</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="tabletop" aria-label="Виртуальный игровой стол Runebound"></canvas>
+      <div id="game-ui" aria-label="Панели игры">
+        <header class="top-bar">
+          <div class="brand">
+            <strong>Runebound</strong>
+            <span>Базовая игра · одиночный режим</span>
+          </div>
+          <div class="turn-state" aria-live="polite">
+            <span>Ход героя</span>
+            <strong>3 действия</strong>
+          </div>
+          <button class="primary-action" type="button" disabled>Завершить ход</button>
+        </header>
+
+        <aside class="panel panel-left" aria-label="Сценарий и колоды">
+          <section>
+            <h2>Сценарий</h2>
+            <button class="card-slot card-slot-wide" type="button" disabled>
+              Выберите сценарий
+            </button>
+          </section>
+          <section>
+            <h2>Приключения</h2>
+            <div class="deck-row">
+              <button class="deck deck-combat" type="button" disabled><b>0</b><span>Бой</span></button>
+              <button class="deck deck-exploration" type="button" disabled><b>0</b><span>Исследование</span></button>
+              <button class="deck deck-social" type="button" disabled><b>0</b><span>Общение</span></button>
+            </div>
+          </section>
+          <section>
+            <h2>Другие колоды</h2>
+            <div class="deck-row deck-row-small">
+              <button class="deck deck-neutral" type="button" disabled><b>60</b><span>Навыки</span></button>
+              <button class="deck deck-neutral" type="button" disabled><b>60</b><span>Активы</span></button>
+              <button class="deck deck-neutral" type="button" disabled><b>0</b><span>Сюжет</span></button>
+            </div>
+          </section>
+        </aside>
+
+        <aside class="panel panel-right" aria-label="Герой и ресурсы">
+          <section class="hero-summary">
+            <div>
+              <span class="eyebrow">Герой</span>
+              <h2>Не выбран</h2>
+            </div>
+            <div class="health"><span>Здоровье</span><strong>—</strong></div>
+          </section>
+          <section>
+            <h2>Ресурсы</h2>
+            <div class="resource-row">
+              <span><b>0</b> золото</span>
+              <span><b>0</b> раны</span>
+              <span><b>0</b> трофеи</span>
+            </div>
+          </section>
+          <section>
+            <h2>Карты героя</h2>
+            <div class="empty-state">Навыки, активы и задания появятся здесь</div>
+          </section>
+          <section class="market-section">
+            <h2>Рынок текущего города</h2>
+            <div class="market-row">
+              <button class="card-slot" type="button" disabled></button>
+              <button class="card-slot" type="button" disabled></button>
+              <button class="card-slot" type="button" disabled></button>
+            </div>
+          </section>
+        </aside>
+
+        <section class="combat-panel" aria-label="Бой с врагом" hidden>
+          <h2>Бой</h2>
+          <p>Карта врага, жетоны и журнал решений ИИ.</p>
+        </section>
+
+        <footer class="canvas-help">
+          ЛКМ — вращение/самоцвет · ПКМ — сдвиг · колесо — масштаб
+        </footer>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
