@@ -1,13 +1,15 @@
+const assetsBaseUrl = new URL("../", import.meta.url);
+
 async function loadImage(path) {
   return new Promise((resolve) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.src = "/games/royal-goods/" + path;
+    image.src = new URL(path, assetsBaseUrl);
   });
 }
 
 async function loadJSON(path) {
-  const resp = await fetch("/games/royal-goods/" + path);
+  const resp = await fetch(new URL(path, assetsBaseUrl));
   return resp.json();
 }
 
