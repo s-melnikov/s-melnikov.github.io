@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080e17">
   <meta name="description" content="Serhii Melnykov — senior full-stack JavaScript engineer building thoughtful, scalable web products.">
   <meta name="author" content="Serhii Melnykov">
   <meta property="og:title" content="Serhii Melnykov — Full-stack JavaScript Engineer">
@@ -12,133 +13,92 @@
   <link rel="icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Serhii Melnykov, home">SM</a>
-    <p class="identity">Serhii Melnykov <span>Full-stack JavaScript Engineer</span></p>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="Serhii Melnykov, home"><span>S</span><span>M</span><span class="brand-dot">.</span></a>
+    <div class="identity"><strong>Serhii Melnykov</strong><span>Full-stack JavaScript Engineer</span></div>
     <nav class="navigation" aria-label="Primary navigation">
       <a href="#work">Work</a>
       <a href="#expertise">Expertise</a>
       <a href="#about">About</a>
     </nav>
-    <a class="contact-link" href="#contact">Contact</a>
+    <a class="header-contact" href="mailto:serhii.melnykov@proton.me">Get in touch <span aria-hidden="true">↗</span></a>
   </header>
 
   <main id="main">
-    <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow">Ideas / Engineering / Impact</p>
-        <h1 id="hero-title">I build<br>thoughtful software.</h1>
-        <p class="hero-intro">I’m Serhii Melnykov, a senior full-stack JavaScript engineer with 13+ years of experience building scalable web products with React, Node.js and TypeScript.</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-main">
+        <p class="eyebrow"><span class="signal" aria-hidden="true"></span> Full-stack engineer <span class="eyebrow-divider">/</span> Prague, Czech Republic</p>
+        <h1 id="hero-title">I build<br><span>thoughtful</span><br>software<span class="accent-dot">.</span></h1>
+        <div class="hero-bottom">
+          <p>I’m Serhii Melnykov, a senior full-stack JavaScript engineer with 13+ years of experience building scalable web products with React, Node.js and TypeScript.</p>
+          <a class="text-action" href="#work">Explore selected work <span aria-hidden="true">↘</span></a>
+        </div>
       </div>
-
-      <aside class="hero-facts" aria-label="Professional summary">
-        <div>
-          <p class="fact-label">Current focus</p>
-          <p>Scalable web applications, AI-powered products, and technical leadership.</p>
-        </div>
-        <div>
-          <p class="fact-label">Selected stack</p>
-          <p>React, Node.js, TypeScript, Next.js, MongoDB, Redis.</p>
-        </div>
-        <div>
-          <p class="fact-label">Location</p>
-          <p>Prague, Czech Republic<br><span class="muted">Open to remote</span></p>
-        </div>
+      <aside class="hero-panel" aria-label="Professional summary">
+        <div class="panel-top"><span>PROFILE / 001</span></div>
+        <div class="experience"><strong>13<span>+</span></strong><span>years of<br>experience</span></div>
+        <div class="panel-detail"><span>Current focus</span><p>Scalable web applications, AI-powered products, and technical leadership.</p></div>
+        <div class="panel-detail"><span>Selected stack</span><p>React, Node.js, TypeScript, Next.js, MongoDB, Redis.</p></div>
+        <div class="panel-location"><span class="signal" aria-hidden="true"></span> Prague, Czech Republic <span class="panel-separator">/</span> Open to remote</div>
       </aside>
     </section>
 
-    <section class="work section-rule" id="work" aria-labelledby="work-title">
-      <div class="section-heading">
-        <p class="eyebrow">01 / Selected work</p>
-        <p>Real products. Real impact.</p>
-      </div>
-      <h2 id="work-title" class="sr-only">Selected work</h2>
+    <section class="work section" id="work" aria-labelledby="work-title">
+      <div class="section-intro"><span class="section-index">01 / EXPERIENCE</span><p>Selected work across product, frontend and backend engineering.</p></div>
+      <div class="section-title-row"><h2 id="work-title">Selected work<span class="accent-dot">.</span></h2><span class="section-count">03 PROJECTS</span></div>
       <div class="work-list">
         <article class="work-item">
-          <div class="work-company"><a href="https://booke.ai" target="_blank" rel="noopener">Booke.ai</a></div>
-          <p class="work-period">2021 — 2026</p>
-          <div class="work-details">
-            <h3>Full-stack Developer</h3>
-            <p>Built financial workflows and AI-powered automation for accounting professionals. Led a frontend redesign and developed backend services, background jobs and LLM integrations.</p>
-          </div>
+          <span class="work-number">01</span>
+          <div class="work-company"><img src="images/booke.svg" alt="" loading="lazy"><h3><a href="https://booke.ai" target="_blank" rel="noopener noreferrer">Booke.ai <span aria-hidden="true">↗</span></a></h3><span>Full-stack Developer</span></div>
+          <p class="work-description">Built financial workflows and AI-powered automation for accounting professionals. Led a frontend redesign and developed backend services, background jobs and LLM integrations.</p>
+          <span class="work-period">2021 — 2026</span>
         </article>
         <article class="work-item">
-          <div class="work-company"><a href="https://choiceqr.com" target="_blank" rel="noopener">Choice</a></div>
-          <p class="work-period">2020 — 2021</p>
-          <div class="work-details">
-            <h3>Frontend Developer</h3>
-            <p>Built the customer ordering application and restaurant dashboard for a digital ordering platform, with a focus on responsive, real-time experiences.</p>
-          </div>
+          <span class="work-number">02</span>
+          <div class="work-company"><img src="images/choice.svg" alt="" loading="lazy"><h3><a href="https://choiceqr.com" target="_blank" rel="noopener noreferrer">Choice <span aria-hidden="true">↗</span></a></h3><span>Frontend Developer</span></div>
+          <p class="work-description">Built the customer ordering application and restaurant dashboard for a digital ordering platform, with a focus on responsive, real-time experiences.</p>
+          <span class="work-period">2020 — 2021</span>
         </article>
         <article class="work-item">
-          <div class="work-company"><a href="https://davincits.com" target="_blank" rel="noopener">Davinci TS</a></div>
-          <p class="work-period">2019 — 2021</p>
-          <div class="work-details">
-            <h3>Senior Frontend Developer</h3>
-            <p>Helped modernize a B2B travel platform through a design system, reusable component library, GraphQL migration and React architecture improvements.</p>
-          </div>
+          <span class="work-number">03</span>
+          <div class="work-company"><img src="images/davincits.svg" alt="" loading="lazy"><h3><a href="https://davincits.com" target="_blank" rel="noopener noreferrer">Davinci TS <span aria-hidden="true">↗</span></a></h3><span>Senior Frontend Developer</span></div>
+          <p class="work-description">Helped modernize a B2B travel platform through a design system, reusable component library, GraphQL migration and React architecture improvements.</p>
+          <span class="work-period">2019 — 2021</span>
         </article>
       </div>
     </section>
 
-    <section class="expertise section-rule" id="expertise" aria-labelledby="expertise-title">
-      <div class="section-heading">
-        <p class="eyebrow">02 / Core capabilities</p>
-        <p>Tools for meaningful progress.</p>
-      </div>
-      <h2 id="expertise-title" class="sr-only">Core capabilities</h2>
+    <section class="expertise section" id="expertise" aria-labelledby="expertise-title">
+      <div class="section-intro"><span class="section-index">02 / EXPERTISE</span><p>The tools and disciplines behind the work.</p></div>
+      <div class="section-title-row"><h2 id="expertise-title">What I do<span class="accent-dot">.</span></h2></div>
       <div class="capabilities">
-        <article>
-          <h3>Frontend</h3>
-          <p>React / Next.js<br>TypeScript<br>Design systems<br>Responsive interfaces</p>
-        </article>
-        <article>
-          <h3>Backend</h3>
-          <p>Node.js / NestJS<br>REST / GraphQL<br>MongoDB / Redis<br>Background jobs</p>
-        </article>
-        <article>
-          <h3>Systems</h3>
-          <p>Product architecture<br>Docker / CI/CD<br>Performance<br>Technical debt</p>
-        </article>
-        <article>
-          <h3>AI integration</h3>
-          <p>LLM workflows<br>Prompt engineering<br>Vector databases<br>Production features</p>
-        </article>
+        <article><span class="capability-number">01 / INTERFACE</span><h3>Frontend</h3><p>React / Next.js<br>TypeScript<br>Design systems<br>Responsive interfaces</p></article>
+        <article><span class="capability-number">02 / INFRASTRUCTURE</span><h3>Backend</h3><p>Node.js / NestJS<br>REST / GraphQL<br>MongoDB / Redis<br>Background jobs</p></article>
+        <article><span class="capability-number">03 / ARCHITECTURE</span><h3>Systems</h3><p>Product architecture<br>Docker / CI/CD<br>Performance<br>Technical debt</p></article>
+        <article><span class="capability-number">04 / INTELLIGENCE</span><h3>AI integration</h3><p>LLM workflows<br>Prompt engineering<br>Vector databases<br>Production features</p></article>
       </div>
     </section>
 
-    <section class="about section-rule" id="about" aria-labelledby="about-title">
-      <div class="about-label"><p class="eyebrow">03 / About</p></div>
-      <div class="about-copy">
-        <h2 id="about-title">Technology is most useful when it makes difficult work feel simple.</h2>
-        <p>I work across the full product lifecycle — from a first interface and component system to reliable backend services. I value clear thinking, durable systems and collaborative teams.</p>
-      </div>
+    <section class="about section" id="about" aria-labelledby="about-title">
+      <div class="section-intro"><span class="section-index">03 / ABOUT</span><p>How I approach the work.</p></div>
+      <div class="about-content"><span class="about-symbol" aria-hidden="true">03</span><div><h2 id="about-title">Technology is most useful when it makes difficult work feel <span>simple.</span></h2><p>I work across the full product lifecycle — from a first interface and component system to reliable backend services. I value clear thinking, durable systems and collaborative teams.</p></div></div>
     </section>
 
-    <section class="contact section-rule" id="contact" aria-labelledby="contact-title">
-      <p class="eyebrow">04 / Get in touch</p>
-      <div class="contact-content">
-        <h2 id="contact-title">Let’s build something that matters.</h2>
-        <a class="email-link" href="mailto:serhii.melnykov@proton.me">serhii.melnykov@proton.me</a>
-      </div>
-      <div class="socials" aria-label="Social links">
-        <a href="https://github.com/s-melnikov" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.linkedin.com/in/mlnkv" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="cv/">Résumé</a>
-      </div>
+    <section class="contact section" id="contact" aria-labelledby="contact-title">
+      <div class="section-intro"><span class="section-index">04 / CONTACT</span><p>Have something in mind?</p></div>
+      <h2 id="contact-title">Let’s build<br>something that <span>matters.</span></h2>
+      <a class="contact-email" href="mailto:serhii.melnykov@proton.me">serhii.melnykov@proton.me <span aria-hidden="true">↗</span></a>
+      <div class="socials" aria-label="Social links"><a href="https://github.com/s-melnikov" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/mlnkv" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="cv/">Résumé ↗</a></div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>© <span id="current-year">2026</span> Serhii Melnykov</p>
-    <p>Prague, Czech Republic</p>
-  </footer>
+  <footer class="site-footer"><p>© <span id="current-year">2026</span> Serhii Melnykov</p><a href="#top">Back to top ↑</a><p>Prague, Czech Republic</p></footer>
   <script src="script.js"></script>
 </body>
 </html>
